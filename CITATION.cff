@@ -1,0 +1,15 @@
+cff-version: 1.2.0
+message: >-
+  If you use this research package, please cite it using the metadata below.
+  For a particular mathematical result, also cite the relevant paper.
+title: "CM packets, principal models and quotient descent"
+authors:
+  - family-names: "Waltchack"
+    given-names: "Rollins"
+date-released: "2026-11-04"
+repository-code: "https://github.com/waltchackdr/mcmullen-cm-packets"
+url: "https://github.com/waltchackdr/mcmullen-cm-packets"
+license-url: "https://github.com/waltchackdr/mcmullen-cm-packets/blob/main/LICENSE.md"
+abstract: >-
+  Research preprints on abelian varieties of dimension six with complex
+  multiplication, their integral models and their fields of definition.

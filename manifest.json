@@ -6,6 +6,11 @@
       "sha256": "f7b3acd006e3a5ee81a7fca4d35bed7ef3a38c17565185dae948baa95ec7900b"
     },
     {
+      "bytes": 703,
+      "path": "CITATION.cff",
+      "sha256": "d2338cdf779c5e2906eaffdaa02a0017a2a80dd5f3f3f4ca87bc2341e257943b"
+    },
+    {
       "bytes": 1421,
       "path": "CONTRIBUTING.md",
       "sha256": "c9108e179aab37b191679cbd2884630e88baf6e49f0848f80371de858af36158"
