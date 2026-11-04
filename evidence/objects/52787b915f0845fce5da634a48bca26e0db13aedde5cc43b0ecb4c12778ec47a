@@ -1,0 +1,167 @@
+{
+  "attempts": [
+    {
+      "blocks": [
+        {
+          "entries": [
+            1,
+            41
+          ],
+          "triple_positions": null
+        },
+        {
+          "entries": [
+            1,
+            41
+          ],
+          "triple_positions": null
+        },
+        {
+          "entries": [
+            2,
+            13,
+            25,
+            25,
+            27,
+            34
+          ],
+          "triple_positions": [
+            0,
+            1,
+            4
+          ]
+        },
+        {
+          "entries": [
+            14,
+            28
+          ],
+          "triple_positions": null
+        }
+      ],
+      "candidate_visits": 74,
+      "case_id": 0,
+      "concatenated_residues": [
+        41,
+        41,
+        2,
+        25,
+        25,
+        34,
+        1,
+        13,
+        28,
+        1,
+        14,
+        27
+      ],
+      "sources": [
+        {
+          "copy_id": 0,
+          "residues": [
+            41,
+            41,
+            2
+          ],
+          "triple": [
+            1,
+            1,
+            40
+          ]
+        },
+        {
+          "copy_id": 1,
+          "residues": [
+            25,
+            25,
+            34
+          ],
+          "triple": [
+            1,
+            1,
+            40
+          ]
+        },
+        {
+          "copy_id": 2,
+          "residues": [
+            1,
+            13,
+            28
+          ],
+          "triple": [
+            1,
+            13,
+            28
+          ]
+        },
+        {
+          "copy_id": 3,
+          "residues": [
+            1,
+            14,
+            27
+          ],
+          "triple": [
+            1,
+            14,
+            27
+          ]
+        }
+      ],
+      "status": "FOUND",
+      "wall_seconds": 0.00022320449352264404
+    }
+  ],
+  "case_count": 24,
+  "copies": [
+    {
+      "copy_id": 0,
+      "embedding": 41,
+      "orbit": 0,
+      "repeated_coefficient_copy": 0,
+      "sign": -1,
+      "source_reduced_embedding": 1
+    },
+    {
+      "copy_id": 1,
+      "embedding": 25,
+      "orbit": 0,
+      "repeated_coefficient_copy": 0,
+      "sign": -1,
+      "source_reduced_embedding": 17
+    },
+    {
+      "copy_id": 2,
+      "embedding": 1,
+      "orbit": 1,
+      "repeated_coefficient_copy": 0,
+      "sign": 1,
+      "source_reduced_embedding": 1
+    },
+    {
+      "copy_id": 3,
+      "embedding": 1,
+      "orbit": 2,
+      "repeated_coefficient_copy": 0,
+      "sign": 1,
+      "source_reduced_embedding": 1
+    }
+  ],
+  "elapsed_seconds": 0.00028296373784542084,
+  "limits": {
+    "case_wall_seconds": 4,
+    "max_candidates_per_case": 2000000,
+    "task_wall_seconds": 120
+  },
+  "manifest_sha256": "9504c08cb672205a79bb8543a4eacf0dd209f4f3f4cdbb50a2ee66418a8f8fdb",
+  "no_partition_is_not_nonalgebraicity": true,
+  "partition_search_sha256": "cc14626504a148394ee3d49fb3c49e6dbe145b9fef425d57b93bb4ba75b9fce0",
+  "schema_version": 1,
+  "scope": "168 cases: B presentation uniform across B copies; repeated type1 copies may use distinct exact-type presentations. Exhausts this explicitly limited choice set only, not every per-copy B choice.",
+  "status": "FOUND",
+  "task_index": 0,
+  "tensor_degree": 4,
+  "terminal": true,
+  "worker_sha256": "d9aefc2557274418c02858e1be03d9ea99d99b4e9d9f005f008f9128b66bf80e"
+}

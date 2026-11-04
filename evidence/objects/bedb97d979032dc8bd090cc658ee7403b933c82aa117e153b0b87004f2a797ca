@@ -1,0 +1,56 @@
+{
+  "all_subspaces": 33880,
+  "dimension_counts": {
+    "0": 19656,
+    "1": 14196,
+    "3": 28
+  },
+  "nonzero_coefficient_forms_nondegenerate": 26,
+  "obstruction_witness": {
+    "basis": [
+      [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        1,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        1,
+        0,
+        1,
+        0
+      ]
+    ],
+    "coefficient_constraints": [
+      [
+        2,
+        1,
+        2
+      ],
+      [
+        2,
+        1,
+        0
+      ],
+      [
+        1,
+        0,
+        1
+      ]
+    ]
+  },
+  "scope": "Finite cyclic model and incidence only; minimum degree/type/classes require the separate human proof and accepted norm/unit inputs.",
+  "status": "EXACT_RESIDUE_ANNIHILATOR_MODEL_PASS"
+}

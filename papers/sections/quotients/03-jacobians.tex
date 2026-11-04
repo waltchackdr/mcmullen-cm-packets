@@ -1,0 +1,297 @@
+% !TeX root = ../../quotients-and-descent.tex
+\section{The restricted principal census and Jacobian question}\label{q:jacobians}
+This section supplies the order-and-type result invoked for the source
+factor. Its arithmetic proof is independent of the quotient and descent
+sections. The theta step has an additional execution and enclosure
+contract; the exact conditional statement is retained below.
+
+\begin{theorem}[Complete simple principal classification with the selected order]
+\label{pp:thm:tenprincipal}
+There are exactly ten origin-preserving polarized isomorphism classes of
+simple principally polarized complex abelian sixfolds $X$ such that
+$\operatorname{End}^0(X)\simeq M$ and, under this identification,
+$R\subseteq\operatorname{End}(X)$. The containment condition is independent
+of the field identification. Eight classes have endomorphism ring $R$
+and polarized automorphism group $\mu_6$; two have endomorphism ring
+$\OM$ and polarized automorphism group $\mu_{42}$. They belong to four
+unpolarized isogeny classes, with the following counts at one CM-type
+representative from each orbit:
+\[
+\begin{array}{c|c|ccc}
+\Phi&\text{flip parity from }\Phi_0 &[R]&[\mathfrak a]&[\OM]\\ \hline
+\{1,5,11,13,17,19\}&0&2&2&0\\
+\{1,5,11,13,19,25\}&1&0&0&1\\
+\{1,5,11,17,23,29\}&0&2&2&0\\
+\{1,5,11,23,25,29\}&1&0&0&1
+\end{array}
+\]
+In particular, the four specified polarized B/C objects exhaust the
+objects in their unpolarized isogeny class satisfying this $R$-containment
+condition. No assertion is made here for other endomorphism orders or
+for the induced A type.
+\end{theorem}
+\begin{proof}
+Every automorphism of $M$ preserves $\OL$ and takes $1-z^{14}$ to
+itself or an associate. Hence it preserves $R=\OL+(1-z^{14})\OM$.
+After choosing a field identification, $H_1(X,\Ql)$ has dimension one
+over $M$, and its integral lattice is a full fractional $R$-ideal.
+Conversely, the positive unimodular forms of
+Proposition~\externalref{packet}{pp:prop:markedpolarizations} give abelian varieties
+by the Riemann criterion.
+
+We check full endomorphisms and simplicity, not merely a centralizer.
+For a CM type $\Phi$, put
+$H=\{\sigma\in\operatorname{Gal}(M/\Ql):\sigma\Phi=\Phi\}$.
+The splitting of
+$\operatorname{End}_{\Ql}(M)=\bigoplus_\sigma M\sigma$
+over $\mathbb C$ has disjoint permutation-matrix supports for distinct
+$\sigma$. A nonzero coefficient in $M$ has nonzero value at every
+embedding, so a term crossing the two Hodge blocks cannot cancel.
+Thus the full rational Hodge endomorphism algebra is
+$M\mathbin{\rtimes}H=\operatorname{End}_{M^H}(M)$.
+The rational weight-one equivalence
+\cite[Corollary~6.9]{MilneShimura2017} and Poincar\'e complete
+reducibility show that the abelian variety is simple precisely when
+$H$ is trivial: otherwise this matrix algebra has nontrivial
+idempotents, whereas for trivial $H$ it is the field $M$.
+
+The exact census of the $64$ types gives precisely the four
+trivial-stabilizer orbits in the table, each of size $12$.
+The two retained implementations are
+\path{experiments/fixed_field_cm_census_v98/primary.py} and
+\path{experiments/fixed_field_cm_census_v98/independent.py}.
+The bounded table derivation
+\path{experiments/simple_cm_unmarked_v145/derive.py}
+binds their accepted outputs, checks orbit coverage and parity, and
+applies Proposition~\externalref{packet}{pp:prop:markedpolarizations}; it does not
+re-prove the ideal classification or the unit-norm theorem.
+
+Every polarization on a simple object here has Rosati involution
+equal to conjugation on $M$. Indeed its positive trace form extends
+to $M\otimes\mathbb R\simeq\mathbb C^6$. An involution exchanging
+factors would give trace norm zero on a factor idempotent. On a fixed
+complex factor, the identity would give negative trace norm on $i$.
+Positivity therefore forces conjugation on every factor. Thus the
+marked classification covers every principal polarization.
+
+Fix one primitive type representative. An unmarked polarized
+isomorphism conjugates the full endomorphism fields and hence is
+semilinear for some $\sigma\in\operatorname{Gal}(M/\Ql)$.
+Holomorphicity at this fixed type forces $\sigma\Phi=\Phi$,
+so $\sigma=1$. Forgetting the marking therefore identifies no
+additional classes or automorphisms at the chosen representative.
+Every object in its orbit can be remarked to this representative,
+because $R$ is Galois-stable. The table and automorphism assertions
+now follow from Proposition~\externalref{packet}{pp:prop:markedpolarizations}.
+
+An unpolarized isogeny likewise induces a field automorphism relating
+the types, so distinct primitive orbits are not isogenous. Within one
+orbit, after remarking, full fractional lattices in $M$ are
+commensurable; an integer multiple of the identity gives an isogeny.
+Finally $\sigma_{31}(\Phi_C)=\Phi_B$ places the four distinct
+objects of Proposition~\externalref{packet}{pp:prop:actualpolarizations} in the first
+orbit. Its count of four proves the restricted exhaustion assertion.
+\end{proof}
+
+\begin{corollary}[Jacobian membership in the ten-class list]
+\label{pp:cor:jacobianlist}
+Of the ten classes in Theorem~\ref{pp:thm:tenprincipal}, the four in
+the third row and the single class in the second row are not
+canonically polarized Jacobians of smooth curves. The single class
+in the fourth row is the known Jacobian of the smooth projective
+model of $y^7=x^3-1$.
+These signature and automorphism criteria alone leave the four B/C
+classes in the first row undecided; Theorem~\ref{pp:thm:jacobiancomplete}
+will exclude them using the invariant theta divisor.
+If any is a Jacobian, its curve is nonhyperelliptic, has full
+automorphism group $C_3$, and is a cyclic triple cover of
+$\mathbb P^1$ with eight branch points, four of each nonzero
+inertia exponent.
+\end{corollary}
+\begin{proof}
+Strong Torelli \cite[Theorem~12.1]{MilneJacobians2021} realizes an
+odd-order polarized Jacobian automorphism $\beta$ by a curve
+automorphism up to sign. Squaring the latter induces $\beta^2$
+and has the same odd order, by faithfulness on the Jacobian.
+For $\beta=\zeta_3$, there are no invariant differentials, so the
+curve quotient has genus zero. Riemann--Hurwitz gives eight fixed
+points. If $n_1,n_2$ count the two inertia exponents, then
+$n_1+n_2=8$ and $n_1+2n_2\equiv0\pmod3$.
+The cyclic-cover eigenspace formula
+\cite[equation~(2.2)]{LiMantovanPries2021} gives only signatures
+$(4,2),(3,3),(2,4)$, respectively for $n_2=1,4,7$.
+The third row has signature $(1,5)$ and is therefore excluded.
+This is also directly Zarhin's established criterion
+$g+2<3|a-b|$ \cite[Theorem~1.1]{Zarhin2007}, here $8<12$;
+the obstruction method is not new.
+The first row has signature $(3,3)$ and hence requires $n_1=n_2=4$.
+A hyperelliptic curve would induce a nontrivial order-three map on
+its hyperelliptic base $\mathbb P^1$, with only two fixed points
+and at most four curve points above them. This contradicts eight
+fixed points. Strong Torelli and the full polarized automorphism
+group $\mu_6$ then give full curve automorphism group $C_3$.
+
+For either maximal-order object, use instead $\beta=\zeta_{21}$.
+Its eigencharacters are primitive, so again the curve quotient
+has genus zero. If $a,b,c$ count branch points with ramification
+indices $3,7,21$, Riemann--Hurwitz gives
+$7a+9b+10c=26$. Its only nonnegative solution is $(1,1,1)$.
+After fixing these three branch points at $0,1,\infty$, the
+monodromy residues are $(7u,3v,-7u-3v)$, with
+$u\in(\mathbb Z/3)^\times$ and $v\in(\mathbb Z/7)^\times$.
+The Chinese remainder theorem makes these twelve tuples a single
+orbit under a change of cyclic generator. Kummer theory thus gives
+one curve up to complex isomorphism, namely $y^7=x^3-1$.
+Its known simple maximal-order CM type is
+$\{1,2,4,8,10,16\}$ modulo $21$
+\cite[Proposition~6.11, Lemma~6.12 and Proposition~6.14]{LiMantovanPries2021}.
+Its odd lifts modulo $42$ are $\{1,23,25,29,31,37\}$, which are
+$23$ times the fourth row's representative. That row is therefore
+the known Jacobian. The distinct second-row object cannot also be
+a Jacobian. The finite ramification and type arithmetic is retained
+in \path{experiments/simple_cm_unmarked_v145/jacobian_check.py};
+the proof uses the geometric inputs just named and makes no
+assertion about isogeny to a Jacobian.
+\end{proof}
+
+\subsection{An invariant theta obstruction and the Jacobian classification}
+\label{pp:sec:thetacertificate}
+Write $B_0,B_1,C_0,C_1$ for the four principal objects of
+Proposition~\externalref{packet}{pp:prop:actualpolarizations}, where the subscript records
+the prescribed polarization or its $4-t^2$ twist. Throughout this
+subsection, Jacobian means the canonical principal polarization of a
+smooth curve, up to origin-preserving polarized isomorphism.
+
+\begin{proposition}[The balanced triple-cover count]
+\label{pp:prop:trigonaltheta}
+Let $C$ be a smooth genus-six cyclic triple cover of $\mathbb P^1$
+with eight branch points, four of each nonzero inertia exponent.
+If $\delta$ is a deck generator and $G=\ker(1-\delta)\subset J(C)$,
+the unique $\delta$-invariant symmetric theta divisor has exactly
+$213$ points of $G$ outside its support. Its multiplicities on $G$
+are $0,1,2$ with respective frequencies $213,456,60$.
+\end{proposition}
+\begin{proof}
+Move infinity away from the branch locus and write
+$y^3=\prod_{i=1}^8(x-t_i)^{a_i}$, with
+$a=(1,1,1,1,2,2,2,2)$. Let $P_i$ be the ramification points and
+$H$ the fiber at infinity. Then $3P_i\sim H$ and
+$D=\sum_iP_i-H$ has degree five and $2D\sim K_C$.
+It is the unique invariant theta characteristic: the characteristic
+torsor has translation group $J(C)[2]$, on which $1-\delta$ is
+invertible since $(1-\delta)(2+\delta)=3$.
+
+Put $W=\{b\in\mathbb F_3^8:\sum_i b_i=0\}$.
+For representatives $b_i\in\{0,1,2\}$, define
+\[
+ E_b=\sum_i b_iP_i-\frac{\sum_i b_i}{3}H.
+\]
+The map $b\mapsto[E_b]$ takes values in $G$ and has kernel
+$\langle a\rangle$. Indeed $a$ gives $\operatorname{div}(y)$;
+conversely, a function with invariant principal divisor is a
+$\delta$-eigenfunction $y^j h(x)$, and its orders at the $P_i$
+force $b_i=ja_i$ modulo three. Both $W/\langle a\rangle$ and
+$G$ have order $3^6$, the latter by the eigenvalues of $1-\delta$
+on $H^1(C,\mathbb C)$. This identifies every point of $G$.
+
+For $m=1+\sum_i b_i/3$, the three eigensheaves for sections of
+$\mathcal O_C(D+E_b)$ on $\mathbb P^1$ have degrees
+\[
+ e_k=-m-4k+\sum_i\left\lfloor\frac{ka_i+1+b_i}{3}\right\rfloor,
+ \qquad k=0,1,2.
+\]
+This follows by taking orders of $y^k h(x)$ at the branch points
+and infinity. Thus $h^0(D+E_b)=\sum_k\max(e_k+1,0)$, independently
+of the distinct branch positions. The exact finite count on the
+$729$ classes gives sorted degree triples
+\[
+\begin{array}{c|rrrrr}
+(e_0,e_1,e_2)_{\rm sorted}&(-1,-1,-1)&(-2,-1,0)&(-2,-2,1)&(-3,0,0)&(-3,-1,1)\\
+\hline
+\text{frequency}&213&456&24&24&12.
+\end{array}
+\]
+The retained finite certificate is specified in
+\path{experiments/bc_jacobian_v147/adoption.json}; its domain is
+exactly the quotient just proved complete. Riemann's singularity
+theorem identifies these dimensions with theta multiplicities
+\cite[Introduction, smooth-curve statement]{CasalainaMartinKass2012}.
+Translation by $D$ identifies the theta support in $\operatorname{Pic}^0(C)$
+with $h^0(D+E_b)>0$. The principal line bundle has $h^0=1$,
+so its invariant class determines a unique effective divisor.
+The displayed frequencies give the assertion.
+\end{proof}
+
+\begin{theorem}[Jacobian classification under the enclosure contract]
+\label{pp:thm:jacobiancomplete}
+Assume the trusted Arb/acb enclosure and execution contract specified
+below for the retained theta certificates. Exactly one of the ten
+classes in Theorem~\ref{pp:thm:tenprincipal} is a canonically polarized
+Jacobian of a smooth curve: the known class of the smooth projective
+model of $y^7=x^3-1$. In particular, none of $B_0,B_1,C_0,C_1$ is
+such a Jacobian.
+\end{theorem}
+\begin{proof}
+For each model, $\delta=\zeta_3$ preserves the principal polarization
+and satisfies $\delta^2+\delta+1=0$. Symmetric representatives form
+a torsor under two-torsion, so the same invertibility argument gives
+a unique invariant line-bundle class. A principal ample line bundle
+has a one-dimensional space of sections, hence determines a unique
+effective divisor in this class. Its support is stable under negation.
+If a B/C model were a Jacobian, the necessary geometry in
+Corollary~\ref{pp:cor:jacobianlist} would identify this divisor with
+the one in Proposition~\ref{pp:prop:trigonaltheta}. Inverting the
+deck generator does not change its fixed kernel or invariant divisor.
+
+The retained certificates give, on each model separately, $107$
+distinct nonzero classes modulo sign in $\ker(1-\delta)$ at which
+the theta section is nonzero. The exact-coordinate sets are the
+indexed representatives $0,\ldots,106$ in the retained pair map.
+Their counts are
+\[
+\begin{array}{c|rrrr}
+\text{model}&B_0&B_1&C_0&C_1\\\hline
+\text{nonzero pairs}&107&107&107&107\\
+\text{distinct points}&214&214&214&214.
+\end{array}
+\]
+The kernel is killed by three, so a nonzero point differs from its
+negative. Each model therefore supplies $214>213$ points outside
+the invariant divisor, contradicting the Jacobian count. No origin
+value or sum across different models is used. Combining these four
+exclusions with Corollary~\ref{pp:cor:jacobianlist} proves the tally.
+\end{proof}
+
+The analytic computation starts from the exact ideal lattice, actual
+CM embeddings and principal alternating form. It verifies an integral
+symplectic basis, recomputes the $\delta$ action and its unique
+invariant quadratic refinement in that basis, and constructs interval
+periods. For normalized lattice $[I,\tau]$, a fixed point has the
+form $z=(n+\tau m)/3$ with $(1-F)(n,m)^t=0$ modulo three.
+The half-characteristic is read from that same refinement. These
+conventions and their geometric identification are reviewed in
+\path{experiments/bc_jacobian_v147/PERIOD_SETUP_REVIEW.md}.
+
+The nonvanishing records are exact dyadic rectangles for squared theta
+values. An independent rational check verifies that a real or imaginary
+interval excludes zero and that all representatives are disjoint modulo
+sign. This check does not reimplement the analytic evaluator: the
+conclusion assumes correctness of the pinned Arb/acb routines, the
+stated enclosure/serialization interface, and the admitted execution
+and runtime provenance. An enclosure excluding zero for the square
+implies nonvanishing of the section; it does not determine a zero's
+multiplicity. The cumulative certificate is
+\path{experiments/bc_jacobian_v147/certificate_run07b_adoption.json},
+which binds the eight accepted retained packages; the geometric consequence
+is bound by \path{experiments/bc_jacobian_v147/jacobian_classification_adoption.json}.
+The separate hostile review in
+\path{experiments/bc_jacobian_v147/session_v150/CLASSIFICATION_REVIEW03.md}
+checks all $428$ raw rectangles and the complete implication above, including
+the two explicitly admitted runtime variants. It does not prove the analytic
+library implementation or its equivalence to source.
+
+The theorem concerns the specified endomorphism-order category and
+polarized isomorphism. It does not exclude isogenies to Jacobians or
+address arbitrary CM orders, and establishes no additional Hodge
+algebraicity or Hilbert-modular orbit membership.
+

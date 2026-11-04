@@ -1,0 +1,217 @@
+{
+  "jobs": [
+    [
+      {
+        "catalog_index": 6,
+        "pair_indices": [
+          40,
+          41,
+          42,
+          43,
+          44,
+          45,
+          46,
+          47
+        ]
+      },
+      {
+        "catalog_index": 6,
+        "pair_indices": [
+          48,
+          49,
+          50,
+          51,
+          52,
+          53,
+          54,
+          55
+        ]
+      },
+      {
+        "catalog_index": 12,
+        "pair_indices": [
+          40,
+          41,
+          42,
+          43,
+          44,
+          45,
+          46,
+          47
+        ]
+      },
+      {
+        "catalog_index": 12,
+        "pair_indices": [
+          48,
+          49,
+          50,
+          51,
+          52,
+          53,
+          54,
+          55
+        ]
+      },
+      {
+        "catalog_index": 15,
+        "pair_indices": [
+          40,
+          41,
+          42,
+          43,
+          44,
+          45,
+          46,
+          47
+        ]
+      },
+      {
+        "catalog_index": 15,
+        "pair_indices": [
+          48,
+          49,
+          50,
+          51,
+          52,
+          53,
+          54,
+          55
+        ]
+      },
+      {
+        "catalog_index": 0,
+        "pair_indices": [
+          48,
+          49,
+          50,
+          51,
+          52,
+          53,
+          54,
+          55
+        ]
+      },
+      {
+        "catalog_index": 1,
+        "pair_indices": [
+          48,
+          49,
+          50,
+          51,
+          52,
+          53,
+          54,
+          55
+        ]
+      }
+    ],
+    [
+      {
+        "catalog_index": 17,
+        "pair_indices": [
+          40,
+          41,
+          42,
+          43,
+          44,
+          45,
+          46,
+          47
+        ]
+      },
+      {
+        "catalog_index": 17,
+        "pair_indices": [
+          48,
+          49,
+          50,
+          51,
+          52,
+          53,
+          54,
+          55
+        ]
+      },
+      {
+        "catalog_index": 40,
+        "pair_indices": [
+          40,
+          41,
+          42,
+          43,
+          44,
+          45,
+          46,
+          47
+        ]
+      },
+      {
+        "catalog_index": 40,
+        "pair_indices": [
+          48,
+          49,
+          50,
+          51,
+          52,
+          53,
+          54,
+          55
+        ]
+      },
+      {
+        "catalog_index": 91,
+        "pair_indices": [
+          40,
+          41,
+          42,
+          43,
+          44,
+          45,
+          46,
+          47
+        ]
+      },
+      {
+        "catalog_index": 91,
+        "pair_indices": [
+          48,
+          49,
+          50,
+          51,
+          52,
+          53,
+          54,
+          55
+        ]
+      },
+      {
+        "catalog_index": 2,
+        "pair_indices": [
+          48,
+          49,
+          50,
+          51,
+          52,
+          53,
+          54,
+          55
+        ]
+      },
+      {
+        "catalog_index": 3,
+        "pair_indices": [
+          48,
+          49,
+          50,
+          51,
+          52,
+          53,
+          54,
+          55
+        ]
+      }
+    ]
+  ],
+  "scope": "128 new disjoint eligible pairs; indices40..55 on six slower representatives,48..55 on0..3. Intended cumulative56per representative after separate data04adoption; no mathematical adoption."
+}

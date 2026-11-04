@@ -1,0 +1,11 @@
+{
+  "certificates/actual_bc_polarizations_data.json": "certificates/actual_bc_polarizations_data.json",
+  "certificates/principal_bc_unpolarized_data.json": "certificates/principal_bc_unpolarized_data.json",
+  "certificates/principal_unmarked_bc_data.json": "certificates/principal_unmarked_bc_data.json",
+  "experiments/bc_jacobian_v147/certificate_worker_candidate.py": "experiments/s_order_census_v162/worker_candidate.py",
+  "experiments/bc_jacobian_v147/remote_wheels.json": "experiments/bc_jacobian_v147/remote_wheels.json",
+  "experiments/s_order_models_v161/catalog_candidate.json": "experiments/s_order_models_v161/catalog_candidate.json",
+  "experiments/s_order_models_v161/census_candidate.py": "experiments/s_order_models_v161/census_candidate.py",
+  "experiments/s_order_models_v161/model.json": "experiments/s_order_models_v161/model.json",
+  "experiments/s_order_models_v161/model_candidate.py": "experiments/s_order_models_v161/model_candidate.py"
+}

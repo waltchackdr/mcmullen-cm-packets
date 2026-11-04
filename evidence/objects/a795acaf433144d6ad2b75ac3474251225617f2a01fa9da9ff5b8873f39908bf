@@ -1,0 +1,526 @@
+[
+  {
+    "accepted150_log_members": {
+      "actual_bytes_by_stat": 1443687,
+      "directory_walk_performed": false,
+      "known_members_checked": 150,
+      "missing_or_size_mismatches": [],
+      "payload_rehashed": false
+    },
+    "accepted_alternate_review": {
+      "bytes": 15376,
+      "path": "experiments/continuous_v82_review/legacy_eight_execution_outcome_review.json",
+      "sha256": "1a6ade13b3fb3f58797144f9ff4b7f78b366183756cfe8f7ff7245b68edc7b69"
+    },
+    "current_tmp_raw_retention_complete": false,
+    "family": "B_LEGACY150",
+    "interpretation": "No selected150 child log is claimed absent unless stat list says so. Eight current-run tmp raw directories remain lost; exact prior V75/V80 canonical files support the reviewed alternate-evidence policy. This does not reconstruct current tmp diagnostics or missing temporal endguards.",
+    "missing_current_execution_raw_directories": [
+      {
+        "canonical_files": {
+          "A-entries.json": {
+            "sha256": "3df6f7f7df57743a316ead8678a9cbc6b8baf9dec7edfdac338c9ce2ce576baa"
+          },
+          "C-entries.json": {
+            "sha256": "368c97decba7ef54861eb9c3a42f65f0e86708f1935185f0890090e5a5aa1ea3"
+          },
+          "bottom-rows.json": {
+            "sha256": "cbf0711a55504dea20e12dd2b585b09e06271ae0c8ac6d246b27dbb87e113487"
+          },
+          "candidates-nonzero.json": {
+            "sha256": "9d59c9d592d823d4ea659d25ba7c5fe19c77a473ce9668a17cc751a1bf3c1ea1"
+          },
+          "candidates-zero.json": {
+            "sha256": "03ffd89cfffebf6e06cf4e983f6b20d0e8b27920f8298e931adc37be444823d1"
+          },
+          "classification.json": {
+            "sha256": "641380998d35893d07f95b24ccf1a5b3bf2197c7d0c736bb7ba4d580c4cde3ad"
+          },
+          "preparation.json": {
+            "sha256": "e81c3efc9550deaf1d2e6a9c764ab5e5626fd30e01a1b5319701ec0be23bef31"
+          },
+          "survivors.json": {
+            "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+          }
+        },
+        "current_known_path_check": {
+          "actual_bytes_by_stat": 2408459,
+          "directory_walk_performed": false,
+          "known_members_checked": 8,
+          "missing_or_size_mismatches": [],
+          "payload_rehashed": false
+        },
+        "index": 148,
+        "lost_current_cloud_directory": "/tmp/broader-principal-sturm-v75-mhga1m4o",
+        "not_the_lost_execution_directory": true,
+        "point_label": "R127:pic0:00",
+        "prior_raw_root": "build/research-v75/full-campaign-2026-10-10/r127-pic0-00/sturm/artifacts",
+        "prior_result_sha256": "dcb7f7fc0adecd8c9221f70e85af7d7d7e36cacfb93226008386eb4693312ccc"
+      },
+      {
+        "canonical_files": {
+          "A-entries.json": {
+            "sha256": "bb9906e70c2c54e6a8fe28598e52c23b09c5b793f4559b6a16161e8bc190ff37"
+          },
+          "C-entries.json": {
+            "sha256": "c1fc57487cdc9398c117f69bf9878a93b24731269be73d881119207fba53393f"
+          },
+          "bottom-rows.json": {
+            "sha256": "f2cf274dbbd5b69598a5054d6a4214995eadd614cbf913430bf737dc79cd199f"
+          },
+          "candidates-nonzero.json": {
+            "sha256": "5ff80c50946056d98c4a6588998f048d121aacd35ff3864c37e5b616a13e040e"
+          },
+          "candidates-zero.json": {
+            "sha256": "aecfe921e64692ab0e97056ba91f4edc2329a850df58d379a86cc9d64df6fc47"
+          },
+          "classification.json": {
+            "sha256": "0478864b6e708ea4c8cbd7738627ee35e5a267664eadd13b94e0f8a277fa7177"
+          },
+          "preparation.json": {
+            "sha256": "bd3844722741e829ea27cb0a14d90b7081aebcb9e9d6d73fc6bbf9f19b535d34"
+          },
+          "survivors.json": {
+            "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+          }
+        },
+        "current_known_path_check": {
+          "actual_bytes_by_stat": 2358321,
+          "directory_walk_performed": false,
+          "known_members_checked": 8,
+          "missing_or_size_mismatches": [],
+          "payload_rehashed": false
+        },
+        "index": 149,
+        "lost_current_cloud_directory": "/tmp/broader-principal-sturm-v75-esx17y2g",
+        "not_the_lost_execution_directory": true,
+        "point_label": "R43_20:pic0:00",
+        "prior_raw_root": "build/research-v75/full-campaign-2026-10-10/r43_20-pic0-00/sturm/artifacts",
+        "prior_result_sha256": "680f573bb1cc8b2a6bd3d5ac4f341475b63168b26607a0e5a26c1ef13cf4d642"
+      },
+      {
+        "canonical_files": {
+          "A-entries.json": {
+            "sha256": "893a55d9e7fe2c2a909e539cf6cea845a657e91201cbfc095fb694652daf241e"
+          },
+          "C-entries.json": {
+            "sha256": "428f52ac1f411bbe8c762df7da3e6d6c894a436ebf09c0cb3e8f2602d2738bac"
+          },
+          "bottom-rows.json": {
+            "sha256": "aa1a7ad6f581d3a4d971c5e2327e8fed1e52db370ac43eee4edd542acf9395e7"
+          },
+          "candidates-nonzero.json": {
+            "sha256": "1a74c93028631c0fd64fc5f48cc5d7350827074586fd7d540f7150b74978f326"
+          },
+          "candidates-zero.json": {
+            "sha256": "03e90ee983a004486ef36ad059ffa263370997e59bf93095bfccc54ef96c37fe"
+          },
+          "classification.json": {
+            "sha256": "e5be9d31ee235e326a78b96a5ac6f752f274431b993ec3c1790e6e6fed9947c7"
+          },
+          "preparation.json": {
+            "sha256": "f5d16ec73d4e2fb192dfea5871de9c4adb746027e2d3caebedadcc156f2f419c"
+          },
+          "survivors.json": {
+            "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+          }
+        },
+        "current_known_path_check": {
+          "actual_bytes_by_stat": 2299576,
+          "directory_walk_performed": false,
+          "known_members_checked": 8,
+          "missing_or_size_mismatches": [],
+          "payload_rehashed": false
+        },
+        "index": 150,
+        "lost_current_cloud_directory": "/tmp/broader-principal-sturm-v75-46zbro95",
+        "not_the_lost_execution_directory": true,
+        "point_label": "R7sq:pic0:00",
+        "prior_raw_root": "build/research-v75/full-campaign-2026-10-10/r7sq-pic0-00/sturm/artifacts",
+        "prior_result_sha256": "3fc2a46e8779e8751a113e5b71d9cf994add566ff83beb1a7f432deda2e7fcae"
+      },
+      {
+        "canonical_files": {
+          "A-entries.json": {
+            "sha256": "f55e9c7ed8b0eac1553bb764130062ef6dc639997d6947e7c69ffb9813639585"
+          },
+          "C-entries.json": {
+            "sha256": "c76b1bf42a875aeeb4946361f44622702471aaec8c81b625c155b661b4e1fd07"
+          },
+          "bottom-rows.json": {
+            "sha256": "65630fe19bf8eaaae123947e3bd51536bfdd894a4ff577f9405e74e6b3450d95"
+          },
+          "candidates-nonzero.json": {
+            "sha256": "58c641af52512e3d1f547f42d539f6e01deacda29026aea151d93b6323b75986"
+          },
+          "candidates-zero.json": {
+            "sha256": "ca73bd729537ee94859e362e64ace0285245b163c6b2ae08d148ac237afed2a8"
+          },
+          "classification.json": {
+            "sha256": "951f2ba99368e549ac6b2846b427bed6295558e218235584673fb68f7913e880"
+          },
+          "preparation.json": {
+            "sha256": "acdb1cd96530873f27dc71694ed0386947e7f528278a57890e934106dcd5a871"
+          },
+          "survivors.json": {
+            "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+          }
+        },
+        "current_known_path_check": {
+          "actual_bytes_by_stat": 2387456,
+          "directory_walk_performed": false,
+          "known_members_checked": 8,
+          "missing_or_size_mismatches": [],
+          "payload_rehashed": false
+        },
+        "index": 151,
+        "lost_current_cloud_directory": "/tmp/broader-principal-sturm-v75-uzksayp5",
+        "not_the_lost_execution_directory": true,
+        "point_label": "R41_22:pic0:00",
+        "prior_raw_root": "build/research-v75/full-campaign-2026-10-10/r41_22-pic0-00/sturm/artifacts",
+        "prior_result_sha256": "75f3359f60143c3cbddbd2b29a68bebfc98d2921c0058b39e2492b38607495b9"
+      },
+      {
+        "canonical_files": {
+          "A-entries.json": {
+            "sha256": "f7c4d8204b5bc597c56bee2c0bf8d577de1224db28c975b9062d48125c3b7818"
+          },
+          "C-entries.json": {
+            "sha256": "a81d861a61bd05c17b100639c4f7373fffbf48c2af1072697c3a2d2a5cf3682f"
+          },
+          "bottom-rows.json": {
+            "sha256": "e99bb41192b4d9d8728b8ee5e93d7ff5ab0e49ffa2d27fa9d7cc8bbb48ded4eb"
+          },
+          "candidates-nonzero.json": {
+            "sha256": "8208ce824b4ee958cca41cf4eb4062a9202bf51226845fad72ba989b81baae4d"
+          },
+          "candidates-zero.json": {
+            "sha256": "521b38d3923bd17d6406e36b58d0dfe5a5f7ffa50196906d6dcac980c84f5f13"
+          },
+          "classification.json": {
+            "sha256": "5a91ded2a8a12fc9eb352e9f38caacc49ccd49d91f563be5ac422789579e3e8b"
+          },
+          "preparation.json": {
+            "sha256": "94a4373ccc3ef955e4ffdde3a9d6801b1afc2ac8ee2dc4b947574adec626df5a"
+          },
+          "survivors.json": {
+            "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+          }
+        },
+        "current_known_path_check": {
+          "actual_bytes_by_stat": 2829359,
+          "directory_walk_performed": false,
+          "known_members_checked": 8,
+          "missing_or_size_mismatches": [],
+          "payload_rehashed": false
+        },
+        "index": 152,
+        "lost_current_cloud_directory": "/tmp/broader-principal-sturm-v75-j2cs94ob",
+        "not_the_lost_execution_directory": true,
+        "point_label": "R43_31:pic0:00",
+        "prior_raw_root": "build/research-v75/full-campaign-2026-10-10/r43_31-pic0-00/sturm/artifacts",
+        "prior_result_sha256": "f085b4f495c69fcafdc53ca07b9f2c6d7131c0a80b0454588fb0175807339834"
+      },
+      {
+        "canonical_files": {
+          "A-entries.json": {
+            "sha256": "c0bf531268ceffffd914750750cf38fd83e57e3d6f57ed50d2895d500df67b5d"
+          },
+          "C-entries.json": {
+            "sha256": "3eccfe88ff38613eafbed27fcb764539148961c78e4f2f83718ee5e31f9a3512"
+          },
+          "bottom-rows.json": {
+            "sha256": "f43540487c59f5246c24b8537c355197d9833a743f154dd515559ebc2afb6499"
+          },
+          "candidates-nonzero.json": {
+            "sha256": "fcd45bce38a040073115c21b00078d4017551be152e2e4cf5f817dd057413015"
+          },
+          "candidates-zero.json": {
+            "sha256": "ae3036f0000452ad5bec3d842cf56798d068a11d81bb0c3444675f82321dac35"
+          },
+          "classification.json": {
+            "sha256": "841871281765f35c274a78c10d5c969ee3776fab47cf8be24619f6804f1f9461"
+          },
+          "preparation.json": {
+            "sha256": "fa592676d7daa728e2fd159a3ad4a49150084abc5e0cc831eef415ec61c62357"
+          },
+          "survivors.json": {
+            "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+          }
+        },
+        "current_known_path_check": {
+          "actual_bytes_by_stat": 2586636,
+          "directory_walk_performed": false,
+          "known_members_checked": 8,
+          "missing_or_size_mismatches": [],
+          "payload_rehashed": false
+        },
+        "index": 153,
+        "lost_current_cloud_directory": "/tmp/broader-principal-sturm-v75-y9glrbk0",
+        "not_the_lost_execution_directory": true,
+        "point_label": "R7:pic0:00",
+        "prior_raw_root": "build/research-v75/full-campaign-2026-10-10/r7-pic0-00/sturm/artifacts",
+        "prior_result_sha256": "545deb2e8049ec2c160b33bbf8c0cb271093f01c17cddde9389e225dbef19e87"
+      },
+      {
+        "canonical_files": {
+          "A-entries.json": {
+            "sha256": "3df6f7f7df57743a316ead8678a9cbc6b8baf9dec7edfdac338c9ce2ce576baa"
+          },
+          "C-entries.json": {
+            "sha256": "368c97decba7ef54861eb9c3a42f65f0e86708f1935185f0890090e5a5aa1ea3"
+          },
+          "bottom-rows.json": {
+            "sha256": "cbf0711a55504dea20e12dd2b585b09e06271ae0c8ac6d246b27dbb87e113487"
+          },
+          "candidates-nonzero.json": {
+            "sha256": "9d59c9d592d823d4ea659d25ba7c5fe19c77a473ce9668a17cc751a1bf3c1ea1"
+          },
+          "candidates-zero.json": {
+            "sha256": "03ffd89cfffebf6e06cf4e983f6b20d0e8b27920f8298e931adc37be444823d1"
+          },
+          "classification.json": {
+            "sha256": "641380998d35893d07f95b24ccf1a5b3bf2197c7d0c736bb7ba4d580c4cde3ad"
+          },
+          "preparation.json": {
+            "sha256": "e81c3efc9550deaf1d2e6a9c764ab5e5626fd30e01a1b5319701ec0be23bef31"
+          },
+          "survivors.json": {
+            "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+          }
+        },
+        "current_known_path_check": {
+          "actual_bytes_by_stat": 2408459,
+          "directory_walk_performed": false,
+          "known_members_checked": 8,
+          "missing_or_size_mismatches": [],
+          "payload_rehashed": false
+        },
+        "index": 156,
+        "lost_current_cloud_directory": "/tmp/r127-pic1-sturm-v80-wfl19tja",
+        "not_the_lost_execution_directory": true,
+        "point_label": "R127:pic0:00",
+        "prior_raw_root": "build/research-v80/full-r127-pic0-00-2026-10-10/sturm/artifacts",
+        "prior_result_sha256": "795487e38676630699bcf0bc9afb5b9ef342ff31511d3d9612170487c36826c1"
+      },
+      {
+        "canonical_files": {
+          "A-entries.json": {
+            "sha256": "7440ca4c2c2b70f847808a18116022e93757839c98ce589e9ced0ca8308e9eae"
+          },
+          "C-entries.json": {
+            "sha256": "55be0122dd3b6a7ce98e897bd2a3deff3cda4812f826e55023b5216033922254"
+          },
+          "bottom-rows.json": {
+            "sha256": "4928a9048370b31f7a6c60fc5c228025bcc89070e333d38789627484fd7cad7f"
+          },
+          "candidates-nonzero.json": {
+            "sha256": "81d4cdce28f100cb4450a7ed8a701676ccc12c4b316f5d87629bf29d990aef97"
+          },
+          "candidates-zero.json": {
+            "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+          },
+          "classification.json": {
+            "sha256": "e80e404adcca23e803595f88bdccce5039454e4b7cf86473988a892e21cf4cf3"
+          },
+          "preparation.json": {
+            "sha256": "4edfbe6cfed63f4e476b1136a82ce5462cbd9dc1d49f849fddf76198c548e7b9"
+          },
+          "survivors.json": {
+            "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+          }
+        },
+        "current_known_path_check": {
+          "actual_bytes_by_stat": 3648478,
+          "directory_walk_performed": false,
+          "known_members_checked": 8,
+          "missing_or_size_mismatches": [],
+          "payload_rehashed": false
+        },
+        "index": 157,
+        "lost_current_cloud_directory": "/tmp/r127-pic1-sturm-v80-0a3cdhkj",
+        "not_the_lost_execution_directory": true,
+        "point_label": "R127:pic1:00",
+        "prior_raw_root": "build/research-v80/full-r127-pic1-00-2026-10-10/sturm/artifacts",
+        "prior_result_sha256": "07168c5dccb0fc7bdb0afc20fc84cd1d5114b69e1f220e654a6cf5a42ef9f2a2"
+      }
+    ],
+    "persistent_local_root": "build/research-v81/v84-recovery-cloud-2026-10-12/legacy-terminal-retained",
+    "persistent_members": {
+      "actual_bytes_by_stat": 2604165,
+      "directory_walk_performed": false,
+      "known_members_checked": 486,
+      "missing_or_size_mismatches": [],
+      "payload_rehashed": false
+    },
+    "public_or_release_retrieval_location": null,
+    "report_and_policy": {
+      "conjunction_review": {
+        "bytes": 4390,
+        "path": "experiments/continuous_v82_review/legacy150_63_2_actual_conjunction_review.json",
+        "sha256": "35432b65aab1289bdf9d7944b076848afb217c9a4bddb11079593968cd0804eb"
+      },
+      "policy": {
+        "bytes": 3101,
+        "path": "experiments/continuous_v82_review/legacy150_63_2_policy_amendment.json",
+        "sha256": "2a7a473fcded661a155545e83a937f8d759a7ab548b0107979dab7a3a9f4a1fa"
+      },
+      "report": {
+        "bytes": 525896,
+        "path": "experiments/continuous_v82_review/legacy_completed_execution_evidence.json",
+        "sha256": "fe6a4a7266d3e8b40b0e6edd858da9d5b1f48a3c62d60a056316fd32c505d2ce"
+      }
+    },
+    "retrieval": {
+      "bytes": 70652,
+      "path": "build/research-v81/v84-recovery-cloud-2026-10-12/legacy-terminal-retained/retrieval.json",
+      "sha256": "8156340e55050f8040a9b695d99ee307ab05f36010efaf2fc48dd75f590299fc"
+    },
+    "source_archive": {
+      "current_stat_bytes": 10158080,
+      "exists": true,
+      "path": "build/research-v81/cloud/final-deployment-2026-10-12/v81-release159-source-evidence-cohort1/source-commit.tar",
+      "recorded_bytes": 10158080,
+      "rehashed_here": false,
+      "sha256": "1f7849308933389802eecb46f8906458d0c2e6637daaefbbea94cb5c1cf6ef8d"
+    },
+    "source_receipt": {
+      "bytes": 757,
+      "path": "build/research-v81/v84-recovery-cloud-2026-10-12/legacy-source-retention.json",
+      "sha256": "d9ada8ecde3b1e2e5c173f1bf4acbb28e53e92b358353ca9869b144e7caef647"
+    }
+  },
+  {
+    "cohort_final_source_runtime_guards_established": false,
+    "family": "B_RECOVERY63_PLUS_TWO_INCOMPLETE",
+    "public_or_release_retrieval_location": null,
+    "receipt": {
+      "bytes": 63303,
+      "path": "build/research-v81/v85-poststop-retention-2026-10-13/admin-attempt2/admin-retrieval.json",
+      "sha256": "76eb6d3a4f47e19534ede0dcb17f64b3c68822942d3a317227771c1cba6d6c67"
+    },
+    "review": {
+      "bytes": 3692,
+      "path": "experiments/continuous_v82_review/recovery63_retrospective_execution_review.json",
+      "sha256": "506e47c32457c839e324d9e0bdfa4b59bbefa38b77e289f45100179d72bfbfd6"
+    },
+    "root": "build/research-v81/v85-poststop-retention-2026-10-13/admin-attempt2/admin",
+    "selected_recovery_members": {
+      "actual_bytes_by_stat": 446243,
+      "directory_walk_performed": false,
+      "known_members_checked": 328,
+      "missing_or_size_mismatches": [],
+      "payload_rehashed": false
+    }
+  },
+  {
+    "family": "B_V87_TWO_WHOLE_COMPLETIONS",
+    "inventory": {
+      "bytes": 2520,
+      "path": "build/research-v81/v87-two-job-continuation-2026-10-13/terminal-retention-01/observer/inventory.json",
+      "sha256": "ec4ba3b51b95eecf3f348dceddfc8b58e514366de615c869519e7aa49b6f35ca"
+    },
+    "members": {
+      "actual_bytes_by_stat": 19562,
+      "directory_walk_performed": false,
+      "known_members_checked": 13,
+      "missing_or_size_mismatches": [],
+      "payload_rehashed": false
+    },
+    "public_or_release_retrieval_location": null,
+    "receipt": {
+      "bytes": 6090,
+      "path": "build/research-v81/v87-two-job-continuation-2026-10-13/terminal-retention-01/retention.json",
+      "sha256": "47d780c103c00e1a6ddc738e457bec0e0b46f1fcd7794ebbc8c683af82b612fa"
+    },
+    "review": {
+      "bytes": 2259,
+      "path": "experiments/continuous_v82_review/v87_two_job_outcome_review.json",
+      "sha256": "99351f9d499e4de3ba404e82fa860b07ccebced4410a5be3ff51b6c0a6e4c891"
+    },
+    "root": "build/research-v81/v87-two-job-continuation-2026-10-13/terminal-retention-01/cohort",
+    "source_archive_shared_with_legacy150": "build/research-v81/cloud/final-deployment-2026-10-12/v81-release159-source-evidence-cohort1/source-commit.tar"
+  },
+  {
+    "actual_outcome_review": {
+      "bytes": 3624,
+      "path": "experiments/continuous_v82_review/v82_outcome_review.json",
+      "sha256": "c93ae10f28108fcb434a30817b8976394c181b10b0723b68384cbffe36c1bdd6"
+    },
+    "archive_member_inventory": {
+      "bytes": 2021127,
+      "path": "build/research-v81/v84-recovery-cloud-2026-10-12/full-ssd-cohort4/raw-backup/archive.json",
+      "sha256": "a5114e2633cbec137f58138791a67a8ade6b10e20f4c2d8dce1bb172197d7666"
+    },
+    "archive_retrieval": {
+      "bytes": 1080,
+      "path": "build/research-v81/v84-recovery-cloud-2026-10-12/full-ssd-cohort4/raw-backup/retrieval.json",
+      "sha256": "4c91f81306032b5bc4c0fe6ef622a05ce3d4d2bacf52dfacacc0c11424e9ab45"
+    },
+    "failure_history_more_precise_external_index_required": true,
+    "family": "C_ORIGINAL_TARGET_V82_504",
+    "prior_failure_history_required": [
+      "v82-aggregate-timeout-cohort3",
+      "full-ssd-cohort4 pre-spawn hard CPU failure",
+      "earlier wall-limited aggregate attempts"
+    ],
+    "public_or_release_retrieval_location": null,
+    "raw_archive": {
+      "current_stat_bytes": 652341116,
+      "path": "build/research-v81/v84-recovery-cloud-2026-10-12/full-ssd-cohort4/raw-backup/evidence.tar.gz",
+      "recorded_bytes": 652341116,
+      "rehashed_here": false,
+      "sha256": "a1da7ab9ec1fbc93946193984c62d2203f773f409e31ed2647dbec7043173eee"
+    },
+    "receipt": {
+      "bytes": 779,
+      "path": "build/research-v81/v84-recovery-cloud-2026-10-12/full-ssd-cohort4/complete-raw-retrieval.json",
+      "sha256": "aad267ab777c1a01187b45c69edd08d557106ae2748a225a303fa0a45bbb11e4"
+    }
+  },
+  {
+    "family": "D_STRICT12_SUCCESSFUL_RUN",
+    "public_or_release_retrieval_location": null,
+    "raw_rehashed_here": false,
+    "recorded_bytes": 273510933,
+    "recorded_files": 845,
+    "retention": {
+      "bytes": 201735,
+      "path": "build/research-v81/release-prep/positive12-closure-preparation-2026-10-13/strict12-run-retention-actual01/retention.json",
+      "sha256": "2ad57dcdd30e2a99f873413705d0b447fe709ecd8451fd404fa40ffce5402452"
+    },
+    "root": "build/research-v81/release-prep/positive12-closure-preparation-2026-10-13/strict12-run-retention-actual01/raw",
+    "root_exists": true,
+    "semantic_review_status": "PENDING_ACTUAL_OUTCOME_REVIEW"
+  },
+  {
+    "family": "D_DEN_PAIR_AND_BOTH_AUDITS",
+    "public_or_release_retrieval_location": null,
+    "raw_rehashed_here": false,
+    "recorded_bytes": 126728750,
+    "recorded_files": 556,
+    "retention": {
+      "bytes": 134790,
+      "path": "build/research-v81/release-prep/positive12-closure-preparation-2026-10-13/final-pair-and-audits-retention-actual01/retention.json",
+      "sha256": "38cc2bc806af99c41564d4ee632b3b64f61a68796ed72f3a9ac9b4a7581c1a1f"
+    },
+    "root": "build/research-v81/release-prep/positive12-closure-preparation-2026-10-13/final-pair-and-audits-retention-actual01/raw",
+    "root_exists": true,
+    "semantic_review_status": "PENDING_ACTUAL_OUTCOME_REVIEW"
+  },
+  {
+    "family": "D_FAILED_STRICT12_OLD5F59",
+    "public_or_release_retrieval_location": null,
+    "raw_rehashed_here": false,
+    "recorded_bytes": 40494127,
+    "recorded_files": 699,
+    "retention": {
+      "bytes": 162987,
+      "path": "build/research-v81/release-prep/positive12-closure-preparation-2026-10-13/failure-retention-actual02/retention.json",
+      "sha256": "58bb361fa0d58de09a7e19a745caa4a36ed46e542c7921d275509c578dc14b3a"
+    },
+    "root": "build/research-v81/release-prep/positive12-closure-preparation-2026-10-13/failure-retention-actual02/raw",
+    "root_exists": true,
+    "semantic_review_status": "FAILED_NO_COMPLETION_CREDIT"
+  }
+]

@@ -1,0 +1,21 @@
+{
+  "status": "PASS",
+  "scope": "Local actual-handler TLS integration and unchanged lifecycle failure injection; no provider, numerical execution, or adoption",
+  "checks": {
+    "pins_verified": 284,
+    "remote_jobs_session_exactly_unchanged": true,
+    "bootstrap_delta_exact": true,
+    "load_packet_run_queue_ast_identical": true,
+    "actual_handler_uploads": 10,
+    "separate_artifact_stores_cross_job_rejected": true,
+    "wrong_pin_no_authorization_reaches_handler": true,
+    "silent_handshake_closed_seconds": 5.001416042010533,
+    "new_callback_failures_cleanup_verified": [
+      "TLS certificate failure",
+      "endpoint identity failure",
+      "discovery deadline",
+      "endpoint receipt write failure"
+    ]
+  },
+  "wall_seconds": 5.071653916005744
+}

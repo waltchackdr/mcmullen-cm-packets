@@ -1,0 +1,68 @@
+{
+  "status": "SUCCESSOR04_PREPARATION_ONLY",
+  "supersedes": "01 missing payload;03 eight-task retention mismatch;02 unreviewed intermediate",
+  "changed_worker_functions": [
+    "validate_plan",
+    "successful_results",
+    "main"
+  ],
+  "unchanged_worker_functions": [
+    "SkipBeforeLaunch",
+    "require",
+    "read_regular",
+    "digest",
+    "save",
+    "verify_pins",
+    "snapshot",
+    "run_one"
+  ],
+  "task_targets": [
+    [
+      0,
+      0,
+      1,
+      1,
+      2,
+      2,
+      3,
+      6
+    ],
+    [
+      12,
+      12,
+      15,
+      15,
+      17,
+      17,
+      40,
+      91
+    ]
+  ],
+  "task_pair_counts": [
+    [
+      4,
+      4,
+      4,
+      4,
+      4,
+      4,
+      8,
+      8
+    ],
+    [
+      4,
+      4,
+      4,
+      4,
+      4,
+      4,
+      8,
+      8
+    ]
+  ],
+  "distinct_target_pairs": 80,
+  "focused_tests": "4PASS0.118seconds; full typed completion rejection cases and unchanged selector/retainer eight-task inventory",
+  "collector": "Distinct task-specific input files, duplicate pair rejection and exact planned/observed pair-set equality; unexecuted on real data",
+  "theta_evaluations": 0,
+  "runtime_flint_execution": false
+}

@@ -1,0 +1,88 @@
+"""Pure rational record checks, not proof of execution or theta correctness.
+
+Only use with independently authenticated plan/runtime/retention evidence.
+This checker cannot establish the actual algebraic period enclosure or FLINT
+correctness from self-declared source hashes. Its status preserves that limit.
+"""
+from fractions import Fraction
+import hashlib
+import json
+from exact_ball_candidate import component, excludes_zero
+
+
+def require(ok, reason):
+    if not ok:
+        raise ValueError(reason)
+
+
+def argument_is_enclosed(tau, numerator, argument):
+    require(len(tau)==6 and all(len(row)==6 for row in tau) and len(argument)==6,
+            'Wrong matrix dimensions')
+    for i in range(6):
+        for part in ('real','imag'):
+            lo=hi=Fraction(numerator[i],3) if part=='real' else Fraction(0)
+            for j in range(6):
+                a,b=component(tau[i][j][part]);q=Fraction(numerator[j+6],3)
+                lo+=min(q*a,q*b);hi+=max(q*a,q*b)
+            actual_lo,actual_hi=component(argument[i][part])
+            require(actual_lo<=lo and hi<=actual_hi,'Argument does not enclose exact linear combination')
+
+
+def check_records(records, plan, task_index, plan_sha256):
+    require(type(task_index) is int and 0<=task_index<len(plan['tasks']),'Task index')
+    task=plan['tasks'][task_index]
+    require(1<=len(records)<=len(task['pair_indices'])+2,'Record count')
+    first=records[0]
+    require(first['stage']=='EXACT_PERIOD_INPUT','Missing input record')
+    require(first['model']==task['model'] and first['task_index']==task_index
+            and first['plan_sha256']==plan_sha256,'Wrong input identity')
+    require(first['characteristic_index']==task['characteristic_index']
+            and first['precision_bits']==task['precision_bits'],'Wrong characteristic/precision')
+    require(len(first['chi'])==12 and all(type(x) is int and x in (0,1) for x in first['chi']),
+            'Invalid characteristic bits')
+    require(sum(x << (11-i) for i,x in enumerate(first['chi']))==task['characteristic_index'],
+            'Characteristic encoding')
+    for name,pin in first['source_sha256'].items():
+        require('/' not in name and plan['pins'].get('experiments/bc_jacobian_v147/'+name)==pin,
+                'Unbound source')
+    required={'interval_periods.py','prepare_periods.py','period_setup.json',
+              'reduced_periods.json','reduced_fixed_pairs.json','remote_certificate_candidate.py',
+              'certificate_worker_candidate.py','exact_ball_candidate.py'}
+    require(set(first['source_sha256'])==required,'Incomplete source bindings')
+    tau=first['tau'];require(len(tau)==6 and all(len(row)==6 for row in tau),'Period dimensions')
+    for row in tau:
+        for ball in row:
+            excludes_zero(ball)  # Validate both component encodings even for zero.
+    input_hash=hashlib.sha256(json.dumps(first,sort_keys=True).encode()).hexdigest()
+    observed=[];nonzero=[];complete=False
+    for record in records[1:]:
+        require(not complete,'Records after completion')
+        require(record['model']==task['model'] and record['task_index']==task_index,'Record identity')
+        if record['stage']=='BATCH_COMPLETE':
+            require(observed==task['pair_indices'] and record['pair_indices']==observed,
+                    'Incomplete claimed batch')
+            complete=True;continue
+        require(record['stage']=='EXACT_THETA_OBSERVATION','Unexpected stage')
+        n=len(observed);require(n<len(task['pair_indices']),'Extra pair')
+        require(type(record['pair_index']) is int and record['pair_index']==task['pair_indices'][n],
+                'Wrong/duplicate pair order')
+        require(record['input_sha256']==input_hash,'Input hash')
+        numerator=task['numerators_mod3'][n]
+        require(record['numerator_mod3']==numerator,'Wrong numerator')
+        centered=[x if x<=1 else x-3 for x in numerator]
+        require(record['centered_lift']==centered,'Wrong lift')
+        require(record['characteristic_index']==task['characteristic_index']
+                and record['precision_bits']==task['precision_bits']
+                and record['quantity']=='theta_characteristic_squared','Wrong evaluation identity')
+        argument_is_enclosed(tau,centered,record['argument'])
+        require(type(record['finite']) is bool and type(record['excludes_zero']) is bool,
+                'Flags must be boolean')
+        if record['finite']:
+            require(excludes_zero(record['enclosure'])==record['excludes_zero'],'False containment flag')
+        else:
+            require(record['enclosure'] is None and not record['excludes_zero'],'Nonfinite claim')
+        observed.append(record['pair_index'])
+        if record['excludes_zero']:nonzero.append(record['pair_index'])
+    return {'status':'STRUCTURAL_RECORDS_CHECKED_NOT_MATHEMATICAL_ACCEPTANCE',
+            'model':task['model'],'complete':complete,'observed_pair_indices':observed,
+            'nonzero_reported_and_rationally_checked':nonzero}

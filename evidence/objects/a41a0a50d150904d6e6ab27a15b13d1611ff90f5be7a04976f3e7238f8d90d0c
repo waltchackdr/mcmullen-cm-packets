@@ -1,0 +1,17 @@
+"""Regression includes a negative control for the necessary Gauss-sign gate."""
+import importlib.util
+from pathlib import Path
+import unittest
+
+
+class BalancedThetaRegression(unittest.TestCase):
+    def test_balanced_and_unbalanced(self):
+        path = Path(__file__).resolve().parents[1]/'experiments/s_order_jacobian_v160/arithmetic_candidate.py'
+        spec = importlib.util.spec_from_file_location('theta160', path)
+        mod = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(mod)
+        self.assertEqual(mod.run()['S_target_evaluations'], 0)
+
+
+if __name__ == '__main__':
+    unittest.main()

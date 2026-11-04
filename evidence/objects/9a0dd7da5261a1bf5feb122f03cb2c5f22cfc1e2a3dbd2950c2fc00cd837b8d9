@@ -1,0 +1,82 @@
+"""C86 exact finite regression, reusing C84's model (not independent).
+
+RREF parameterizes every dimension-three subspace exactly once. For each,
+the three pair constraints on coefficients 1,t,t^2 form a 3x3 matrix.
+Its kernel is T_H. All arithmetic is in F3; no geometric adoption by code.
+"""
+from collections import Counter
+from itertools import combinations, product
+import importlib.util
+import json
+from pathlib import Path
+import resource
+import signal
+
+spec = importlib.util.spec_from_file_location('c84', Path(__file__).resolve().parents[1] / 'fermat_all_quotients_v155/arithmetic_candidate.py')
+model = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(model)
+
+
+def rank3(a):
+    a = [list(row) for row in a]
+    r = 0
+    for j in range(3):
+        pivot = next((i for i in range(r, 3) if a[i][j]), None)
+        if pivot is None:
+            continue
+        a[r], a[pivot] = a[pivot], a[r]
+        a[r] = [x * a[r][j] % 3 for x in a[r]]
+        for i in range(r+1, 3):
+            c = a[i][j]
+            a[i] = [(x-c*y) % 3 for x,y in zip(a[i],a[r])]
+        r += 1
+    return r
+
+
+def check():
+    if not __debug__:
+        raise RuntimeError('Enabled assertions required')
+    basis = [tuple(int(i == j) for i in range(6)) for j in range(6)]
+    real_t = lambda v: tuple(-x % 3 for x in model.real_action(v))
+    transforms = [lambda v:v, real_t, lambda v:real_t(real_t(v))]
+    grams = [[[model.pair(f(v),w) for w in basis] for v in basis] for f in transforms]
+    assert all(g[i][j] == -g[j][i] % 3 for g in grams for i in range(6) for j in range(6))
+    coefficients = [c for c in product(range(3),repeat=3) if any(c)]
+    assert len(coefficients) == 26
+    for c in coefficients:
+        g = [[sum(c[k]*grams[k][i][j] for k in range(3)) % 3 for j in range(6)] for i in range(6)]
+        assert len(model.rref(g)) == 6
+    census = Counter()
+    obstruction_witness = None
+    for pivots in combinations(range(6),3):
+        free = [(i,j) for i,p in enumerate(pivots) for j in range(p+1,6) if j not in pivots]
+        for values in product(range(3),repeat=len(free)):
+            rows = [[int(j == p) for j in range(6)] for p in pivots]
+            for (i,j),value in zip(free,values):
+                rows[i][j] = value
+            transformed = [[f(v) for v in rows] for f in transforms]
+            constraints = [[model.pair(transformed[k][i],rows[j]) for k in range(3)] for i,j in [(0,1),(0,2),(1,2)]]
+            rank = rank3(constraints)
+            census[3-rank] += 1
+            if rank == 3 and obstruction_witness is None:
+                obstruction_witness = {'basis':rows,'coefficient_constraints':constraints}
+                # Invertibility forbids rank-zero restrictions for every nonzero c.
+                for c in coefficients:
+                    entries = [sum(x*y for x,y in zip(row,c)) % 3 for row in constraints]
+                    assert any(entries)
+                    a,b,d = entries
+                    assert rank3([[0,a,b],[-a%3,0,d],[-b%3,-d%3,0]]) == 2
+    assert dict(census) == {0:19656,1:14196,3:28}
+    assert sum(census.values()) == 33880
+    assert census[1] == 13*(1120-28)
+    assert census[0] == 108*182
+    return {'status':'EXACT_RESIDUE_ANNIHILATOR_MODEL_PASS','dimension_counts':dict(sorted(census.items())),
+            'all_subspaces':sum(census.values()),'nonzero_coefficient_forms_nondegenerate':26,
+            'obstruction_witness':obstruction_witness,
+            'scope':'Finite cyclic model and incidence only; minimum degree/type/classes require the separate human proof and accepted norm/unit inputs.'}
+
+
+if __name__ == '__main__':
+    resource.setrlimit(resource.RLIMIT_CPU,(20,20))
+    signal.alarm(30)
+    print(json.dumps(check(),indent=2,sort_keys=True))

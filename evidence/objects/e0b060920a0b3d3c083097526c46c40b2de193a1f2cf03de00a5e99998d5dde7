@@ -1,0 +1,116 @@
+{
+  "actual_load_packet_function_pass": true,
+  "actual_worker_validation_pass": true,
+  "candidate_pins_verified": 303,
+  "jobs": [
+    {
+      "archive_bytes": 337920,
+      "changed_members": [
+        "experiments/bc_jacobian_v147/certificate_plan_candidate.json"
+      ],
+      "job": 0,
+      "observations": 80,
+      "pair_counts_per_task": [
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        16,
+        16
+      ]
+    },
+    {
+      "archive_bytes": 337920,
+      "changed_members": [
+        "experiments/bc_jacobian_v147/certificate_plan_candidate.json"
+      ],
+      "job": 1,
+      "observations": 80,
+      "pair_counts_per_task": [
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        16,
+        16
+      ]
+    }
+  ],
+  "negative_plan_rejections": [
+    [
+      0,
+      "old_grid"
+    ],
+    [
+      0,
+      "duplicate_chunk"
+    ],
+    [
+      0,
+      "omitted_task"
+    ],
+    [
+      0,
+      "old_numerator"
+    ],
+    [
+      0,
+      "raised_cpu"
+    ],
+    [
+      0,
+      "raised_wall"
+    ],
+    [
+      0,
+      "raised_parent"
+    ],
+    [
+      0,
+      "wrong_record"
+    ],
+    [
+      1,
+      "old_grid"
+    ],
+    [
+      1,
+      "duplicate_chunk"
+    ],
+    [
+      1,
+      "omitted_task"
+    ],
+    [
+      1,
+      "old_numerator"
+    ],
+    [
+      1,
+      "raised_cpu"
+    ],
+    [
+      1,
+      "raised_wall"
+    ],
+    [
+      1,
+      "raised_parent"
+    ],
+    [
+      1,
+      "wrong_record"
+    ]
+  ],
+  "new_distinct_observations": 160,
+  "prior80_disjoint": true,
+  "provider_calls": 0,
+  "status": "PASS_INPUT_ONLY_EXECUTION_GATE",
+  "theta_calls": 0,
+  "unchanged_bootstrap_numerical_sources": true,
+  "wall_seconds": 0.05699695899966173
+}

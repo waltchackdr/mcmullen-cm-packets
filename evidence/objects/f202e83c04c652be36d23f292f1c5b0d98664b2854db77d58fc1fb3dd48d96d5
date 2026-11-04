@@ -1,0 +1,28 @@
+"""Finite convention regression only; geometric factor argument is human proof."""
+from pathlib import Path
+from math import gcd
+import json
+import unittest
+ROOT=Path(__file__).resolve().parents[1]
+
+class Tests(unittest.TestCase):
+    def test_differential_type_lift_and_maximal_order_obstruction(self):
+        primitive=[i for i in range(1,11) if gcd(i,21)==1]
+        self.assertEqual(primitive,[1,2,4,5,8,10])
+        # zeta42=-zeta21^11, so embedding t maps it to exponent21+22t.
+        lifted=sorted((21+22*t)%42 for t in primitive)
+        self.assertEqual(lifted,[1,5,23,25,29,31])
+        units=[u for u in range(42) if gcd(u,42)==1]
+        orbit={tuple(sorted((u*t)%42 for t in lifted)) for u in units}
+        self.assertEqual(len(orbit),12)
+        table=json.loads((ROOT/'experiments/simple_cm_unmarked_v145/table.json').read_text())
+        rows=[r for r in table['primitive_orbits'] if tuple(r['representative']) in orbit]
+        self.assertEqual(len(rows),1)
+        self.assertEqual(rows[0]['classes_by_order_and_ideal']['O'],0)
+        self.assertEqual(rows[0]['stabilizer'],[1])
+    def test_genus_and_holomorphic_orders(self):
+        self.assertEqual(-4+22,2*10-2)
+        self.assertTrue(all(20-2*i>=0 for i in range(1,11)))
+        self.assertLess(20-2*11,0)
+
+if __name__=='__main__':unittest.main()

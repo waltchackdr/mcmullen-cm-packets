@@ -1,0 +1,403 @@
+{
+  "abstract_CM_type": [
+    1,
+    5,
+    11,
+    13,
+    19,
+    25
+  ],
+  "cyclotomic_definitions": {
+    "b": "sqrt21*u",
+    "s3": "1+2*zeta42^14",
+    "s7": "zeta42^6+zeta42^12+zeta42^24-zeta42^18-zeta42^30-zeta42^36",
+    "sqrt21": "-s3*s7",
+    "t_a": "zeta42^a+zeta42^(-a)",
+    "u": "t_1*t_13*t_17",
+    "xi": "s7*b"
+  },
+  "exact_checks": {
+    "all_signs_certified_by_rational_root_intervals": true,
+    "det_trace_hermitian_form": -4202539929,
+    "disc_power_basis_L": 453789,
+    "negative_determinant_is_square_of": 64827,
+    "norm_b": -9261,
+    "norm_sqrt21": -9261,
+    "norm_u": 1,
+    "rows": [
+      {
+        "CM_selection_sign": 1,
+        "chi_minus7": 1,
+        "embedding_exponent_mod42": 1,
+        "t_interval": [
+          "13330781647155/6740678634608",
+          "9917643907427/5014833500533"
+        ],
+        "values": {
+          "b": {
+            "certified_interval": [
+              "38070077952410647439232576384348860385194736727527139806439698231/3479029575600295258627449967675089257606196099747562334333960192",
+              "34706293679530862599867013654089755541002368483337487924346585880/3171630547263215771629409015733772856425225230275583457363937893"
+            ],
+            "sign": 1
+          },
+          "sqrt21": {
+            "certified_interval": [
+              "17648327556935232294585576622576234650782913616868062730635331283/3851180805668132103509558071800509995652698167733667067736029184",
+              "13129749845439023925285861241274737445049935291228602132601985855/2865146310598050856088728184179036855055746091328703920674643584"
+            ],
+            "sign": 1
+          },
+          "t1": {
+            "certified_interval": [
+              "13330781647155/6740678634608",
+              "9917643907427/5014833500533"
+            ],
+            "sign": 1
+          },
+          "t13": {
+            "certified_interval": [
+              "-5627977362251975336682593821298364891418357591995194217021306849/7702361611336264207019116143601019991305396335467334135472058368",
+              "-4187021952293957105247627222171410158156773157904240627772835187/5730292621196101712177456368358073710111492182657407841349287168"
+            ],
+            "sign": -1
+          },
+          "t17": {
+            "certified_interval": [
+              "-1888234156250987065732526207429731494036114317545517/1142668569272949812741534513193077260606873987492096",
+              "-1888234156250987065732525672616528354489071834076593/1142668569272949812741534513193077260606873987492096"
+            ],
+            "sign": -1
+          },
+          "u": {
+            "certified_interval": [
+              "4929813475599963515725373785695210369701033182331489/2064498110168467376237087006920527244084768785104896",
+              "1510226447967421295245246841787271445907415237814520/632449820502738529066109449045823060742455664559921"
+            ],
+            "sign": 1
+          }
+        }
+      },
+      {
+        "CM_selection_sign": 1,
+        "chi_minus7": -1,
+        "embedding_exponent_mod42": 5,
+        "t_interval": [
+          "9285374036579/6333367660191",
+          "3883735048660/2649017892121"
+        ],
+        "values": {
+          "b": {
+            "certified_interval": [
+              "-18934079454654007506442322710790180320147159212761415272736908837/745631205008563268720722163002113873096269016571558232331632841",
+              "-45268281067584074587805866135314125908672886926601938943454979219/1782682017466258648140127249432537638540540650947137108976723311"
+            ],
+            "sign": -1
+          },
+          "sqrt21": {
+            "certified_interval": [
+              "8169275285075719137403584704466010143163929707927067381928691095/1782682017466258648140127249432537638540540650947137108976723311",
+              "3416911437472877233008411325988654064874260695564604639261128717/745631205008563268720722163002113873096269016571558232331632841"
+            ],
+            "sign": 1
+          },
+          "t1": {
+            "certified_interval": [
+              "9285374036579/6333367660191",
+              "3883735048660/2649017892121"
+            ],
+            "sign": 1
+          },
+          "t13": {
+            "certified_interval": [
+              "-3406964914509461433678563852947174321247413231287376408107823199/1782682017466258648140127249432537638540540650947137108976723311",
+              "-1425009805303467827247717625768358498577155670821715684417721663/745631205008563268720722163002113873096269016571558232331632841"
+            ],
+            "sign": -1
+          },
+          "t17": {
+            "certified_interval": [
+              "185553829264001010482952819089645969615984699065894/93824860806754269649640449102623424897075869874107",
+              "556661487792003031448858654045913572316463936350158/281474582420262808948921347307870274691227609622321"
+            ],
+            "sign": 1
+          },
+          "u": {
+            "certified_interval": [
+              "-3729060803462061796408912753901120158926933254923651/672959598637860214462057005797916573996093170024391",
+              "-652378812322201794066027008360108585964092154546247/117730604792660453760128622681906533460908357984151"
+            ],
+            "sign": -1
+          }
+        }
+      },
+      {
+        "CM_selection_sign": 1,
+        "chi_minus7": 1,
+        "embedding_exponent_mod42": 11,
+        "t_interval": [
+          "-438780584609/2935769002494",
+          "-740999564958/4957839134117"
+        ],
+        "values": {
+          "b": {
+            "certified_interval": [
+              "224214537802301119653793903412459297608648791239314547080263185/103657147610378951249160776043914831407036493013794778261446196",
+              "63107804065979462686559510412582651152650335870368335203212028/29175516563524855298378714557102606953378168426181902757714613"
+            ],
+            "sign": 1
+          },
+          "sqrt21": {
+            "certified_interval": [
+              "-39584727103981034398201494482940261039161175950238710193960686/8638095634198245937430064670326235950586374417816231521787183",
+              "-401097039275371604398520026730686645664437334935348974516517646/87526549690574565895136143671307820860134505278545708273143839"
+            ],
+            "sign": -1
+          },
+          "t1": {
+            "certified_interval": [
+              "-438780584609/2935769002494",
+              "-740999564958/4957839134117"
+            ],
+            "sign": -1
+          },
+          "t13": {
+            "certified_interval": [
+              "-488512772064127015110916749495724036522703250875834918469179289/295624453396383085091827885948572862682526483554549894906177029",
+              "-101429496829989988860815529266650937067886966645027456907315881/61380257126009857218239351096812083871094130940563567433849272"
+            ],
+            "sign": -1
+          },
+          "t17": {
+            "certified_interval": [
+              "-11246565073488543962624837228216532217367382688491/5884724327329564895092289104589735389373601524689",
+              "-101219085661396895663623530703141682625835210185914/52962518945966084055830601941307618504362413722201"
+            ],
+            "sign": -1
+          },
+          "u": {
+            "certified_interval": [
+              "-16666033110197438418723857717922171308258590535395/35308345963977389370553734627538412336241609148134",
+              "-8333016555098719209361923980176250697728211560813/17654172981988694685276867313769206168120804574067"
+            ],
+            "sign": -1
+          }
+        }
+      },
+      {
+        "CM_selection_sign": 1,
+        "chi_minus7": -1,
+        "embedding_exponent_mod42": 13,
+        "t_interval": [
+          "-5613628391598/7682723834989",
+          "-5403994083827/7395821606948"
+        ],
+        "values": {
+          "b": {
+            "certified_interval": [
+              "-6137254442935429910266067216026500084736519411603711955278755993/6200954283096758620408785068091161854894189648580850118889172244",
+              "-5908065940061797435477891993378631894915526503223712190410369339/5969386985089958776397663118329008446380205618595643897147502608"
+            ],
+            "sign": -1
+          },
+          "sqrt21": {
+            "certified_interval": [
+              "-28416342383251521286877656790595212305210594155081435185591532783/6200954283096758620408785068091161854894189648580850118889172244",
+              "-13677583855829482193668450058496053512001116605494451561801899823/2984693492544979388198831559164504223190102809297821948573751304"
+            ],
+            "sign": -1
+          },
+          "t1": {
+            "certified_interval": [
+              "-5613628391598/7682723834989",
+              "-5403994083827/7395821606948"
+            ],
+            "sign": -1
+          },
+          "t13": {
+            "certified_interval": [
+              "11805427729048066056165623184305904144306917353332423242407338783/5969386985089958776397663118329008446380205618595643897147502608",
+              "12263389494277634960678007104993361563870564380484320922993643951/6200954283096758620408785068091161854894189648580850118889172244"
+            ],
+            "sign": 1
+          },
+          "t17": {
+            "certified_interval": [
+              "-30158437544672108904778083357054968069238037940428/201782415204621143546473332215227500804461093147449",
+              "-17233392882669776517016035770490224051782598359415/115304237259783510597984761265844286173977767512828"
+            ],
+            "sign": -1
+          },
+          "u": {
+            "certified_interval": [
+              "174320819691517356318200324501353548817085979385119/807129660818484574185893328860910003217844372589796",
+              "348641639383034712636400777810824284185701091820155/1614259321636969148371786657721820006435688745179592"
+            ],
+            "sign": 1
+          }
+        }
+      },
+      {
+        "CM_selection_sign": -1,
+        "chi_minus7": -1,
+        "embedding_exponent_mod42": 17,
+        "t_interval": [
+          "-14130692742673/8551216174992",
+          "-14818878744497/8967673271425"
+        ],
+        "values": {
+          "b": {
+            "certified_interval": [
+              "20860209147024015155226345729629672228100196374665710213225280411/12571387661893297553605852225970657253384081749841961576894080000",
+              "43752265449955735179834196129980492113776111890710115388203907991/26367266319375446860832761937219703915451795335600133914834000000"
+            ],
+            "sign": 1
+          },
+          "sqrt21": {
+            "certified_interval": [
+              "4833199751103906082290457001623543307940663866459472438846197911/1054690652775017874433310477488788156618071813424005356593360000",
+              "115218671102519901312457659357638801433673015174450391684486145347/25142775323786595107211704451941314506768163499683923153788160000"
+            ],
+            "sign": 1
+          },
+          "t1": {
+            "certified_interval": [
+              "-14130692742673/8551216174992",
+              "-14818878744497/8967673271425"
+            ],
+            "sign": -1
+          },
+          "t13": {
+            "certified_interval": [
+              "-7881713118660397339427804347172362644991908318467679178962103333/52734532638750893721665523874439407830903590671200267829668000000",
+              "-1503137562375208507657174464880834567519118208407200270901227747/10057110129514638042884681780776525802707265399873569261515264000"
+            ],
+            "sign": -1
+          },
+          "t17": {
+            "certified_interval": [
+              "8621444312447532843473272670006156148718910010658943/5880514492737664222406973615967776045898415052960000",
+              "957938256938614760385919298195737896691334542534571/653390499193073802489663735107530671766490561440000"
+            ],
+            "sign": 1
+          },
+          "u": {
+            "certified_interval": [
+              "2233022031990291608267429723680336629360319076259229/6166904398110392637436792084786571562445839260250000",
+              "2030435629027678928349463923629327753829261841349201/5607424481867035096358153098899895674678608765030400"
+            ],
+            "sign": 1
+          }
+        }
+      },
+      {
+        "CM_selection_sign": 1,
+        "chi_minus7": -1,
+        "embedding_exponent_mod42": 19,
+        "t_interval": [
+          "-6126491191623/3205664264683",
+          "-6282437924201/3287262826108"
+        ],
+        "values": {
+          "b": {
+            "certified_interval": [
+              "-1628445175898081300868009494753214200645039758441988353027422159/173570764583557133819694220161686911980253849131590521305965534",
+              "-219498892296942409973649802023933554623053941811985199694790131/23395685114307226281888042511106544928803895228137716220995248"
+            ],
+            "sign": -1
+          },
+          "sqrt21": {
+            "certified_interval": [
+              "-795401167135510834265476260416154890578232416300632040561670343/173570764583557133819694220161686911980253849131590521305965534",
+              "-857699983773315508973834530135740770889543228063237314923290171/187165480914457810255104340088852359430431161825101729767961984"
+            ],
+            "sign": -1
+          },
+          "t1": {
+            "certified_interval": [
+              "-6126491191623/3205664264683",
+              "-6282437924201/3287262826108"
+            ],
+            "sign": -1
+          },
+          "t13": {
+            "certified_interval": [
+              "535185157193586908554676815631656918383913338861528802985217129/365039076878468832588330479942343990575711974163045319092767168",
+              "521900445494792419430885673148881631617634302772506381147742929/355977841098773247386072057541429711823674910080834551710040368"
+            ],
+            "sign": 1
+          },
+          "t17": {
+            "certified_interval": [
+              "-81139694229098723877832280827557965836793513080765/111046513828850692906176101754900254995972976887696",
+              "-81139694229098723877832119712463976233661070734497/111046513828850692906176101754900254995972976887696"
+            ],
+            "sign": -1
+          },
+          "u": {
+            "certified_interval": [
+              "233135408855087042192562886768515653456421178555675/113873146636136151978468537509032786053805721087296",
+              "221704982998023999965284022728923890800286959877027/108290045527098332011845479885626401080479732460596"
+            ],
+            "sign": 1
+          }
+        }
+      }
+    ],
+    "s3_squared": -3,
+    "s7_squared": -7,
+    "sqrt21_squared": 21
+  },
+  "execution": {
+    "CPU_seconds_before_publication": 0.26049900000000004,
+    "cpu_limit_soft_hard_seconds": [
+      25,
+      26
+    ],
+    "floating_point_used": false,
+    "interpreter": ".venv/bin/python",
+    "sympy_version": "1.14.0",
+    "wall_alarm_seconds": 50
+  },
+  "field": "M=Q(zeta42)=Q(zeta21), L=M+, K=Q(sqrt(-7))",
+  "independent_review_required": [
+    "Recompute the cyclotomic and real polynomial identities through a separate path.",
+    "Check the H1 versus H^1 and Riemann-form sign convention; E(x,Jx)>0 is explicit and changing global convention changes both xi and E together.",
+    "Verify the rational polarization transport and Markman determinant convention; the positive rational scaling contributes a norm in rank six.",
+    "Verify actual theorem hypotheses in the pinned primary Markman source, already inspected in continuation_referee.json."
+  ],
+  "input_pins": {
+    "experiments/fixed_field_cm_census_v98/continuation_referee.json": "be42e420288082c8a88c2e1a96e0eebd1cae631b58634221fe12bc61dcc442e2",
+    "experiments/fixed_field_cm_census_v98/primary.json": "2135edfe6a09b1a2c51a254f80e4570a761674e5be3208c15c549087f225917e",
+    "experiments/fixed_field_cm_census_v98/review.json": "763c49a36c57145b8a2985a0654d6b6e1563c55b547605eb8c04f76051daf475"
+  },
+  "polynomials": {
+    "b": "4*t**5 + 3*t**4 - 15*t**3 - 13*t**2 + 4*t + 3",
+    "minimal_polynomial_t": "t**6 + t**5 - 6*t**4 - 6*t**3 + 8*t**2 + 8*t + 1",
+    "sqrt21_positive_at_identity": "2*t**5 - 2*t**4 - 10*t**3 + 8*t**2 + 12*t - 3",
+    "t13": "-t**5 + 6*t**3 + t**2 - 9*t - 3",
+    "t17": "-t**4 + 4*t**2 - 2",
+    "unit_u": "t**4 + t**3 - 3*t**2 - 4*t - 1"
+  },
+  "schema_version": 1,
+  "scope": {
+    "abstract_polarizable_CM_realization": true,
+    "algebraicity_adopted": false,
+    "bounded_search_completeness_claim": false,
+    "geometric_curve_point": false,
+    "ledger_promotion": false,
+    "principal_polarization": false,
+    "standard_trace_polarization_claim": false
+  },
+  "status": "EXACT_POLARIZATION_PREPARATION_PENDING_INDEPENDENT_REVIEW_NOT_PROMOTED",
+  "structural_proof": [
+    "Use the fixed complex embedding zeta42=exp(2*pi*i/42). The quadratic Gauss sum s7 defined here is i*sqrt(7): its square is -7 by exact cyclotomic reduction; the standard odd quadratic Gauss-sum sign or direct sine signs select positive imaginary part. The exact identity sqrt21=-s3*s7 and positive identity embedding of sqrt21, together with s3=i*sqrt(3), independently fixes s7=i*sqrt(7).",
+    "For real embeddings indexed by r=1,5,11,13,17,19, s7 transforms by the quadratic character chi_-7(r). The selected CM embedding is r if r lies in Phi and -r otherwise. A trace alternating form E_xi(x,y)=Tr_M/Q(xi*x*bar(y)) has E_xi(x,Jx)>0 when the imaginary part of phi(xi) is positive for each phi in Phi. The certified b-sign equals chi_-7(r) times the selection sign; hence xi=s7*b has positive imaginary part in all selected CM embeddings.",
+    "Take the complex torus C^6/Phi(O_M). Since b and s7 are algebraic integers, E_xi is integral on O_M; xi is nonzero and conjugate(xi)=-xi, so E_xi is a nondegenerate alternating form. It is J-invariant and positive in the stated convention. Thus it is a polarization, giving an abelian sixfold with this abstract CM type. Scaling by a positive integer works for any commensurable lattice; no principal polarization is claimed.",
+    "The K-action satisfies E_xi(kx,ky)=Nm_K/Q(k)*E_xi(x,y). The character fibers each contain three selected type embeddings, so the K-signature is (3,3). Let T(x,y)=Tr_M/K(b*x*bar(y)). Then the Hermitian form E_xi(s7*x,y)+s7*E_xi(x,y) equals -14*T(x,y), by expanding the quadratic trace. This is compatible with the same polarization; the factor (-14)^6 in rank six is a rational square and hence a K-norm.",
+    "The vectors 1,t,...,t^5 form a K-basis of M. Indeed L is totally real and K imaginary quadratic, so L and K are linearly disjoint over Q and M=LK. On this basis T has entries Tr_L/Q(b*t^(i+j)). Its determinant is disc(1,t,...,t^5)*N_L/Q(b), a standard trace-pairing change-of-multiplication determinant identity.",
+    "Every t_a is a Galois conjugate of t and N(t)=1 from the constant term of its degree-six minimal polynomial. Thus N(u)=1. The positive sqrt21 generates the real quadratic subfield and has three conjugates +sqrt21 and three -sqrt21, giving norm -21^3. Consequently det(T)=-3^6*7^8=-(3^3*7^4)^2. Explicitly (3^3*7^4)^2 is Nm_K/Q(3^3*7^4), so the Hermitian discriminant class is -1.",
+    "The construction concerns a rational CM Hodge structure and a freely chosen compatible polarization. It supplies no statement that the standard trace polarization on a marked McMullen fiber has this determinant or is principal. For another variety of this abstract CM type with rational M-action, an M-linear identification H1(A,Q)=M transports the rational alternating form; clearing denominators makes it an integral polarization. The positivity depends only on the CM type and is unaffected by choosing a different commensurable lattice.",
+    "If independently accepted, these hypotheses meet Markman Theorem 1.5.1 for K=Q(sqrt(-7)); the previously reviewed all-powers invariant-generation lemma would then give Hodge algebraicity for every power of this abstract isogeny type. This preparation does not itself promote that consequence."
+  ]
+}

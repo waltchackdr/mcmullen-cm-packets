@@ -1,0 +1,61 @@
+"""Successor15 narrow local fixtures; retained14 checker unchanged. No network/credentials."""
+import ast,hashlib,importlib.util,json,resource,signal,sys,time
+from pathlib import Path
+ROOT=Path(__file__).resolve().parents[2];D=ROOT/'experiments/s_order_theta_v164';HERE=ROOT/'experiments/bc_jacobian_v147/session_v150'
+def module(name,p):
+ s=importlib.util.spec_from_file_location(name,p);m=importlib.util.module_from_spec(s);s.loader.exec_module(m);return m
+def main():
+ start=time.monotonic();sys.path.insert(0,str(HERE));e=module('ref_endpoint15',HERE/'endpoint_telemetry15.py');sha=lambda p:hashlib.sha256(p.read_bytes()).hexdigest()
+ assert sha(D/'review_inputs15.json')=='4af575a439962cf30eadadd3ebb68e56270dcee59bb5e2fcf0956ed33ca5de55'
+ packet=json.loads((D/'review_inputs15.json').read_bytes());c=json.loads((ROOT/'build/s-order-v164/diagnostic15/execution_candidate.json').read_bytes());old=json.loads((D/'execution_authority13.json').read_bytes())
+ for p,h in {**packet['pins'],**c['pins']}.items():assert sha(ROOT/p)==h,p
+ assert c['jobs']==old['jobs'] and c['bootstrap_code']==old['bootstrap_code'] and c['session_manifest']==old['session_manifest']
+ before=(HERE/'session_controller_telemetry14.py').read_text();after=(HERE/'session_controller_telemetry15.py').read_text()
+ assert before.replace('endpoint_telemetry14','endpoint_telemetry15')==after
+ assert c['local_entrypoint']=='experiments/bc_jacobian_v147/session_v150/session_controller_telemetry15.py'
+ rows=[]
+ for base,label in [(Exception,'ProviderReadError'),(TimeoutError,'TimeoutError'),(OSError,'ProviderReadError')]:
+  Err=type('SYNTHETIC_PRIVATE_TYPE',(base,),{});error=Err('SYNTHETIC_PRIVATE_MESSAGE');events=[];calls=[]
+  def provider(*a,**k):calls.append(k);raise error
+  try:e.discover(provider,'p','n','c',0,1200,lambda x:None,clock=lambda:0,sleep=lambda x:None,observe=events.append)
+  except Exception as got:assert got is error
+  else:raise AssertionError('Missing provider failure')
+  assert len(calls)==1 and events[-1]['exception_type']==label
+  assert 'SYNTHETIC' not in json.dumps(events)
+  assert events[0]['planned_timeout_seconds']==events[-1]['request_timeout_seconds']==10
+  rows.append({'base':base.__name__,'label':label,'attempts':1})
+ deadline_cases=[]
+ for local_delete,now0,delay,expected in [(1200,119.,2,0),(310,9.,2,0),(1200,119.,.5,1)]:
+  now=[now0];events=[];calls=[]
+  def observer(x):
+   events.append(x)
+   if x['event']=='provider_read_started':now[0]+=delay
+  def provider(*a,**kw):calls.append({'started':now[0],**kw});return {'id':'p','name':'n','private':'SYNTHETIC_PRIVATE_RESPONSE'}
+  try:e.discover(provider,'p','n','c',0,local_delete,lambda x:None,clock=lambda:now[0],sleep=lambda dt:now.__setitem__(0,now[0]+dt),observe=observer)
+  except TimeoutError:pass
+  else:raise AssertionError('Missing endpoint deadline')
+  assert len(calls)==expected and events[-1]['event']=='endpoint_deadline'
+  if expected:assert calls[0]['timeout']==.5 and events[1]['request_timeout_seconds']==.5 and events[0]['planned_timeout_seconds']==1
+  assert 'SYNTHETIC' not in json.dumps(events)
+  deadline_cases.append({'local_delete':local_delete,'initial_time':now0,'observer_delay':delay,'provider_calls':len(calls)})
+ # Actual lifecycle handles telemetry persistence failure without endpoint retry.
+ life=module('ref_lifecycle15',HERE.parent/'runtime/lifecycle_candidate.py');name='hodge-v147-abcdefghijkl';live=[False];calls=[];saved={}
+ pod={'id':'p','name':name,'costPerHr':.1,'cpuFlavorId':'cpu3c','vcpuCount':2,'containerDiskInGb':5,'volumeInGb':0}
+ def provider(path,method='GET',**kw):
+  calls.append((method,path))
+  if method=='POST':live[0]=True;return pod
+  if method=='DELETE':live[0]=False;return {}
+  if path=='/pods':return [pod] if live[0] else []
+  if path=='/networkvolumes':return []
+  raise AssertionError('Unexpected endpoint call')
+ def broken_sink(x):raise OSError('synthetic disk failure')
+ def execute(p):return e.discover(provider,p,name,'cert',0,1200,lambda x:None,clock=lambda:0,sleep=lambda x:None,observe=broken_sink)
+ result=life.Lifecycle(provider,lambda k,v:saved.update({k:v}),clock=lambda:0,sleep=lambda x:None).run(name,{'name':name},execute,lambda:None)
+ assert result['status']=='EXECUTION_FAILED' and result['phase']=='WORKLOAD'
+ assert saved['cleanup.json']['provider_absence_verified'] and not live[0]
+ assert calls.count(('POST','/pods'))==calls.count(('DELETE','/pods/p'))==1 and ('GET','/pods/p') not in calls
+ out={'status':'PASS_DIAGNOSTIC15_DELTA','packet_pins':len(packet['pins']),'candidate_pins':len(c['pins']),'same_sparse13_jobs_bootstrap_session':True,'controller_only_module_name_and_pin_change_from14':True,'fixed_enum_and_exact_exception_passthrough':rows,'deadline_cases':deadline_cases,'observer_failure_cleanup_pass':True,'no_provider_retries':True,'provider_calls':0,'numerical_calls':0,'wall_seconds':time.monotonic()-start}
+ Path(__file__).with_suffix('.json').write_text(json.dumps(out,indent=2,sort_keys=True)+'\n');print(json.dumps(out,sort_keys=True))
+if __name__=='__main__':
+ if not __debug__:raise RuntimeError('Nonoptimized audit required')
+ resource.setrlimit(resource.RLIMIT_CPU,(20,20));signal.alarm(30);main()

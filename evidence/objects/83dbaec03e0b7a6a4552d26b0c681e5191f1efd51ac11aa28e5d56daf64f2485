@@ -1,0 +1,58 @@
+{
+  "incorrect_trivial_root_action_failures": 40,
+  "minimum_fixed_including_A": 29,
+  "principal_R_S": [
+    2,
+    26
+  ],
+  "principal_fixed": 28,
+  "pseudoreal_R_S": [
+    1,
+    13
+  ],
+  "pseudoreal_underlying_classes": 14,
+  "real_underlying_quotient_R_S": [
+    1,
+    13
+  ],
+  "root_cocycle_cases": 42,
+  "rows": [
+    {
+      "multiplicity": 2,
+      "polarized_fixed": 2,
+      "size": 4,
+      "split_fibers": 1,
+      "swapped_fibers": 1,
+      "underlying_fixed": 2
+    },
+    {
+      "multiplicity": 1,
+      "polarized_fixed": 0,
+      "size": 8,
+      "split_fibers": 0,
+      "swapped_fibers": 0,
+      "underlying_fixed": 0
+    },
+    {
+      "multiplicity": 4,
+      "polarized_fixed": 6,
+      "size": 12,
+      "split_fibers": 3,
+      "swapped_fibers": 3,
+      "underlying_fixed": 6
+    },
+    {
+      "multiplicity": 4,
+      "polarized_fixed": 0,
+      "size": 24,
+      "split_fibers": 0,
+      "swapped_fibers": 0,
+      "underlying_fixed": 0
+    }
+  ],
+  "scope": "Abstract adopted stabilizer/fiber count and root-exponent cocycle corroboration only",
+  "status": "PASS",
+  "underlying_fixed_including_A": 29,
+  "underlying_real_model_classes_including_A": 15,
+  "wall_seconds": 0.00033129198709502816
+}

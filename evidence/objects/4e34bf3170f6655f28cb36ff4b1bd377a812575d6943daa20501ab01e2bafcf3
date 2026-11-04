@@ -1,0 +1,43 @@
+"""Exact finite h0 model; geometry remains the separate provisional proof."""
+import itertools
+import json
+from collections import Counter
+
+
+def require(condition, message):
+    if not condition:
+        raise ValueError(message)
+
+
+def main():
+    inertia = (1, 1, 1, 1, 2, 2, 2, 2)
+    space = {b for b in itertools.product(range(3), repeat=8) if sum(b) % 3 == 0}
+    seen = set()
+    multiplicities, degrees = Counter(), Counter()
+    for b in sorted(space):
+        if b in seen:
+            continue
+        orbit = {tuple((x+k*a) % 3 for x, a in zip(b, inertia)) for k in range(3)}
+        require(len(orbit) == 3 and orbit <= space and not orbit.intersection(seen), 'Bad orbit')
+        values = []
+        triples = []
+        for v in sorted(orbit):
+            e = [-1-sum(v)//3-4*k+sum((k*a+1+x)//3 for a, x in zip(inertia, v)) for k in range(3)]
+            require(sum(e) == -3, 'Riemann-Roch degree mismatch')
+            values.append(sum(max(x+1, 0) for x in e))
+            triples.append(tuple(sorted(e)))
+        require(len(set(values)) == 1 and len(set(triples)) == 1, 'Not invariant under divisor relation')
+        seen.update(orbit)
+        multiplicities[values[0]] += 1
+        degrees[triples[0]] += 1
+    require(seen == space and len(space) == 2187, 'Incomplete coverage')
+    require(dict(multiplicities) == {0: 213, 1: 456, 2: 60}, 'Unexpected histogram')
+    print(json.dumps({'status': 'EXACT_FINITE_MODEL_GEOMETRIC_PROOF_PENDING',
+                      'inertia': inertia, 'space_size': len(space), 'class_count': sum(multiplicities.values()),
+                      'h0_counts': dict(sorted(multiplicities.items())),
+                      'degree_triple_counts': [{'degrees': e, 'count': n} for e, n in sorted(degrees.items())],
+                      'BC_theta_evaluation_performed': False}, indent=2))
+
+
+if __name__ == '__main__':
+    main()

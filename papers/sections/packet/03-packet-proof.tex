@@ -1,0 +1,457 @@
+% !TeX root = ../../packet-and-principal-models.tex
+\section{The complete packet: arithmetic and geometry}
+The proof separates the finite arithmetic domain from curve membership.
+The supplementary order calculations feed into the following full census;
+its proof includes noninvertible modules over the originally generated order.
+Historical partial exclusion totals are kept in the supplement and play no
+role as substitutes for the final two-target cover.
+
+\subsection{The complete marked arithmetic census}\label{subsec:arithmeticcensus}
+
+Throughout this subsection the extension $M/L$, its $L$-action and the
+ordered six real embeddings are fixed.  Write $z=\zeta_{42}$ and
+\[
+ \alpha_k=z^k(1+z+z^4)=A_k+B_kz,\qquad
+ c_k=2A_k+tB_k,\qquad 0\leq k<42.
+\]
+We count integral matrices of trace $c_k$ and determinant $\pi$, up to
+$\SL_2(\OL)$ conjugacy, and their upper fixed tuples in
+$\SL_2(\OL)\backslash\HH^6$.  Thus the universe is the norm-$\pi$ packet
+in this marked CM field, rather than a union over other CM fields.
+For an ideal $\mathfrak f\subseteq\OL$, put
+$S_{\mathfrak f}=\OL+\mathfrak f\OM$; in particular
+$S_{\OL}=\OM$.
+
+\begin{lemma}[Point fibers and the intrinsic multiplier order]
+\label{lem:packetpointfibers}
+For any fixed trace $c_k$, the map from its integral matrix classes to
+quotient upper fixed points has exactly two classes in each fiber,
+represented by $T$ and $c_kI-T$.  The relative conductor ideal of the
+multiplier order is an invariant of the quotient point.  In particular,
+different embedded ideals in Proposition~\externalref{supplement}{prop:alltraceorders}
+give disjoint proper-multiplier point populations.
+\end{lemma}
+\begin{proof}
+The two-root argument in Theorem~\externalref{supplement}{thm:d7ambient} applies to every
+$c_k$: the characteristic polynomial is irreducible, since its
+discriminant $B_k^2(t^2-4)$ is negative at every real embedding.
+If two actions fix the same upper tuple, they preserve both conjugate
+complex lines and commute.  Injectivity of a real embedding makes this
+commutation an identity over $L$.  They therefore belong to the same
+quadratic centralizer, where their characteristic polynomial has only
+its two roots.  An anti-intertwiner has determinant $-N_{M/L}(a)$,
+totally negative, so the two root classes are distinct under $\SL_2$.
+
+The $L$-algebra preserving those lines is intrinsic to the tuple.
+Its intersection with $M_2(\OL)$ is the multiplier ring of the
+corresponding lattice.  An integral determinant-one change of basis
+conjugates both the algebra and this order.  The two identifications of
+that algebra with $M$ fixing $L$ differ only by complex conjugation,
+which preserves every $S_{\mathfrak f}$.  Hence the exact ideal
+$\mathfrak f$, not merely its norm, is invariant.  Extra endomorphisms
+of an unmarked abelian variety do not enlarge this two-by-two
+$L$-linear centralizer, and automorphisms permuting the marked real
+embeddings are not quotient identifications.
+\end{proof}
+
+\begin{proposition}[The $144$ selected $d=3$ ambient points]
+\label{prop:d3ambientpoints}
+The $1280$ matrix classes of Theorem~\externalref{supplement}{thm:d3classes} define exactly
+$144$ distinct quotient points.  Their decomposition and the number
+of those matrix classes incident to each point are
+\[
+\begin{array}{c|r|r}
+\text{Multiplier conductor}&\text{Points}&\text{Incidences per point}\\\hline
+\OL&16&24\\
+(7,t-1)&32&16\\
+(7,t-1)^2&32&4\\
+(43,t-20)&32&4\\
+(43,t-31)&32&4.
+\end{array}
+\]
+Their intersection with the $112$-point population of
+Theorem~\externalref{supplement}{thm:d7ambient} consists of exactly the sixteen maximal
+points; the union contains $240$ distinct ambient points.
+\end{proposition}
+\begin{proof}
+Theorem~\externalref{supplement}{thm:d3classes} supplies the complete module and orientation
+lists.  Choose the common basis $(1,gz)$ with
+\[
+ g=1,\ B_0,\ B_{12},\ B_4,\ B_8
+\]
+for the five displayed multipliers.  Let $\delta_m$ be the binary
+product selected by mask $m$ from
+\[
+ (\xi_5,\xi_{11},\xi_{13},\xi_{17},-1,u),\qquad u=4-t^2.
+\]
+Use masks $0,\ldots,31$ for maximal multiplier and $0,\ldots,63$
+for a proper multiplier.  Multiplication by any allowed $\alpha_k$
+in orientation $\delta=\delta_m$ is
+\[
+ T_{k,g,\delta}=
+ \begin{pmatrix}A_k&-\delta gB_k\\
+ B_k/(\delta g)&A_k+tB_k\end{pmatrix}.
+\]
+Putting $q=g\delta$, the upper tuple is specified exactly by
+\begin{equation}\label{eq:principalpacketpoint}
+ 2x=-qt,\qquad 4h^2=q^2(4-t^2),\qquad |w|^2=q^2,
+ \qquad h>0.
+\end{equation}
+It is independent of the trace label.  The matrix
+\[
+ U_q=\begin{pmatrix}1&qt\\0&1\end{pmatrix}\in\SL_2(\OL)
+\]
+sends this tuple to the one for $-q$ and satisfies
+$U_q(c_kI-T_{k,g,\delta})U_q^{-1}=T_{k,g,-\delta}$.
+Thus root pairing toggles bit $16$.  Canonical masks are $0,\ldots,15$
+for $\OM$ and $0,\ldots,15,32,\ldots,47$ for every proper multiplier.
+Lemma~\ref{lem:packetpointfibers} proves that no further quotient
+identifications occur.  Literal equality of the chosen tuples is a
+separate assertion: their real parts force equality of $q$, whose ideal
+$(q)=(g)$ separates the five strata.
+
+We also account for the basis orientations in the old $1280$-matrix
+list.  A regular basis $(1,\alpha_k)$ changes to $(1,gz)$ by
+$Q=\left(\begin{smallmatrix}1&A_k\\0&e\end{smallmatrix}\right)$,
+where $e=B_k/g$; for the intermediate basis use
+$Q=\operatorname{diag}(1,(t-1)/B_0)$.  The nontrivial unit-square
+identities $e=\delta_a v^2$ are
+\[
+\begin{array}{c|r|l}
+ e&a&v\\\hline
+ B_{15}/B_0&33&1+5t-5t^3+t^5\\
+ B_{18}/B_0&39&3+13t-t^2-11t^3+2t^5\\
+ (t-1)/B_0&7&1+18t+3t^2-16t^3-t^4+3t^5.
+\end{array}
+\]
+Each displayed $v$ is a unit.  For regular labels $0,4,8,12$ use
+$e=v=1,a=0$; the opposite trace label negates $e$ and toggles bit $16$
+of $a$.  The intermediate basis is the same at labels $12$ and $33$.
+If $n=m\mathbin{\oplus}a$ and
+$h_0=\prod_{i:a_i=1,\,m_i=0}s_i$ for the six listed generators $s_i$,
+then $\delta_n\delta_a/\delta_m=h_0^2$.  Consequently
+\[
+ P=(vh_0)^{-1}D_{\delta_n}QD_{\delta_m}^{-1},
+ \qquad D_\delta=\operatorname{diag}(\delta,1),
+\]
+is integral of determinant one and transports the old action to its
+common-basis action.  If needed, compose with $U_{g\delta_n}$ to
+select the canonical root partner.  The paired exact implementations
+in Supplement, Section~\externalref{supplement}{app:computer} check every unit identity and all
+$1280$ matrix and upper-tuple transports.
+
+There are twelve trace labels at maximal multiplier, eight at
+multiplier $(7,t-1)$, and two at each of the other three proper
+multipliers.  The two-root fibers give the displayed incidences and
+$16\cdot24+32\cdot16+96\cdot4=1280$.
+The intermediate conductor-seven stratum is counted once.
+The proper $d=3$ conductors differ from the two proper $d=7$
+conductors, whereas their common maximal tuples coincide.
+Lemma~\ref{lem:packetpointfibers} gives the asserted intersection
+and $144+112-16=240$.
+\end{proof}
+
+\begin{theorem}[The full marked norm-$\pi$ arithmetic census]
+\label{thm:fullpacketarithmetic}
+For all $42$ traces in Proposition~\externalref{supplement}{prop:alltraceorders}, the
+complete integral matrix universe has $3520$ trace-labelled
+$\SL_2(\OL)$ classes.  The exact counts, including every module
+overorder and determinant orientation, are
+\[
+\begin{array}{c|r|r|r}
+\text{Generated-order conductor}&\text{Traces}&
+ \text{Classes per trace}&\text{Subtotal}\\\hline
+\OL&16&32&512\\
+(7,t-1)&12&96&1152\\
+(7,t-1)^2&2&160&320\\
+(41,t-12)&2&96&192\\
+(41,t-22)&2&96&192\\
+(43,t-20)&2&96&192\\
+(43,t-31)&2&96&192\\
+(83,t-36)&2&160&320\\
+(127,t-94)&2&224&448.
+\end{array}
+\]
+Their upper fixed tuples define exactly $368$ distinct ambient
+quotient points, with the following intrinsic multiplier decomposition:
+\[
+\begin{array}{c|r|r|r}
+\text{Multiplier conductor}&|\operatorname{Pic}(S_{\mathfrak f})|&
+ \text{Points}&\text{Incidences per point}\\\hline
+\OL&1&16&84\\
+(7,t-1)&1&32&28\\
+(7,t-1)^2&1&32&4\\
+(41,t-12)&1&32&4\\
+(41,t-22)&1&32&4\\
+(43,t-20)&1&32&4\\
+(43,t-31)&1&32&4\\
+(83,t-36)&2&64&4\\
+(127,t-94)&3&96&4.
+\end{array}
+\]
+In particular the two nonprincipal classes at conductor $(127,t-94)$
+are exchanged by conjugation and together contribute $64$ points.
+These are arithmetic ambient points; the theorem makes no new
+curve-membership or geometric CM-type assertion.
+\end{theorem}
+\begin{proof}
+The existing local calculations in Theorems~\externalref{supplement}{thm:d7nonmax}
+and~\externalref{supplement}{thm:d3classes} leave two embedded orders to consider.
+Put
+\[
+ \mathfrak p'_{41}=(41,t-22),\quad
+ \mathfrak p_{127}=(127,t-94),\quad \gamma=B_{10}.
+\]
+Proposition~\externalref{supplement}{prop:alltraceorders} gives
+$(B_5)=\mathfrak p'_{41}$ and $(\gamma)=\mathfrak p_{127}$.
+For either prime $\mathfrak p=(p,t-r)$, compute in
+\[
+ A_{\mathfrak p}=\mathbf F_p[Z]/(Z^2-rZ+1),\qquad
+ Q_{\mathfrak p}=A_{\mathfrak p}^{\times}/\mathbf F_p^{\times}.
+\]
+Exact multiplication of projective pairs $[a:b]$, with
+$a^2+rab+b^2\ne0$, gives
+\[
+\begin{array}{c|l|r|c|r}
+\mathfrak p&A_{\mathfrak p}&|Q_{\mathfrak p}|&
+ [\varepsilon]&\operatorname{ord}[\varepsilon]\\\hline
+\mathfrak p'_{41}&\mathbf F_{41^2}&42&[1:30]&42\\
+\mathfrak p_{127}&\mathbf F_{127}\times\mathbf F_{127}&126&[1:80]&42.
+\end{array}
+\]
+Here $\varepsilon=1-z^2$ and $[z]=[\varepsilon]^{22}$ in both
+quotients.  At $127$ the roots are $40,54$; the ordered ratio of the
+two components sends $\varepsilon$ to $51$ and $1+9z$ to $7$.
+For example,
+\[
+\begin{gathered}
+ 51^6=32,\quad51^{14}=107,\quad51^{21}=-1,\quad51^{42}=1,\\
+ 7^{18}=64,\quad7^{42}=107,\quad7^{63}=-1,\quad7^{126}=1
+ \pmod{127}
+\end{gathered}
+\]
+certify their respective orders $42$ and $126$.
+The complete unit generation $E_M=\langle\varepsilon\rangle\mu_{42}E_L$
+proved in Theorem~\externalref{supplement}{thm:d7nonmax} shows that no omitted global
+unit enlarges the order-$42$ image.  The conductor exact sequence
+and $h(M)=1$ give
+\[
+ \operatorname{Pic}(S_{\mathfrak p'_{41}})=1,
+ \qquad \operatorname{Pic}(S_{\mathfrak p_{127}})\simeq\mathbf Z/3\mathbf Z.
+\]
+For every proper order here, the unit condition is
+$n+22j\equiv0\pmod d$ on $\varepsilon^n z^j v$, $v\in E_L$,
+where the image order $d$ is $6$ or $42$.  At $127$ it is $42$,
+not $|Q_{\mathfrak p_{127}}|=126$.  The exponent $n$ is therefore
+even, so $N(S_{\mathfrak f}^{\times})=E_L^2$; conversely all real
+unit squares occur.  For maximal multiplier the image is $E_L^+$.
+
+For completeness of the modules at a prime conductor, normalize a
+full local rank-one lattice $I$ so its maximal-order span is $B$.
+In the inert case a vector of minimal valuation is a unit of $B$;
+in the split case the residue subspace surjects to each coordinate
+and contains a vector nonzero in both.  Divide by such a unit.
+Then $D+\varpi B\subseteq I\subseteq B$, whose quotient has length
+one over the local DVR $D$.  Hence there are exactly the proper
+and maximal local types.  Globally this gives
+\[
+ \operatorname{ICM}(S_{\mathfrak p})=
+ \operatorname{Pic}(S_{\mathfrak p})\sqcup\operatorname{Pic}(\OM).
+\]
+The square-conductor proof in Theorem~\externalref{supplement}{thm:d3classes} adds
+exactly the intermediate order at seven.  Thus noninvertible modules
+over the originally generated order are included.  Since $h(L)=1$,
+each lattice has an integral rank-two basis.  The determinant quotient
+$E_L/N(S^{\times})$ supplies $32$ classes for maximal multiplier
+and $64$ for each proper Picard class.  These facts prove the first table.
+
+To make the new nonprincipal classes and their root fibers explicit,
+use the three distinct conductor-unit cosets
+$1,1+9z,1+100z$ at $127$ and the ideals
+\[
+ J_s=\gamma\OM+(1+sz)\OL,
+ \qquad (1+sz,\gamma z)\text{ a basis},\qquad s=0,9,100.
+\]
+Their residues are units at the conductor; locally they are multiples
+of the proper order, and away from it they are maximal.  Thus they
+are invertible ideals of the proper multiplier order.  The conductor
+sequence identifies their three classes and proves they exhaust it.
+The action of $\alpha_k=A_k+B_kz$ is
+\[
+ T_{k,s}=\begin{pmatrix}
+ A_k-sB_k&-\gamma B_k\\
+ (B_k/\gamma)(1+st+s^2)&A_k+(t+s)B_k
+ \end{pmatrix}.
+\]
+Its entries are integral and its characteristic polynomial is the
+required one; conjugating by $D_{\delta_m}$ supplies all orientations.
+
+Conjugation is inversion on $Q_{\mathfrak p_{127}}$, and
+$\overline{1+9z}=85(1+100z)$ modulo the conductor.
+Consequently $\overline{J_9}=J_{100}$ and conversely.
+The conjugation matrix from the basis of $J_9$ to that of $J_{100}$ is
+\[
+ C_{100,9}=\begin{pmatrix}
+ 1+9t&\gamma t\\
+ -(109+900t)/\gamma&-1-100t
+ \end{pmatrix},\qquad \det C_{100,9}=-1.
+\]
+It is integral, since $109+900\cdot94\equiv0\pmod{127}$ and
+$(\gamma)=(127,t-94)$.  Therefore
+$D_{\delta_{m\oplus16}}C_{100,9}D_{\delta_m}^{-1}$ has determinant
+one and transports the action on $J_9$ to the conjugate-root action
+on $J_{100}$.  The root pairs are
+$(J_9,m)\leftrightarrow(J_{100},m\oplus16)$.
+All $64$ masks on $J_9$ represent the nonprincipal point population;
+the principal class contributes $32$ further points, giving $96$.
+
+For clarity, the nonprincipal conductor-$83$ module may be represented
+by $(1+3z,B_2z)$.  In its conductor quotient
+$[1+3z]^2=[\varepsilon]^{29}$, and
+$\eta=\varepsilon z^{28}$ has norm $u$.
+Multiplication by $\eta$ followed by conjugation preserves this ideal
+and has determinant $-u$.  Thus its root pairing is
+$m\mapsto m\oplus48$.  After twisting, multiply the bridge by the
+scalar $u^{-1}$ when bit $32$ of $m$ is unset, and by $1$ otherwise;
+the determinant is then one.  Principal modules use $m\mapsto m\oplus16$.
+The two portable implementations check all $736$ integral root bridges
+against every permitted trace action.
+
+Finally, in any basis $(1+sz,gz)$ put
+$q=g\delta$ and $n=1+st+s^2=N_{M/L}(1+sz)>0$.
+The exact tuple satisfies
+\[
+ 2x=-\frac{q(t+2s)}n,\qquad
+ 4h^2=\frac{q^2(4-t^2)}{n^2},\qquad |w|^2=\frac{q^2}n.
+\]
+It is independent of the allowed trace label.  Together with
+Lemma~\ref{lem:packetpointfibers}, this identifies repeated overorders
+and proves both the point counts and separation of distinct conductor
+strata in the second table.  The fourteen traces acting in the
+conductor-seven order give $28$ incidences per point; all $42$ act in
+the maximal order.  Each other proper stratum occurs for two traces.
+Thus the independent incidence check is
+\[
+ 16\cdot84+32\cdot28+320\cdot4=3520,
+ \qquad 16+6\cdot32+64+96=368.
+\]
+The exact manifests also compare all chosen tuple coefficients, but
+quotient distinctness follows from the structural arguments above.
+\end{proof}
+
+\begin{remark}[Geometry and representative labels]
+The $144$-point and $112$-point populations account for $240$ points of
+the full census.  The two further conductor strata contribute
+$32+96=128$ points, giving $368$.  Equal rational conductor norms do
+not identify the two primes over $41$ or the two over $43$.
+The common-basis labels used here need not equal older companion or
+ideal-lattice masks, especially at nonprincipal conductor $83$.
+An individual geometric decision requires an exact representative
+transport; a proved whole-stratum conclusion transfers through the
+equality of complete intrinsic populations.  This arithmetic census
+adds no geometric CM type, polarization or Hodge conclusion.
+\end{remark}
+
+
+\subsection{From two regions to the full curve}
+\begin{lemma}[Two simultaneous target regions]\label{lem:twochambers}
+Let $Q$ be the labelled quadrilateral chamber in McMullen's source
+half-plane, let $r$ be reflection in its $AB$ side, and let $Q_i$ be
+its six normalized coordinate quadrilaterals. Write $r_i$ for reflection
+in the labelled $A_iB_i$ side and put
+\[
+ P_0=\prod_{i=1}^6 Q_i,\qquad P_1=\prod_{i=1}^6 r_i(Q_i).
+\]
+If a tuple $p\in\HH^6$ represents a point of the normalized McMullen
+curve, some $H\in\SL_2(\OL)$ sends $p$ into $P_0\cup P_1$.
+Consequently, complete empty searches for both target regions exclude
+$p$ from the curve. Each search may use its own explicitly verified
+$\SL_2(\OL)$ translate of $p$.
+\end{lemma}
+\begin{proof}
+Let $W$ be the quadrilateral reflection group and let $\Delta_0$ be
+its orientation-preserving subgroup. McMullen's construction identifies
+the holomorphic quadrilateral group with this index-two subgroup
+\cite[\S4]{McMullen2026}. Thus $Q\cup rQ$ is a fundamental region
+for $\Delta_0$, with boundary identifications allowed. The normalized
+modular embedding $F$ is obtained from the labelled triangle maps by
+Schwarz continuation. The same continuation across the $AB$ side gives
+$F_i(rz)=r_i(F_i(z))$ in every coordinate
+\cite[\S6, Theorem~6.3 and the proof of Theorem~1.9]{McMullen2026}.
+It follows that $F(Q)\subset P_0$ and $F(rQ)\subset P_1$.
+The region choice is simultaneous in all six coordinates; no independent
+coordinate reflections are used.
+
+Write $p=KF(z)$ with $K\in\SL_2(\OL)$. Choose
+$\eta\in\Delta_0$ such that $\eta z\in Q\cup rQ$.
+Equivariance gives
+$\rho(\eta)K^{-1}p=F(\eta z)\in P_0\cup P_1$,
+where the normalized monodromy lift $\rho(\eta)$ is integral of
+determinant one. If search $j$ uses $p_j=G_jp$ with
+$G_j\in\SL_2(\OL)$, then $HG_j^{-1}$ carries $p_j$ to the same
+target. Both empty exhaustive searches contradict this necessity.
+This proof makes no assertion that any $r_i$ normalizes the arithmetic
+group or permutes the packet.
+\end{proof}
+
+\begin{theorem}[Complete fixed marked geometric packet]\label{thm:fullpacketgeometry}
+Assume the packet execution hypothesis stated in the introduction.
+Let $\mathcal S$ be the $368$ ambient quotient points of
+Theorem~\ref{thm:fullpacketarithmetic}, with its fixed $M/L$, norm
+generator, $L$-action and ordered embeddings. Let $\mathcal X$ be the
+normalized McMullen curve image in $\SL_2(\OL)\backslash\HH^6$.
+Then
+\[
+ \mathcal S\cap\mathcal X=\{A,B,C\}.
+\]
+Thus exactly $365$ points are excluded, including every point of proper
+multiplier order. The three labels in the arithmetic certificate are
+$\texttt{OM:pic0:07}$, $\texttt{OM:pic0:15}$ and
+$\texttt{OM:pic0:00}$ for $A,B,C$, respectively.
+\end{theorem}
+\begin{proof}
+The arithmetic census fixes the complete domain, including all module
+classes, determinant sectors, intermediate overorders and root fibers.
+The positive vertex realizations in Theorem~\ref{thm:A} and
+Theorem~\externalref{supplement}{thm:d7ambient} give three distinct points in the intersection.
+It remains to exclude each of the other $365$ points.
+
+For the original target $P_0$, the retained legacy calculations cover
+$116$ distinct points. The original-target portable certificate covers
+the disjoint complement of $249$ nonvertex labels. Their union is exactly
+$\mathcal S\setminus\{A,B,C\}$; the thirteen maximal exclusions are already
+inside the $116$ and are not counted twice. The original-target coverage
+uses the complete numerical searches, not the full-curve conclusions
+of the historical subpacket propositions. At nonprincipal conductor
+$83$, its bridge is equality of the entire $32$-point population, not
+an unproved permutation of the old and new mask labels.
+
+The reflected certificate reconstructs all $365$ nonvertex labels and
+tests the simultaneous target $P_1$. In each target the source transport
+is separately verified integral of determinant one. Fresh exact target
+vertices and outward rational height/modulus bounds give finite
+positive trace-form ellipsoids for all possible entries. Inclusive
+lattice recursion, the affine determinant equation, both simultaneous
+matrix signs and the separate $c=0$ branch exhaust the candidate set.
+Closed side predicates retain boundary equality. These arguments apply
+to nonprincipal modules and all orientations, without a maximal-order
+or mask-zero hypothesis.
+
+The primary quotient-field path and the separate Sturm path agree on
+the complete preparations, entries, rows, candidates and classifications.
+Every survivor set is empty. The retained reports bind each plan and
+result to its source, target, runtime and full row journal. The
+whole-executable correspondence and actual portable controls justify
+the source relocation; controls are not a sampling proof for untested
+labels. The certificates and historical execution assumptions are
+specified in Supplement, Section~\externalref{supplement}{app:computer}.
+
+If a remaining point lay on the curve, Lemma~\ref{lem:twochambers} would
+give an integral determinant-one matrix sending it into $P_0$ or $P_1$.
+For a source replaced by $G_jp$ in target $j$, the corresponding matrix
+is $HG_j^{-1}$. The complete search for that target would retain it,
+contradicting its empty result. The positive realizations therefore
+give the asserted equality. No arithmetic-normalizer property of the
+reflection and no independent per-coordinate chamber choice is used.
+\end{proof}
+

@@ -1,0 +1,35 @@
+{
+  "all_subspace_G_orbits": 234,
+  "complete_minimum_polarized_orbits": {
+    "1": 1,
+    "4": 2,
+    "8": 4,
+    "12": 4,
+    "24": 120
+  },
+  "fixed_scalar_orbits": [
+    94,
+    2,
+    10,
+    14,
+    10,
+    2
+  ],
+  "obstructed_minimum_polarized_orbits": {
+    "8": 3,
+    "24": 116
+  },
+  "obstructed_underlying_orbits": {
+    "4": 3,
+    "12": 8
+  },
+  "principalizable_subspace_G_orbits": 115,
+  "scope": "Checks displayed sums only; semilinear fixed-space counts and Galois identifications require the human proof and hostile review.",
+  "status": "PROVISIONAL_INTEGER_REGRESSION_PASS",
+  "underlying_orbits": {
+    "2": 2,
+    "4": 4,
+    "6": 4,
+    "12": 12
+  }
+}

@@ -1,0 +1,62 @@
+"""Prepare an immutable two-job theta packet; never authorize it."""
+from pathlib import Path
+import argparse,copy,hashlib,io,json,tarfile
+ROOT=Path(__file__).resolve().parents[2]
+def raw(p):return (ROOT/p).read_bytes()
+def sha(b):return hashlib.sha256(b).hexdigest()
+def ref(p):
+ b=raw(p);return {'path':p,'sha256':sha(b),'bytes':len(b)}
+def write(p,d,canonical=False):
+ target=ROOT/p;target.parent.mkdir(parents=True,exist_ok=True)
+ target.write_text(json.dumps(d,sort_keys=True,**({} if canonical else {'indent':2}))+'\n')
+p=argparse.ArgumentParser();p.add_argument('--output',required=True);p.add_argument('--pair-start',type=int,default=0);p.add_argument('--pair-count',type=int,default=8);args=p.parse_args();base=args.output
+assert base.startswith('build/s-order-v164/') and '..' not in Path(base).parts and not (ROOT/base).exists()
+old=json.loads(raw('experiments/s_order_census_v162/postprocess_execution_authority01.json'));oldpacket=json.loads(raw(old['jobs'][0]['path']))
+common=['experiments/s_order_census_v162/adoption.json','experiments/s_order_census_v162/final_data_review01.json',
+ 'experiments/s_order_theta_v164/period_loader_candidate.py','experiments/s_order_theta_v164/remote_theta_candidate.py',
+ 'experiments/bc_jacobian_v147/exact_ball_candidate.py','experiments/bc_jacobian_v147/remote_wheels.json']
+representatives=[0,1,2,3,6,12,15,17,40,91]
+assert 0<=args.pair_start<130 and 2<=args.pair_count<=16 and args.pair_start+args.pair_count<=130
+packets=[];manifests=[];mappings=[]
+for job in (0,1):
+ folder=f'{base}/job{job}';mapping={p:p for p in common}
+ mapping['experiments/bc_jacobian_v147/certificate_worker_candidate.py']='experiments/s_order_theta_v164/worker_candidate.py'
+ tasks=[]
+ for position,index in enumerate(representatives[5*job:5*job+5]):
+  path=f'build/s-order-v162/postprocessed01/model{index:03}.json';mapping[path]=path
+  record=json.loads(raw(path));pairs=record['transport']['eligible_nonzero_pairs']
+  start,count=args.pair_start,args.pair_count;cut=start+count//2
+  chunks=[range(start,cut),range(cut,start+count)] if position<3 else [range(start,start+count)]
+  for chunk in chunks:
+   indices=list(chunk)
+   tasks.append({'catalog_index':index,'record_path':path,'pair_indices':indices,'numerators_mod3':[pairs[k] for k in indices],
+                'max_cpu_seconds':120,'child_wall_seconds':150,'parent_kill_seconds':160})
+ plan={'scope':'Exact theta candidates on individually adopted S-order models; no automatic exclusion','job_index':job,'concurrency':2,'max_tasks':8,
+       'pair_start':args.pair_start,'pair_count':args.pair_count,'pins':{v:sha(raw(p)) for v,p in mapping.items()},'tasks':tasks}
+ pp=f'{folder}/certificate_plan_candidate.json';write(pp,plan)
+ contents={v:raw(p) for v,p in mapping.items()};contents['experiments/bc_jacobian_v147/certificate_plan_candidate.json']=raw(pp)
+ archive=io.BytesIO()
+ with tarfile.open(fileobj=archive,mode='w',format=tarfile.USTAR_FORMAT) as tar:
+  for name,b in sorted(contents.items()):
+   info=tarfile.TarInfo(name);info.size=len(b);info.mode=0o444;info.mtime=0;info.uid=info.gid=0;info.uname=info.gname='';tar.addfile(info,io.BytesIO(b))
+ data=archive.getvalue();assert len(data)<=2*1024**2 and len(contents)<=64
+ (ROOT/folder/'source.tar').write_bytes(data)
+ scope=f'Job{job}: exact theta candidates on five S-order targets; pair indices{args.pair_start}..{args.pair_start+args.pair_count-1}; no adoption'
+ manifest={'scope':scope,'archive_sha256':sha(data),'plan_sha256':sha(raw(pp)),'files':{n:{'sha256':sha(b),'bytes':len(b)} for n,b in contents.items()}}
+ mf=f'{folder}/source_manifest.json';write(mf,manifest)
+ uploads={'pipeline':ref('experiments/s_order_census_v162/pipeline_candidate.py'),'selector':oldpacket['uploads']['selector'],'setup':oldpacket['uploads']['setup'],'source_tar':ref(f'{folder}/source.tar'),'source_manifest':ref(mf)}
+ jm=f'{folder}/job_manifest.json';jobmanifest={'image':json.loads(raw(oldpacket['code']['job_manifest.json']['path']))['image'],'scope':scope,
+ 'transport':{'blobs':{n:{'sha256':v['sha256'],'bytes':v['bytes']} for n,v in uploads.items()},'plan_sha256':manifest['plan_sha256']}}
+ write(jm,jobmanifest,True);code=copy.deepcopy(oldpacket['code']);code['job_manifest.json']=ref(jm)
+ packet={'scope':scope,'code':code,'uploads':uploads,'source_mapping':mapping}
+ ep=f'{folder}/execution_packet.json';write(ep,packet);packets.append(ref(ep));manifests.append(jobmanifest);mappings.append(mapping)
+sm=f'{base}/session_manifest.json';write(sm,{'version':1,'jobs':manifests},True)
+a=copy.deepcopy(old);a['baseline_postprocess_authority']=ref('experiments/s_order_census_v162/postprocess_execution_authority01.json')
+a['baseline_postprocess_review']=a.pop('independent_review');a['baseline_postprocess_candidate']=a.pop('candidate')
+a['status']='CANDIDATE_V164_THETA_NOT_AUTHORIZED';a['jobs']=packets;a['session_manifest']=ref(sm);a['bootstrap_code']['job_manifest.json']=ref(sm)
+a['scope']='Two five-target/eight-task theta jobs; unchanged artifact allowlist and1200/1500sec lifecycle,0.50reservation/0.35hourcap. Exact disjoint chunks, dyadic loader, producer and completion schema require review. No execution or mathematical adoption.'
+paths=set(p for mapping in mappings for p in mapping.values())
+paths|={'experiments/s_order_theta_v164/prepare_candidate.py','experiments/s_order_theta_v164/WORKING_INTERFACE.md'}
+paths|={str(p.relative_to(ROOT)) for p in (ROOT/base).rglob('*') if p.is_file()}
+a['pins'].update({p:sha(raw(p)) for p in paths});write(f'{base}/execution_candidate.json',a)
+print(json.dumps({'candidate':f'{base}/execution_candidate.json','candidate_sha256':sha(raw(f'{base}/execution_candidate.json')),'archive_bytes':[len(raw(f'{base}/job{j}/source.tar')) for j in (0,1)],'source_files_per_job':len(contents),'status':a['status']}))

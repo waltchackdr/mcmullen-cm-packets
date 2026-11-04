@@ -1,0 +1,26 @@
+{
+  "blockers": [
+    "Unrestricted dynamic exception class name enters new diagnostic log",
+    "Telemetry write can consume endpoint deadline before provider read uses stale timeout"
+  ],
+  "candidate_pins": 325,
+  "deadline_reproduction": [
+    {
+      "started_seconds": 121.0,
+      "timeout_seconds": 1.0
+    }
+  ],
+  "dynamic_class_name_reproduced": true,
+  "exception_message_not_logged": true,
+  "numerical_calls": 0,
+  "observer_failure_cleanup_pass": true,
+  "packet_pins": 11,
+  "provider_calls": 0,
+  "same_sparse13_jobs_bootstrap_session": true,
+  "status": "REJECT_CHANGED_TELEMETRY_BOUNDARY",
+  "unchanged_controller_functions": [
+    "load_packet",
+    "run_queue"
+  ],
+  "wall_seconds": 0.047107000020332634
+}

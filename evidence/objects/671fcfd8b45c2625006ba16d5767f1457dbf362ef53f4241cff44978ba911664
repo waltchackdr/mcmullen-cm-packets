@@ -1,0 +1,111 @@
+#!/usr/bin/env python3
+"""Bounded exact regression for the signed-graph model; no Graver enumeration."""
+from fractions import Fraction
+from hashlib import sha256
+from pathlib import Path
+import json
+
+ROOT = Path(__file__).resolve().parents[2]
+SOURCE = "experiments/mixed_products_v100/second_primitive_minors.json"
+T2 = [
+    [0, 0, 0, 1, 0, 1],
+    [0, 0, 1, -1, 0, 0],
+    [0, 0, 1, 0, 0, -1],
+    [0, 1, 0, 0, 1, 0],
+    [1, -1, 0, 0, 0, 0],
+    [1, 0, 0, 0, -1, 0],
+]
+EXPECTED = [
+    [1, 0, 0, 0, 0, -1, 1, 0, -1, 0, 0, 0],
+    [0, 1, -1, 0, 0, 0, 0, 1, 0, -1, 0, 0],
+    [0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, -1],
+    [1, 0, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0],
+    [0, 1, 0, 1, 0, 0, 0, 0, 0, 1, -1, 0],
+    [0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 1],
+]
+
+
+def determinant(matrix):
+    a = [[Fraction(x) for x in row] for row in matrix]
+    result = Fraction(1)
+    for j in range(len(a)):
+        pivot = next((k for k in range(j, len(a)) if a[k][j]), None)
+        if pivot is None:
+            return Fraction(0)
+        if pivot != j:
+            a[j], a[pivot] = a[pivot], a[j]
+            result = -result
+        value = a[j][j]
+        result *= value
+        for k in range(j + 1, len(a)):
+            ratio = a[k][j] / value
+            for l in range(j, len(a)):
+                a[k][l] -= ratio * a[j][l]
+    return result
+
+
+def check():
+    raw = (ROOT / SOURCE).read_bytes()
+    source = json.loads(raw)
+    columns = source["full_weight_columns"]
+    full = [list(row) for row in zip(*columns)]
+    assert source["independent_rows"] == list(range(6))
+    assert full[6:] == [[-x for x in row] for row in reversed(full[:6])]
+    w = full[:6]
+    twice_n = [[sum(t[k] * w[k][j] for k in range(6))
+                for j in range(12)] for t in T2]
+    assert twice_n == [[2 * x for x in row] for row in EXPECTED]
+    det_t2 = determinant(T2)
+    assert det_t2 != 0
+    cycle = [0, 3, 1, 4, 2, 5]
+    pairs = {tuple(sorted((cycle[i], cycle[(i + 1) % 6]))): []
+             for i in range(6)}
+    edge_ports = []
+    lift_checks = 0
+    for j in range(12):
+        ports = [(v, EXPECTED[v][j]) for v in range(6) if EXPECTED[v][j]]
+        assert len(ports) == 2 and all(abs(s) == 1 for v, s in ports)
+        (u, a), (v, b) = ports
+        pairs[tuple(sorted((u, v)))].append([j, a * b])
+        edge_ports.append(ports)
+        # In each fixed orthant, either traversal has incidence equal to
+        # signed state(start) minus signed state(finish).
+        for epsilon in (-1, 1):
+            for start, finish in [((u, epsilon*a), (v, -epsilon*b)),
+                                  ((v, epsilon*b), (u, -epsilon*a))]:
+                boundary = [0] * 6
+                boundary[start[0]] += start[1]
+                boundary[finish[0]] -= finish[1]
+                assert boundary == [epsilon * EXPECTED[i][j] for i in range(6)]
+                lift_checks += 1
+    assert all(sorted(x[1] for x in edges) == [-1, 1] for edges in pairs.values())
+    # One nonzero minor independently establishes full row rank.
+    rank_columns = [0, 1, 2, 3, 4, 6]
+    minor = determinant([[row[j] for j in rank_columns] for row in EXPECTED])
+    assert minor != 0
+    witness = source["nonunit_primitive_circuit"]["expanded"]
+    assert all(sum(row[j] * witness[j] for j in range(12)) == 0 for row in EXPECTED)
+    return {
+        "input_sha256": {SOURCE: sha256(raw).hexdigest()},
+        "transform_T2": T2,
+        "det_T2": str(det_t2),
+        "det_T2_over_2": str(det_t2 / 64),
+        "signed_incidence_matrix": EXPECTED,
+        "identity": "T2 W = 2 N; remaining full weight rows are negative reversed first six rows",
+        "full_rank_minor_columns": rank_columns,
+        "full_rank_minor_value": str(minor),
+        "underlying_cycle": cycle,
+        "edge_ports": edge_ports,
+        "signed_state_boundary_checks": lift_checks,
+        "coefficient_two_witness": witness,
+        "status": "EXACT_STRUCTURAL_REGRESSION_ONLY_NO_GRAVER_ENUMERATION",
+    }
+
+
+if __name__ == "__main__":
+    import resource
+    import signal
+    resource.setrlimit(resource.RLIMIT_CPU, (20, 22))
+    signal.alarm(30)
+    assert __debug__
+    print(json.dumps(check(), indent=2, sort_keys=True))

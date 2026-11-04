@@ -1,0 +1,14 @@
+{
+  "archive_bytes": 10158080,
+  "archive_path": "build/research-v81/cloud/final-deployment-2026-10-12/v81-release159-source-evidence-cohort1/source-commit.tar",
+  "archive_sha256": "1f7849308933389802eecb46f8906458d0c2e6637daaefbbea94cb5c1cf6ef8d",
+  "checked_bytes": 9844440,
+  "checked_files": 264,
+  "observed_epoch": 1791845639.248327,
+  "original159_pass": false,
+  "skipped_original_end_guard_reconstructed": false,
+  "snapshot_sha256": "e6aa5112a8465180d50e4a2b187f632d5f6b4196bb7e3d39d020d32c1810d2c0",
+  "source_commit": "462b53ff29ef0035729878dededbb556926f0cc8",
+  "source_manifest_sha256": "d5cc8cdcab982e930c46e523aad544362f2f66cb293d13996fb304e4e9e19606",
+  "status": "LOCAL_IMMUTABLE_LEGACY_SOURCE_ARCHIVE_AND_264_MANIFEST_FILES_VERIFIED"
+}

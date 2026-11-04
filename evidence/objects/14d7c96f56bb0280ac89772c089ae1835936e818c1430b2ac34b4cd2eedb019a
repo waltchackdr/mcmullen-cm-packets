@@ -1,0 +1,106 @@
+"""Independent small finite-field and eigenspace checks for C96.
+No producer imports, Grassmannian(6,3) enumeration or Galois-orbit enumeration.
+"""
+import itertools,json,resource,signal,time
+from pathlib import Path
+resource.setrlimit(resource.RLIMIT_CPU,(20,20));signal.alarm(30)
+start=time.monotonic()
+def digits(x):return [x%3,x//3%3,x//9]
+def enc(a):return sum((v%3)*3**i for i,v in enumerate(a))
+def add27(a,b):return enc([x+y for x,y in zip(digits(a),digits(b))])
+def mul27(a,b):
+ c=[0]*5
+ for i,x in enumerate(digits(a)):
+  for j,y in enumerate(digits(b)):c[i+j]+=x*y
+ # F27=F3[t]/(t^3-t-1); all three base-field substitutions nonzero.
+ for i in (4,3):c[i-2]+=c[i];c[i-3]+=c[i]
+ return enc(c[:3])
+A=[[add27(a,b) for b in range(27)] for a in range(27)]
+M=[[mul27(a,b) for b in range(27)] for a in range(27)]
+neg27=[enc([-v for v in digits(a)]) for a in range(27)]
+def add(a,b):return A[a%27][b%27]+27*A[a//27][b//27]
+def neg(a):return neg27[a%27]+27*neg27[a//27]
+def mul(x,y):
+ a,b=x%27,x//27;c,d=y%27,y//27
+ return A[M[a][c]][neg27[M[b][d]]]+27*A[M[a][d]][M[b][c]]
+def power(x,n):
+ r=1
+ while n:
+  if n&1:r=mul(r,x)
+  x=mul(x,x);n//=2
+ return r
+assert all(power(x,728)==1 for x in range(1,729))
+frob=[[power(x,3**j) for x in range(729)] for j in range(6)]
+k=[x for x in range(1,729) if frob[3][x]==x];assert len(k)==26
+c=27;assert frob[3][c]==neg(c) and power(c,26)==2
+# Fixed-space values here are consequences of the human primary-module proof;
+# independent arithmetic below checks all norm fibers and G restrictions.
+def fixed(u,j):
+ if j==0:return 33880 if frob[1][u]==u else (28 if frob[3][u]==u else 0)
+ if j in (1,5):return 4 if power(u,364)==1 else 0
+ if j in (2,4):return 40 if power(u,91) in (1,2) else 0
+ n=power(u,28)
+ return 340 if n==1 else (0 if n==2 else (2 if power(n,13)==1 else 0))
+full=[];restricted=[];G=[];normfibers=[]
+for j in range(6):
+ d=(6,1,2,3,2,1)[j];exponent=728//(3**d-1);counts={};total=0;small=0
+ target=power(c,3**j-1)
+ for u in range(1,729):
+  n=power(u,exponent);counts[n]=counts.get(n,0)+1;total+=fixed(u,j)
+  if power(u,28) in (target,neg(target)):
+   G.append((u,j));small+=fixed(u,j)
+ assert len(counts)==3**d-1 and set(counts.values())=={exponent}
+ full.append(total);restricted.append(small);normfibers.append({'j':j,'norm_values':len(counts),'fiber_size':exponent})
+assert full==[68432,1456,7280,10192,7280,1456]
+assert restricted==[67760,112,560,9520,560,112] and len(G)==336
+G0=[(u,j) for u,j in G if j in (0,3)];assert len(G0)==112
+# Coefficient projective lines and Frobenius orbits, directly in F27.
+line=lambda x:min(x,neg(x))
+coeff={line(x) for x in k};orbits=[]
+while coeff:
+ x=min(coeff);orbit={line(frob[j][x]) for j in range(3)};orbits.append(sorted(orbit));coeff-=orbit
+assert sorted(map(len,orbits))==[1,3,3,3,3]
+# Each coefficient form is scalar-conjugate to b1; chosen scalars normalize G0.
+for t in {line(x) for x in k}:
+ v=next(v for v in range(1,729) if power(v,28)==t);vi=power(v,727)
+ for u,j in G0:
+  newu=mul(mul(v,u),frob[j][vi]);assert (newu,j) in G0
+# Direct G0-transitivity on the 28 k-lines.
+kline=lambda x:min(mul(x,t) for t in k)
+assert len({kline(u) for u,j in G0})==28
+# Independent small eigenspace model: all subspaces of F3^3 (28 total),
+# pairing positive and negative eigenspaces by the ordinary dot product.
+def rowspace(rows):
+ a=[list(v) for v in rows];r=0
+ for j in range(3):
+  q=next((i for i in range(r,len(a)) if a[i][j]%3),None)
+  if q is None:continue
+  a[q],a[r]=a[r],a[q];a[r]=[x*pow(a[r][j],-1,3)%3 for x in a[r]]
+  for i in range(len(a)):
+   if i!=r:
+    t=a[i][j];a[i]=[(x-t*y)%3 for x,y in zip(a[i],a[r])]
+  r+=1
+  if r==len(a):break
+ return tuple(tuple(v) for v in a[:r])
+vectors=list(itertools.product(range(3),repeat=3));subs={(),rowspace([(1,0,0),(0,1,0),(0,0,1)])}
+for v in vectors:subs.add(rowspace([v]))
+for v,w in itertools.product(vectors,repeat=2):subs.add(rowspace([v,w]))
+assert [sum(len(h)==r for h in subs) for r in range(4)]==[1,13,13,1]
+threeplanes=[(x,y) for x,y in itertools.product(subs,repeat=2) if len(x)+len(y)==3]
+isotropic=[(x,y) for x,y in threeplanes if all(sum(a*b for a,b in zip(v,w))%3==0 for v in x for w in y)]
+assert len(threeplanes)==340 and len(isotropic)==28
+# Check the order7 scalar and actual h=Frob^2 lift facts in this model.
+roots7=[v for v in range(1,729) if power(v,7)==1];assert len(roots7)==7
+assert all(power(v,91)==1 for v in roots7)
+assert all(next(j for j in range(1,7) if power(v,3**j)==v)==6 for v in roots7 if v!=1)
+# Solve the nonnegative orbit-size equations without fitting an answer.
+solutions=[]
+for a4 in range(7):
+ for a8 in range(4):
+  if 4*a4+8*a8!=24:continue
+  for a12 in range(120-a4-a8):
+   a24=119-a4-a8-a12
+   if 4*a4+8*a8+12*a12+24*a24==2808:solutions.append([a4,a8,a12,a24])
+assert solutions==[[0,3,0,116]]
+out={'status':'PASS','field_model':'F27=F3[t]/(t^3-t-1); K=F27[i]/(i^2+1)','norm_fibers':normfibers,'full_semilinear_fixed_sums':full,'restricted_G_fixed_sums':restricted,'full_scalar_orbit_fixed_counts':[x//728 for x in full],'G_order':len(G),'G0_order':len(G0),'coefficient_orbit_lengths':sorted(map(len,orbits)),'scalar_coefficient_identification_normalizes_G0':True,'G0_orbit_size_on_k_lines':28,'involution_invariant_threeplanes':len(threeplanes),'involution_invariant_lagrangians':len(isotropic),'order7_scalar_degree':6,'orbit_equation_solutions':solutions,'scope':'Norm fibers/normalization/eigenspace checks; fixed-space formulas rely on separately reviewed structural proof, no33880 enumeration','wall_seconds':time.monotonic()-start}
+Path(__file__).with_suffix('.json').write_text(json.dumps(out,indent=2,sort_keys=True)+'\n');print(json.dumps(out,sort_keys=True))

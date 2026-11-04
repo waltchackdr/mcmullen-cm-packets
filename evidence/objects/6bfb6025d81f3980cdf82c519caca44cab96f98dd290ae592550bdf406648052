@@ -1,0 +1,23 @@
+"""Four-pair norm-family, polarization and kernel witness regression."""
+import json
+from pathlib import Path
+import subprocess
+import sys
+import unittest
+ROOT=Path(__file__).resolve().parents[1]
+CERT=ROOT/'certificates/bc_polarization_square_v141.py'
+class BCPolarizationSquare(unittest.TestCase):
+    def test_complete_families_and_kernel_matrices(self):
+        r=subprocess.run([sys.executable,'-B',str(CERT)],capture_output=True,text=True,timeout=25,check=True)
+        self.assertEqual(json.loads(r.stdout),json.loads((ROOT/'certificates/bc_polarization_square_data.json').read_text()))
+    def test_independent_form_and_torsion_checks(self):
+        r=subprocess.run([sys.executable,'-B',str(ROOT/'independent/bc_polarization_square_v141.py')],capture_output=True,text=True,timeout=25,check=True)
+        result=json.loads(r.stdout)
+        self.assertEqual(result['status'],'INDEPENDENT_FOUR_FORMS_AND_KERNELS_PASS')
+        self.assertEqual(result['two_torsion_vectors_exhausted'],4096)
+        self.assertTrue(result['two_complementary_kernel_classes'])
+    def test_disabled_assertions_rejected(self):
+        r=subprocess.run([sys.executable,'-O','-B',str(CERT)],capture_output=True,text=True,timeout=25)
+        self.assertNotEqual(r.returncode,0)
+        self.assertIn('Enabled assertions are required',r.stderr)
+if __name__=='__main__':unittest.main()

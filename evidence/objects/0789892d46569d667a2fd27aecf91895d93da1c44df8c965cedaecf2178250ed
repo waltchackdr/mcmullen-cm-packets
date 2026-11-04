@@ -1,0 +1,252 @@
+#!/usr/bin/env python3
+"""Closed-capture metadata audit: fixed557 + selected26/147, all duplicates retained.
+
+No field or geometry search is executed. Frozen administrative validators are
+reused; only the approved configuration hash is parameterized for new cohorts.
+"""
+import argparse,fcntl,hashlib,importlib.util,json,resource,signal,sys,time
+from pathlib import Path
+BASE='experiments/continuous_v83/continuation/crosscohort/fixed730-revision01/audit.py'
+BASE_SHA='3d125c2cbbe65d18f084e9495ffd03dbea853f20aad43dad20b78d6715898b65'
+ALLOCATION='27fd48603c124ca8cfc31dd94cf6eeb66e95ce3df00816331183051151aa8b52'
+OLD_POD='woqi0t1lpjuqq3'
+NEW_CONFIG='36f7c248b52843470867ff1aeb2847bcc83aba20bd85371af9336c5e944ac8ca'
+EXECUTION_BINDING='99cce75f9fc022bf0ae6fa54b8bbe7502a6d30446773d22e583d988670ea641b'
+SCOPE='FIXED_730_557_ORIGINAL_PLUS_26_EXISTING_PLUS_147_FANOUT_NO_PROMOTION'
+def need(ok,message):
+ if not ok:raise ValueError(message)
+def encoded(v):return (json.dumps(v,sort_keys=True,separators=(',',':'),allow_nan=False)+'\n').encode()
+def sha(p):
+ h=hashlib.sha256()
+ with Path(p).open('rb')as f:
+  for b in iter(lambda:f.read(1048576),b''):h.update(b)
+ return h.hexdigest()
+def object_sha(v):return hashlib.sha256(encoded(v)).hexdigest()
+def helpers(root):
+ p=Path(root)/BASE;need(all(not q.is_symlink()for q in(p,*p.parents))and sha(p)==BASE_SHA,'Unreviewed fixed audit helper')
+ s=importlib.util.spec_from_file_location('fanout_fixed',p);x=importlib.util.module_from_spec(s);s.loader.exec_module(x)
+ return (x,*x.modules(Path(root)))
+def digest_value(s):return type(s)is str and len(s)==64 and all(c in '0123456789abcdef'for c in s)
+
+def allocation_binding(x,c,labels,index,allocation,binding,old,new,new_sha,continuation_hosts):
+ need(object_sha(allocation)==ALLOCATION,'Allocation canonical bytes changed')
+ need(binding['status']=='ROOT_APPROVED_FIXED_FANOUT_ALLOCATION','Explicit root selection authority')
+ need(binding['allocation_sha256']==ALLOCATION and binding['new_configuration_sha256']==new_sha and binding['existing_execution_configuration_sha256']==x.CONFIG,'Configuration/selection binding')
+ for k in ('reserved_partition_never_initialized_or_run_under_new_configuration','all_original_and_duplicate_attempts_preserved','completed_duplicates_require_full_canonical_and_journal_agreement'):need(binding[k]is True,'Required selection safeguard '+k)
+ need(binding['reserved_partition_must_never_be_initialized_or_run']==OLD_POD and binding['substitution_for_missing_selected_source']=='FORBIDDEN_WITHOUT_SEPARATE_REVIEWED_AMENDMENT'and binding['theorem_promotion']is False,'No fallback/promotion')
+ need(binding['configuration_core_sha256']==object_sha({k:v for k,v in new.items()if k!='authorization'})and binding['root_authorization_sha256']==new['authorization']['sha256'],'Final configuration/root authorization identity')
+ c.validate_partition(index,old['partitions'],labels);c.validate_partition(index,new['partitions'],labels)
+ need(old['partitions']=={OLD_POD:sorted(index['unresolved'])} and old['cohort_id']==allocation['reserved_existing']['cohort_id'],'Existing full173 execution')
+ mapping=binding['logical_slot_to_actual_pod_id'];need(set(mapping)==set(allocation['new_partitions']) and len(set(mapping.values()))==6 and OLD_POD not in mapping.values(),'Six distinct fresh actual hosts')
+ need(all(type(v)is str and v and '/'not in v for v in mapping.values()),'Actual host identifiers')
+ expected={OLD_POD:allocation['reserved_existing']['keys'],**{mapping[slot]:keys for slot,keys in allocation['new_partitions'].items()}}
+ need(new['partitions']==expected and set(new['hosts'])==set(expected),'Exact reserved26 plus147 configuration')
+ need(set(continuation_hosts)=={OLD_POD,*mapping.values()},'All seven actual cohorts required; no extra reserved-new execution')
+ need(new['cohort_id']!=old['cohort_id'] and new_sha!=x.CONFIG,'Fresh cohort/configuration identity')
+ for cfg in(old,new):need(cfg['origin_index']['sha256']==x.INDEX and cfg['origin_review']['sha256']==x.ORIGIN_REVIEW,'Unchanged origin authentication')
+ refs=binding['source_runtime_resource_reviews'];need(set(refs)==set(mapping.values()),'Per-new-host review bindings')
+ for host in mapping.values():
+  record=refs[host];need(set(record)=={'slot','runtime_sha256','runtime_review_sha256','smoke_result_sha256','host_observation_sha256','budget_sha256'} and all(digest_value(v)for k,v in record.items()if k!='slot'),'Exact actual source/runtime/resource evidence schema')
+  need(mapping.get(record['slot'])==host and record['runtime_sha256']==new['hosts'][host]['runtime']['sha256'] and record['runtime_review_sha256']==new['hosts'][host]['runtime_review']['sha256'],'Actual configuration evidence links')
+  limits=new['hosts'][host]['limits'];c.validate_limits(limits)
+  need(limits['cpu_seconds']==3600 and limits['workers']==len(expected[host]) and limits['max_campaign_bytes']==10000000000,'Fixed prospective fanout caps/storage')
+ selected={k:OLD_POD for k in expected[OLD_POD]}
+ for host,keys in expected.items():
+  if host!=OLD_POD:
+   for key in keys:selected[key]=host
+ need(set(selected)==set(index['unresolved']) and len(selected)==173,'Fixed selected173 coverage')
+ for key,source in allocation['selected_sources'].items():
+  expected_host=OLD_POD if source['source']=='EXISTING_V86'else mapping[source['logical_slot']]
+  need(source['task_key']==key and selected[key]==expected_host,'Allocation selected-source authority')
+ return selected,mapping
+
+# Exact frozen continuation function with one explicit policy parameter.
+# The test reverses only its name, two extra arguments, helper qualifications
+# and CONFIG->config_sha; the resulting AST must equal the accepted base.
+def continuation_for_configuration(x,config_sha,a,c,store,index,config,partition,receipt,receipt_sha,review,inventory_sha,documents):
+ state=x.capture_gate(a,store,receipt,receipt_sha,review,config,partition,config_sha,inventory_sha,documents);host=config['hosts'][partition]
+ manifest=store.read('manifest.json');r=x.mapped_runner(a,store)
+ need(manifest==c.expected_manifest(config,index,host,partition,config_sha),'Continuation manifest differs from reviewed configuration')
+ need(state['manifest_sha256']==store.sha('manifest.json') and state['configuration_sha256']==config_sha and
+      store.sha('configuration.json')==config_sha and store.sha('controller.py')==x.PINS[x.HERE+'/continuation/controller.py'] and
+      state['controller_sha256']==x.PINS[x.HERE+'/continuation/controller.py'],'Continuation state/source/config binding')
+ need(state['runtime']==store.read('approvals/runtime.json') and store.sha('approvals/runtime.json')==host['runtime']['sha256'],'Approved cohort runtime')
+ rr=store.read('approvals/runtime-review.json');need(store.sha('approvals/runtime-review.json')==host['runtime_review']['sha256'] and rr['status']=='APPROVED_CONTINUATION_RUNTIME' and rr['runtime_sha256']==host['runtime']['sha256'],'Actual runtime review')
+ for name,ref in (('origin-index',config['origin_index']),('origin-review',config['origin_review']),('root-authorization',config['authorization']),('guard-source',host['guard']['source']),('guard-config',host['guard']['configuration'])):
+  need(store.sha('approvals/'+name+'.json')==ref['sha256'],'Copied authorization/input changed')
+ auth=store.read('approvals/root-authorization.json')
+ need(auth['status']=='ROOT_APPROVED_BOUNDED_CONTINUATION' and auth['configuration_core_sha256']==x.object_sha({k:v for k,v in config.items() if k!='authorization'}) and auth['controller_sha256']==x.PINS[x.HERE+'/continuation/controller.py'] and auth['theorem_promotion'] is False and auth['funding_and_volume_reservations_verified'] is True and auth['linux_resource_probe_accepted'] is True,'Root authorization contract')
+ labels=sorted({c.task(k)[0] for k in config['partitions'][partition]});x.source_and_plans(a,store,index,labels,r)
+ need(a.number(state['started_epoch']) and a.number(state['finished_epoch']) and state['finished_epoch']>=state['started_epoch'],'Coordinator times')
+ need(type(state['coordinator_pid'])is int and state['coordinator_pid']>1 and type(state['coordinator_identity']['start_ticks'])is int and state['coordinator_identity']['start_ticks']>0 and state['coordinator_identity']['boot_id']==host['guard']['boot_id'],'Coordinator host/process identity')
+ c.validate_limits(host['limits'])
+ assigned=set(config['partitions'][partition]);need(set(state['jobs'])<=assigned and state['pending_tasks']==sorted(set(state['pending_tasks'])) and set(state['pending_tasks'])==assigned-set(state['jobs']),'Continuation pending domain')
+ records=[];results={};dirs=set()
+ for k,job in sorted(state['jobs'].items()):
+  need(type(job['attempts'])is list and len(job['attempts'])==1,'No hidden retry');row=job['attempts'][0]
+  need(row['task_key']==k and row['directory'] not in dirs,'Repeated/mislabeled attempt');dirs.add(row['directory'])
+  records.append(x.continuation_row(a,c,r,store,manifest,state,index,config,partition,row))
+  if row['status']=='COMPLETE':
+   value=x.complete(a,c,r,store,manifest,row,index,config['cohort_id'])
+   validation={n:value[n] for n in ('result_sha256','counts','canonical_artifact_sha256','target_geometry_sha256','preparation_sha256','plan_sha256')}
+   validation['outcome']='EMPTY_COMPUTATION' if value['counts']['survivor_count']==0 else 'SURVIVORS_REQUIRE_RESEARCH_REVIEW'
+   # row_evidence is independently recomputed during the paired structural stage.
+   need(all(row['validation'][n]==v for n,v in validation.items()),'Saved validation differs')
+   value['_row_evidence_sha256']=row['validation']['row_evidence_sha256'];results[k]=value
+ need({n[:-len('/attempt.json')] for n in store.files if n.startswith('attempts/') and n.endswith('/attempt.json')}==dirs,'Unrecorded continuation intent')
+ for n in store.files:
+  if n.startswith('attempts/'):need(any(n.startswith(d+'/') for d in dirs),'Orphan continuation output')
+ need({n[:-len('/lease.json')] for n in store.files if n.startswith('attempts/') and n.endswith('/lease.json')}=={r['directory'] for j in state['jobs'].values() for r in j['attempts'] if r['status']!='NEVER_STARTED'},'Unrecorded/missing lease')
+ peak=x.overlap(records,host['limits']['workers'])
+ guards=state.get('sources_unchanged') is True and state.get('runtime_unchanged') is True and state.get('full730_crosscohort_audit_required') is True
+ if state['status']==x.CLOSED:need(guards,'Normal closure lacks source/runtime guards')
+ return results,records,{'partition_id':partition,'status':state['status'],'pending_tasks':state['pending_tasks'],
+  'maximum_observed_concurrency':peak,'source_runtime_postguards':guards,
+  'over_effective_wall_observations':[x['global_attempt_id'] for x in records if x['wall_seconds']>x['effective_wall_limit']],
+  'timing_limitation':'Parent-observed finish includes polling/validation; it is not exact child lifetime.'}
+
+
+def normalize_complete(x,a,item):
+ # Every complete duplicate gets structural inspection, even if selected missing.
+ counts=a.inspect_geometry(item['_folder'],item['_result']);need(counts==item['counts'],'Duplicate structural counts differ')
+ a.survivor_journal(item['_folder']);rows=item['_runner'].row_coverage(item['_folder'],item['backend'])
+ if '_row_evidence_sha256'in item:need(object_sha(rows)==item['_row_evidence_sha256'],'Saved row evidence differs')
+ return rows
+
+def select_and_compare(x,a,c,index,allocation,selected_hosts,by_host,output):
+ need(set(by_host)==set(selected_hosts.values()),'Missing actual cohort result map')
+ selected={};duplicates=[];extra_completed={}
+ for key in sorted(index['unresolved']):
+  paths=[(host,results[key])for host,results in by_host.items()if key in results]
+  target=selected_hosts[key]
+  if key in by_host[target]:selected[key]=by_host[target][key]
+  normalized=[]
+  for host,item in paths:
+   need(c.key(item['point_label'],item['backend'])==key,'Completed result under wrong key')
+   rows=normalize_complete(x,a,item);normalized.append(rows)
+   name='complete-path-rows/'+host+'/'+item['_runner'].slug(item['point_label'])+'-'+item['backend']+'.json'
+   row_sha=a.save(output,name,rows)
+   detail={k:v for k,v in item.items()if not k.startswith('_')}
+   duplicates.append({'task_key':key,'host':host,'selected':host==target,'completed_result':detail,'row_evidence':{'path':name,'sha256':row_sha}})
+   if host!=target:extra_completed.setdefault(key,[]).append(host)
+  for (_,first),(_,other),rows in zip(paths,paths[1:],normalized[1:]):
+   c.compare_paths(first,other)
+   need(normalized[0]==rows,'Duplicate normalized row journals conflict')
+ # Each declared complete result has been visited, including all extra V86 work.
+ need(all(set(results)<=set(index['unresolved'])for results in by_host.values()),'Foreign complete continuation result')
+ need(sum(len(r)for r in by_host.values())==len(duplicates),'Hidden complete duplicate')
+ return selected,{'status':'ALL_RETAINED_COMPLETE_DUPLICATES_AGREE','complete_path_count':len(duplicates),
+  'selected_complete_count':len(selected),'additional_complete_path_count':sum(len(v)for v in extra_completed.values()),
+  'missing_selected_keys':sorted(set(index['unresolved'])-set(selected)),
+  'additional_completed_hosts_by_key':extra_completed,'paths':duplicates,
+  'substitution_performed':False,'failure_or_partial_is_exclusion':False}
+
+
+def output_outside_evidence(output,roots):
+ need(all(not output.is_relative_to(r)and not r.is_relative_to(output)for r in roots),'Output/evidence overlap before any write')
+ for i,root in enumerate(roots):need(all(not root.is_relative_to(other)and not other.is_relative_to(root)for other in roots[:i]),'Captured cohort roots overlap')
+
+def audit_locked(args):
+ root=Path(args.helpers);x,a,c,h=helpers(root);input_path,inputs=x.reference(a,{'path':str(args.input),'sha256':args.input_sha256})
+ need(type(inputs['schema_version'])is int and inputs['schema_version']==1 and inputs['scope']==SCOPE,'Fanout audit scope')
+ refs={};anchors={str(input_path):sha(input_path)}
+ for name,pin in [('origin_index',x.INDEX),('origin_review',x.ORIGIN_REVIEW),('existing_configuration',x.CONFIG),('new_configuration',NEW_CONFIG),('original_inventory',x.ORIGIN_INVENTORY),('allocation',ALLOCATION),('allocation_execution_binding',EXECUTION_BINDING)]:
+  p,value=x.reference(a,inputs[name],pin);refs[name]=(p,value);anchors[str(p)]=sha(p)
+ index=refs['origin_index'][1];review=refs['origin_review'][1];old=refs['existing_configuration'][1];new=refs['new_configuration'][1];new_sha=inputs['new_configuration']['sha256'];allocation=refs['allocation'][1];binding=refs['allocation_execution_binding'][1]
+ c.validate_origin_acceptance(index,review,x.INDEX);labels=a.declared_domain()
+ need(len(index['accepted'])==557 and len(index['unresolved'])==173,'Fixed original557/173')
+ selected_hosts,mapping=allocation_binding(x,c,labels,index,allocation,binding,old,new,new_sha,inputs['continuations'])
+ original_inventory=refs['original_inventory'][1];need(original_inventory['scope']=='ALL_PERSISTED_ORIGINAL_CAMPAIGN_REGULAR_FILES_EXCEPT_COORDINATOR_LOCK','Original inventory scope')
+ output=a.safe(args.output);roots=[a.safe(inputs['original_root'])]+[a.safe(entry['root'])for entry in inputs['continuations'].values()]
+ output_outside_evidence(output,roots)
+ original_store=x.Store(a,inputs['original_root'],x.ORIGIN,original_inventory,True);stores=[original_store]
+ output.mkdir(parents=True,exist_ok=False);args.owned_output=True
+ accepted,records,_=x.original(a,c,h,original_store,index,review,labels)
+ need(set(accepted)==set(index['accepted']),'Exact557 accepted origins')
+ by_host={};partition_reports=[]
+ for host,entry in sorted(inputs['continuations'].items()):
+  config=old if host==OLD_POD else new;config_sha=x.CONFIG if host==OLD_POD else new_sha
+  need(set(entry)=={'root','inventory','receipt','review'},'Exact captured cohort reference')
+  vp,inv=x.reference(a,entry['inventory']);pp,receipt=x.reference(a,entry['receipt']);qp,approval=x.reference(a,entry['review'])
+  need(inv['scope']=='ALL_PERSISTED_COHORT_REGULAR_FILES_EXCEPT_COORDINATOR_LOCK','Captured continuation scope')
+  for p in(vp,pp,qp):anchors[str(p)]=sha(p)
+  store=x.Store(a,entry['root'],config['hosts'][host]['campaign_path'],inv)
+  need(all(not store.root.is_relative_to(other.root)and not other.root.is_relative_to(store.root)for other in stores),'Captured cohort roots overlap')
+  stores.append(store)
+  need(not output.is_relative_to(store.root)and not store.root.is_relative_to(output),'Output/evidence overlap')
+  documents={}
+  for name in('parent-completion.json','process-observation.json','observer-completion.json','runtime-observed.json','stdout.log','stderr.log','parent-stdout.log','parent-stderr.log'):
+   p=a.below(pp.parent,name);a.signature(p);digest=sha(p);anchors[str(p)]=digest;documents[name]={'sha256':digest,'value':a.read(p)if name.endswith('.json')else None}
+  values,attempts,part=continuation_for_configuration(x,config_sha,a,c,store,index,config,host,receipt,entry['receipt']['sha256'],approval,entry['inventory']['sha256'],documents)
+  need(x.CONFIG==inputs['existing_configuration']['sha256'],'Fixed helper configuration changed')
+  if host!=OLD_POD:
+   auth=store.read('approvals/root-authorization.json')
+   need(auth['never_launch_partition']==OLD_POD and auth['allocation_sha256']==ALLOCATION,'Actual launch approval lacks reserved partition prohibition')
+  by_host[host]=values;records+=attempts
+  part.update(configuration_sha256=config_sha,cohort_id=config['cohort_id'],inventory_sha256=entry['inventory']['sha256'],receipt_sha256=entry['receipt']['sha256'],review_sha256=entry['review']['sha256'],state_sha256=store.sha('state.json'),manifest_sha256=store.sha('manifest.json'))
+  partition_reports.append(part)
+ selected,duplicate_report=select_and_compare(x,a,c,index,allocation,selected_hosts,by_host,output)
+ report=x.reconcile(a,c,labels,accepted,selected,records,partition_reports,output)
+ report['status']='COMPLETE_730_SELECTED_FANOUT_DISCOVERY_AUDIT_NO_PROMOTION'if report['status'].startswith('COMPLETE_730')else'PARTIAL_SELECTED_FANOUT_AUDIT_NO_COMPLETENESS'
+ report.update(schema_version=1,scope=SCOPE,target_id=a.TARGET,known_positive_hits_outside_domain=a.HITS,
+  allocation_sha256=ALLOCATION,allocation_execution_binding_sha256=inputs['allocation_execution_binding']['sha256'],
+  existing_configuration_sha256=inputs['existing_configuration']['sha256'],new_configuration_sha256=new_sha,
+  selected_source_hosts=selected_hosts,logical_slot_to_actual_pod_id=mapping,
+  reserved_new_configuration_partition_executed=False,complete_duplicate_comparison=duplicate_report,
+  source_sha256=a.PINS,administrative_source_sha256={**x.PINS,BASE:BASE_SHA},
+  origin_index_sha256=x.INDEX,origin_review_sha256=x.ORIGIN_REVIEW,origin_manifest_sha256=a.MANIFEST,
+  origin_state_sha256=index['origin']['state_sha256'],origin_inventory_sha256=x.ORIGIN_INVENTORY,
+  origin_prior_transfer_extras=original_store.extra_seals,origin_prior_transfer_extra_directories=original_store.extra_directories,
+  original_runtime_sha256=index['origin']['runtime_sha256'],historical_runtime_profiles_verified_from_sealed_bytes=True,
+  installed_historical_runtimes_reverified=False,actual_remote_process_absence_source='Accepted terminal capture/closure evidence; not audit-host /proc',
+  mathematical_recomputation=False,archival_retention='Separate archive/local-retention gates remain mandatory',
+  limitations=['All seven declared continuation cohorts require accepted closed capture; unobserved remote activity is outside a metadata audit.',
+   'Root allocation approval forbids reserved-new execution; each admitted actual cohort is explicitly bound to its own configuration.',
+   'Finite-domain mathematics is not re-proved by result metadata; survivors remain research candidates.',
+   'Immutable ordinary filesystem is assumed; cache/inventory seals are not a malicious-root defense.'])
+ report['attempts']={'path':'attempts.json','sha256':a.save(output,'attempts.json',records)}
+ for p,digest in anchors.items():need(sha(p)==digest,'Audit input changed')
+ for store in stores:
+  for n,digest in a.PINS.items():need(sha(store.path('source/'+n))==digest,'Frozen mathematical source changed')
+  store.unchanged()
+ for name,digest in{**x.PINS,BASE:BASE_SHA}.items():need(sha(root/name)==digest,'Administrative helper changed')
+ report['anchors_sha256']=anchors;report['bytes_hashed_once']=sum(s.cache.bytes_hashed for s in stores)
+ return a,output,report
+
+
+def administrative_window(x,a,inputs,args):
+ p,w=x.reference(a,inputs['administrative_window']);core={k:v for k,v in inputs.items()if k!='administrative_window'}
+ need(type(w['schema_version'])is int and w['schema_version']==1 and w['status']=='ROOT_APPROVED_CLOSED_CAPTURE_AUDIT_WINDOW','Explicit administrative window')
+ need(w['auditor_sha256']==sha(__file__)and w['input_core_sha256']==object_sha(core),'Exact fanout auditor/input authorization')
+ need(type(w['deadline_epoch'])is int and w['deadline_epoch']==args.deadline_epoch and type(w['guard_deadline_epoch'])is int and args.deadline_epoch<=w['guard_deadline_epoch']-60,'Independent administrative guard reserve')
+ need(type(w['wall_limit_seconds'])is int and 0<w['wall_limit_seconds']<=1200 and w['cpu_limits_seconds']==[600,610]and all(type(v)is int for v in w['cpu_limits_seconds'])and type(w['memory_bytes'])is int and w['memory_bytes']==4*1024**3,'Admin resource approval')
+ need(all(w[n]is True for n in('exclusive_administrative_capacity_reserved','read_only_closed_captures_only','producer_deadlines_unchanged'))and w['mathematical_execution']is False and w['theorem_promotion']is False,'Read-only administrative scope')
+ return p,w
+
+def audit(args):
+ x,a,_,_=helpers(args.helpers);p=a.safe(args.input);a.signature(p);need(sha(p)==args.input_sha256,'Audit input hash');inputs=a.read(p)
+ window_path,window=administrative_window(x,a,inputs,args);window_sha=sha(window_path);lock=a.safe(inputs['audit_lock']);a.signature(lock)
+ with lock.open('rb')as stream:
+  fcntl.flock(stream,fcntl.LOCK_EX|fcntl.LOCK_NB);need(time.time()<args.deadline_epoch,'Audit cutoff passed')
+  result=audit_locked(args);need(time.time()<args.deadline_epoch and sha(window_path)==window_sha,'Admin window crossed/changed')
+  result[2].update(administrative_window_sha256=window_sha,administrative_deadline_epoch=args.deadline_epoch,producer_deadlines_unchanged=True)
+  return result
+
+def main():
+ p=argparse.ArgumentParser(description=__doc__);p.add_argument('--helpers',type=Path,required=True);p.add_argument('--input',type=Path,required=True);p.add_argument('--input-sha256',required=True);p.add_argument('--output',type=Path,required=True);p.add_argument('--deadline-epoch',type=int,required=True);args=p.parse_args()
+ need(__debug__ and sys.flags.isolated and sys.flags.dont_write_bytecode,'Raw Python -I -B required')
+ soft,hard=resource.getrlimit(resource.RLIMIT_CPU);memory,_=resource.getrlimit(resource.RLIMIT_AS)
+ need(0<soft<=600 and soft<=hard<=610 and 0<memory<=4*1024**3,'Administrative600/610CPU4GiB required')
+ own=sha(__file__);binary=sha(Path(sys.executable).resolve());start=time.monotonic();cpu=time.process_time()
+ def interrupted(signum,frame):raise InterruptedError('Audit interrupted '+str(signum))
+ for sig in(signal.SIGTERM,signal.SIGINT):signal.signal(sig,interrupted)
+ try:
+  a,output,report=audit(args);need(sha(__file__)==own and sha(Path(sys.executable).resolve())==binary,'Auditor/runtime changed')
+  report.update(auditor_sha256=own,cpu_seconds=time.process_time()-cpu,wall_seconds=time.monotonic()-start,
+   audit_runtime={'invocation_path':sys.executable,'python_version':sys.version,'binary_sha256':binary,'binary_unchanged':True,'cpu_limits_seconds':[soft,hard],'memory_bytes':memory})
+  digest=a.save(output,'audit.json',report);print(json.dumps({'status':report['status'],'audit_sha256':digest,'summary':report['summary']}));return 0 if report['status'].startswith('COMPLETE_730')else 2
+ except BaseException as error:
+  failure={'status':'FANOUT_AUDIT_FAILED_NO_CONCLUSION','error':repr(error),'auditor_sha256':own,'theorem_promotion':False}
+  if getattr(args,'owned_output',False)and not(args.output/'failure.json').exists():(args.output/'failure.json').write_bytes(encoded(failure))
+  print(json.dumps(failure),file=sys.stderr);return 1
+if __name__=='__main__':raise SystemExit(main())

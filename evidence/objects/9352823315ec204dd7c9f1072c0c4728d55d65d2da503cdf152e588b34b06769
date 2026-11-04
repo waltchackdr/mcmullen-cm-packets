@@ -1,0 +1,57 @@
+"""Candidate interval reconstruction from exact transported quotient bases.
+
+Uses the reviewed V147 formula/serialization contracts on new input models.
+No numerical reconnaissance period is consumed and no theta is evaluated.
+Runtime and resulting data require separate scoped review.
+"""
+from pathlib import Path
+import sys
+import sympy as s
+
+ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0,str(ROOT/'experiments/bc_jacobian_v147'))
+from exact_ball_candidate import serialize, component
+
+
+def run(model, seed, transport):
+    if not __debug__:
+        raise RuntimeError("Enabled assertions required")
+    from flint import acb, arb, acb_mat, ctx
+    ctx.prec = 512
+    matrix = lambda rows:s.Matrix([[s.Rational(x) for x in row] for row in rows])
+    u = matrix(model['symplectic_power_basis']);change = matrix(transport['symplectic_transform'])
+    basis = matrix(transport['symplectic_power_basis']);e = matrix(seed['ambient_form'])
+    j = s.zeros(12);j[:6,6:] = s.eye(6);j[6:,:6] = -s.eye(6)
+    assert all(x.q == 1 for x in change) and change.T*j*change == j
+    assert basis == u*change and basis.T*e*basis == j
+    exponents = model['actual_tangent_type']
+    assert exponents == transport['actual_tangent_type'] == [1,5,11,13,17,19]
+    period = acb_mat(6,12)
+    for i,exponent in enumerate(exponents):
+        root = (acb(exponent)/21).exp_pi_i()
+        for col in range(12):
+            period[i,col] = sum((acb(int(basis[k,col].p))/int(basis[k,col].q))*root**k for k in range(12))
+    a = acb_mat([[period[i,k] for k in range(6)] for i in range(6)])
+    b = acb_mat([[period[i,k+6] for k in range(6)] for i in range(6)])
+    initial = a.inv()*b
+    for i in range(6):
+        for k in range(6):
+            assert initial[i,k].is_finite()
+            assert (initial[i,k]-initial[k,i]).contains(0)
+    # Exact symmetry is inherited from the positive Riemann form, not inferred
+    # from the overlap test. Reflecting an enclosing triangle preserves it.
+    tau = acb_mat([[initial[min(i,k),max(i,k)] for k in range(6)] for i in range(6)])
+    lower = [[arb(int(i == k)) for k in range(6)] for i in range(6)]
+    pivots = []
+    for k in range(6):
+        pivot = tau[k,k].imag-sum(lower[k][r]**2*pivots[r] for r in range(k))
+        assert pivot > 0
+        pivots.append(pivot)
+        for i in range(k+1,6):
+            lower[i][k] = (tau[i,k].imag-sum(lower[i][r]*lower[k][r]*pivots[r] for r in range(k)))/pivot
+    encoded_pivots = [serialize(acb(x))['real'] for x in pivots]
+    assert all(component(x)[0] > 0 for x in encoded_pivots)
+    return {'status':'INTERVAL_PERIOD_CANDIDATE_REVIEW_REQUIRED','catalog_index':model['catalog_index'],
+            'precision_bits':512,'period_rectangles':[[serialize(tau[i,k]) for k in range(6)] for i in range(6)],
+            'positive_ldl_pivots':encoded_pivots,'theta_evaluations':0,
+            'scope':'Outward period/positive-pivot records under pinned Arb contract; actual geometric and runtime adoption remain separate.'}

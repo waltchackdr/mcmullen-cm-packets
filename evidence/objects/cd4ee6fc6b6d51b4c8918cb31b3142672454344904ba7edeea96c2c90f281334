@@ -1,0 +1,26 @@
+"""Regress exact arithmetic needed for the separate human polarization proof."""
+import importlib.util
+from pathlib import Path
+import unittest
+
+spec = importlib.util.spec_from_file_location('minimum_polarization',
+    Path(__file__).resolve().parents[1] /
+    'experiments/fermat_minimum_polarization_v154/arithmetic_candidate.py')
+arithmetic = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(arithmetic)
+
+
+class MinimumPolarizationInput(unittest.TestCase):
+    def test_small_norm_obstruction_and_attaining_generator(self):
+        result = arithmetic.check()
+        self.assertEqual(result['norm_beta'], -27)
+        self.assertEqual(result['norm_t_minus1'], 7)
+        self.assertEqual(result['only_prime_ideal_norm_below27'], 7)
+        # Multiplying by -1 in this even-degree field does not change norm sign.
+        self.assertEqual(arithmetic.norm([1, -1]), 7)
+        self.assertEqual(arithmetic.norm([3]), 729)
+        self.assertEqual(arithmetic.norm(arithmetic.F), 0)
+
+
+if __name__ == '__main__':
+    unittest.main()

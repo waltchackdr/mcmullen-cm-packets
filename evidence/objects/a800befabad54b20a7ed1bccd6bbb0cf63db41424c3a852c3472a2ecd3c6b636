@@ -1,0 +1,158 @@
+{
+  "candidate_pins": 253,
+  "controller_delta_only_import_and_required_pins": true,
+  "job_function_ast_identical": true,
+  "packet_pins": 15,
+  "provider_calls": 0,
+  "real_sleeps": 0,
+  "retention_stub_scope": "Only read/telemetry/job propagation tested; unchanged real retention reused from prior review",
+  "scenarios": {
+    "404_then_timeout": {
+      "exception": "RemoteReadError",
+      "post_start_snapshot_attempts": 2,
+      "retry_events": [
+        {
+          "attempt": 1,
+          "error": "HTTPError",
+          "http_status": 404,
+          "kind": "snapshot"
+        },
+        {
+          "attempt": 2,
+          "error": "TimeoutError",
+          "kind": "snapshot"
+        }
+      ],
+      "synthetic_sleeps": [
+        0.5
+      ],
+      "telemetry_events": 12
+    },
+    "artifact404": {
+      "exception": "RemoteReadError",
+      "post_start_snapshot_attempts": 1,
+      "retry_events": [],
+      "synthetic_sleeps": [],
+      "telemetry_events": 12
+    },
+    "deadline": {
+      "exception": "RemoteReadError",
+      "post_start_snapshot_attempts": 1,
+      "retry_events": [
+        {
+          "attempt": 1,
+          "error": "HTTPError",
+          "http_status": 404,
+          "kind": "snapshot"
+        }
+      ],
+      "synthetic_sleeps": [
+        0.25
+      ],
+      "telemetry_events": 10
+    },
+    "late_success": {
+      "exception": "RemoteReadError",
+      "post_start_snapshot_attempts": 1,
+      "retry_events": [],
+      "synthetic_sleeps": [],
+      "telemetry_events": 10
+    },
+    "malformed_snapshot": {
+      "exception": "ValueError",
+      "post_start_snapshot_attempts": 1,
+      "retry_events": [],
+      "synthetic_sleeps": [],
+      "telemetry_events": 10
+    },
+    "persist_failure": {
+      "exception": "RuntimeError",
+      "post_start_snapshot_attempts": 1,
+      "retry_events": [],
+      "synthetic_sleeps": [],
+      "telemetry_events": 10
+    },
+    "recovered": {
+      "exception": null,
+      "post_start_snapshot_attempts": 2,
+      "retry_events": [
+        {
+          "attempt": 1,
+          "error": "HTTPError",
+          "http_status": 404,
+          "kind": "snapshot"
+        }
+      ],
+      "synthetic_sleeps": [
+        0.5
+      ],
+      "telemetry_events": 14
+    },
+    "second404": {
+      "exception": "RemoteReadError",
+      "post_start_snapshot_attempts": 2,
+      "retry_events": [
+        {
+          "attempt": 1,
+          "error": "HTTPError",
+          "http_status": 404,
+          "kind": "snapshot"
+        },
+        {
+          "attempt": 2,
+          "error": "HTTPError",
+          "http_status": 404,
+          "kind": "snapshot"
+        }
+      ],
+      "synthetic_sleeps": [
+        0.5
+      ],
+      "telemetry_events": 12
+    },
+    "snapshot401": {
+      "exception": "RemoteReadError",
+      "post_start_snapshot_attempts": 1,
+      "retry_events": [],
+      "synthetic_sleeps": [],
+      "telemetry_events": 10
+    },
+    "start404": {
+      "exception": "HTTPError",
+      "post_start_snapshot_attempts": 0,
+      "retry_events": [],
+      "synthetic_sleeps": [],
+      "telemetry_events": 8
+    },
+    "timeout_then404": {
+      "exception": "RemoteReadError",
+      "post_start_snapshot_attempts": 2,
+      "retry_events": [
+        {
+          "attempt": 1,
+          "error": "TimeoutError",
+          "kind": "snapshot"
+        },
+        {
+          "attempt": 2,
+          "error": "HTTPError",
+          "http_status": 404,
+          "kind": "snapshot"
+        }
+      ],
+      "synthetic_sleeps": [],
+      "telemetry_events": 12
+    },
+    "upload404": {
+      "exception": "HTTPError",
+      "post_start_snapshot_attempts": 0,
+      "retry_events": [],
+      "synthetic_sleeps": [],
+      "telemetry_events": 6
+    }
+  },
+  "status": "PASS_LOCAL_RECOVERY_DELTA_AND_SYNTHETIC_JOB_INTEGRATION",
+  "theta_calls": 0,
+  "unchanged_remote_package": true,
+  "wall_seconds": 0.0865696250111796
+}

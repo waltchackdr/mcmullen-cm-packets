@@ -1,0 +1,846 @@
+{
+  "archive_sha256": "f722a2aa3c3d96d8df8350dc6f012e41245ba9985fabb42c857ae4bed5906476",
+  "cases": {
+    "ORIGINAL_Q_V1/OM:pic0:00": {
+      "paired_preparations": {
+        "primary": {
+          "directory": "v83-positive-plans-cohort1/primary/02-original_q_v1-c",
+          "result_sha256": "9bd533b0262fc191eb791b337f66c5f6842e59f6d9ea8f2eb2a0e114f32f5d53"
+        },
+        "sturm": {
+          "directory": "v83-positive-plans-cohort1/sturm/02-original_q_v1-c",
+          "result_sha256": "5ebda5ec504d4628f0228ea841e1edc60e5e7b70a19d2f2055c1ba4cd9d6794b"
+        }
+      },
+      "plan": {
+        "entry_units": {
+          "A": [
+            1,
+            -1,
+            0,
+            0,
+            -1
+          ],
+          "C": [
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "DEN": [
+            -1,
+            0,
+            0,
+            0,
+            0
+          ],
+          "NUM": [
+            -1,
+            0,
+            0,
+            0,
+            -1
+          ]
+        },
+        "point_label": "OM:pic0:00",
+        "schema_version": 2,
+        "target_id": "ORIGINAL_Q_V1",
+        "transport": {
+          "inversion_first": false,
+          "unit_exponents": [
+            1,
+            0,
+            0,
+            0,
+            0
+          ]
+        }
+      },
+      "plan_sha256": "c6421803dfe558b66b18c01526b33c1c734d9718beca5e61c8620e8a35f3a83e",
+      "preparation_sha256": "61c122530683b0e62cdf2795fbbb9810a55d3774fb72fdb7ce37320e1c70010c",
+      "record_sha256": "8ebf8db945e89b66729e2b4dfe42e40f64600686fb291ee6c4c2a2464d3f1410",
+      "signed_H_selected": [
+        [
+          [
+            "-1",
+            "-4",
+            "4",
+            "1",
+            "-1",
+            "0"
+          ],
+          [
+            "1",
+            "8",
+            "4",
+            "-9",
+            "-2",
+            "2"
+          ],
+          [
+            "4",
+            "12",
+            "-5",
+            "-7",
+            "1",
+            "1"
+          ],
+          [
+            "-4",
+            "-9",
+            "2",
+            "9",
+            "0",
+            "-2"
+          ]
+        ],
+        [
+          [
+            "1",
+            "4",
+            "-4",
+            "-1",
+            "1",
+            "0"
+          ],
+          [
+            "-1",
+            "-8",
+            "-4",
+            "9",
+            "2",
+            "-2"
+          ],
+          [
+            "-4",
+            "-12",
+            "5",
+            "7",
+            "-1",
+            "-1"
+          ],
+          [
+            "4",
+            "9",
+            "-2",
+            "-9",
+            "0",
+            "2"
+          ]
+        ]
+      ],
+      "target_geometry_sha256": "d75e0a38cac9de988cd04afcf7638ffdeea4a4334958ab2d37e3b1372fb1c4f5",
+      "vertex": "C"
+    },
+    "ORIGINAL_Q_V1/OM:pic0:07": {
+      "paired_preparations": {
+        "primary": {
+          "directory": "v83-positive-plans-cohort1/primary/00-original_q_v1-a",
+          "result_sha256": "98d3ebcd4802818f266d5522753d581b0cd1124431de248305e9051f2ab8bc32"
+        },
+        "sturm": {
+          "directory": "v83-positive-plans-cohort1/sturm/00-original_q_v1-a",
+          "result_sha256": "09dee3717796b97e29b106861bbe09105816ba5bfa41b3ae2cdcf1107d69821e"
+        }
+      },
+      "plan": {
+        "entry_units": {
+          "A": [
+            0,
+            -1,
+            1,
+            0,
+            -1
+          ],
+          "C": [
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "DEN": [
+            0,
+            1,
+            -1,
+            0,
+            0
+          ],
+          "NUM": [
+            -1,
+            0,
+            0,
+            0,
+            -1
+          ]
+        },
+        "point_label": "OM:pic0:07",
+        "schema_version": 2,
+        "target_id": "ORIGINAL_Q_V1",
+        "transport": {
+          "inversion_first": false,
+          "unit_exponents": [
+            0,
+            -1,
+            0,
+            0,
+            0
+          ]
+        }
+      },
+      "plan_sha256": "601e882858830d2cb70f1b5a3102b1acfe1f7b6ec04095a08f25104f318400f2",
+      "preparation_sha256": "35226ad469ac3cd9a61a0d098cdd59de871c3c24ad3c1e8af3a799b21f484bee",
+      "record_sha256": "1eb56abb3ea3d826864b80b7ab690ee4e2a1ee90af229496fa605c2bd05a1f37",
+      "signed_H_selected": [
+        [
+          [
+            "0",
+            "-4",
+            "-4",
+            "1",
+            "1",
+            "0"
+          ],
+          [
+            "0",
+            "-1",
+            "0",
+            "0",
+            "0",
+            "0"
+          ],
+          [
+            "-2",
+            "3",
+            "4",
+            "-1",
+            "-1",
+            "0"
+          ],
+          [
+            "2",
+            "5",
+            "1",
+            "-2",
+            "-1",
+            "0"
+          ]
+        ],
+        [
+          [
+            "0",
+            "4",
+            "4",
+            "-1",
+            "-1",
+            "0"
+          ],
+          [
+            "0",
+            "1",
+            "0",
+            "0",
+            "0",
+            "0"
+          ],
+          [
+            "2",
+            "-3",
+            "-4",
+            "1",
+            "1",
+            "0"
+          ],
+          [
+            "-2",
+            "-5",
+            "-1",
+            "2",
+            "1",
+            "0"
+          ]
+        ]
+      ],
+      "target_geometry_sha256": "d75e0a38cac9de988cd04afcf7638ffdeea4a4334958ab2d37e3b1372fb1c4f5",
+      "vertex": "A"
+    },
+    "ORIGINAL_Q_V1/OM:pic0:15": {
+      "paired_preparations": {
+        "primary": {
+          "directory": "v83-positive-plans-cohort1/primary/01-original_q_v1-b",
+          "result_sha256": "c1558c8047f487fca26e2c525f540119654e020d038bf04d1542ae5d4f0e57f7"
+        },
+        "sturm": {
+          "directory": "v83-positive-plans-cohort1/sturm/01-original_q_v1-b",
+          "result_sha256": "3f1f78fc4636f77de4deb6a91c087b3d6985f5148c0e9436912024cc9e41db3f"
+        }
+      },
+      "plan": {
+        "entry_units": {
+          "A": [
+            0,
+            0,
+            0,
+            0,
+            -1
+          ],
+          "C": [
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "DEN": [
+            -1,
+            0,
+            1,
+            -1,
+            0
+          ],
+          "NUM": [
+            -1,
+            0,
+            1,
+            -1,
+            -1
+          ]
+        },
+        "point_label": "OM:pic0:15",
+        "schema_version": 2,
+        "target_id": "ORIGINAL_Q_V1",
+        "transport": {
+          "inversion_first": false,
+          "unit_exponents": [
+            0,
+            0,
+            -1,
+            0,
+            0
+          ]
+        }
+      },
+      "plan_sha256": "e685879b3ec800514ba0fc8043133ee0ceef83965fa16a2b16238705acd0d423",
+      "preparation_sha256": "ac187bd633b3c1eef44ac36cde402bdaf649a0f2d760a712a58a2052a3884e38",
+      "record_sha256": "fa85bf0962fe4bb3b488a0003ee559169c453a3e07b0c9ecac72a676601251f9",
+      "signed_H_selected": [
+        [
+          [
+            "-2",
+            "-10",
+            "-6",
+            "10",
+            "2",
+            "-2"
+          ],
+          [
+            "-1",
+            "-8",
+            "-9",
+            "4",
+            "4",
+            "0"
+          ],
+          [
+            "1",
+            "5",
+            "3",
+            "-5",
+            "-1",
+            "1"
+          ],
+          [
+            "-1",
+            "4",
+            "5",
+            "-2",
+            "-2",
+            "0"
+          ]
+        ],
+        [
+          [
+            "2",
+            "10",
+            "6",
+            "-10",
+            "-2",
+            "2"
+          ],
+          [
+            "1",
+            "8",
+            "9",
+            "-4",
+            "-4",
+            "0"
+          ],
+          [
+            "-1",
+            "-5",
+            "-3",
+            "5",
+            "1",
+            "-1"
+          ],
+          [
+            "1",
+            "-4",
+            "-5",
+            "2",
+            "2",
+            "0"
+          ]
+        ]
+      ],
+      "target_geometry_sha256": "d75e0a38cac9de988cd04afcf7638ffdeea4a4334958ab2d37e3b1372fb1c4f5",
+      "vertex": "B"
+    },
+    "REFLECTED_AB_V1/OM:pic0:00": {
+      "paired_preparations": {
+        "primary": {
+          "directory": "v83-positive-plans-cohort1/primary/05-reflected_ab_v1-c",
+          "result_sha256": "2677eba794e58b9f4fb2a65bd321d8a9b86eaafa2499c24f2a7fe5448014611d"
+        },
+        "sturm": {
+          "directory": "v83-positive-plans-cohort1/sturm/05-reflected_ab_v1-c",
+          "result_sha256": "3e561fa2b1a0ece89652e0f5f5a244e49554756c50bf7090b5059937e4ec844f"
+        }
+      },
+      "plan": {
+        "entry_units": {
+          "A": [
+            0,
+            -1,
+            0,
+            0,
+            0
+          ],
+          "C": [
+            0,
+            0,
+            0,
+            -1,
+            1
+          ],
+          "DEN": [
+            0,
+            0,
+            0,
+            0,
+            -1
+          ],
+          "NUM": [
+            0,
+            0,
+            0,
+            0,
+            -2
+          ]
+        },
+        "point_label": "OM:pic0:00",
+        "schema_version": 2,
+        "target_id": "REFLECTED_AB_V1",
+        "transport": {
+          "inversion_first": false,
+          "unit_exponents": [
+            0,
+            0,
+            0,
+            0,
+            1
+          ]
+        }
+      },
+      "plan_sha256": "693f4669ef550d4a15d8b5c96849a16294e94693fbfc36c60821505136e73147",
+      "preparation_sha256": "bbc88af939c123e29f6bf694bb28b8b284041c56e8f821badeeb5ef3658d7c1f",
+      "record_sha256": "20e8d4cc57263f027a1dd558531fddb4d1593b52df86cc0b01a9ea7c79510643",
+      "signed_H_selected": [
+        [
+          [
+            "-2",
+            "0",
+            "1",
+            "0",
+            "0",
+            "0"
+          ],
+          [
+            "0",
+            "0",
+            "3",
+            "1",
+            "-1",
+            "0"
+          ],
+          [
+            "-14",
+            "-17",
+            "11",
+            "12",
+            "-2",
+            "-2"
+          ],
+          [
+            "0",
+            "1",
+            "0",
+            "-1",
+            "0",
+            "0"
+          ]
+        ],
+        [
+          [
+            "2",
+            "0",
+            "-1",
+            "0",
+            "0",
+            "0"
+          ],
+          [
+            "0",
+            "0",
+            "-3",
+            "-1",
+            "1",
+            "0"
+          ],
+          [
+            "14",
+            "17",
+            "-11",
+            "-12",
+            "2",
+            "2"
+          ],
+          [
+            "0",
+            "-1",
+            "0",
+            "1",
+            "0",
+            "0"
+          ]
+        ]
+      ],
+      "target_geometry_sha256": "35b9103624b7457f945346d0248a9535279910172d91dd488c8e3747931b3fec",
+      "vertex": "C"
+    },
+    "REFLECTED_AB_V1/OM:pic0:07": {
+      "paired_preparations": {
+        "primary": {
+          "directory": "v83-positive-plans-cohort1/primary/03-reflected_ab_v1-a",
+          "result_sha256": "c41acf0ccae287600705208498374a73a2cd1591b84becb787550dd47f4a9e63"
+        },
+        "sturm": {
+          "directory": "v83-positive-plans-cohort1/sturm/03-reflected_ab_v1-a",
+          "result_sha256": "1e0f803a8e0fe6fbf51802bcbd1f29006c23c7ce0585abb84f22722acca907c6"
+        }
+      },
+      "plan": {
+        "entry_units": {
+          "A": [
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "C": [
+            0,
+            1,
+            -1,
+            0,
+            1
+          ],
+          "DEN": [
+            0,
+            -1,
+            0,
+            0,
+            -1
+          ],
+          "NUM": [
+            -1,
+            -1,
+            1,
+            0,
+            -2
+          ]
+        },
+        "point_label": "OM:pic0:07",
+        "schema_version": 2,
+        "target_id": "REFLECTED_AB_V1",
+        "transport": {
+          "inversion_first": false,
+          "unit_exponents": [
+            0,
+            0,
+            -1,
+            0,
+            1
+          ]
+        }
+      },
+      "plan_sha256": "4f80641a798f928c574afb3263a0fb4a6f1f300c4a7225b24e79e523005f6a86",
+      "preparation_sha256": "b1a60b519a464ae98bf7d9b96ac32a5c03d73a0de52d04d65b6c0d628dfcaf20",
+      "record_sha256": "502d43c5f153a2a4c2c1ba2998978edbfc569dcdf52be9681aa4cd474a07ee4a",
+      "signed_H_selected": [
+        [
+          [
+            "-4",
+            "-8",
+            "1",
+            "6",
+            "0",
+            "-1"
+          ],
+          [
+            "-1",
+            "-7",
+            "-3",
+            "2",
+            "1",
+            "0"
+          ],
+          [
+            "17",
+            "25",
+            "-12",
+            "-18",
+            "2",
+            "3"
+          ],
+          [
+            "0",
+            "1",
+            "-4",
+            "-2",
+            "2",
+            "1"
+          ]
+        ],
+        [
+          [
+            "4",
+            "8",
+            "-1",
+            "-6",
+            "0",
+            "1"
+          ],
+          [
+            "1",
+            "7",
+            "3",
+            "-2",
+            "-1",
+            "0"
+          ],
+          [
+            "-17",
+            "-25",
+            "12",
+            "18",
+            "-2",
+            "-3"
+          ],
+          [
+            "0",
+            "-1",
+            "4",
+            "2",
+            "-2",
+            "-1"
+          ]
+        ]
+      ],
+      "target_geometry_sha256": "35b9103624b7457f945346d0248a9535279910172d91dd488c8e3747931b3fec",
+      "vertex": "A"
+    },
+    "REFLECTED_AB_V1/OM:pic0:15": {
+      "paired_preparations": {
+        "primary": {
+          "directory": "v83-positive-plans-cohort1/primary/04-reflected_ab_v1-b",
+          "result_sha256": "dc1b6edb72c3e883530bb1d9ade0ab677ec811d50f73cc523bb880bd912bf57f"
+        },
+        "sturm": {
+          "directory": "v83-positive-plans-cohort1/sturm/04-reflected_ab_v1-b",
+          "result_sha256": "760314cf174f403d253c9a8716d584ce6a34150a71d2c15d026fe3c65d128be1"
+        }
+      },
+      "plan": {
+        "entry_units": {
+          "A": [
+            -1,
+            0,
+            1,
+            0,
+            -1
+          ],
+          "C": [
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "DEN": [
+            0,
+            0,
+            0,
+            -1,
+            0
+          ],
+          "NUM": [
+            1,
+            -1,
+            0,
+            -1,
+            -1
+          ]
+        },
+        "point_label": "OM:pic0:15",
+        "schema_version": 2,
+        "target_id": "REFLECTED_AB_V1",
+        "transport": {
+          "inversion_first": false,
+          "unit_exponents": [
+            -1,
+            0,
+            0,
+            0,
+            0
+          ]
+        }
+      },
+      "plan_sha256": "4baa75cbe0065eacdec6fbe43e55687b15de0ff9f3bd86b2da32704b410f3aad",
+      "preparation_sha256": "59c2d2c9708a30816f35cec721ff9e5860549877b28fd41e5c5673c46584cb39",
+      "record_sha256": "1abd6bea4e2854ae48f3ebd171dac928190d3a30b2759f8eb620efe88aa1edba",
+      "signed_H_selected": [
+        [
+          [
+            "-2",
+            "-6",
+            "0",
+            "2",
+            "0",
+            "0"
+          ],
+          [
+            "-1",
+            "-8",
+            "-9",
+            "2",
+            "4",
+            "1"
+          ],
+          [
+            "1",
+            "3",
+            "0",
+            "-1",
+            "0",
+            "0"
+          ],
+          [
+            "-1",
+            "0",
+            "5",
+            "2",
+            "-2",
+            "-1"
+          ]
+        ],
+        [
+          [
+            "2",
+            "6",
+            "0",
+            "-2",
+            "0",
+            "0"
+          ],
+          [
+            "1",
+            "8",
+            "9",
+            "-2",
+            "-4",
+            "-1"
+          ],
+          [
+            "-1",
+            "-3",
+            "0",
+            "1",
+            "0",
+            "0"
+          ],
+          [
+            "1",
+            "0",
+            "-5",
+            "-2",
+            "2",
+            "1"
+          ]
+        ]
+      ],
+      "target_geometry_sha256": "35b9103624b7457f945346d0248a9535279910172d91dd488c8e3747931b3fec",
+      "vertex": "B"
+    }
+  },
+  "diagnostic_sha256": "1666a165a959453cee8c1afca91a4e84810c096bb4b3b5d6349a23e0cca560c0",
+  "dispatcher_sha256": "1d30c4c7a49abbe306ab8b9655211b90ae3b460205e3a0f3bb1ffc521585723e",
+  "executed_source_sha256": {
+    "certificates/d7_ambient_points_v45.py": "34cb35db91b953162b595fb61e031f551e6df0a0d7b5192dc15a6c00c39274a2",
+    "certificates/d7_r83_mask14_v46.py": "70e9c7114adea2b319c3e430046ae3e917717142e7a78e4d43a043950f1147f3",
+    "certificates/d7_r83_masks14_30_v47.py": "e78ba5e793134f28d8113d8129809421a5a7754c439afcd64ba0385543799941",
+    "certificates/d7_r83_principal_expected_v55.py": "0fd36a67b004e6a250188aa8731a207456b5e49faa955005d6b12cd36665bea7",
+    "certificates/d7_r83_principal_v55.py": "a937b69037b5d53f40a600aefb177bf89766d3529b22f73529b2b861ec9238cc",
+    "certificates/full_packet_v62/ambient_points.json": "c0e84da6c266c087cbce65a6e8aca8e3f30350ce56b5a1089c4ae4978a381f36",
+    "certificates/full_packet_v62/module_templates.json": "09ccff217511a67e946567135f9ffb74da020843621d0895ecce8746d25c245d",
+    "certificates/residual_orbit_k17_k38_v42.py": "5186066f21a2f840ffc71936a54372d7ad51eb6cc919bf7812bb1bec258cd59d",
+    "experiments/continuous_v83/child.py": "e593f070efa845a05d9f7d4ab7d1efd2566ebc275bad8a9e02621a56f0548360",
+    "experiments/continuous_v83/nominate.py": "2b91049e3e37609d4c1a94edd230c8f2fb5730a9ab49ad4c9018b5aa87fe8f89",
+    "experiments/continuous_v83/primary.py": "c167a51e6881923319576897ea07a8d05998f935bc0f6884eef529928c4d6313",
+    "experiments/continuous_v83/primary_target.py": "b94aca2bc29fc612fbecaadf83430ebd0a9e09f462876c1dc41fe0aa51422bd3",
+    "experiments/continuous_v83/runner.py": "3acda0f59005ad92ae832760e4c614c524eed078e84b571698f8209ff5614449",
+    "experiments/continuous_v83/sturm.py": "9d83a1bcaa79ebbbd4fed557cd7845de57e3955e6f55516ee7119a425f45d2ca",
+    "experiments/continuous_v83/sturm_target.py": "6a0aae7a310a091719721b08654574da87f0c105e716988e932ceedacd5886e6",
+    "independent/d7_ambient_points_sturm_v45.py": "3eb68f57e6d0d88b2e548f605742d434c8714b25eb1404b3c27d32415b61f42a",
+    "independent/d7_r83_principal_sturm_v55.py": "894339e82389ff651bf25b04693821c4dfeedc427dec2fa4fd8993f195bb663f",
+    "independent/quadrilateral_k17_stdlib_v41.py": "c5bd45f334a028820a071b5c758acfb8e48afc1e8454b18a3174dd04ca58a38c",
+    "independent/residual_orbit_k17_k38_sturm_v42.py": "12a0d875e2715fe2c2ae123d2dc5202f4d7ce4e024f114ad163126654219fc13"
+  },
+  "full_control_launch_approved": false,
+  "full_positive_controls_completed": false,
+  "helper_sha256": "f9dcb98f6ef3fd5202c95be935357e481a48ef8c3839c979c8c8241f5cbfdd67",
+  "members_verified": 160,
+  "note_sha256": "3313092d777a2b972ba3458bd76a00a85e6788615f5c7606a59ada046676211c",
+  "positive_witnesses_sha256": "42dfdce3ff4b202f0ec03b53b62f9a4f3bc10af7fc2767b5832ccba08aa8c6eb",
+  "primary_index_handoff_verified": true,
+  "primary_index_sha256": "59519e15aabd06db6200de38829ed45e911169b8ad80d95bd06b8960ac346977",
+  "record_sha256": {
+    "ORIGINAL_Q_V1/OM:pic0:00": "8ebf8db945e89b66729e2b4dfe42e40f64600686fb291ee6c4c2a2464d3f1410",
+    "ORIGINAL_Q_V1/OM:pic0:07": "1eb56abb3ea3d826864b80b7ab690ee4e2a1ee90af229496fa605c2bd05a1f37",
+    "ORIGINAL_Q_V1/OM:pic0:15": "fa85bf0962fe4bb3b488a0003ee559169c453a3e07b0c9ecac72a676601251f9",
+    "REFLECTED_AB_V1/OM:pic0:00": "20e8d4cc57263f027a1dd558531fddb4d1593b52df86cc0b01a9ea7c79510643",
+    "REFLECTED_AB_V1/OM:pic0:07": "502d43c5f153a2a4c2c1ba2998978edbfc569dcdf52be9681aa4cd474a07ee4a",
+    "REFLECTED_AB_V1/OM:pic0:15": "1abd6bea4e2854ae48f3ebd171dac928190d3a30b2759f8eb620efe88aa1edba"
+  },
+  "retrieval_index_sha256": "9d61f58659136c35479c623a0e61d7823cd7fc8c177b1f57d8ab823e4e65c39f",
+  "run_sha256": "7e01a0685b9baf38bf46cba583bfad3387dd8781fbb78d0bd664636807b57f12",
+  "runtime_file_sha256": "9b48f8b0b4286e4d3f5cf6ab8af6c33e81b93cdac0127eea074180ba031764d1",
+  "schema_version": 1,
+  "scope": "SIX_PAIRED_PREPARATIONS_AND_PLAN_SPECIFIC_EXACT_WITNESSES_NOT_FULL_CONTROLS",
+  "source_relocation_sha256": "969f0ca3022f15fc351ce161e5930e87d8b92f89849e4d47596a020654d65bda",
+  "status": "PASS_EXACT_POSITIVE_WITNESS_REVIEW",
+  "sturm_index_sha256": "539e33ee79598f64a07064dcb84e03a7e8d1c3445b4d63cb88a298ed1ed239b0",
+  "theorem_promotion": false,
+  "witness_data_sha256": "07d094661382acf1dbe1e18360d134da9d4d0d41cb550b8ae0217e8152c21ae1"
+}

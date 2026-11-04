@@ -1,0 +1,97 @@
+"""Candidate exact coordinate transport chosen by numerical reconnaissance.
+
+No saved decimal is an enclosure. No theta function is evaluated. The caller
+must bind model/seed bytes and impose process/resource bounds.
+"""
+import hashlib
+import json
+import mpmath as mp
+import sympy as s
+
+
+def matrix(rows):
+    return s.Matrix([[s.Rational(x) for x in row] for row in rows])
+
+
+def integral(a):
+    return all(x.q == 1 for x in a)
+
+
+def numeric(a):
+    return mp.matrix([[mp.mpf(int(x.p))/int(x.q) for x in row] for row in a.tolist()])
+
+
+def action(tau, change):
+    a,b,c,d = [numeric(x) for x in (change[:6,:6],change[:6,6:],change[6:,:6],change[6:,6:])]
+    return (a+tau*c)**-1*(b+tau*d)
+
+
+def reconstruct(basis, tangent_type):
+    roots = [mp.exp(mp.pi*mp.j*e/21) for e in tangent_type]
+    p = mp.matrix([[sum((mp.mpf(int(basis[k,j].p))/int(basis[k,j].q))*root**k
+                             for k in range(12)) for j in range(12)] for root in roots])
+    return p[:,:6]**-1*p[:,6:]
+
+
+def run(model, seed):
+    if not __debug__:
+        raise RuntimeError("Enabled assertions required")
+    mp.mp.dps = 80
+    assert model['actual_tangent_type'] == seed['actual_tangent_type'] == [1,5,11,13,17,19]
+    j = s.zeros(12);j[:6,6:] = s.eye(6);j[6:,:6] = -s.eye(6)
+    u = matrix(model['symplectic_power_basis']);e = matrix(seed['ambient_form'])
+    f = matrix(model['delta_in_symplectic_basis'])
+    assert u.T*e*u == j and integral(f) and f*f+f+s.eye(12) == s.zeros(12)
+    assert f.T*j*f == j
+    original = reconstruct(u,model['actual_tangent_type'])
+    tau = original.copy(); total = s.eye(12); history = []
+    for iteration in range(20):
+        y = mp.matrix([[mp.im(x) for x in row] for row in tau.tolist()])
+        lower = mp.cholesky(y)
+        lattice = s.Matrix([[int(mp.nint(x*10**18)) for x in row] for row in lower.tolist()])
+        _, t = lattice.lll_transform(delta=s.Rational(3,4))
+        assert integral(t) and abs(t.det()) == 1
+        step = s.diag(t.inv(),t.T)
+        tau = action(tau,step); total = total*step
+        shift = s.zeros(6)
+        for a in range(6):
+            for b in range(a,6):shift[a,b] = shift[b,a] = int(mp.nint(mp.re(tau[a,b])))
+        step = s.eye(12);step[:6,6:] = -shift
+        tau = action(tau,step);total = total*step
+        history.append({'iteration':iteration,'abs_tau00_noncertified':mp.nstr(abs(tau[0,0]),16)})
+        if abs(tau[0,0]) >= mp.mpf('0.999999999'):break
+        step = s.eye(12);step[0,0] = step[6,6] = 0;step[6,0] = 1;step[0,6] = -1
+        tau = action(tau,step);total = total*step
+    assert integral(total) and total.T*j*total == j
+    inv = -j*total.T*j
+    assert inv*total == s.eye(12)
+    basis = u*total; reduced_f = inv*f*total
+    assert integral(reduced_f) and basis.T*e*basis == j
+    recomputed = reconstruct(basis,model['actual_tangent_type'])
+    error = max(abs(tau[a,b]-recomputed[a,b]) for a in range(6) for b in range(6))
+    assert error < mp.mpf('1e-45')
+    chi = model['invariant_refinement_chi']
+    q = lambda x:(sum(int(x[a])*int(x[a+6]) for a in range(6))+sum(int(x[a])*chi[a] for a in range(12))) % 2
+    new_chi = [q(total[:,a]) for a in range(12)]
+    assert new_chi == [int((j*reduced_f)[a,a]) % 2 for a in range(12)]
+    assert sum(new_chi[a]*new_chi[a+6] for a in range(6)) % 2 == 0
+    canonical = lambda v:min(tuple(v),tuple(-x % 3 for x in v))
+    pairs = set()
+    for old in model['eligible_nonzero_pairs']:
+        v = inv*s.Matrix(old);assert integral(v)
+        v = canonical(tuple(int(x) % 3 for x in v));assert any(v)
+        point = s.Matrix(v); k = (reduced_f-s.eye(12))*point/3;assert integral(k)
+        refinement = (sum(int(k[a])*int(k[a+6]) for a in range(6))+sum(int(k[a])*new_chi[a] for a in range(12))) % 2
+        assert (3*refinement+int((point.T*j*k)[0])) % 6 == 0
+        pairs.add(v)
+    assert len(pairs) == 130
+    serial = lambda a:[[str(x) for x in row] for row in a.tolist()]
+    return {'status':'EXACT_TRANSPORT_WITH_NONCERTIFIED_PERIOD_RECONNAISSANCE',
+            'catalog_index':model['catalog_index'],'actual_tangent_type':model['actual_tangent_type'],
+            'symplectic_transform':serial(total),'symplectic_power_basis':serial(basis),
+            'delta_in_symplectic_basis':serial(reduced_f),'invariant_refinement_chi':new_chi,
+            'flint_characteristic_index':sum(bit << (11-a) for a,bit in enumerate(new_chi)),
+            'eligible_nonzero_pairs':sorted(pairs),'history':history,
+            'tau_noncertified':[[[mp.nstr(mp.re(x),70),mp.nstr(mp.im(x),70)] for x in row] for row in recomputed.tolist()],
+            'transformation_error_noncertified':mp.nstr(error,8),'theta_evaluations':0,
+            'scope':'Candidate exact coordinate transport; decimals are reconnaissance only, no interval or theta claim.'}

@@ -1,0 +1,77 @@
+"""Tiny independent cyclotomic/unit-coboundary check for C99.
+No producer imports; actual automorphism groups and real descent are human-proof premises.
+"""
+import json,time
+from pathlib import Path
+
+def trim(a):
+ while len(a)>1 and a[-1]==0:a.pop()
+ return a
+
+def exactdiv(a,b):
+ a=a[:];q=[0]*max(1,len(a)-len(b)+1)
+ while len(a)>=len(b) and a!=[0]:
+  k=len(a)-len(b);assert a[-1]%b[-1]==0;c=a[-1]//b[-1];q[k]=c
+  for j,v in enumerate(b):a[k+j]-=c*v
+  trim(a)
+ assert a==[0]
+ return trim(q)
+
+def cyclo(n):
+ a=[-1]+[0]*(n-1)+[1]
+ for d in range(1,n):
+  if n%d==0:a=exactdiv(a,cyclo(d))
+ return a
+
+def determinant(a):
+ a=[r[:] for r in a];last=1;sign=1;n=len(a)
+ for k in range(n-1):
+  if a[k][k]==0:
+   j=next(i for i in range(k+1,n) if a[i][k]);a[k],a[j]=a[j],a[k];sign=-sign
+  p=a[k][k]
+  for i in range(k+1,n):
+   for j in range(k+1,n):
+    v=a[i][j]*p-a[i][k]*a[k][j];assert v%last==0;a[i][j]=v//last
+  for i in range(k+1,n):a[i][k]=0
+  last=p
+ return sign*a[-1][-1]
+
+def main():
+ start=time.monotonic();f=cyclo(42);n=len(f)-1;assert n==12
+ def red(a):
+  a=a[:]
+  while len(a)>n:
+   c=a[-1];k=len(a)-len(f)
+   for j,v in enumerate(f):a[k+j]-=c*v
+   trim(a)
+  return a+[0]*(n-len(a))
+ def mul(a,b):
+  p=[0]*(len(a)+len(b)-1)
+  for i,x in enumerate(a):
+   for j,y in enumerate(b):p[i+j]+=x*y
+  return red(p)
+ z=lambda e:red([0]*(e%42)+[1])
+ add=lambda a,b:[x+y for x,y in zip(a,b)]
+ neg=lambda a:[-x for x in a]
+ gamma=add(z(6),neg(z(8)));bar_gamma=add(z(-6),neg(z(-8)))
+ assert gamma==mul(neg(z(14)),bar_gamma)
+ matrix=list(map(list,zip(*(mul(gamma,z(i)) for i in range(n)))))
+ norm=determinant(matrix);assert norm==1
+ assert mul(z(21),z(21))==z(0)
+ cyclic={}
+ for m in (6,42):
+  cob={2*h%m for h in range(m)}
+  cosets={frozenset((a+h)%m for h in cob) for a in range(m)}
+  assert len(cosets)==2 and frozenset(cob)!=frozenset((m//2+h)%m for h in cob)
+  fixed=[h for h in range(m) if h==(-h)%m];assert fixed==[0,m//2]
+  cyclic[str(m)]={'polarized_twists':len(cosets),'real_polarized_automorphism_exponents':fixed}
+ # R and S: real-unit factor cancels in h/bar(h), image is root squares.
+ r_image={2*h%6 for h in range(6)};assert len(r_image)==3
+ # O: roots supply exponents2h, gamma supplies exponent35.
+ o_image={(2*h+35*k)%42 for h in range(42) for k in range(42)}
+ assert len(o_image)==42 and (35*3)%42==21
+ assert len({2*h%42 for h in range(42)})==21 # negative omission control
+ underlying=1+14*2;polarized=2+28*2;assert (underlying,polarized)==(29,58)
+ out={'status':'PASS','scope':'Exact cyclotomic unit identity and finite coboundary corroboration; geometric descent and full unit groups are scoped adopted premises','Phi42':f,'gamma_absolute_norm':norm,'gamma_conjugation_ratio_exponent_mod42':35,'gamma_cubed_ratio_exponent_mod42':21,'cyclic':cyclic,'R_and_S_coboundary_image_order':3,'O_coboundary_image_order':42,'omitting_gamma_wrongly_leaves_two_source_twists':True,'polarized_real_forms':58,'underlying_real_forms':29,'forgetful_fiber_size':2,'wall_seconds':time.monotonic()-start}
+ Path(__file__).with_suffix('.json').write_text(json.dumps(out,indent=2,sort_keys=True)+'\n');print(json.dumps(out,sort_keys=True))
+if __name__=='__main__':main()

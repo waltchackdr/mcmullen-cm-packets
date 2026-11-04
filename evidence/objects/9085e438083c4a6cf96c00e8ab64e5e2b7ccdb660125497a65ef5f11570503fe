@@ -1,0 +1,29 @@
+{
+  "accepted_linux_smoke_sha256": "fc4dce24ccb5c8f08760e19756198d5efffca5c3c7634a97fce95dcd7c74c1ba",
+  "budget_ceiling_usd": 50.0,
+  "deadline_epoch": 1791849919.0,
+  "guard_evidence_sha256": "7e3ae7837607e7c0e6c4c4b91cbb9bbb4e19c43ff96712f40328f1c42d852282",
+  "minimum_free_mib": 2048,
+  "package_sha256": "18f75af69dfda0dbefde2f68ef7da79ecca701fd24cb625be8f74e44784d021c",
+  "provider_shutdown_verified_by_this_program": false,
+  "python_invocation": {
+    "binary_sha256": "2f7fff382c9d335d6d63f134b55cb8ced9d0b2e1d47e6f210ad3f059adfa71c1",
+    "invocation_path": "/opt/v81-runtime/cohort.i8xmfN8X/venv/bin/python",
+    "pyvenv_cfg_sha256": "e645ee82b175aa41a617d4f665bf716c9172397786deb901c33aac3d3e828ebd",
+    "resolved_binary": "/opt/v81-runtime/python/cpython-3.14.6-linux-x86_64-gnu/bin/python3.14",
+    "sys_base_prefix": "/opt/v81-runtime/python/cpython-3.14.6-linux-x86_64-gnu",
+    "sys_prefix": "/opt/v81-runtime/cohort.i8xmfN8X/venv"
+  },
+  "runtime_manifest_sha256": "816f3def8fa6a4a84e9931dce54f231e9b575f8de5eff7e3dfae6f95e8b8d4dc",
+  "schema_version": 1,
+  "stop_deadline_epoch": 1791850219.0,
+  "supervisor_sha256": "7f2dce00a33e36f4b7e3a7194982f658ddc39944acba26cd65bb2bbee73dab4b",
+  "supervisor_source_sha256": {
+    "aggregate.py": "e7c362135c68fc41612f8aec32455866cf68f7401075c81af67779ee2411ce97",
+    "child.py": "b78ba5ccdb4fcdec0b568c0ea2502575768f12bb8c04c87714576397dfc3f31e",
+    "frontend.py.in": "a7a6bb12289ee1074b99797fa5ab64486f8deb23a6a35b80298e657ead087a79",
+    "stage.py": "dcdaa95e54d08781ddd62098f83bd900a93f0c50472350c927e719982690e03f",
+    "supervisor.py": "7f2dce00a33e36f4b7e3a7194982f658ddc39944acba26cd65bb2bbee73dab4b"
+  },
+  "workers": 24
+}

@@ -1,0 +1,33 @@
+{
+  "eigenvalues_by_order": {
+    "21": 21,
+    "3": 0,
+    "7": 0
+  },
+  "inverse_rotation_invariant": true,
+  "norm_coefficients_ascending": [
+    11,
+    0,
+    0,
+    -3,
+    0,
+    0,
+    -3,
+    -7,
+    0,
+    -3,
+    0,
+    0,
+    -3,
+    0,
+    -7,
+    -3,
+    0,
+    0,
+    -3,
+    0,
+    0
+  ],
+  "relation": "N^2=21N modulo 1+t+...+t^20",
+  "status": "FINITE_POLYNOMIAL_CHECK_NOT_GEOMETRIC_ADOPTION"
+}

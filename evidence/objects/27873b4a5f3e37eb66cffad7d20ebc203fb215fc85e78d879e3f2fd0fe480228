@@ -1,0 +1,1546 @@
+[
+  {
+    "id": 1,
+    "env": "theorem",
+    "title": "The fixed marked norm-$\\pi$ packet",
+    "labels": [
+      "thm:packetintro"
+    ],
+    "start": 8730,
+    "end": 9606,
+    "line": 178
+  },
+  {
+    "id": 2,
+    "env": "theoremA",
+    "title": null,
+    "labels": [
+      "thm:A"
+    ],
+    "start": 9884,
+    "end": 10926,
+    "line": 201
+  },
+  {
+    "id": 3,
+    "env": "theorem",
+    "title": "Principal models and their integral distinctions",
+    "labels": [
+      "pp:thm:introgeometry"
+    ],
+    "start": 11544,
+    "end": 13126,
+    "line": 235
+  },
+  {
+    "id": 4,
+    "env": "theoremB",
+    "title": null,
+    "labels": [
+      "thm:B"
+    ],
+    "start": 16957,
+    "end": 19631,
+    "line": 306
+  },
+  {
+    "id": 5,
+    "env": "proposition",
+    "title": "Arithmetic and component certificate",
+    "labels": [
+      "prop:mainarith"
+    ],
+    "start": 24245,
+    "end": 25203,
+    "line": 373
+  },
+  {
+    "id": 6,
+    "env": "proposition",
+    "title": "Geometric meaning of the normalized $B$-vertex",
+    "labels": [
+      "prop:geometricB"
+    ],
+    "start": 26085,
+    "end": 26852,
+    "line": 395
+  },
+  {
+    "id": 7,
+    "env": "theorem",
+    "title": "Exact $B_t$-vertex certificate",
+    "labels": [
+      "thm:Bvertex"
+    ],
+    "start": 28794,
+    "end": 29339,
+    "line": 437
+  },
+  {
+    "id": 8,
+    "env": "proposition",
+    "title": "Polarization type",
+    "labels": [
+      "prop:E1type"
+    ],
+    "start": 31466,
+    "end": 31803,
+    "line": 479
+  },
+  {
+    "id": 9,
+    "env": "proposition",
+    "title": "No compatible principal polarization on the explicit $\\OL^2$ lattice",
+    "labels": [
+      "prop:noprincipal"
+    ],
+    "start": 32324,
+    "end": 32607,
+    "line": 503
+  },
+  {
+    "id": 10,
+    "env": "proposition",
+    "title": "A principally polarized model in the isogeny class",
+    "labels": [
+      "prop:ppisogenous"
+    ],
+    "start": 34263,
+    "end": 35616,
+    "line": 529
+  },
+  {
+    "id": 11,
+    "env": "corollary",
+    "title": "The principal model is not the same orbifold vertex",
+    "labels": [
+      "cor:noBstablepp"
+    ],
+    "start": 39206,
+    "end": 39708,
+    "line": 622
+  },
+  {
+    "id": 12,
+    "env": "proposition",
+    "title": "Polarization-compatible $K$-action",
+    "labels": [
+      "prop:Kcompatible"
+    ],
+    "start": 42762,
+    "end": 43112,
+    "line": 676
+  },
+  {
+    "id": 13,
+    "env": "proposition",
+    "title": "Fixed matrices act on the explicit lattice",
+    "labels": [
+      "prop:fixedmatrixlattice"
+    ],
+    "start": 44375,
+    "end": 44956,
+    "line": 708
+  },
+  {
+    "id": 14,
+    "env": "corollary",
+    "title": "The exact $G$-certificate transports the endomorphism",
+    "labels": [
+      "cor:Gtransport"
+    ],
+    "start": 45998,
+    "end": 46725,
+    "line": 731
+  },
+  {
+    "id": 15,
+    "env": "proposition",
+    "title": "CM type and Weil signature",
+    "labels": [
+      "prop:actualcmtype"
+    ],
+    "start": 48847,
+    "end": 49317,
+    "line": 777
+  },
+  {
+    "id": 16,
+    "env": "proposition",
+    "title": "Weil discriminant $-1$",
+    "labels": [
+      "prop:discminusone"
+    ],
+    "start": 50916,
+    "end": 51177,
+    "line": 815
+  },
+  {
+    "id": 17,
+    "env": "corollary",
+    "title": "Algebraicity of the exceptional Weil space",
+    "labels": [
+      "cor:Weilalg"
+    ],
+    "start": 52242,
+    "end": 52498,
+    "line": 831
+  },
+  {
+    "id": 18,
+    "env": "lemma",
+    "title": "Fourier classification for the primitive CM type",
+    "labels": [
+      "lem:primitivebinary"
+    ],
+    "start": 54485,
+    "end": 55078,
+    "line": 866
+  },
+  {
+    "id": 19,
+    "env": "theorem",
+    "title": "Hodge ring of the certified CM sixfold",
+    "labels": [
+      "thm:fullhodge"
+    ],
+    "start": 58079,
+    "end": 58826,
+    "line": 964
+  },
+  {
+    "id": 20,
+    "env": "corollary",
+    "title": "Hodge conjecture for the certified sixfold",
+    "labels": [
+      "cor:HCspecific"
+    ],
+    "start": 60001,
+    "end": 60243,
+    "line": 998
+  },
+  {
+    "id": 21,
+    "env": "proposition",
+    "title": "Comparison with known CM factors",
+    "labels": [
+      "prop:knownCM"
+    ],
+    "start": 61448,
+    "end": 62087,
+    "line": 1020
+  },
+  {
+    "id": 22,
+    "env": "theorem",
+    "title": "Mixed powers",
+    "labels": [
+      "ext:thm:mixed"
+    ],
+    "start": 70692,
+    "end": 70986,
+    "line": 1187
+  },
+  {
+    "id": 23,
+    "env": "corollary",
+    "title": "The packet fibers and the additional abstract type",
+    "labels": [],
+    "start": 70988,
+    "end": 71267,
+    "line": 1194
+  },
+  {
+    "id": 24,
+    "env": "theorem",
+    "title": "Individual powers for the fixed field",
+    "labels": [
+      "ext:thm:individual"
+    ],
+    "start": 71851,
+    "end": 72111,
+    "line": 1211
+  },
+  {
+    "id": 25,
+    "env": "lemma",
+    "title": "Algebraic contractions",
+    "labels": [
+      "ext:lem:contraction"
+    ],
+    "start": 78534,
+    "end": 79320,
+    "line": 1359
+  },
+  {
+    "id": 26,
+    "env": "lemma",
+    "title": "The full integer kernel",
+    "labels": [
+      "ext:lem:lattice"
+    ],
+    "start": 85410,
+    "end": 85551,
+    "line": 1496
+  },
+  {
+    "id": 27,
+    "env": "theorem",
+    "title": "Six-orbit mixed products",
+    "labels": [
+      "six:thm:products"
+    ],
+    "start": 94008,
+    "end": 94531,
+    "line": 1667
+  },
+  {
+    "id": 28,
+    "env": "theorem",
+    "title": "All mixed products for the fixed field",
+    "labels": [
+      "eight:thm:all"
+    ],
+    "start": 101043,
+    "end": 101448,
+    "line": 1810
+  },
+  {
+    "id": 29,
+    "env": "corollary",
+    "title": "CM factors with fields contained in the fixed field",
+    "labels": [
+      "eight:cor:subfields"
+    ],
+    "start": 113047,
+    "end": 113607,
+    "line": 2050
+  },
+  {
+    "id": 30,
+    "env": "corollary",
+    "title": "An intrinsic splitting-field criterion",
+    "labels": [
+      "eight:cor:mt-splitting"
+    ],
+    "start": 115327,
+    "end": 116008,
+    "line": 2090
+  },
+  {
+    "id": 31,
+    "env": "lemma",
+    "title": null,
+    "labels": [
+      "lem:degree"
+    ],
+    "start": 121783,
+    "end": 121952,
+    "line": 2184
+  },
+  {
+    "id": 32,
+    "env": "proposition",
+    "title": "Degree obstruction",
+    "labels": [
+      "prop:degree-obstruction"
+    ],
+    "start": 122094,
+    "end": 122510,
+    "line": 2194
+  },
+  {
+    "id": 33,
+    "env": "lemma",
+    "title": "Adjoint equals adjugate",
+    "labels": [
+      "lem:adjugate",
+      "eq:adjdet"
+    ],
+    "start": 124229,
+    "end": 124614,
+    "line": 2227
+  },
+  {
+    "id": 34,
+    "env": "corollary",
+    "title": "Correct Hecke similitude factor",
+    "labels": [
+      "cor:rosatipi"
+    ],
+    "start": 124910,
+    "end": 125313,
+    "line": 2245
+  },
+  {
+    "id": 35,
+    "env": "proposition",
+    "title": "Correct local characteristic polynomial",
+    "labels": [
+      "prop:charpoly",
+      "eq:correct-charpoly"
+    ],
+    "start": 126196,
+    "end": 126767,
+    "line": 2262
+  },
+  {
+    "id": 36,
+    "env": "proposition",
+    "title": "CM repair",
+    "labels": [
+      "prop:cmrepair"
+    ],
+    "start": 127095,
+    "end": 127511,
+    "line": 2281
+  },
+  {
+    "id": 37,
+    "env": "proposition",
+    "title": "The stated count does not follow from the stated parametrization",
+    "labels": [
+      "prop:2816"
+    ],
+    "start": 130501,
+    "end": 131029,
+    "line": 2351
+  },
+  {
+    "id": 38,
+    "env": "proposition",
+    "title": "Six distinct Schwarz equations",
+    "labels": [
+      "prop:sixHG"
+    ],
+    "start": 133893,
+    "end": 134390,
+    "line": 2396
+  },
+  {
+    "id": 39,
+    "env": "proposition",
+    "title": null,
+    "labels": [
+      "prop:pi1"
+    ],
+    "start": 142927,
+    "end": 143099,
+    "line": 2514
+  },
+  {
+    "id": 40,
+    "env": "theorem",
+    "title": "The $84$ elements and $42$ traces",
+    "labels": [
+      "thm:42",
+      "eq:normfiber"
+    ],
+    "start": 144337,
+    "end": 144890,
+    "line": 2542
+  },
+  {
+    "id": 41,
+    "env": "theorem",
+    "title": "Arithmetic $(3,3)$ signature counts",
+    "labels": [
+      "thm:signature"
+    ],
+    "start": 146930,
+    "end": 147545,
+    "line": 2596
+  },
+  {
+    "id": 42,
+    "env": "proposition",
+    "title": "Canonical Hecke-fixed CM representative",
+    "labels": [
+      "prop:canonical-fixed",
+      "eq:wi"
+    ],
+    "start": 148858,
+    "end": 149470,
+    "line": 2648
+  },
+  {
+    "id": 43,
+    "env": "proposition",
+    "title": "Explicit component orientation and integral transfer",
+    "labels": [
+      "prop:orientationt"
+    ],
+    "start": 155925,
+    "end": 156728,
+    "line": 2772
+  },
+  {
+    "id": 44,
+    "env": "proposition",
+    "title": "Effective finiteness of the orbit test",
+    "labels": [
+      "prop:effectiveorbit"
+    ],
+    "start": 158344,
+    "end": 159102,
+    "line": 2827
+  },
+  {
+    "id": 45,
+    "env": "corollary",
+    "title": "Finite geometric search for each CM candidate",
+    "labels": [
+      "cor:finitegeometric"
+    ],
+    "start": 160346,
+    "end": 160930,
+    "line": 2883
+  },
+  {
+    "id": 46,
+    "env": "theorem",
+    "title": "Maximal-order trace classes at $43$",
+    "labels": [
+      "thm:maxorder"
+    ],
+    "start": 162275,
+    "end": 162979,
+    "line": 2919
+  },
+  {
+    "id": 47,
+    "env": "proposition",
+    "title": "All-trace reduction by embedded order",
+    "labels": [
+      "prop:alltraceorders"
+    ],
+    "start": 163970,
+    "end": 164976,
+    "line": 2943
+  },
+  {
+    "id": 48,
+    "env": "theorem",
+    "title": "Exact nonmaximal $d=7$ conjugacy counts",
+    "labels": [
+      "thm:d7nonmax"
+    ],
+    "start": 166821,
+    "end": 168018,
+    "line": 3010
+  },
+  {
+    "id": 49,
+    "env": "theorem",
+    "title": "The nonmaximal $d=3$ classes",
+    "labels": [
+      "thm:d3classes"
+    ],
+    "start": 172248,
+    "end": 172800,
+    "line": 3129
+  },
+  {
+    "id": 50,
+    "env": "theorem",
+    "title": "The $112$ ambient nonmaximal $d=7$ CM points",
+    "labels": [
+      "thm:d7ambient"
+    ],
+    "start": 176026,
+    "end": 177295,
+    "line": 3204
+  },
+  {
+    "id": 51,
+    "env": "lemma",
+    "title": "Point fibers and the intrinsic multiplier order",
+    "labels": [
+      "lem:packetpointfibers"
+    ],
+    "start": 180526,
+    "end": 181028,
+    "line": 3305
+  },
+  {
+    "id": 52,
+    "env": "proposition",
+    "title": "The $144$ selected $d=3$ ambient points",
+    "labels": [
+      "prop:d3ambientpoints"
+    ],
+    "start": 182320,
+    "end": 182993,
+    "line": 3337
+  },
+  {
+    "id": 53,
+    "env": "theorem",
+    "title": "The full marked norm-$\\pi$ arithmetic census",
+    "labels": [
+      "thm:fullpacketarithmetic"
+    ],
+    "start": 186159,
+    "end": 187531,
+    "line": 3434
+  },
+  {
+    "id": 54,
+    "env": "proposition",
+    "title": "Two proper-order $d=7$ exclusions",
+    "labels": [
+      "prop:d7mask14"
+    ],
+    "start": 195153,
+    "end": 195589,
+    "line": 3648
+  },
+  {
+    "id": 55,
+    "env": "proposition",
+    "title": "Two further proper-order $d=7$ exclusions",
+    "labels": [
+      "prop:d7mask15_31"
+    ],
+    "start": 198410,
+    "end": 198857,
+    "line": 3718
+  },
+  {
+    "id": 56,
+    "env": "proposition",
+    "title": "A third pair of proper-order $d=7$ exclusions",
+    "labels": [
+      "prop:d7mask6_22"
+    ],
+    "start": 201023,
+    "end": 201503,
+    "line": 3770
+  },
+  {
+    "id": 57,
+    "env": "proposition",
+    "title": "A fourth pair of proper-order $d=7$ exclusions",
+    "labels": [
+      "prop:d7mask1_17"
+    ],
+    "start": 203534,
+    "end": 204014,
+    "line": 3822
+  },
+  {
+    "id": 58,
+    "env": "proposition",
+    "title": "A twenty-point proper-order $d=7$ exclusion batch",
+    "labels": [
+      "prop:d7batch10"
+    ],
+    "start": 206057,
+    "end": 206668,
+    "line": 3874
+  },
+  {
+    "id": 59,
+    "env": "proposition",
+    "title": "The final two proper-order $d=7$ exclusion pairs",
+    "labels": [
+      "prop:d7finalpairs"
+    ],
+    "start": 210107,
+    "end": 210643,
+    "line": 3966
+  },
+  {
+    "id": 60,
+    "env": "corollary",
+    "title": "Closure of the nontrivial-$R_{83}$ stratum",
+    "labels": [
+      "cor:d7r83nontrivial"
+    ],
+    "start": 214339,
+    "end": 215081,
+    "line": 4066
+  },
+  {
+    "id": 61,
+    "env": "theorem",
+    "title": "Closure of the principal-Picard proper-$R_{83}$ stratum",
+    "labels": [
+      "thm:d7r83principal"
+    ],
+    "start": 215083,
+    "end": 215423,
+    "line": 4079
+  },
+  {
+    "id": 62,
+    "env": "corollary",
+    "title": "Closure of the proper-$R_{83}$ locus",
+    "labels": [
+      "cor:d7r83all"
+    ],
+    "start": 218183,
+    "end": 218716,
+    "line": 4139
+  },
+  {
+    "id": 63,
+    "env": "lemma",
+    "title": "Two simultaneous target regions",
+    "labels": [
+      "lem:twochambers"
+    ],
+    "start": 218941,
+    "end": 219630,
+    "line": 4156
+  },
+  {
+    "id": 64,
+    "env": "theorem",
+    "title": "Complete fixed marked geometric packet",
+    "labels": [
+      "thm:fullpacketgeometry"
+    ],
+    "start": 220921,
+    "end": 221632,
+    "line": 4196
+  },
+  {
+    "id": 65,
+    "env": "theorem",
+    "title": "All maximal-multiplier orientations",
+    "labels": [
+      "thm:maximalallorientations"
+    ],
+    "start": 224278,
+    "end": 224789,
+    "line": 4257
+  },
+  {
+    "id": 66,
+    "env": "theorem",
+    "title": "Exclusion of the complete proper-$R_{41}$ stratum",
+    "labels": [
+      "thm:d7r41complete"
+    ],
+    "start": 232544,
+    "end": 233057,
+    "line": 4450
+  },
+  {
+    "id": 67,
+    "env": "corollary",
+    "title": "Closure of the nonmaximal $d=7$ geometric packet",
+    "labels": [
+      "cor:d7geometrycomplete"
+    ],
+    "start": 237793,
+    "end": 238317,
+    "line": 4576
+  },
+  {
+    "id": 68,
+    "env": "proposition",
+    "title": "Seven further pointwise exclusions",
+    "labels": [
+      "prop:broadersevenexclusions"
+    ],
+    "start": 239599,
+    "end": 240942,
+    "line": 4612
+  },
+  {
+    "id": 69,
+    "env": "corollary",
+    "title": "Historical subpacket coverage",
+    "labels": [
+      "cor:geometry119"
+    ],
+    "start": 245783,
+    "end": 246268,
+    "line": 4739
+  },
+  {
+    "id": 70,
+    "env": "theorem",
+    "title": "A second exact Hecke vertex",
+    "labels": [
+      "thm:Avertex"
+    ],
+    "start": 247185,
+    "end": 248316,
+    "line": 4766
+  },
+  {
+    "id": 71,
+    "env": "theorem",
+    "title": "Hodge conjecture at the normalized $A$-vertex",
+    "labels": [
+      "thm:Ahodge"
+    ],
+    "start": 250098,
+    "end": 250494,
+    "line": 4823
+  },
+  {
+    "id": 72,
+    "env": "proposition",
+    "title": "The normalized $C$-vertex and saturation of the $43$-packet",
+    "labels": [
+      "prop:Cvertex"
+    ],
+    "start": 252457,
+    "end": 253410,
+    "line": 4876
+  },
+  {
+    "id": 73,
+    "env": "proposition",
+    "title": "The $B$- and $C$-vertices are distinct holomorphic classes",
+    "labels": [
+      "prop:BCdistinct"
+    ],
+    "start": 254726,
+    "end": 255015,
+    "line": 4926
+  },
+  {
+    "id": 74,
+    "env": "proposition",
+    "title": "The fourth quadrilateral vertex is the $B$-class",
+    "labels": [
+      "prop:DBsame"
+    ],
+    "start": 255799,
+    "end": 256348,
+    "line": 4947
+  },
+  {
+    "id": 75,
+    "env": "proposition",
+    "title": "Principally polarized model at the $C$-vertex",
+    "labels": [
+      "prop:Cppisogenous"
+    ],
+    "start": 257606,
+    "end": 258089,
+    "line": 4964
+  },
+  {
+    "id": 76,
+    "env": "corollary",
+    "title": "The principal $C$-model loses the full vertex automorphism",
+    "labels": [
+      "cor:noCstablepp"
+    ],
+    "start": 258807,
+    "end": 259077,
+    "line": 4994
+  },
+  {
+    "id": 77,
+    "env": "proposition",
+    "title": "Principally polarized model at the $A$-vertex",
+    "labels": [
+      "prop:Appisogenous"
+    ],
+    "start": 259549,
+    "end": 260507,
+    "line": 5011
+  },
+  {
+    "id": 78,
+    "env": "corollary",
+    "title": "The principal $A$-model loses the full vertex automorphism",
+    "labels": [
+      "cor:noAstablepp"
+    ],
+    "start": 262161,
+    "end": 262486,
+    "line": 5075
+  },
+  {
+    "id": 79,
+    "env": "proposition",
+    "title": "A common marked principal lattice at the three vertices",
+    "labels": [
+      "prop:commonprincipal"
+    ],
+    "start": 263127,
+    "end": 263684,
+    "line": 5099
+  },
+  {
+    "id": 80,
+    "env": "proposition",
+    "title": "Ambient and curve stabilizers of the common level",
+    "labels": [
+      "prop:principalstabilizer"
+    ],
+    "start": 266322,
+    "end": 267266,
+    "line": 5168
+  },
+  {
+    "id": 81,
+    "env": "theorem",
+    "title": "A connected principally polarized RM family",
+    "labels": [
+      "thm:principalfamily"
+    ],
+    "start": 269451,
+    "end": 270628,
+    "line": 5230
+  },
+  {
+    "id": 82,
+    "env": "proposition",
+    "title": "An explicit principal RM component",
+    "labels": [
+      "pp:prop:explicit",
+      "pp:eq:basis",
+      "pp:eq:group",
+      "pp:eq:curve"
+    ],
+    "start": 273324,
+    "end": 274672,
+    "line": 5301
+  },
+  {
+    "id": 83,
+    "env": "proposition",
+    "title": "Explicit transition stabilizer",
+    "labels": [
+      "pp:prop:stabilizer"
+    ],
+    "start": 277885,
+    "end": 278208,
+    "line": 5417
+  },
+  {
+    "id": 84,
+    "env": "proposition",
+    "title": "Distinct principal points with fixed real multiplication",
+    "labels": [
+      "pp:prop:markeddistinct"
+    ],
+    "start": 279062,
+    "end": 279588,
+    "line": 5450
+  },
+  {
+    "id": 85,
+    "env": "proposition",
+    "title": "Three distinct unmarked principal fibers",
+    "labels": [
+      "pp:prop:unmarkeddistinct"
+    ],
+    "start": 282231,
+    "end": 282695,
+    "line": 5516
+  },
+  {
+    "id": 86,
+    "env": "proposition",
+    "title": "The smallest scalar-polarized $B$--$C$ isogeny",
+    "labels": [
+      "pp:prop:bcisogeny"
+    ],
+    "start": 286888,
+    "end": 287602,
+    "line": 5628
+  },
+  {
+    "id": 87,
+    "env": "proposition",
+    "title": "Three distinct underlying abelian varieties",
+    "labels": [
+      "pp:prop:unpolarizeddistinct"
+    ],
+    "start": 291242,
+    "end": 291581,
+    "line": 5715
+  },
+  {
+    "id": 88,
+    "env": "proposition",
+    "title": "The least unpolarized isogeny degree",
+    "labels": [
+      "pp:prop:mindegree"
+    ],
+    "start": 295374,
+    "end": 295679,
+    "line": 5800
+  },
+  {
+    "id": 89,
+    "env": "proposition",
+    "title": "Integral maps and an ideal class of order two",
+    "labels": [
+      "pp:prop:homideal"
+    ],
+    "start": 298165,
+    "end": 299227,
+    "line": 5866
+  },
+  {
+    "id": 90,
+    "env": "proposition",
+    "title": "The full Picard group of the principal-model order",
+    "labels": [
+      "pp:prop:picardorder"
+    ],
+    "start": 302348,
+    "end": 302844,
+    "line": 5960
+  },
+  {
+    "id": 91,
+    "env": "proposition",
+    "title": "The ordinary ideal-class monoid of the selected order",
+    "labels": [
+      "pp:prop:idealclassmonoid"
+    ],
+    "start": 306627,
+    "end": 307631,
+    "line": 6067
+  },
+  {
+    "id": 92,
+    "env": "proposition",
+    "title": "Marked principal polarizations for the selected order",
+    "labels": [
+      "pp:prop:markedpolarizations"
+    ],
+    "start": 309849,
+    "end": 310827,
+    "line": 6134
+  },
+  {
+    "id": 93,
+    "env": "proposition",
+    "title": "All principal polarizations on the specified B/C models",
+    "labels": [
+      "pp:prop:actualpolarizations"
+    ],
+    "start": 313795,
+    "end": 314502,
+    "line": 6223
+  },
+  {
+    "id": 94,
+    "env": "theorem",
+    "title": "Complete simple principal classification with the selected order",
+    "labels": [
+      "pp:thm:tenprincipal"
+    ],
+    "start": 317227,
+    "end": 318411,
+    "line": 6296
+  },
+  {
+    "id": 95,
+    "env": "corollary",
+    "title": "Jacobian membership in the ten-class list",
+    "labels": [
+      "pp:cor:jacobianlist"
+    ],
+    "start": 321729,
+    "end": 322510,
+    "line": 6384
+  },
+  {
+    "id": 96,
+    "env": "proposition",
+    "title": "The balanced triple-cover count",
+    "labels": [
+      "pp:prop:trigonaltheta"
+    ],
+    "start": 325522,
+    "end": 326009,
+    "line": 6454
+  },
+  {
+    "id": 97,
+    "env": "theorem",
+    "title": "Jacobian classification under the enclosure contract",
+    "labels": [
+      "pp:thm:jacobiancomplete"
+    ],
+    "start": 328192,
+    "end": 328667,
+    "line": 6514
+  },
+  {
+    "id": 98,
+    "env": "proposition",
+    "title": null,
+    "labels": [],
+    "start": 332589,
+    "end": 333111,
+    "line": 6595
+  },
+  {
+    "id": 99,
+    "env": "proposition",
+    "title": "The induced polarization on the Fermat factor",
+    "labels": [
+      "pp:prop:fermatrestricted"
+    ],
+    "start": 336611,
+    "end": 337162,
+    "line": 6666
+  },
+  {
+    "id": 100,
+    "env": "corollary",
+    "title": "An integral primitive projector",
+    "labels": [
+      "pp:cor:fermatprojector"
+    ],
+    "start": 339945,
+    "end": 340374,
+    "line": 6738
+  },
+  {
+    "id": 101,
+    "env": "proposition",
+    "title": "Minimum isogenies from the Fermat factor",
+    "labels": [
+      "pp:prop:fermatbcminimum"
+    ],
+    "start": 341821,
+    "end": 342671,
+    "line": 6782
+  },
+  {
+    "id": 102,
+    "env": "proposition",
+    "title": "Minimum polarization and principal quotients",
+    "labels": [
+      "pp:prop:fermatminpolarization"
+    ],
+    "start": 345212,
+    "end": 345889,
+    "line": 6855
+  },
+  {
+    "id": 103,
+    "env": "theorem",
+    "title": "All principal targets at minimum degree",
+    "labels": [
+      "pp:thm:fermatallquotients"
+    ],
+    "start": 350543,
+    "end": 351422,
+    "line": 6961
+  },
+  {
+    "id": 104,
+    "env": "theorem",
+    "title": "Galois orbits of the minimum principal targets",
+    "labels": [
+      "pp:thm:quotientgalois"
+    ],
+    "start": 355238,
+    "end": 355779,
+    "line": 7058
+  },
+  {
+    "id": 105,
+    "env": "theorem",
+    "title": "Underlying quotients and the principal obstruction",
+    "labels": [
+      "pp:thm:fermatunderlying"
+    ],
+    "start": 360045,
+    "end": 361078,
+    "line": 7160
+  },
+  {
+    "id": 106,
+    "env": "corollary",
+    "title": "Galois orbits after forgetting polarization",
+    "labels": [
+      "pp:cor:underlyinggalois"
+    ],
+    "start": 364670,
+    "end": 365113,
+    "line": 7247
+  },
+  {
+    "id": 107,
+    "env": "proposition",
+    "title": "Cyclotomic action on all underlying quotients",
+    "labels": [
+      "pp:prop:allunderlyinggalois"
+    ],
+    "start": 366383,
+    "end": 366950,
+    "line": 7285
+  },
+  {
+    "id": 108,
+    "env": "theorem",
+    "title": "Minimum polarizations on the obstructed quotients",
+    "labels": [
+      "pp:thm:obstructedminimum"
+    ],
+    "start": 368936,
+    "end": 369318,
+    "line": 7333
+  },
+  {
+    "id": 109,
+    "env": "proposition",
+    "title": "Normalized group and minimum polarized action",
+    "labels": [
+      "pp:prop:minimumpolarizedgalois"
+    ],
+    "start": 373732,
+    "end": 374535,
+    "line": 7431
+  },
+  {
+    "id": 110,
+    "env": "theorem",
+    "title": "The ray field of the polarized-class action",
+    "labels": [
+      "pp:thm:quotientrayfield"
+    ],
+    "start": 377320,
+    "end": 378425,
+    "line": 7499
+  },
+  {
+    "id": 111,
+    "env": "theorem",
+    "title": "Complete Galois orbit census of the quotient family",
+    "labels": [
+      "pp:thm:completequotientorbits"
+    ],
+    "start": 382557,
+    "end": 383458,
+    "line": 7602
+  },
+  {
+    "id": 112,
+    "env": "corollary",
+    "title": "Fields of moduli in the obstructed family",
+    "labels": [
+      "pp:cor:obstructedmodulifields"
+    ],
+    "start": 390830,
+    "end": 391529,
+    "line": 7783
+  },
+  {
+    "id": 113,
+    "env": "theorem",
+    "title": "Fields of moduli for the complete finite family",
+    "labels": [
+      "pp:thm:completequotientmoduli"
+    ],
+    "start": 392627,
+    "end": 393873,
+    "line": 7818
+  },
+  {
+    "id": 114,
+    "env": "theorem",
+    "title": "Real models and pseudoreal underlying varieties",
+    "labels": [
+      "pp:thm:quotientrealmodels"
+    ],
+    "start": 396777,
+    "end": 397946,
+    "line": 7904
+  },
+  {
+    "id": 115,
+    "env": "corollary",
+    "title": "Real forms and forgetting the minimum polarization",
+    "labels": [
+      "pp:cor:quotientrealforms"
+    ],
+    "start": 401181,
+    "end": 401768,
+    "line": 7987
+  },
+  {
+    "id": 116,
+    "env": "theorem",
+    "title": "Common field of definition and underlying descent obstruction",
+    "labels": [
+      "pp:thm:quotientdefinitionfield"
+    ],
+    "start": 404094,
+    "end": 405174,
+    "line": 8042
+  },
+  {
+    "id": 117,
+    "env": "theorem",
+    "title": "A common real number field for the real forms",
+    "labels": [
+      "pp:thm:realdefinitionfield"
+    ],
+    "start": 409326,
+    "end": 410301,
+    "line": 8141
+  },
+  {
+    "id": 118,
+    "env": "theorem",
+    "title": "Minimum degrees of underlying fields of definition",
+    "labels": [
+      "pp:thm:definitiondegrees"
+    ],
+    "start": 413291,
+    "end": 414174,
+    "line": 8218
+  },
+  {
+    "id": 119,
+    "env": "corollary",
+    "title": "Weil structures and Hodge classes on the quotient family",
+    "labels": [
+      "pp:cor:quotientweilhodge"
+    ],
+    "start": 415446,
+    "end": 416261,
+    "line": 8262
+  },
+  {
+    "id": 120,
+    "env": "theorem",
+    "title": "Minimum principal-target isogenies from obstructed quotients",
+    "labels": [
+      "pp:thm:obstructedisogenies"
+    ],
+    "start": 419087,
+    "end": 419908,
+    "line": 8333
+  },
+  {
+    "id": 121,
+    "env": "proposition",
+    "title": "A structural theta filter for balanced cubic actions",
+    "labels": [
+      "pp:prop:balancedtheta"
+    ],
+    "start": 424937,
+    "end": 425679,
+    "line": 8462
+  },
+  {
+    "id": 122,
+    "env": "corollary",
+    "title": "Necessary Jacobian geometry of the smaller-order targets",
+    "labels": [
+      "pp:cor:smallerjacobian"
+    ],
+    "start": 427864,
+    "end": 428673,
+    "line": 8523
+  },
+  {
+    "id": 123,
+    "env": "proposition",
+    "title": "The two-prime primitive factor",
+    "labels": [
+      "pp:prop:twoprimefermat"
+    ],
+    "start": 430352,
+    "end": 431441,
+    "line": 8576
+  },
+  {
+    "id": 124,
+    "env": "proposition",
+    "title": "A global unit twist and its coarse involution",
+    "labels": [
+      "pp:prop:unitfamily"
+    ],
+    "start": 433681,
+    "end": 434572,
+    "line": 8649
+  },
+  {
+    "id": 125,
+    "env": "proposition",
+    "title": "The unit involution preserves the principal curve",
+    "labels": [
+      "pp:prop:unitcurve"
+    ],
+    "start": 436089,
+    "end": 436621,
+    "line": 8698
+  },
+  {
+    "id": 126,
+    "env": "proposition",
+    "title": "Two principal classes over each specified RM variety",
+    "labels": [
+      "pp:prop:sixprincipal"
+    ],
+    "start": 438923,
+    "end": 439409,
+    "line": 8764
+  },
+  {
+    "id": 127,
+    "env": "proposition",
+    "title": "Unmarked separation at the induced A fiber",
+    "labels": [
+      "pp:prop:unmarkeda"
+    ],
+    "start": 441138,
+    "end": 441407,
+    "line": 8810
+  },
+  {
+    "id": 128,
+    "env": "proposition",
+    "title": "The four B/C polarization pairs",
+    "labels": [
+      "pp:prop:polarizationsquare"
+    ],
+    "start": 444625,
+    "end": 445418,
+    "line": 8893
+  },
+  {
+    "id": 129,
+    "env": "corollary",
+    "title": "Six Weil points on the specified principal image",
+    "labels": [
+      "pp:cor:weilimage"
+    ],
+    "start": 448695,
+    "end": 449298,
+    "line": 8982
+  },
+  {
+    "id": 130,
+    "env": "proposition",
+    "title": "The surviving order in the selected CM field",
+    "labels": [
+      "prop:survivingorder"
+    ],
+    "start": 452570,
+    "end": 453289,
+    "line": 9055
+  },
+  {
+    "id": 131,
+    "env": "theorem",
+    "title": "Collapse of the maximal-order integral conjugacy problem",
+    "labels": [
+      "thm:GLcollapse",
+      "eq:unitnormquotient"
+    ],
+    "start": 454850,
+    "end": 455912,
+    "line": 9100
+  },
+  {
+    "id": 132,
+    "env": "lemma",
+    "title": "Class and narrow class numbers of $L$",
+    "labels": [
+      "lem:narrowclass"
+    ],
+    "start": 457144,
+    "end": 457423,
+    "line": 9143
+  },
+  {
+    "id": 133,
+    "env": "theorem",
+    "title": "Exact unit-norm image",
+    "labels": [
+      "thm:unitnorm"
+    ],
+    "start": 459277,
+    "end": 459504,
+    "line": 9199
+  },
+  {
+    "id": 134,
+    "env": "corollary",
+    "title": "No oriented splitting for holomorphic Hilbert-modular conjugacy",
+    "labels": [
+      "cor:orientedcollapse"
+    ],
+    "start": 460989,
+    "end": 461488,
+    "line": 9234
+  },
+  {
+    "id": 135,
+    "env": "corollary",
+    "title": "Sharp arithmetic reduction for the strongest $d=3$ candidates",
+    "labels": [
+      "cor:12collapse"
+    ],
+    "start": 461997,
+    "end": 462736,
+    "line": 9250
+  },
+  {
+    "id": 136,
+    "env": "proposition",
+    "title": "Six maximal-order companion classes lie in normalized vertex orbits",
+    "labels": [
+      "prop:sixvertexorbits"
+    ],
+    "start": 462738,
+    "end": 463468,
+    "line": 9264
+  },
+  {
+    "id": 137,
+    "env": "proposition",
+    "title": "The last imprimitive pair lies in the normalized $A$ orbit",
+    "labels": [
+      "prop:Amaximalpair"
+    ],
+    "start": 465319,
+    "end": 465675,
+    "line": 9317
+  },
+  {
+    "id": 138,
+    "env": "theorem",
+    "title": "Hodge classification of the maximal-order $(3,3)$ packet",
+    "labels": [
+      "thm:packetHodge"
+    ],
+    "start": 467928,
+    "end": 469272,
+    "line": 9399
+  },
+  {
+    "id": 139,
+    "env": "proposition",
+    "title": "Exact exclusion of the four nonvertex maximal-order companions",
+    "labels": [
+      "prop:residualexclusions"
+    ],
+    "start": 471000,
+    "end": 471247,
+    "line": 9466
+  },
+  {
+    "id": 140,
+    "env": "corollary",
+    "title": "Complete maximal-order geometric packet",
+    "labels": [
+      "cor:maximalgeometrycomplete"
+    ],
+    "start": 472909,
+    "end": 473462,
+    "line": 9503
+  }
+]

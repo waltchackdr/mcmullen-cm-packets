@@ -1,0 +1,59 @@
+#!/usr/bin/env python3
+"""Bounded Shioda4.3 probe of supplied one-copy degree6 atom supports.
+No atom completeness or arbitrary-power conclusion is asserted here.
+"""
+import collections,functools,hashlib,itertools,json,pathlib,resource,time
+resource.setrlimit(resource.RLIMIT_CPU,(18,19))
+ROOT=pathlib.Path(__file__).resolve().parents[2]
+ATOM=ROOT/'experiments/mixed_products_v100/primitive_pair_atoms.json'
+SCOPE=ROOT/'experiments/mixed_products_v100/second_primitive_scope.json'
+G=(1,5,11,13,17,19,23,25,29,31,37,41)
+PB={1,5,11,13,17,19};PD={1,5,11,13,19,25}
+
+def shift(S,h):return tuple(sorted((f,g*h%42) for f,g in S))
+def balance(T):return all(sum(h*a%42 for a in T)==21*len(T) for h in G)
+@functools.lru_cache(None)
+def allowed(T):
+ if not balance(T):return False
+ return len(T)!=6 or any(sum(T[i] for i in I)%42==0 for I in itertools.combinations(range(6),3))
+@functools.lru_cache(None)
+def partition(T):
+ if not T:return ()
+ for k in (2,4,6):
+  if k>len(T):continue
+  seen=set()
+  for rest in itertools.combinations(range(1,len(T)),k-1):
+   I=(0,)+rest;B=tuple(T[i] for i in I)
+   if B in seen:continue
+   seen.add(B)
+   if allowed(B):
+    R=tuple(T[i] for i in range(len(T)) if i not in I)
+    ans=partition(R)
+    if ans is not None:return (B,)+ans
+ return None
+
+def run():
+ atoms=json.loads(ATOM.read_bytes())['atoms']
+ mixed={tuple(map(tuple,a['support'])) for a in atoms if len(a['support'])==6 and len({f for f,g in a['support']})==2}
+ orbit_reps=sorted({min(shift(S,h) for h in G) for S in mixed})
+ assert len(mixed)==60 and len(orbit_reps)==6
+ triples=json.loads(SCOPE.read_bytes())['exact_output_payload']['B_exact_type_triples']
+ triples=sorted(map(tuple,triples),key=lambda B:(B!=(10,12,20),B))
+ D=(1,14,27);results=[]
+ for S in orbit_reps:
+  orbit=sorted({shift(S,h) for h in G});assert set(orbit)<=mixed
+  assert all(sum(1 if h*g%42 in (PB if f=='B' else PD) else -1 for f,g in S)==0 for h in G)
+  attempts=[]
+  for B in triples:
+   T=tuple(sorted(g*a%42 for f,g in S for a in (B if f=='B' else D)))
+   assert balance(T)
+   P=partition(T)
+   attempt={'B_triple':B,'D_triple':D,'gamma':T,'blocks':P}
+   if P is not None:
+    assert sorted(a for beta in P for a in beta)==list(T)
+    attempt['block_checks']=[{'block':beta,'all_unit_sums':[sum(h*a%42 for a in beta) for h in G],'triple_positions':next((I for I in itertools.combinations(range(6),3) if sum(beta[i] for i in I)%42==0),None) if len(beta)==6 else None} for beta in P]
+   attempts.append(attempt)
+   if P is not None:break
+  results.append({'representative':S,'orbit':orbit,'attempts':attempts,'success':P is not None})
+ return {'status':'BOUNDED_SOURCE_CRITERION_DISCOVERY_REQUIRES_INDEPENDENT_REVIEW','input_sha256':{str(p.relative_to(ROOT)):hashlib.sha256(p.read_bytes()).hexdigest() for p in (ATOM,SCOPE)},'mixed_atom_count':len(mixed),'Galois_orbit_count':len(orbit_reps),'successful_orbit_count':sum(r['success'] for r in results),'orbits':results,'scope':'Uses supplied atom list. Every partition success is independently directly checkable. Failure exhausts all allowed block partitions for the attempted presentation only. No theorem promotion or all-powers claim.'}
+if __name__=='__main__':print(json.dumps(run(),sort_keys=True,separators=(',',':')))

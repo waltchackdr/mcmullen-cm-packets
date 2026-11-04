@@ -1,0 +1,7 @@
+{
+  "observed_utc": "2026-11-03T05:26:34.082020+00:00",
+  "pod_count": 0,
+  "network_volume_count": 0,
+  "no_active_resources": true,
+  "scope": "Read-only post-session provider observation; no cost release."
+}

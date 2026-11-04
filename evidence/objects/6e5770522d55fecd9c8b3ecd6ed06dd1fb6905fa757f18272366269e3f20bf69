@@ -1,0 +1,102 @@
+"""Shared field-free remaining12 contract and reviewed administrative imports."""
+import hashlib,importlib.util,json,os,stat
+from pathlib import Path
+TARGET='REFLECTED_AB_V1'
+LABELS=('R127:pic1:00','R127:pic1:16','R127:pic1:32','R127:pic1:63','R83:pic1:00','R83:pic1:16')
+BACKENDS=('primary','sturm');DATA='certificates/reflected_packet_v83'
+PLAN_SHA='9d05cf31f0d3e8f6ce8ee2a8b9f96f165b95c7fd35caebc7d2cb344853499fca'
+FANOUT='experiments/continuous_v83/continuation/fanout/audit.py'
+FANOUT_SHA='0789892d46569d667a2fd27aecf91895d93da1c44df8c965cedaecf2178250ed'
+TEMPLATE_SHA='d391aedb0c2a845de2a6cb89590770114dad63802cd891aa869582f01d419ff6'
+RELOCATION_SHA='969f0ca3022f15fc351ce161e5930e87d8b92f89849e4d47596a020654d65bda'
+CAPTURE_STATUS='SIX_SELECTED_FULL_PAIRS_CAPTURED_PENDING_REVIEW_AND_WHOLE730'
+PACKAGE_STATUS='REMAINING12_STRICT_PORTABLE_PACKAGE_PENDING_EXECUTION'
+def need(ok,message):
+ if not ok:raise ValueError(message)
+def encode(v):return(json.dumps(v,sort_keys=True,separators=(',',':'),allow_nan=False)+'\n').encode()
+def object_sha(v):return hashlib.sha256(encode(v)).hexdigest()
+def safe(p):
+ p=Path(os.path.abspath(p));need(all(not q.is_symlink()for q in(p,*p.parents)),'Symlink path');return p
+def regular(p):
+ p=safe(p);s=p.stat();need(stat.S_ISREG(s.st_mode)and s.st_nlink==1,'Unaliased regular file');return p
+def sha(p):
+ h=hashlib.sha256()
+ with regular(p).open('rb')as f:
+  for b in iter(lambda:f.read(1048576),b''):h.update(b)
+ return h.hexdigest()
+def read(p):
+ def unique(pairs):
+  d={}
+  for k,v in pairs:need(k not in d,'Duplicate JSON key');d[k]=v
+  return d
+ return json.loads(regular(p).read_text(),object_pairs_hook=unique,parse_constant=lambda c:need(False,'Nonfinite JSON'))
+def write(p,v):
+ p=safe(p);p.parent.mkdir(parents=True,exist_ok=True)
+ with p.open('xb')as f:f.write(encode(v));f.flush();os.fsync(f.fileno())
+def ref(record,expected=None):
+ need(set(record)=={'path','sha256'}and Path(record['path']).is_absolute(),'Exact absolute reference');p=regular(record['path'])
+ need(sha(p)==record['sha256']and(expected is None or record['sha256']==expected),'Reference seal');return p
+
+def load(path,name):
+ s=importlib.util.spec_from_file_location(name,path);m=importlib.util.module_from_spec(s);s.loader.exec_module(m);return m
+def helpers(root):
+ root=safe(root);p=regular(root/FANOUT);need(sha(p)==FANOUT_SHA,'Unreviewed fanout source');f=load(p,'remaining_fanout');return(f,*f.helpers(root))
+def plan(record):
+ value=read(ref(record,PLAN_SHA));need(value['remaining_labels']==list(LABELS)and value['fresh_required_jobs']==12 and value['total_required_jobs']==32 and value['all32_complete']is False,'Fixed remaining12/32 plan');return value
+
+def tree(root):
+ root=safe(root);files={};dirs=[];inodes=set()
+ def fail(error):raise error
+ for folder,children,names in os.walk(root,followlinks=False,onerror=fail):
+  for name in children:
+   p=safe(Path(folder)/name);need(p.is_dir(),'Non-directory');dirs.append(p.relative_to(root).as_posix())
+  for name in names:
+   p=regular(Path(folder)/name);s=p.stat();identity=(s.st_dev,s.st_ino);need(identity not in inodes,'Duplicate inode');inodes.add(identity)
+   files[p.relative_to(root).as_posix()]={'bytes':s.st_size,'sha256':sha(p)}
+ return{'schema_version':1,'directories':sorted(dirs),'files':dict(sorted(files.items()))}
+def copy(source,target,pin):
+ import shutil
+ source=regular(source);target=safe(target);need(sha(source)==pin and not target.exists(),'Copy input/fresh destination');target.parent.mkdir(parents=True,exist_ok=True)
+ shutil.copyfile(source,target);need(sha(source)==pin==sha(target),'Before/after source or copy changed')
+
+COUNTS=('a_count','c_count','bottom_rows','nonzero_candidates','zero_candidates','candidate_count','survivor_count','classification_digest','c_zero_audit')
+CANONICAL=('preparation.json','A-entries.json','C-entries.json','bottom-rows.json','candidates-nonzero.json','candidates-zero.json','classification.json','survivors.json')
+def beneath(root,name):
+ need(type(name)is str and name and not Path(name).is_absolute() and '..'not in Path(name).parts,'Unsafe relative path')
+ path=safe(Path(root)/name);need(path.is_relative_to(safe(root)),'Path escapes root');return path
+def distinct_output(output,roots):
+ output=safe(output);need(not output.exists(),'Fresh output required')
+ for root in roots:
+  root=safe(root);need(not output.is_relative_to(root)and not root.is_relative_to(output),'Output overlaps evidence')
+ return output
+def counts(value):
+ need(set(value)==set(COUNTS),'Exactly nine count fields')
+ need(all(type(value[n])is int and value[n]>=0 for n in COUNTS[:7]),'Integer nonnegative counts')
+ need(type(value['c_zero_audit'])is list and len(value['c_zero_audit'])==5 and all(type(n)is int and n>=0 for n in value['c_zero_audit']),'Exact c0 audit')
+ need(type(value['classification_digest'])is str and len(value['classification_digest'])==64,'Classification digest')
+ need(value['candidate_count']==value['nonzero_candidates']+value['zero_candidates'] and value['survivor_count']<=value['candidate_count'],'Count partition')
+def capture_verified(root,pin,review_record,capture_source):
+ root=safe(root);need(sha(root/'capture.json')==pin,'Capture report seal');report=read(root/'capture.json')
+ review_path=ref(review_record);review=read(review_path)
+ need(type(report['schema_version'])is int and report['schema_version']==1 and report['status']==CAPTURE_STATUS,'Capture not complete selected pairs')
+ need(report['target_id']==TARGET and report['captured_labels']==list(LABELS)and report['fresh_jobs']==12 and report['required_jobs']==32,'Capture fixed6/12/32')
+ need(report['remaining_plan_sha256']==PLAN_SHA and report['capture_source_sha256']==capture_source and report['common_source_sha256']==sha(__file__),'Capture source contract')
+ need(report['source_runtime_selected_evidence_unchanged']is True and report['whole730_reconciliation_required']is True and report['theorem_promotion']is False,'Capture guards/scope')
+ need(report['eligible_empty_labels']==list(LABELS)and report['survivor_labels']==[] and set(report['points'])==set(LABELS),'All six actual selected negative pairs required')
+ prior=report['prior_completed_labels'];fixed=report['required_labels']
+ need(len(prior)==10 and prior==sorted(set(prior))and set(prior).isdisjoint(LABELS)and sorted(prior+list(LABELS))==fixed and len(fixed)==16,'Exact prior10/new6 partition')
+ wanted=report['capture_files'];actual=tree(root);actual['files'].pop('capture.json',None)
+ need(actual==wanted,'Capture file/directory inventory changed')
+ need(review['status']=='ACCEPTED_FIXED_REMAINING_SELECTED_PAIR_EVIDENCE' and review['capture_sha256']==pin and review['capture_source_sha256']==capture_source and review['remaining_plan_sha256']==PLAN_SHA,'Actual capture acceptance missing')
+ need(review['capture_inventory_sha256']==object_sha(wanted)and review['captured_labels']==list(LABELS)and review['fresh_jobs']==12 and review['required_jobs']==32,'Capture review domain/inventory')
+ need(review['normal_capture_execution_accepted']is True and review['all_selected_source_closures_accepted']is True and review['archive_members_and_local_retention_verified']is True and review['whole730_reconciliation_required']is True and review['theorem_promotion']is False,'Capture execution/retention acceptance')
+ for label,row in report['points'].items():
+  need(row['point_label']==label and row['target_id']==TARGET and row['outcome']=='PAIRED_EMPTY_DISCOVERY','Actual negative point identity');counts(row['counts'])
+  need(row['counts']['survivor_count']==0 and set(row['canonical_artifact_sha256'])==set(CANONICAL),'Actual empty complete8')
+  need(row['preparation_sha256']==row['canonical_artifact_sha256']['preparation.json'],'Preparation binding')
+  need(sha(beneath(root,row['witness_plan']['path']))==row['witness_plan']['input_sha256'],'Raw source plan bytes')
+  need(sha(beneath(root,row['row_evidence']['path']))==row['row_evidence']['sha256'],'Normalized complete row evidence')
+  need(set(row['backends'])==set(BACKENDS),'Exactly paired sources')
+  for backend,value in row['backends'].items():
+   need(value['backend']==backend and value['point_label']==label and value['counts']==row['counts']and value['canonical_artifact_sha256']==row['canonical_artifact_sha256']and value['target_geometry_sha256']==row['target_geometry_sha256']and value['plan_sha256']==row['witness_plan']['input_sha256']and value['preparation_sha256']==row['preparation_sha256'],'Paired capture fields differ')
+ return report,review

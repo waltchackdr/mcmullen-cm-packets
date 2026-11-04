@@ -1,0 +1,75 @@
+{
+  "concurrency": 2,
+  "job_index": 0,
+  "max_tasks": 8,
+  "pins": {
+    "certificates/actual_bc_polarizations_data.json": "76c0520fbbae970dd2abfbe1b70d9d71df59534a8c7f4b1f20433047c83f311c",
+    "certificates/principal_bc_unpolarized_data.json": "f4481b8162c2a8aac0db7dcc9afdbb0e8d6f56eb252e1ede92670034d6deb86e",
+    "certificates/principal_unmarked_bc_data.json": "b9792b7ebe38ab8235d8b7b603a2596768d182b7863c6ca975eac56f9cb0437f",
+    "experiments/bc_jacobian_v147/certificate_worker_candidate.py": "8ffcdd32c6f4d8db15cbac9dcab453aae5bd2dd77139b82349a91d92be2c94d8",
+    "experiments/bc_jacobian_v147/remote_wheels.json": "0f5a54a15cda08ac95234437b16779763b8ab3a442b2b822488466df4e9bad73",
+    "experiments/s_order_models_v161/catalog_candidate.json": "e6a6d431107ce1ceb9cee31ace70558876800d56daf3869a2174dfbea9eb97e3",
+    "experiments/s_order_models_v161/census_candidate.py": "13eab054a1bebf18321a985a425f93250752f489acbc2b6c01409a6fa82f6b51",
+    "experiments/s_order_models_v161/model.json": "1803891819609ee4c8ecb84222a898a2574207f06bfdf08c48fca95ef27f8184",
+    "experiments/s_order_models_v161/model_candidate.py": "6bb0f3d1797a779ab8665ed47c3cf1d38e34b9205f7a5c9e19ab89615d54cf5d"
+  },
+  "scope": "Exact principal quotient models only; no periods/theta/claim adoption",
+  "tasks": [
+    {
+      "child_wall_seconds": 150,
+      "count": 10,
+      "max_cpu_seconds": 120,
+      "parent_kill_seconds": 160,
+      "start": 0
+    },
+    {
+      "child_wall_seconds": 150,
+      "count": 10,
+      "max_cpu_seconds": 120,
+      "parent_kill_seconds": 160,
+      "start": 10
+    },
+    {
+      "child_wall_seconds": 150,
+      "count": 10,
+      "max_cpu_seconds": 120,
+      "parent_kill_seconds": 160,
+      "start": 20
+    },
+    {
+      "child_wall_seconds": 150,
+      "count": 10,
+      "max_cpu_seconds": 120,
+      "parent_kill_seconds": 160,
+      "start": 30
+    },
+    {
+      "child_wall_seconds": 150,
+      "count": 10,
+      "max_cpu_seconds": 120,
+      "parent_kill_seconds": 160,
+      "start": 40
+    },
+    {
+      "child_wall_seconds": 150,
+      "count": 10,
+      "max_cpu_seconds": 120,
+      "parent_kill_seconds": 160,
+      "start": 50
+    },
+    {
+      "child_wall_seconds": 150,
+      "count": 10,
+      "max_cpu_seconds": 120,
+      "parent_kill_seconds": 160,
+      "start": 60
+    },
+    {
+      "child_wall_seconds": 150,
+      "count": 10,
+      "max_cpu_seconds": 120,
+      "parent_kill_seconds": 160,
+      "start": 70
+    }
+  ]
+}

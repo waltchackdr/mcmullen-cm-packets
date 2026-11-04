@@ -1,0 +1,46 @@
+{
+  "actual_t_residue_order": 26,
+  "conditional_class_arithmetic": {
+    "fixed_form_kernels": 1120,
+    "no_principal_S": 108,
+    "nonprincipalizable_quotient_subgroups": 19656,
+    "principal_classes_per_admitting_target": 2,
+    "principalizable_S": 78,
+    "principalizable_underlying": 80,
+    "unrestricted_minimum_kernels": 14224
+  },
+  "contains_all_real_residue_units": true,
+  "dimension3_subspaces_by_ordered_basis_formula": 33880,
+  "explicit_generators": {
+    "gamma": [
+      0,
+      18
+    ],
+    "t": [
+      17,
+      0
+    ],
+    "z": [
+      22,
+      9
+    ]
+  },
+  "generated_group_is_all_nonzero_squares": true,
+  "generated_residue_group_size": 364,
+  "model": "F27=F3[tau]/(tau^3-tau^2+tau+1); K=F27[s]/(s^2+1)",
+  "scope": "Finite residue group and exact integer consequences only. Global-unit upper bound, unit signatures, two-form theorem and geometric exhaustion are separate human inputs.",
+  "status": "PASS",
+  "t_13": [
+    2,
+    0
+  ],
+  "tau_order": 26,
+  "unpolarized_classes": {
+    "R": 2,
+    "S": 186
+  },
+  "unpolarized_orbit_sizes": {
+    "R": 14,
+    "S": 182
+  }
+}

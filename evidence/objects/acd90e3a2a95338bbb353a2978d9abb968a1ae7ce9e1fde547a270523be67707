@@ -1,0 +1,26 @@
+"""Finite orbit regression for the separate underlying-quotient human proof."""
+import importlib.util
+from pathlib import Path
+import unittest
+
+spec = importlib.util.spec_from_file_location('unpolarized_quotients',
+    Path(__file__).resolve().parents[1] /
+    'experiments/fermat_unpolarized_quotients_v156/arithmetic_candidate.py')
+arithmetic = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(arithmetic)
+
+
+class UnpolarizedQuotients(unittest.TestCase):
+    def test_principalizable_and_obstructed_orbit_partition(self):
+        r = arithmetic.check()
+        census = r['census_orbit_size_fixed_form_intersection_count']
+        self.assertEqual(r['real_unit_residue_order'], 26)
+        self.assertEqual(sum(x['orbit_count'] for x in census), 188)
+        self.assertEqual(sum(x['orbit_count'] for x in census if x['fixed_form_isotropic_count']), 80)
+        self.assertEqual(sum(x['orbit_count'] for x in census if not x['fixed_form_isotropic_count']), 108)
+        self.assertEqual(sum(x['orbit_size']*x['orbit_count'] for x in census if x['fixed_form_isotropic_count']), 14224)
+        self.assertEqual(sum(x['fixed_form_isotropic_count']*x['orbit_count'] for x in census), 1120)
+
+
+if __name__ == '__main__':
+    unittest.main()

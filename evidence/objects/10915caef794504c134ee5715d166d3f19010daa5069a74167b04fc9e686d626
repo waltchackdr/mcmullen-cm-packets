@@ -1,0 +1,82 @@
+#!/usr/bin/env python3
+"""Exact kernel-box enumeration under the separately proved signed-graph bound.
+
+This source solves six pivot coordinates from six free coordinates. It does
+not infer the global Graver bound from a small-box experiment.
+"""
+from collections import Counter
+from hashlib import sha256
+from itertools import product
+from math import lcm
+from pathlib import Path
+import json
+import sympy as sp
+
+ROOT = Path(__file__).resolve().parents[2]
+SOURCE = "experiments/mixed_products_v100/second_primitive_minors.json"
+SOURCE_SHA = "e2c590ec4cdc6be129d047004da73cde1f1498ed2f90c51c636b62fe9e9e3b90"
+
+
+def conformal_below(a,b):
+    return all(x*y >= 0 and abs(x) <= abs(y) for x,y in zip(a,b))
+
+
+def check():
+    raw = (ROOT / SOURCE).read_bytes()
+    assert sha256(raw).hexdigest() == SOURCE_SHA
+    source = json.loads(raw)
+    full = sp.Matrix.hstack(*[sp.Matrix(c) for c in source["full_weight_columns"]])
+    W = full[:6,:]
+    pivots = list(W.rref()[1])
+    free = [i for i in range(12) if i not in pivots]
+    assert len(pivots) == len(free) == 6
+    coefficient = -W[:,pivots].inv()*W[:,free]
+    denominator = lcm(*(int(v.q) for v in coefficient))
+    numerator = [[int(v*denominator) for v in row] for row in coefficient.tolist()]
+    candidates = []
+    for f in product(range(-2,3),repeat=6):
+        if not any(f): continue
+        pnum = [sum(x*y for x,y in zip(row,f)) for row in numerator]
+        if any(x % denominator for x in pnum): continue
+        pv = [x//denominator for x in pnum]
+        if any(abs(x)>2 for x in pv): continue
+        vector = [0]*12
+        for i,x in zip(free,f): vector[i]=x
+        for i,x in zip(pivots,pv): vector[i]=x
+        if sum(map(abs,vector))>12: continue
+        if next(x for x in vector if x) < 0: continue
+        assert full*sp.Matrix(vector) == sp.zeros(12,1)
+        candidates.append(vector)
+    candidates.sort(key=lambda z:(sum(map(abs,z)),z))
+    graver = []
+    signed = []
+    decompositions = []
+    for vector in candidates:
+        smaller = next((g for g in signed if conformal_below(g,vector)),None)
+        if smaller is None:
+            graver.append(vector)
+            signed.extend([vector,[-x for x in vector]])
+        else:
+            residual = [x-y for x,y in zip(vector,smaller)]
+            assert any(residual) and sum(map(abs,residual)) < sum(map(abs,vector))
+            assert full*sp.Matrix(residual) == sp.zeros(12,1)
+            decompositions.append({"vector":vector,"subrelation":smaller,"residual":residual})
+    assert all(sum(map(abs,z))%2 == 0 for z in graver)
+    return {"status":"EXACT_KERNEL_BOX_RESULT_GLOBAL_COMPLETENESS_USES_SEPARATE_GRAPH_BOUND",
+            "input_sha256":{SOURCE:SOURCE_SHA},"pivot_columns":pivots,"free_columns":free,
+            "coordinate_map_numerator":numerator,"coordinate_map_denominator":denominator,
+            "free_tuples_tested":5**6,"candidate_count_up_to_sign":len(candidates),
+            "graver_count_up_to_sign":len(graver),"graver_vectors_up_to_sign":graver,
+            "counts_by_degree":dict(sorted(Counter(sum(map(abs,z)) for z in graver).items())),
+            "counts_by_maximum_coefficient":dict(sorted(Counter(max(map(abs,z)) for z in graver).items())),
+            "nonminimal_decompositions":decompositions,
+            "scope":"Primitive conformal integer relations conditional on the independently reviewed signed-graph l1<=12 and coefficient<=2 theorem. No algebraicity claim; no extrapolation from finite data."}
+
+
+if __name__ == '__main__':
+    import resource
+    import signal
+    resource.setrlimit(resource.RLIMIT_CPU,(20,22))
+    signal.alarm(30)
+    assert __debug__
+    print(json.dumps(check(),indent=2,sort_keys=True))

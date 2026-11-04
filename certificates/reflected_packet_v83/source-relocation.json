@@ -1,0 +1,148 @@
+{
+  "executed_campaign_source_sha256": {
+    "certificates/d7_ambient_points_v45.py": "34cb35db91b953162b595fb61e031f551e6df0a0d7b5192dc15a6c00c39274a2",
+    "certificates/d7_r83_mask14_v46.py": "70e9c7114adea2b319c3e430046ae3e917717142e7a78e4d43a043950f1147f3",
+    "certificates/d7_r83_masks14_30_v47.py": "e78ba5e793134f28d8113d8129809421a5a7754c439afcd64ba0385543799941",
+    "certificates/d7_r83_principal_expected_v55.py": "0fd36a67b004e6a250188aa8731a207456b5e49faa955005d6b12cd36665bea7",
+    "certificates/d7_r83_principal_v55.py": "a937b69037b5d53f40a600aefb177bf89766d3529b22f73529b2b861ec9238cc",
+    "certificates/full_packet_v62/ambient_points.json": "c0e84da6c266c087cbce65a6e8aca8e3f30350ce56b5a1089c4ae4978a381f36",
+    "certificates/full_packet_v62/module_templates.json": "09ccff217511a67e946567135f9ffb74da020843621d0895ecce8746d25c245d",
+    "certificates/residual_orbit_k17_k38_v42.py": "5186066f21a2f840ffc71936a54372d7ad51eb6cc919bf7812bb1bec258cd59d",
+    "experiments/continuous_v83/child.py": "e593f070efa845a05d9f7d4ab7d1efd2566ebc275bad8a9e02621a56f0548360",
+    "experiments/continuous_v83/nominate.py": "2b91049e3e37609d4c1a94edd230c8f2fb5730a9ab49ad4c9018b5aa87fe8f89",
+    "experiments/continuous_v83/primary.py": "c167a51e6881923319576897ea07a8d05998f935bc0f6884eef529928c4d6313",
+    "experiments/continuous_v83/primary_target.py": "b94aca2bc29fc612fbecaadf83430ebd0a9e09f462876c1dc41fe0aa51422bd3",
+    "experiments/continuous_v83/runner.py": "3acda0f59005ad92ae832760e4c614c524eed078e84b571698f8209ff5614449",
+    "experiments/continuous_v83/sturm.py": "9d83a1bcaa79ebbbd4fed557cd7845de57e3955e6f55516ee7119a425f45d2ca",
+    "experiments/continuous_v83/sturm_target.py": "6a0aae7a310a091719721b08654574da87f0c105e716988e932ceedacd5886e6",
+    "independent/d7_ambient_points_sturm_v45.py": "3eb68f57e6d0d88b2e548f605742d434c8714b25eb1404b3c27d32415b61f42a",
+    "independent/d7_r83_principal_sturm_v55.py": "894339e82389ff651bf25b04693821c4dfeedc427dec2fa4fd8993f195bb663f",
+    "independent/quadrilateral_k17_stdlib_v41.py": "c5bd45f334a028820a071b5c758acfb8e48afc1e8454b18a3174dd04ca58a38c",
+    "independent/residual_orbit_k17_k38_sturm_v42.py": "12a0d875e2715fe2c2ae123d2dc5202f4d7ce4e024f114ad163126654219fc13"
+  },
+  "full_positive_controls_verified": false,
+  "mathematical_code_executed": false,
+  "mathematical_file_count": 16,
+  "portable_sha256": {
+    "certificates/d7_ambient_points_v45.py": "34cb35db91b953162b595fb61e031f551e6df0a0d7b5192dc15a6c00c39274a2",
+    "certificates/d7_r83_mask14_v46.py": "70e9c7114adea2b319c3e430046ae3e917717142e7a78e4d43a043950f1147f3",
+    "certificates/d7_r83_masks14_30_v47.py": "e78ba5e793134f28d8113d8129809421a5a7754c439afcd64ba0385543799941",
+    "certificates/d7_r83_principal_expected_v55.py": "0fd36a67b004e6a250188aa8731a207456b5e49faa955005d6b12cd36665bea7",
+    "certificates/d7_r83_principal_v55.py": "a937b69037b5d53f40a600aefb177bf89766d3529b22f73529b2b861ec9238cc",
+    "certificates/full_packet_v62/ambient_points.json": "c0e84da6c266c087cbce65a6e8aca8e3f30350ce56b5a1089c4ae4978a381f36",
+    "certificates/full_packet_v62/module_templates.json": "09ccff217511a67e946567135f9ffb74da020843621d0895ecce8746d25c245d",
+    "certificates/reflected_packet_v83/primary_target.py": "b94aca2bc29fc612fbecaadf83430ebd0a9e09f462876c1dc41fe0aa51422bd3",
+    "certificates/reflected_primary_kernel_v83.py": "f76493968959d467ff661d7a54cbadaa51fdf0b9e9fee2fbd2968160193d69b6",
+    "certificates/residual_orbit_k17_k38_v42.py": "5186066f21a2f840ffc71936a54372d7ad51eb6cc919bf7812bb1bec258cd59d",
+    "independent/d7_ambient_points_sturm_v45.py": "3eb68f57e6d0d88b2e548f605742d434c8714b25eb1404b3c27d32415b61f42a",
+    "independent/d7_r83_principal_sturm_v55.py": "894339e82389ff651bf25b04693821c4dfeedc427dec2fa4fd8993f195bb663f",
+    "independent/quadrilateral_k17_stdlib_v41.py": "c5bd45f334a028820a071b5c758acfb8e48afc1e8454b18a3174dd04ca58a38c",
+    "independent/reflected_packet_v83/sturm_target.py": "6a0aae7a310a091719721b08654574da87f0c105e716988e932ceedacd5886e6",
+    "independent/reflected_sturm_kernel_v83.py": "b2b4b154198290c66f7f1c41b639a23bb62943a64772146c2cd11ca6cb5a1c4e",
+    "independent/residual_orbit_k17_k38_sturm_v42.py": "12a0d875e2715fe2c2ae123d2dc5202f4d7ce4e024f114ad163126654219fc13"
+  },
+  "runtime_import_closure_verified": false,
+  "schema_version": 1,
+  "source_gate_sha256": "f72ca0e5568efb2ce96dd1adc0ad7570510b1718b80fe90aec2008503edcfde8",
+  "source_map": {
+    "certificates/d7_ambient_points_v45.py": {
+      "executed_sha256": "34cb35db91b953162b595fb61e031f551e6df0a0d7b5192dc15a6c00c39274a2",
+      "portable_path": "certificates/d7_ambient_points_v45.py",
+      "portable_sha256": "34cb35db91b953162b595fb61e031f551e6df0a0d7b5192dc15a6c00c39274a2",
+      "rule": "BYTE_IDENTICAL"
+    },
+    "certificates/d7_r83_mask14_v46.py": {
+      "executed_sha256": "70e9c7114adea2b319c3e430046ae3e917717142e7a78e4d43a043950f1147f3",
+      "portable_path": "certificates/d7_r83_mask14_v46.py",
+      "portable_sha256": "70e9c7114adea2b319c3e430046ae3e917717142e7a78e4d43a043950f1147f3",
+      "rule": "BYTE_IDENTICAL"
+    },
+    "certificates/d7_r83_masks14_30_v47.py": {
+      "executed_sha256": "e78ba5e793134f28d8113d8129809421a5a7754c439afcd64ba0385543799941",
+      "portable_path": "certificates/d7_r83_masks14_30_v47.py",
+      "portable_sha256": "e78ba5e793134f28d8113d8129809421a5a7754c439afcd64ba0385543799941",
+      "rule": "BYTE_IDENTICAL"
+    },
+    "certificates/d7_r83_principal_expected_v55.py": {
+      "executed_sha256": "0fd36a67b004e6a250188aa8731a207456b5e49faa955005d6b12cd36665bea7",
+      "portable_path": "certificates/d7_r83_principal_expected_v55.py",
+      "portable_sha256": "0fd36a67b004e6a250188aa8731a207456b5e49faa955005d6b12cd36665bea7",
+      "rule": "BYTE_IDENTICAL"
+    },
+    "certificates/d7_r83_principal_v55.py": {
+      "executed_sha256": "a937b69037b5d53f40a600aefb177bf89766d3529b22f73529b2b861ec9238cc",
+      "portable_path": "certificates/d7_r83_principal_v55.py",
+      "portable_sha256": "a937b69037b5d53f40a600aefb177bf89766d3529b22f73529b2b861ec9238cc",
+      "rule": "BYTE_IDENTICAL"
+    },
+    "certificates/full_packet_v62/ambient_points.json": {
+      "executed_sha256": "c0e84da6c266c087cbce65a6e8aca8e3f30350ce56b5a1089c4ae4978a381f36",
+      "portable_path": "certificates/full_packet_v62/ambient_points.json",
+      "portable_sha256": "c0e84da6c266c087cbce65a6e8aca8e3f30350ce56b5a1089c4ae4978a381f36",
+      "rule": "BYTE_IDENTICAL"
+    },
+    "certificates/full_packet_v62/module_templates.json": {
+      "executed_sha256": "09ccff217511a67e946567135f9ffb74da020843621d0895ecce8746d25c245d",
+      "portable_path": "certificates/full_packet_v62/module_templates.json",
+      "portable_sha256": "09ccff217511a67e946567135f9ffb74da020843621d0895ecce8746d25c245d",
+      "rule": "BYTE_IDENTICAL"
+    },
+    "certificates/residual_orbit_k17_k38_v42.py": {
+      "executed_sha256": "5186066f21a2f840ffc71936a54372d7ad51eb6cc919bf7812bb1bec258cd59d",
+      "portable_path": "certificates/residual_orbit_k17_k38_v42.py",
+      "portable_sha256": "5186066f21a2f840ffc71936a54372d7ad51eb6cc919bf7812bb1bec258cd59d",
+      "rule": "BYTE_IDENTICAL"
+    },
+    "experiments/continuous_v83/primary.py": {
+      "executed_sha256": "c167a51e6881923319576897ea07a8d05998f935bc0f6884eef529928c4d6313",
+      "portable_path": "certificates/reflected_primary_kernel_v83.py",
+      "portable_sha256": "f76493968959d467ff661d7a54cbadaa51fdf0b9e9fee2fbd2968160193d69b6",
+      "rule": "REVERSIBLE_ROOT_AND_HELPER_PATH_ONLY"
+    },
+    "experiments/continuous_v83/primary_target.py": {
+      "executed_sha256": "b94aca2bc29fc612fbecaadf83430ebd0a9e09f462876c1dc41fe0aa51422bd3",
+      "portable_path": "certificates/reflected_packet_v83/primary_target.py",
+      "portable_sha256": "b94aca2bc29fc612fbecaadf83430ebd0a9e09f462876c1dc41fe0aa51422bd3",
+      "rule": "BYTE_IDENTICAL"
+    },
+    "experiments/continuous_v83/sturm.py": {
+      "executed_sha256": "9d83a1bcaa79ebbbd4fed557cd7845de57e3955e6f55516ee7119a425f45d2ca",
+      "portable_path": "independent/reflected_sturm_kernel_v83.py",
+      "portable_sha256": "b2b4b154198290c66f7f1c41b639a23bb62943a64772146c2cd11ca6cb5a1c4e",
+      "rule": "REVERSIBLE_ROOT_AND_HELPER_PATH_ONLY"
+    },
+    "experiments/continuous_v83/sturm_target.py": {
+      "executed_sha256": "6a0aae7a310a091719721b08654574da87f0c105e716988e932ceedacd5886e6",
+      "portable_path": "independent/reflected_packet_v83/sturm_target.py",
+      "portable_sha256": "6a0aae7a310a091719721b08654574da87f0c105e716988e932ceedacd5886e6",
+      "rule": "BYTE_IDENTICAL"
+    },
+    "independent/d7_ambient_points_sturm_v45.py": {
+      "executed_sha256": "3eb68f57e6d0d88b2e548f605742d434c8714b25eb1404b3c27d32415b61f42a",
+      "portable_path": "independent/d7_ambient_points_sturm_v45.py",
+      "portable_sha256": "3eb68f57e6d0d88b2e548f605742d434c8714b25eb1404b3c27d32415b61f42a",
+      "rule": "BYTE_IDENTICAL"
+    },
+    "independent/d7_r83_principal_sturm_v55.py": {
+      "executed_sha256": "894339e82389ff651bf25b04693821c4dfeedc427dec2fa4fd8993f195bb663f",
+      "portable_path": "independent/d7_r83_principal_sturm_v55.py",
+      "portable_sha256": "894339e82389ff651bf25b04693821c4dfeedc427dec2fa4fd8993f195bb663f",
+      "rule": "BYTE_IDENTICAL"
+    },
+    "independent/quadrilateral_k17_stdlib_v41.py": {
+      "executed_sha256": "c5bd45f334a028820a071b5c758acfb8e48afc1e8454b18a3174dd04ca58a38c",
+      "portable_path": "independent/quadrilateral_k17_stdlib_v41.py",
+      "portable_sha256": "c5bd45f334a028820a071b5c758acfb8e48afc1e8454b18a3174dd04ca58a38c",
+      "rule": "BYTE_IDENTICAL"
+    },
+    "independent/residual_orbit_k17_k38_sturm_v42.py": {
+      "executed_sha256": "12a0d875e2715fe2c2ae123d2dc5202f4d7ce4e024f114ad163126654219fc13",
+      "portable_path": "independent/residual_orbit_k17_k38_sturm_v42.py",
+      "portable_sha256": "12a0d875e2715fe2c2ae123d2dc5202f4d7ce4e024f114ad163126654219fc13",
+      "rule": "BYTE_IDENTICAL"
+    }
+  },
+  "status": "STATIC_SOURCE_RELOCATION_ONLY_NOT_ADOPTED",
+  "terminal_evidence_adopted": false,
+  "theorem_promotion": false
+}

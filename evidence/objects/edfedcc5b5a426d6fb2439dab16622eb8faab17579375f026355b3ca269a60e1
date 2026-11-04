@@ -1,0 +1,68 @@
+{
+  "auditor_sha256": "d377a50ff79ce247b33f31bc7781230387c62ffc41fea2a304fe3f09e7ee8182",
+  "binds": {
+    "approval": "8f67999466f56b200b0c2ec6947c8dcd41551c7cf9c58da77e19bb6577dc4cb8",
+    "executor_review": "017f37c24b8b8dd1905e8e6531c36924181d232b0996d817eb0473e5999095b4",
+    "inventory": "ec4ba3b51b95eecf3f348dceddfc8b58e514366de615c869519e7aa49b6f35ca",
+    "manifest": "d5cc8cdcab982e930c46e523aad544362f2f66cb293d13996fb304e4e9e19606",
+    "observer_completion": "57072f94f92ceb2ae0bb1f530ba0e69bc32ce53a51f4fd8466e35e8ad94aff27",
+    "observer_config": "b5a293c0b4d62b897f8c2a9c36225236eb589599c8c674ec07230289f5184900",
+    "process_observation": "d61b9b60feacbb529e14eca7ff9871e85b6fae8cd8d8a4af9fa07eeff33f49fe",
+    "producer_completion": "ee1c42c4310959d69dd91680eba0e938295cf98c57b4725afb66cef76abf0ea4",
+    "receipt": "86dab376ff8f0f3fd9f273d9dca12801ae41cbccc4c183c213d9a7bf0dbad5e9",
+    "runtime": "caab54e97d70761044db07ceae563620ab9be053f1ad737f376e989ebe0be52e",
+    "runtime_review": "a6309fb2bad8111cfbe90c90821a3a558e22768dbde9a44999dae4ec7a145da0",
+    "snapshot": "e6aa5112a8465180d50e4a2b187f632d5f6b4196bb7e3d39d020d32c1810d2c0",
+    "state": "73535c88ad5f518e9a9e5f41fe8cce6dd33daf8bcbb7dbf19ba8f2cf7b668652"
+  },
+  "common_sha256": "521d5756438ba1b8faa569777fd90376eadd323b27c4e7314b7aa76a54adff13",
+  "completed_jobs": 2,
+  "keys": [
+    "r83-1-04",
+    "r83-1-11"
+  ],
+  "missing_old_endguards_reconstructed": false,
+  "old65_pass": false,
+  "original159_pass": false,
+  "records": [
+    {
+      "backend": "sturm",
+      "completed_mask_sha256": "a26057d8a4888ae31cea2884d30e63e2a6062734956424c42fc5b0f7c4b5e86f",
+      "family": "R83",
+      "key": "r83-1-04",
+      "log_sha256": "8dd47be63a5877d1d9dbfaf9226b29f13eddb95fb3c058a2a641dde7030730c8",
+      "mask": 4,
+      "observed": {
+        "bottom_rows": 1967,
+        "classification_digest": "bd151e60199047b4d542c68d3f85e535d87f567fab2020ca9abce405269bcd3f",
+        "mask": 4,
+        "nonzero_candidates": 6496,
+        "survivor_count": 0,
+        "zero_candidates": 1588
+      },
+      "original_index": 52
+    },
+    {
+      "backend": "sturm",
+      "completed_mask_sha256": "291641356d4ed5bfcf56d87a20531bd062802f8398897f8b968ebc5887757e2b",
+      "family": "R83",
+      "key": "r83-1-11",
+      "log_sha256": "5dc6f9508ced36d5ad54fca660d9f14c5b0ac968890624bab5787183bdf7b15e",
+      "mask": 11,
+      "observed": {
+        "bottom_rows": 1849,
+        "classification_digest": "a38b79cb1189b14af0dbb7dee0b17acc40e7dde278b06156b3256162ec345a42",
+        "mask": 11,
+        "nonzero_candidates": 6256,
+        "survivor_count": 0,
+        "zero_candidates": 2232
+      },
+      "original_index": 53
+    }
+  ],
+  "retention_and_hostile_outcome_review_required": true,
+  "schema_version": 1,
+  "source_archive_sha256": "1f7849308933389802eecb46f8906458d0c2e6637daaefbbea94cb5c1cf6ef8d",
+  "status": "V87_TWO_WHOLE_JOB_FULL_LOG_AUDIT_PASS_PENDING_OUTCOME_REVIEW",
+  "theorem_promotion": false
+}

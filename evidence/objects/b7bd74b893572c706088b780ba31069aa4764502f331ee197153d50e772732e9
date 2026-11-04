@@ -1,0 +1,56 @@
+"""Rational independent checks of proposed retention, no numerical imports."""
+import importlib.util
+from pathlib import Path
+import unittest
+from fractions import Fraction
+p=Path(__file__).resolve().parents[1]/'experiments/bc_jacobian_v147/exact_ball_candidate.py'
+s=importlib.util.spec_from_file_location('ball',p);m=importlib.util.module_from_spec(s);s.loader.exec_module(m)
+
+def real(mid,rad):return {'mid':mid,'rad':rad}
+def ball(a,b=None):return {'real':a,'imag':b or real([0,0],[0,0])}
+
+class Tests(unittest.TestCase):
+    def test_touching_zero_does_not_exclude(self):
+        self.assertFalse(m.excludes_zero(ball(real([1,0],[1,0]))))
+        self.assertFalse(m.excludes_zero(ball(real([-1,0],[1,0]))))
+    def test_strict_sign_and_imaginary_separation(self):
+        self.assertTrue(m.excludes_zero(ball(real([1,0],[1,-1]))))
+        self.assertTrue(m.excludes_zero(ball(real([-1,0],[1,-1]))))
+        self.assertTrue(m.excludes_zero(ball(real([0,0],[2,0]),real([3,0],[1,0]))))
+    def test_exact_large_exponent_and_cancellation(self):
+        self.assertEqual(m.component(real([3,-1000],[1,-1000])),
+                         (Fraction(2,1<<1000),Fraction(4,1<<1000)))
+    def test_malformed_data_rejected(self):
+        for pair in ([True,0],[1,False],[1.0,0],['1',0],[1,100001],[1<<4097,0],[1]):
+            with self.subTest(pair_type=type(pair[0]).__name__):
+                with self.assertRaises(ValueError):m.dyadic(pair)
+        with self.assertRaises(ValueError):m.component(real([1,0],[-1,0]))
+    def test_both_components_validated_even_if_real_excludes(self):
+        with self.assertRaises(ValueError):m.excludes_zero(ball(real([2,0],[1,0]),real([0,0],[-1,0])))
+    def test_serializer_retains_pairs_and_checks_predicate(self):
+        class Exact:
+            def __init__(self,pair):self.pair=pair
+            def man_exp(self):return tuple(self.pair)
+        class Part:
+            def __init__(self,mid,rad):self.m,self.r=mid,rad
+            def mid(self):return Exact(self.m)
+            def rad(self):return Exact(self.r)
+        class Value:
+            real=Part([3,-2],[1,-3]);imag=Part([0,0],[1,-20])
+            def is_finite(self):return True
+            def contains(self,x):return False
+        record=m.serialize(Value())
+        self.assertEqual(record,ball(real([3,-2],[1,-3]),real([0,0],[1,-20])))
+        class Wrong(Value):
+            def contains(self,x):return True
+        with self.assertRaises(ValueError):m.serialize(Wrong())
+        class Infinite(Value):
+            def is_finite(self):return False
+        with self.assertRaises(ValueError):m.serialize(Infinite())
+
+    def test_exact_grid_matches_integer_endpoint_test(self):
+        for center in range(-8,9):
+            for radius in range(9):
+                self.assertEqual(m.excludes_zero(ball(real([center,-3],[radius,-3]))),abs(center)>radius)
+
+if __name__=='__main__':unittest.main()

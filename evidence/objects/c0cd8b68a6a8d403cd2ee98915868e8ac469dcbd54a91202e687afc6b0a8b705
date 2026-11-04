@@ -1,0 +1,369 @@
+#!/usr/bin/env python3
+"""Authenticate original completed paths for scheduling subtraction, not adoption.
+
+The original command coordinate and the location of retained bytes are distinct.
+No frozen helper is monkeypatched. No field arithmetic or cloud action occurs.
+"""
+from __future__ import annotations
+import argparse
+from collections import Counter
+import importlib.util
+import json
+import math
+from pathlib import Path
+import signal
+import sys
+import time
+
+AUDITOR_SHA='b785ac6745741b8af511cf488aa4e348c0da4bd790cc327345471042f13e53c3'
+RUNNER_SHA='3acda0f59005ad92ae832760e4c614c524eed078e84b571698f8209ff5614449'
+CONTRACT_SHA='c17d0f238fa23783595e60d3fae6ff591d4b51c4d2d32f7e5d939ab30548f05d'
+ORIGIN='/workspace/v83-campaign-cohort1'
+HERE='experiments/continuous_v83'
+RESOURCE_FAILURES={'CPU_OR_RESOURCE_LIMIT','WALL_LIMIT','INTERRUPTED'}
+
+
+def load(path, checksum, name):
+    import hashlib
+    if path.is_symlink() or hashlib.sha256(path.read_bytes()).hexdigest()!=checksum:
+        raise ValueError('Unreviewed validator before import: '+str(path))
+    spec=importlib.util.spec_from_file_location(name,path)
+    module=importlib.util.module_from_spec(spec);spec.loader.exec_module(module)
+    return module
+
+
+class Bytes:
+    """Hash every source-inventory file once, then reject any stat change.
+
+    Ordinary quiescent-file semantics, not a claim against privileged transient
+    modification. Local prior-transfer extras are enumerated, never substituted.
+    """
+    def __init__(self,a,root,inventory):
+        self.a=a;self.root=a.safe(root);self.files=inventory['files'];self.cache=a.Hashes()
+        a.require(type(inventory['schema_version']) is int and inventory['schema_version']==1,
+                  'Inventory schema')
+        a.require(inventory['scope']=='ALL_PERSISTED_ORIGINAL_CAMPAIGN_REGULAR_FILES_EXCEPT_COORDINATOR_LOCK',
+                  'Wrong retained inventory scope')
+        self.before=a.inventory(self.root)
+        a.require(set(self.files)<=set(self.before),'Missing retained original file')
+        self.extras=sorted(set(self.before)-set(self.files))
+        for name,record in self.files.items():
+            path=a.below(self.root,name)
+            a.require(type(record['bytes']) is int and record['bytes']>=0 and
+                      path.stat().st_size==record['bytes'] and self.cache(path)==record['sha256'],
+                      'Retained bytes differ: '+name)
+
+    def path(self,name):
+        self.a.require(name in self.files,'File outside authenticated origin inventory: '+name)
+        return self.a.below(self.root,name)
+
+    def sha(self,name):
+        return self.cache(self.path(name))
+
+    def read(self,name):
+        self.sha(name)
+        return self.a.read(self.path(name))
+
+    def unchanged(self):
+        self.cache.unchanged()
+        self.a.require(self.a.inventory(self.root)==self.before,'Retained backup changed during authentication')
+
+
+def integer(a,value,minimum=0):
+    a.require(type(value) is int and value>=minimum,'Expected exact nonnegative integer')
+    return value
+
+
+def digest_string(a,value):
+    a.require(type(value) is str and len(value)==64 and all(c in '0123456789abcdef' for c in value),
+              'Expected SHA256')
+
+
+def counts(a,result):
+    answer={name:result[name] for name in a.COUNTS}
+    for name in a.COUNTS:
+        if name=='classification_digest':digest_string(a,answer[name])
+        elif name=='c_zero_audit':
+            a.require(type(answer[name]) is list and len(answer[name])==5,'c=0 audit shape')
+            for n in answer[name]:integer(a,n)
+        else:integer(a,answer[name])
+    a.require(answer['candidate_count']==answer['nonzero_candidates']+answer['zero_candidates'] and
+              answer['survivor_count']<=answer['candidate_count'],'Count identities')
+    return answer
+
+
+def attempt(a,r,b,manifest,state,label,stage,backend,row):
+    """Original argv via unchanged construction; local bytes via explicit store."""
+    limits=manifest['limits'];number=integer(a,row['attempt_number'],1)
+    a.require(number<=(2 if stage=='prep' else len(limits['cpu_tiers'])),'Original retry ordinal')
+    cpu=limits['preparation_cpu']*number if stage=='prep' else limits['cpu_tiers'][number-1]
+    directory=f'attempts/{a.TARGET}/{r.slug(label)}/{stage}-{backend}-{number:02d}'
+    key=r.job_key(label,stage,backend)
+    integer(a,row['parent_pid'],2);integer(a,row['pid'],2);integer(a,row['cpu_limit'],1)
+    integer(a,row['wall_limit'],1)
+    a.require(row['directory']==directory and row['task']==[label,stage,backend] and
+              row['task_key']==key and row['target_id']==a.TARGET and row['cpu_limit']==cpu and
+              row['wall_limit']==cpu*limits['wall_multiplier'],'Original identity/caps')
+    command=r.attempt_command(Path(ORIGIN),(label,stage,backend),directory,cpu,limits,
+                              row['parent_pid'],state['runtime']['invocation_path'],row.get('plan_sha256') is not None)
+    a.require(row['command']==command,'Original argv coordinate differs')
+    intent=b.read(directory+'/attempt.json')
+    keys={'status','target_id','task_key','directory','command','attempt_number','parent_pid',
+          'task','started_utc','started_epoch','cpu_limit','wall_limit','plan_sha256'}
+    a.require(set(intent)==keys and intent['status']=='RUNNING' and
+              all(row.get(k)==v for k,v in intent.items() if k!='status'),'Immutable intent differs')
+    lease=b.read(directory+'/lease.json')
+    a.require(set(lease)=={'pid','parent_pid','target_id','task_key'} and
+              lease=={'pid':row['pid'],'parent_pid':row['parent_pid'],'target_id':a.TARGET,'task_key':key},
+              'Original lease differs')
+    for k in ('pid','parent_pid'):integer(a,lease[k],2)
+    status=row['status'];rc=row.get('returncode')
+    a.require(status in RESOURCE_FAILURES|{'COMPLETE','FAILED'},'Unclosed/unknown attempt')
+    if status=='COMPLETE':a.require(type(rc) is int and rc==0 and a.number(row.get('cpu_seconds')),'No complete rc0')
+    elif status=='CPU_OR_RESOURCE_LIMIT':a.require(type(rc) is int and rc in {-signal.SIGXCPU,-signal.SIGKILL,-signal.SIGXFSZ},'Resource rc')
+    elif status in ('WALL_LIMIT','FAILED'):a.require(type(rc) is int and rc!=0,'Failure rc')
+    elif rc is not None:a.require(type(rc) is int,'Interrupted rc type')
+    log=b.sha(directory+'/child.log')
+    if status!='INTERRUPTED':a.require(log==row['log_sha256'] and a.number(row.get('wall_seconds')),'Log/time seal')
+    for name in ('cpu_seconds','wall_seconds'):
+        if name in row:a.require(a.number(row[name]),'Nonfinite stage timing')
+    a.require(a.number(row.get('started_epoch')) and
+              abs(a.timestamp(row['started_utc'])-row['started_epoch'])<1,'Launch clock')
+    end=a.timestamp(row['finished_utc']);a.require(end>=row['started_epoch'],'Attempt interval')
+    if 'wall_seconds' in row:a.require(abs(end-row['started_epoch']-row['wall_seconds'])<1,'Finish clock')
+    plan='plans/'+r.slug(label)+'.json'
+    if row.get('plan_sha256') is None:a.require(stage=='prep' and backend=='primary','Only primary nomination may lack plan')
+    else:a.require(row['plan_sha256']==b.sha(plan),'Original plan bytes')
+    return {'task_key':key,'directory':directory,'status':status,'attempt_number':number,'returncode':rc,
+            'started_epoch':row['started_epoch'],'finished_epoch':end,'cpu_limit':cpu,'wall_limit':row['wall_limit'],
+            'cpu_seconds':row.get('cpu_seconds'),'wall_seconds':row.get('wall_seconds'),
+            'intent_sha256':b.sha(directory+'/attempt.json'),'lease_sha256':b.sha(directory+'/lease.json'),
+            'log_sha256':log}
+
+
+def result(a,r,b,manifest,state,label,stage,backend,row):
+    base=row['directory']+'/output/';raw=b.read(base+'result.json')
+    a.require(raw['status']==('PREPARATION_ONLY' if stage=='prep' else 'FULL_GEOMETRY_DISCOVERY_COMPLETE') and
+              raw['point_label']==label and raw['backend']==backend and raw['target_id']==a.TARGET,'Result identity')
+    a.require(all(raw.get(k) is True for k in ('assertions_enabled','sources_unchanged','executable_unchanged','witness_plan_unchanged')),
+              'Missing actual result postguards')
+    a.require(raw['driver_sha256']==manifest['source_sha256'][HERE+'/'+backend+'.py'] and
+              raw['source_sha256']==r.driver_pins(b.path('source/'+HERE+'/'+backend+'.py')),'Driver closure')
+    for name,checksum in raw['source_sha256'].items():a.require(b.sha('source/'+name)==checksum,'Result source seal')
+    runtime=raw['runtime'];reviewed=state['runtime']
+    a.require(runtime['python_executable']==reviewed['resolved_binary'] and
+              runtime['python_sha256']==reviewed['python_sha256'] and
+              runtime['python_version']==reviewed['python_version'] and
+              runtime['cpu_limits_seconds']==[row['cpu_limit'],row['cpu_limit']+1] and
+              all(type(x) is int for x in runtime['cpu_limits_seconds']),'Result runtime/caps')
+    seals={name[len(base):]:record['sha256'] for name,record in b.files.items()
+           if name.startswith(base) and Path(name).name!='progress.json'}
+    a.require(seals==row['output_sha256'],'Producer output inventory')
+    a.require(set(seals)==set(raw['artifact_sha256'])|{'result.json'},'Result artifact inventory')
+    for name,checksum in raw['artifact_sha256'].items():a.require(b.sha(base+name)==checksum,'Artifact seal')
+    a.require(b.sha(base+'target-geometry.json')==raw['target_geometry_sha256']==a.TARGET_HASH and
+              b.read(base+'target-geometry.json')['target_id']==a.TARGET,'Target descriptor')
+    a.require(raw['artifact_sha256']['target-geometry.json']==raw['target_geometry_sha256'] and
+              'preparation.json' in raw['artifact_sha256'],'Missing prep/target seal')
+    emitted=b.read(base+'witness-plan.json');r.validate_plan(emitted,label)
+    a.require(raw['witness_plan_sha256']==b.sha(base+'witness-plan.json'),'Emitted plan seal')
+    plan='plans/'+r.slug(label)+'.json'
+    a.require(b.read(plan)==emitted and b.sha(plan)==raw['witness_plan_sha256'],'Original/emitted plan bytes')
+    if row.get('plan_sha256') is not None:
+        a.require(raw['input_witness_plan_sha256']==row['plan_sha256']==raw['witness_plan_sha256'],'Input plan seal')
+    for key in ('cpu_seconds','wall_seconds'):a.require(a.number(raw[key]),'Raw measured time')
+    a.require(raw['cpu_seconds']==row['cpu_seconds'],'Producer CPU mismatch')
+    if stage=='full':
+        a.require(set(raw['canonical_artifact_sha256'])==set(a.CANONICAL),'Canonical8 set')
+        for name,h in raw['canonical_artifact_sha256'].items():a.require(b.sha(base+name)==h==raw['artifact_sha256'][name],'Canonical seal')
+        counts(a,raw)
+    return raw
+
+
+def authenticate(a,r,b,manifest,state,approval):
+    """Pure metadata core; test fixtures inject their own small frozen domain."""
+    labels=r.domain(b.root/'source')[0]
+    a.require(labels==a.declared_domain()==manifest['remaining'],'Exact C39 nonhit domain')
+    a.require(type(state['schema_version']) is int and state['schema_version']==2 and
+              state['target_id']==a.TARGET and state['status'] in
+              ('CAMPAIGN_DEADLINE','ALL_TARGET_DISCOVERIES_COMPLETE_REQUIRES_REVIEW','QUEUE_EXHAUSTED_WITH_INCOMPLETE_POINTS') and
+              type(state['active_workers']) is int and state['active_workers']==0 and not state.get('error'),
+              'Original terminal producer state')
+    a.require(approval['normal_producer_closure'] is True,'No authenticated producer closure')
+    a.require(state['deadline_epoch']==a.QUEUE_CUTOFF and state['stop_deadline_epoch']==a.STOP_DEADLINE and
+              state['manifest_sha256']==a.MANIFEST==b.sha('manifest.json') and
+              a.object_hash(state['runtime'])==a.RUNTIME,'Original deadline/runtime/manifest')
+    if state['status']=='CAMPAIGN_DEADLINE':a.require(a.timestamp(state['updated_utc'])>=a.QUEUE_CUTOFF,'Early deadline claim')
+    a.require(manifest['source_sha256']==a.PINS and len(a.PINS)==19,'Original19 source closure')
+    a.require({n.removeprefix('source/') for n in b.files if n.startswith('source/')}==set(a.PINS),'Original source inventory')
+    for name,h in a.PINS.items():a.require(b.sha('source/'+name)==h,'Original source bytes')
+    a.require(manifest['imported_plan_sha256']=={},'This origin used no nomination-index import')
+    a.require(state['pilot_review_sha256']==a.PILOT_REVIEW and
+              b.sha('approvals/pilot-review.json')==a.PILOT_REVIEW and b.sha('pilot-evidence.json')==a.PILOT_EVIDENCE,
+              'Original pilot anchors')
+    wanted={r.job_key(label,stage,backend) for label in labels for stage in a.STAGES for backend in a.BACKENDS}
+    a.require(set(state['jobs'])==wanted and set(state['preparations'])==set(labels),'Original job/prep inventory')
+    selected={};records=[];prior={};results={};anomalies={}
+    for label in labels:
+        for stage in a.STAGES:
+            for backend in a.BACKENDS:
+                key=r.job_key(label,stage,backend);rows=state['jobs'][key]['attempts'];prior[key]=rows
+                a.require([x['attempt_number'] for x in rows]==list(range(1,len(rows)+1)),'Ordinal gap')
+                a.require(sum(x['status']=='COMPLETE' for x in rows)<=1,'Duplicate complete attempt')
+                if any(x['status']=='COMPLETE' for x in rows):a.require(rows[-1]['status']=='COMPLETE','Success followed by attempt')
+                for previous,current in zip(rows,rows[1:]):a.require(a.timestamp(previous['finished_utc'])<=current['started_epoch'],'Overlapping retry')
+                for row in rows:
+                    records.append(attempt(a,r,b,manifest,state,label,stage,backend,row))
+                    if row['status']=='FAILED':anomalies[key]='Unexpected original FAILED attempt requires review'
+                    if row['status']=='COMPLETE':
+                        results[key]=result(a,r,b,manifest,state,label,stage,backend,row);selected[key]=row
+    resources=a.observed_resources(records,manifest['limits']['workers'])
+    temporal=a.temporal_barriers(records,labels,manifest['pilot_label'])
+    preparations={}
+    for label in labels:
+        keys=[r.job_key(label,'prep',backend) for backend in a.BACKENDS]
+        a.require(all(key in selected for key in keys),'Every origin label requires authenticated paired prep')
+        pair=[results[key] for key in keys];p=state['preparations'][label]
+        a.require(p['target_id']==a.TARGET,'Prepared target')
+        for name in ('preparation.json','target-geometry.json','witness-plan.json'):
+            a.require(pair[0]['artifact_sha256'][name]==pair[1]['artifact_sha256'][name],'Paired prep mismatch')
+        a.require(p['preparation_sha256']==pair[0]['artifact_sha256']['preparation.json'] and
+                  p['target_geometry_sha256']==pair[0]['target_geometry_sha256'],'Producer paired prep record')
+        preparations[label]={'plan_relative_path':'plans/'+r.slug(label)+'.json',
+            'plan_sha256':pair[0]['witness_plan_sha256'],'preparation_sha256':p['preparation_sha256'],
+            'target_geometry_sha256':p['target_geometry_sha256'],'backends':{backend:{
+                'attempt_directory':selected[key]['directory'],'attempt_record_sha256':a.object_hash(selected[key]),
+                'result_sha256':b.sha(selected[key]['directory']+'/output/result.json'),
+                'log_sha256':selected[key]['log_sha256'],'output_sha256':selected[key]['output_sha256']}
+                for backend,key in zip(a.BACKENDS,keys)}}
+    accepted={};unresolved={};paired_points={};obligations=sorted(r.job_key(label,'full',backend) for label in labels for backend in a.BACKENDS)
+    for label in labels:
+        paired=[]
+        for backend in a.BACKENDS:
+            key=r.job_key(label,'full',backend);prepared=preparations[label]
+            if key not in selected:
+                unresolved[key]={'task':[label,'full',backend],'reason':anomalies.get(key,'No authenticated COMPLETE original attempt'),
+                    'prior_attempts':[{'attempt_number':x['attempt_number'],'status':x['status'],'attempt_record_sha256':a.object_hash(x)} for x in prior[key]],
+                    'unexpected_failure_review_required':key in anomalies}
+                continue
+            row=selected[key];raw=results[key]
+            a.require(raw['witness_plan_sha256']==prepared['plan_sha256'] and
+                      raw['artifact_sha256']['preparation.json']==prepared['preparation_sha256'] and
+                      raw['target_geometry_sha256']==prepared['target_geometry_sha256'],'Full changed paired preparation')
+            accepted[key]={'task':[label,'full',backend],'attempt_number':row['attempt_number'],
+                'attempt_directory':row['directory'],'attempt_record_sha256':a.object_hash(row),'returncode':0,
+                'plan_sha256':prepared['plan_sha256'],'result_sha256':b.sha(row['directory']+'/output/result.json'),
+                'log_sha256':row['log_sha256'],'output_sha256':row['output_sha256'],
+                'preparation_sha256':prepared['preparation_sha256'],'target_geometry_sha256':prepared['target_geometry_sha256'],
+                'canonical_artifact_sha256':raw['canonical_artifact_sha256'],'counts':counts(a,raw)}
+            paired.append(raw)
+        if len(paired)==2:
+            a.require(paired[0]['canonical_artifact_sha256']==paired[1]['canonical_artifact_sha256'] and
+                      counts(a,paired[0])==counts(a,paired[1]),'Paired complete outcomes disagree')
+            point=state['points'][label];raw=paired[0]
+            expected={'status':'PAIRED_EMPTY_DISCOVERY' if raw['survivor_count']==0 else 'PAIRED_SURVIVORS_REQUIRE_GEOMETRY',
+                'survivor_count':raw['survivor_count'],'candidate_count':raw['candidate_count'],
+                'target_id':a.TARGET,'pilot':label==manifest['pilot_label'],
+                'target_geometry_sha256':raw['target_geometry_sha256'],
+                'canonical_artifact_sha256':raw['canonical_artifact_sha256']}
+            a.require(set(point)==set(expected)|{'row_evidence_sha256'} and
+                      a.object_hash({k:point[k] for k in expected})==a.object_hash(expected),
+                      'Producer paired outcome differs')
+            digest_string(a,point['row_evidence_sha256']);paired_points[label]=point
+    a.require(set(state['points'])==set(paired_points) and
+              a.object_hash(state.get('summary'))==a.object_hash(dict(Counter(p['status'] for p in paired_points.values()))),
+              'Producer paired inventory/summary differs')
+    if state['status']=='ALL_TARGET_DISCOVERIES_COMPLETE_REQUIRES_REVIEW':
+        a.require(not unresolved,'Complete-domain terminal status with unresolved paths')
+    a.require(not set(accepted)&set(unresolved) and sorted(set(accepted)|set(unresolved))==obligations,'Scheduling partition')
+    return {'obligations':obligations,'preparations':preparations,'accepted':accepted,'unresolved':unresolved,
+            'unexpected_failures':anomalies,'dispatch_blocked_pending_unexpected_failure_review':bool(anomalies),
+            'observed_original_resources':resources,'observed_original_temporal_barriers':temporal}
+
+
+def run(args):
+    a=load(args.auditor,AUDITOR_SHA,'origin_readonly_audit_helpers')
+    own=a.sha(Path(__file__));contract=Path(__file__).with_name('origin_index_contract.json')
+    a.require(a.sha(contract)==CONTRACT_SHA,'Origin contract changed')
+    external={}
+    for field in ('receipt','inventory','retention_review','source_review','producer_log'):
+        path=a.safe(getattr(args,field));checksum=getattr(args,field+'_sha256')
+        a.signature(path);a.require(a.sha(path)==checksum,'External evidence anchor '+field);external[field]=(path,checksum)
+    source_review=a.read(args.source_review)
+    a.require(source_review['status']=='PASS_ORIGIN_SCHEDULING_AUTHENTICATOR_SOURCE_REVIEW' and
+              source_review['authenticator_sha256']==own and source_review['contract_sha256']==CONTRACT_SHA,
+              'Missing exact administrative source review')
+    receipt=a.read(args.receipt);review=a.read(args.retention_review)
+    a.require(review['status']=='PASS_POSTSTOP_ORIGIN_BYTES_FOR_SCHEDULING_AUTHENTICATION' and
+              review['normal_producer_closure'] is True and review['ordinary_immutable_source_assumption_explicit'] is True,
+              'Actual origin closure/retention review required')
+    for field in ('receipt','inventory','producer_log'):
+        a.require(review[field+'_sha256']==external[field][1],'Review evidence binding '+field)
+    a.require(receipt['status']=='POSTSTOP_PERSISTED_BYTES_CAPTURED_NOT_ORIGINAL_HOST_OBSERVER' and
+              receipt['source_campaign_path']==ORIGIN and receipt['inventory_sha256']==args.inventory_sha256 and
+              receipt['coordinator_lock_held'] is True and receipt['source_and_inventory_before_after_equal'] is True and
+              receipt['missed_original_host_observer_reconstructed'] is False and
+              receipt['process_absence_basis']=='PROVIDER_EXITED_NOT_REPLACEMENT_HOST_PID_TEST',
+              'Actual poststop byte observation required')
+    for field in ('state_sha256','manifest_sha256','provider_exited_sha256'):
+        a.require(review[field]==receipt[field],'Poststop outcome review binding '+field)
+    backup=a.safe(args.backup_root);output=a.safe(args.output)
+    a.require(not output.is_relative_to(backup) and not backup.is_relative_to(output),'Disjoint output')
+    a.require(not output.exists(),'Refuse output replacement')
+    closure_output=output.with_name(output.stem+'-closure.json')
+    a.require(not closure_output.exists() and not closure_output.is_symlink(),'Refuse closure replacement')
+    b=Bytes(a,backup,a.read(args.inventory))
+    a.require(b.sha('state.json')==receipt['state_sha256'] and b.sha('manifest.json')==receipt['manifest_sha256'],
+              'Poststop retained state/manifest differ')
+    manifest=b.read('manifest.json');state=b.read('state.json')
+    a.require(receipt['source_sha256']==manifest['source_sha256'],'Receipt source mismatch')
+    log=Path(args.producer_log).read_text().splitlines();a.require(log,'Empty producer closure log')
+    final=json.loads(log[-1],object_pairs_hook=a.duplicate_free,
+        parse_constant=lambda value: (_ for _ in ()).throw(a.Anomaly('Nonfinite producer JSON: '+value)))
+    a.require(a.object_hash(final)==a.object_hash({'status':state['status'],'summary':state.get('summary',{})}),
+                                       'Missing exact terminal producer JSON')
+    r=load(b.path('source/'+HERE+'/runner.py'),RUNNER_SHA,'unchanged_origin_runner')
+    result=authenticate(a,r,b,manifest,state,review)
+    a.require(len(result['obligations'])==730 and len(result['preparations'])==365,'Production obligation counts')
+    b.unchanged()
+    for path,checksum in external.values():a.require(a.sha(path)==checksum,'External evidence changed')
+    a.require(a.sha(Path(__file__))==own and a.sha(args.auditor)==AUDITOR_SHA and a.sha(contract)==CONTRACT_SHA,
+              'Authenticator source changed')
+    closure={'schema_version':1,'status':'ORIGIN_PRODUCER_CLOSURE_EVIDENCE_BOUND_NOT_ADOPTION',
+        'state_sha256':b.sha('state.json'),'manifest_sha256':a.MANIFEST,
+        'producer_log_sha256':args.producer_log_sha256,'poststop_observation_sha256':args.receipt_sha256,
+        'backup_inventory_sha256':args.inventory_sha256,'retention_review_sha256':args.retention_review_sha256,
+        'normal_producer_closure':True,'missed_original_host_observer_reconstructed':False,
+        'ordinary_immutable_source_assumption_explicit':True,'theorem_promotion':False}
+    closure_sha=a.object_hash(closure)
+    result.update(schema_version=1,status='AUTHENTICATED_ORIGIN_SCHEDULING_INDEX_NOT_ADOPTION',target_id=a.TARGET,
+        origin={'campaign_path':ORIGIN,'manifest_sha256':a.MANIFEST,'state_sha256':b.sha('state.json'),
+            'cutoff_observation_sha256':args.receipt_sha256,'observation_kind':'POSTSTOP_PERSISTED_BYTES_NOT_ORIGINAL_HOST_OBSERVER',
+            'retention_review_sha256':args.retention_review_sha256,'producer_log_sha256':args.producer_log_sha256,
+            'closure_evidence_sha256':closure_sha,
+            'backup_root':str(backup),'backup_inventory_sha256':args.inventory_sha256,'source_sha256':a.PINS,
+            'runtime_sha256':a.RUNTIME,'normal_closure':True,'local_retained_superset_extras':b.extras,
+            'historical_source_assumption':receipt['historical_source_assumption']},
+        closure_evidence=closure,authentication={'authenticator_sha256':own,'source_review_sha256':args.source_review_sha256,
+            'contract_sha256':CONTRACT_SHA,'source_runtime_argv_intent_lease_checked':True,
+            'all_subtracted_output_and_log_bytes_checked':True,'paired_preparation_bytes_checked':True,
+            'producer_terminal_and_all_prior_failures_retained':True,'full_crosscohort_result_audit_complete':False,
+            'scope':'SCHEDULING_AUTHENTICATION_ONLY'},theorem_promotion=False)
+    output.parent.mkdir(parents=True,exist_ok=True)
+    a.save(output.parent,output.stem+'-closure.json',closure)
+    a.save(output.parent,output.name,result)
+    return result,a.sha(output)
+
+
+def main():
+    p=argparse.ArgumentParser(description=__doc__)
+    for name in ('auditor','backup-root','receipt','inventory','retention-review','source-review','producer-log','output'):
+        p.add_argument('--'+name,type=Path,required=True)
+    for name in ('receipt','inventory','retention-review','source-review','producer-log'):
+        p.add_argument('--'+name+'-sha256',required=True)
+    args=p.parse_args();result,checksum=run(args)
+    print(json.dumps({'status':result['status'],'accepted':len(result['accepted']),'unresolved':len(result['unresolved']),
+                      'dispatch_blocked':result['dispatch_blocked_pending_unexpected_failure_review'],'sha256':checksum}))
+
+
+if __name__=='__main__':main()

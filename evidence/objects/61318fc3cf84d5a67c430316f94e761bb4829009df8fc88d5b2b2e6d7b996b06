@@ -1,0 +1,13 @@
+{
+  "argv": [
+    "python3",
+    "-I",
+    "-B",
+    "tests/test_staged_packet_release_v96.py"
+  ],
+  "returncode": 0,
+  "scope": "three staged certificate/registration checks; no mathematical execution or finalinstallation",
+  "source_sha256": "84e5b7ceb23ca965d01aa3e29c0ef08dc537fd9e0ae8a68ad5fe744b59f5875f",
+  "status": "PASS",
+  "wall_seconds": 0.4223930835723877
+}

@@ -1,0 +1,65 @@
+{
+  "all_dimension3_subspaces": 33880,
+  "gram": [
+    [
+      0,
+      2,
+      1,
+      1,
+      1,
+      2
+    ],
+    [
+      1,
+      0,
+      1,
+      0,
+      0,
+      1
+    ],
+    [
+      2,
+      2,
+      0,
+      1,
+      0,
+      1
+    ],
+    [
+      2,
+      0,
+      2,
+      0,
+      1,
+      1
+    ],
+    [
+      2,
+      0,
+      0,
+      2,
+      0,
+      2
+    ],
+    [
+      1,
+      2,
+      2,
+      2,
+      1,
+      0
+    ]
+  ],
+  "lagrangian_count": 1120,
+  "model": "Sum-zero F3^7; cyclic shift; alternating nearest-neighbor cycle form",
+  "negative_control": "1092 maximal isotropics are not stable under T+T^-1",
+  "orbit_sizes": [
+    7
+  ],
+  "order7_orbit_count": 160,
+  "other_orbits": 156,
+  "real_stable_orbits": 4,
+  "real_subfield_stable_count": 28,
+  "scope": "Finite cyclic symplectic model; actual module identification and quotient theorem require the separate human proof.",
+  "status": "EXACT_FINITE_SYMPLECTIC_MODEL_PASS"
+}

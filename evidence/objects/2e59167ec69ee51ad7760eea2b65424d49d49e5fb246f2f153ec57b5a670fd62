@@ -1,0 +1,64 @@
+"""Exact deserialization of adopted V162 periods; not a new period proof."""
+from pathlib import Path
+import sys
+ROOT=Path(__file__).resolve().parents[2]
+sys.path.insert(0,str(ROOT/'experiments/bc_jacobian_v147'))
+from exact_ball_candidate import component,serialize
+
+REPRESENTATIVES=[0,1,2,3,6,12,15,17,40,91]
+
+def require(ok,message):
+    if not ok:raise ValueError(message)
+
+def validate_record(record,index):
+    require(type(index) is int and index in REPRESENTATIVES,'Unexpected target')
+    require(record['catalog_index']==index,'Record target mismatch')
+    require(record['status']=='EXACT_MODEL_AUDIT_AND_PERIOD_CANDIDATES','Record status')
+    require(record['theta_evaluations']==0,'Expected pre-theta input')
+    transport=record['transport'];interval=record['interval_period']
+    require(transport['catalog_index']==interval['catalog_index']==index,'Nested target mismatch')
+    require(transport['actual_tangent_type']==[1,5,11,13,17,19],'Actual type mismatch')
+    require(interval['precision_bits']==512,'Adopted input precision')
+    chi=transport['invariant_refinement_chi']
+    require(len(chi)==12 and all(type(x) is int and x in (0,1) for x in chi),'Characteristic bits')
+    characteristic=sum(x<<(11-i) for i,x in enumerate(chi))
+    require(transport['flint_characteristic_index']==characteristic,'Characteristic convention')
+    pairs=transport['eligible_nonzero_pairs']
+    require(len(pairs)==130 and all(len(v)==12 and all(type(x) is int and x in (0,1,2) for x in v) for v in pairs),'Pair shape')
+    require(len({tuple(v) for v in pairs})==130,'Duplicate pairs')
+    require(all(tuple(v)<tuple(-x%3 for x in v) for v in pairs),'Nonzero canonical sign representatives')
+    require(pairs==sorted(pairs),'Stable pair indices')
+    rectangles=interval['period_rectangles']
+    require(len(rectangles)==6 and all(len(row)==6 for row in rectangles),'Period shape')
+    for i in range(6):
+        for j in range(6):
+            require(rectangles[i][j]==rectangles[j][i],'Exact reflected symmetry')
+            require(set(rectangles[i][j])=={'real','imag'},'Complex rectangle fields')
+            for name in ('real','imag'):component(rectangles[i][j][name])
+    return chi,characteristic,pairs,rectangles
+
+def load(record,index,precision=96):
+    from flint import arb,acb,acb_mat,ctx
+    require(precision==96,'Reviewed candidate working precision')
+    ctx.prec=precision
+    chi,characteristic,pairs,rectangles=validate_record(record,index)
+    def decode(rectangle):
+        parts=[arb(tuple(rectangle[name]['mid']),tuple(rectangle[name]['rad'])) for name in ('real','imag')]
+        value=acb(*parts)
+        require(serialize(value)==rectangle,'Exact dyadic roundtrip failed')
+        return value
+    tau=acb_mat([[decode(x) for x in row] for row in rectangles])
+    lower=[[arb(int(i==j)) for j in range(6)] for i in range(6)]
+    pivots=[]
+    for j in range(6):
+        pivot=tau[j,j].imag-sum(lower[j][k]**2*pivots[k] for k in range(j))
+        require(pivot>0,'Positive interval LDL not certified')
+        pivots.append(pivot)
+        for i in range(j+1,6):
+            lower[i][j]=(tau[i,j].imag-sum(lower[i][k]*lower[j][k]*pivots[k] for k in range(j)))/pivot
+    return tau,chi,characteristic,pairs,[serialize(acb(x))['real'] for x in pivots]
+
+def argument(tau,numerator):
+    from flint import acb,acb_mat
+    centered=[x if x<=1 else x-3 for x in numerator]
+    return centered,acb_mat([[acb(centered[i])/3+sum(tau[i,j]*centered[j+6]/3 for j in range(6))] for i in range(6)])

@@ -1,0 +1,265 @@
+{
+  "execution_adoption_sha256": "da164584dc0c9b5c520cc953996f9880df794ca8f1b9d97dc3b0a9cc86b53d5d",
+  "pipeline": {
+    "benchmark_returncode": 0,
+    "mathematical_conclusion": null,
+    "runtime_sha256": "b85ced7085eda60dd5c8d48850dad8a65a94d215ec17b81b69495d959ace3435",
+    "setup_returncode": 0,
+    "status": "ATTEMPT_ENDED_NO_THEOREM"
+  },
+  "plan_sha256": "c3482ea3d0ad2712144be3140ac62d272724c6149b8b4093f6b7f81c64d29593",
+  "retention_sha256": "2607eb168245a2b08032e30d733f16405a650b8fa31484aeec29e6c9ca3609be",
+  "runtime_sha256": "b85ced7085eda60dd5c8d48850dad8a65a94d215ec17b81b69495d959ace3435",
+  "runtime_unchanged": true,
+  "status": "DIAGNOSTIC_ONLY_NO_MATHEMATICAL_ADOPTION",
+  "tasks": [
+    {
+      "child_status": "EXITED",
+      "model": "B0",
+      "returncode": 0,
+      "structural_check": {
+        "complete": true,
+        "model": "B0",
+        "nonzero_reported_and_rationally_checked": [
+          48,
+          49,
+          50,
+          51,
+          52,
+          53,
+          54,
+          55
+        ],
+        "observed_pair_indices": [
+          48,
+          49,
+          50,
+          51,
+          52,
+          53,
+          54,
+          55
+        ],
+        "status": "STRUCTURAL_RECORDS_CHECKED_NOT_MATHEMATICAL_ACCEPTANCE"
+      },
+      "task_index": 0
+    },
+    {
+      "child_status": "EXITED",
+      "model": "B0",
+      "returncode": 0,
+      "structural_check": {
+        "complete": true,
+        "model": "B0",
+        "nonzero_reported_and_rationally_checked": [
+          56,
+          57,
+          58,
+          59,
+          60,
+          61,
+          62,
+          63
+        ],
+        "observed_pair_indices": [
+          56,
+          57,
+          58,
+          59,
+          60,
+          61,
+          62,
+          63
+        ],
+        "status": "STRUCTURAL_RECORDS_CHECKED_NOT_MATHEMATICAL_ACCEPTANCE"
+      },
+      "task_index": 1
+    },
+    {
+      "child_status": "EXITED",
+      "model": "B1",
+      "returncode": 0,
+      "structural_check": {
+        "complete": true,
+        "model": "B1",
+        "nonzero_reported_and_rationally_checked": [
+          48,
+          49,
+          50,
+          51,
+          52,
+          53,
+          54,
+          55
+        ],
+        "observed_pair_indices": [
+          48,
+          49,
+          50,
+          51,
+          52,
+          53,
+          54,
+          55
+        ],
+        "status": "STRUCTURAL_RECORDS_CHECKED_NOT_MATHEMATICAL_ACCEPTANCE"
+      },
+      "task_index": 2
+    },
+    {
+      "child_status": "EXITED",
+      "model": "B1",
+      "returncode": 0,
+      "structural_check": {
+        "complete": true,
+        "model": "B1",
+        "nonzero_reported_and_rationally_checked": [
+          56,
+          57,
+          58,
+          59,
+          60,
+          61,
+          62,
+          63
+        ],
+        "observed_pair_indices": [
+          56,
+          57,
+          58,
+          59,
+          60,
+          61,
+          62,
+          63
+        ],
+        "status": "STRUCTURAL_RECORDS_CHECKED_NOT_MATHEMATICAL_ACCEPTANCE"
+      },
+      "task_index": 3
+    },
+    {
+      "child_status": "EXITED",
+      "model": "C0",
+      "returncode": 0,
+      "structural_check": {
+        "complete": true,
+        "model": "C0",
+        "nonzero_reported_and_rationally_checked": [
+          48,
+          49,
+          50,
+          51,
+          52,
+          53,
+          54,
+          55
+        ],
+        "observed_pair_indices": [
+          48,
+          49,
+          50,
+          51,
+          52,
+          53,
+          54,
+          55
+        ],
+        "status": "STRUCTURAL_RECORDS_CHECKED_NOT_MATHEMATICAL_ACCEPTANCE"
+      },
+      "task_index": 4
+    },
+    {
+      "child_status": "EXITED",
+      "model": "C0",
+      "returncode": 0,
+      "structural_check": {
+        "complete": true,
+        "model": "C0",
+        "nonzero_reported_and_rationally_checked": [
+          56,
+          57,
+          58,
+          59,
+          60,
+          61,
+          62,
+          63
+        ],
+        "observed_pair_indices": [
+          56,
+          57,
+          58,
+          59,
+          60,
+          61,
+          62,
+          63
+        ],
+        "status": "STRUCTURAL_RECORDS_CHECKED_NOT_MATHEMATICAL_ACCEPTANCE"
+      },
+      "task_index": 5
+    },
+    {
+      "child_status": "EXITED",
+      "model": "C1",
+      "returncode": 0,
+      "structural_check": {
+        "complete": true,
+        "model": "C1",
+        "nonzero_reported_and_rationally_checked": [
+          48,
+          49,
+          50,
+          51,
+          52,
+          53,
+          54,
+          55
+        ],
+        "observed_pair_indices": [
+          48,
+          49,
+          50,
+          51,
+          52,
+          53,
+          54,
+          55
+        ],
+        "status": "STRUCTURAL_RECORDS_CHECKED_NOT_MATHEMATICAL_ACCEPTANCE"
+      },
+      "task_index": 6
+    },
+    {
+      "child_status": "EXITED",
+      "model": "C1",
+      "returncode": 0,
+      "structural_check": {
+        "complete": true,
+        "model": "C1",
+        "nonzero_reported_and_rationally_checked": [
+          56,
+          57,
+          58,
+          59,
+          60,
+          61,
+          62,
+          63
+        ],
+        "observed_pair_indices": [
+          56,
+          57,
+          58,
+          59,
+          60,
+          61,
+          62,
+          63
+        ],
+        "status": "STRUCTURAL_RECORDS_CHECKED_NOT_MATHEMATICAL_ACCEPTANCE"
+      },
+      "task_index": 7
+    }
+  ]
+}

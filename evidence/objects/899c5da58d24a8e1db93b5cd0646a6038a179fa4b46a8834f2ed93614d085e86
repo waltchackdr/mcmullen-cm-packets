@@ -1,0 +1,98 @@
+{
+  "C35_semantic_anchor": {
+    "row": "| C35 | A is complex-isogenous to J(y^2=x^7-1)^2; B and C are complex-isogenous to the simple factor X21 of J(y^2=x^21-1) | HUMAN | HUMAN-PROOF; HOSTILE-REVIEW; EXACT-REGRESSION; TARGETED-PASS | Underlying complex isogeny classes with explicitly specified field actions; no fixed-RM or polarized isomorphism, comparison-isogeny degree, or historical firstness | `paper/main.tex`, Proposition `knownCM`; `docs/KNOWN_CM_COMPARISON_2026-09-18.md`; `docs/REFEREE_CM_COMPARISON_V58.md`; `certificates/known_cm_comparison_v58.py` | Uses existing geometric types, Goodson's primitive factor and Milne CM classification, including nonsimple A. Two underlying classes do not collapse the three marked quotient points. Added after the frozen v57 release; requires the next integrated source/PDF gate. |",
+    "sha256": "be3ed4dce03d3311293ed125d0e449eaacc7a07e5ad54dceb71dc659b53dd072",
+    "whole_ledger_equality_not_claimed": true
+  },
+  "additional_existing_dependencies": {
+    "certificates/known_cm_comparison_v58.py": {
+      "bytes": 6311,
+      "sha256": "1f26599e13dec36d7375ded2167b0e1147d9515eaf5df02b4375fb0c619fe421"
+    },
+    "docs/KNOWN_CM_COMPARISON_2026-09-18.md": {
+      "bytes": 16454,
+      "sha256": "3f19e9ee5e32674e6fe7e5720062110880d1bed90bc5d2e53957488afd446f26"
+    },
+    "docs/REFEREE_CM_COMPARISON_V58.md": {
+      "bytes": 7504,
+      "sha256": "e50d5779cf5c23c784ecfcabb759d931a7f86db795b6b424423ce547a7f74362"
+    }
+  },
+  "author_global_lattice_minimum": 14,
+  "cloud_spending": false,
+  "earlier_attempts_retained": true,
+  "files": {
+    "ASSESSMENT.txt": {
+      "bytes": 6890,
+      "sha256": "c0a7254f0592f7ceeac61d58ab0621483c9b611ebd4766b5421d8f4d0621c1ae"
+    },
+    "SEPARATION_PROPOSAL.txt": {
+      "bytes": 5773,
+      "sha256": "1a0baa0dd4d192ae2bee3afa1ca20773d701bf432e4fd408a3f2cee032b9396d"
+    },
+    "enumerate_shell.py": {
+      "bytes": 7600,
+      "sha256": "9186b2118e45b75630939b32e58a02f39c0e1aeff032722e907606b5041d3936"
+    },
+    "enumeration02/branches.jsonl": {
+      "bytes": 23081,
+      "sha256": "45ed39a03b5a38314e0370034a0f6f87154308bd8724c0953dd0dbe6a986d351"
+    },
+    "enumeration02/producer.source": {
+      "bytes": 7600,
+      "sha256": "9186b2118e45b75630939b32e58a02f39c0e1aeff032722e907606b5041d3936"
+    },
+    "enumeration02/receipt.json": {
+      "bytes": 360,
+      "sha256": "f922bcd74fc14d029d0b7e5919ff9b6dd73475d3feca3ad68119965a7e60a961"
+    },
+    "enumeration02/result.json": {
+      "bytes": 1773,
+      "sha256": "38908b3d9d24aa59f34ac7cbb0fd8e27550d1e909c227f4c4487a9437500644c"
+    },
+    "lattice_reduction03.json": {
+      "bytes": 6960,
+      "sha256": "52905807f1a2e89b0c1d44cddab4fcadd29bf79653f6a6ff9bd36a67de6aed48"
+    },
+    "reduce_lattice.py": {
+      "bytes": 4567,
+      "sha256": "1c321437b42643b9a0e93e376ecb31cb440bd75ca4b6124df9b9d82f3940d2b9"
+    },
+    "reduce_problem.py": {
+      "bytes": 6506,
+      "sha256": "75b5344b88648a475692783f131afd55cd54fc13f0e5735f6da093bddb80a8e1"
+    },
+    "reduction02.json": {
+      "bytes": 45138,
+      "sha256": "b88c16a6aab9839384f5accb7da606912f25f6e309ecec4146fdf94c2b4f8f8e"
+    },
+    "review/box_enumeration.json": {
+      "bytes": 873,
+      "sha256": "c80aac1cc7ea8b2ee995dfa7a2a77c3825469ce3394d32218cc4c3c293c7b1f5"
+    },
+    "review/box_enumeration.py": {
+      "bytes": 2345,
+      "sha256": "6728156b76b537b681e61eaf10baf6338818ffbbcd41503b69fc58442f1c5a6e"
+    },
+    "review/check_reduction.py": {
+      "bytes": 4639,
+      "sha256": "929b16aae56adc5f8f53254fd53cae736b65eea5620f18f610ee173b7d12bb59"
+    },
+    "review/lattice_reduction_review.json": {
+      "bytes": 612,
+      "sha256": "1bd22305066e1cae0293df8e98ef89ed7324dea440331c66bfa630e5220f5121"
+    },
+    "review/reduction_review.json": {
+      "bytes": 1164,
+      "sha256": "9b6f48a0cc68ccafd5e868ae4d52114a4b67a4907c6d7dca16996354509dc378"
+    }
+  },
+  "independent_box_points": 531441,
+  "new_curve_point": false,
+  "norm12_shell_count": 0,
+  "producer_traversal_nodes": 59,
+  "statement": "The three specified C56 principal fibers at A,B,C are pairwise nonisomorphic as principally polarized abelian varieties after forgetting O_L marking and level.",
+  "status": "PROVISIONAL_THREE_UNMARKED_POLARIZED_PRINCIPAL_IMAGES_PENDING_HOSTILE_REVIEW",
+  "theorem_adoption": false,
+  "unpolarized_isomorphism_decided": false
+}

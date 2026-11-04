@@ -1,0 +1,75 @@
+"""Bounded exact archive/input-only10 gate; reuses the09 contract path; no provider/numerical execution."""
+import ast,copy,hashlib,importlib.util,json,resource,signal,tarfile,tempfile,time
+from pathlib import Path
+ROOT=Path(__file__).resolve().parents[2];D=Path(__file__).parent
+sha=lambda b:hashlib.sha256(b).hexdigest()
+def load(p):return json.loads((ROOT/p).read_bytes())
+def pinned(r):
+ raw=(ROOT/r['path']).read_bytes();assert sha(raw)==r['sha256'];assert 'bytes' not in r or len(raw)==r['bytes'];return raw
+def require(ok,message):
+ if not ok:raise ValueError(message)
+def archive(path):
+ with tarfile.open(ROOT/path) as t:
+  members=t.getmembers();assert len(members)==13 and all(x.isfile() for x in members) and len({m.name for m in members})==13
+  return {m.name:t.extractfile(m).read() for m in members}
+def main():
+ started=time.monotonic();c=load('build/s-order-v164/preparation10/execution_candidate.json');old=load('experiments/s_order_theta_v164/execution_authority09.json')
+ assert sha((ROOT/'build/s-order-v164/preparation10/execution_candidate.json').read_bytes())=='b3395a3a60d4a611e2ac522f0ebbc5b9e4148ee97e384c6578922e5ee29e7fde'
+ for p,h in c['pins'].items():assert sha((ROOT/p).read_bytes())==h,p
+ for key in ('baseline_tls08_authority','baseline_tls08_candidate','baseline_tls08_review','input_preparation_candidate'):pinned(c[key])
+ assert c['local_entrypoint']==old['local_entrypoint']
+ assert {k:v for k,v in c['bootstrap_code'].items() if k!='job_manifest.json'}=={k:v for k,v in old['bootstrap_code'].items() if k!='job_manifest.json'}
+ assert c['bootstrap_code']['job_manifest.json']==c['session_manifest']
+ session=json.loads(pinned(c['session_manifest']));assert pinned(c['session_manifest'])==(json.dumps(session,sort_keys=True)+'\n').encode()
+ # Invoke precisely the existing load_packet function without importing a main
+ # entrypoint or its provider/credential modules.
+ controller=ROOT/c['local_entrypoint'];tree=ast.parse(controller.read_text());fn=next(n for n in tree.body if isinstance(n,ast.FunctionDef) and n.name=='load_packet')
+ ns={'json':json,'pinned':pinned,'sha':sha,'require':require};exec(compile(ast.Module(body=[fn],type_ignores=[]),'<unchanged load_packet>','exec'),ns)
+ spec=importlib.util.spec_from_file_location('worker10',ROOT/'experiments/s_order_theta_v164/worker_candidate.py');w=importlib.util.module_from_spec(spec);spec.loader.exec_module(w)
+ selected=set();summary=[];rejected=[];plname='experiments/bc_jacobian_v147/certificate_plan_candidate.json'
+ before=load('experiments/s_order_theta_v164/referee_actual_data01.json');recent=load('experiments/s_order_theta_v164/referee_actual_data02.json');previous={(r['catalog_index'],r['pair_index']) for r in before['observations']+recent['observations']}
+ assert len(previous)==240
+ for job in range(2):
+  packet,manifest,uploads,code=ns['load_packet'](c['jobs'][job]);assert manifest==session['jobs'][job]
+  op=json.loads(pinned(old['jobs'][job]));oldcontents=archive(op['uploads']['source_tar']['path']);contents=archive(packet['uploads']['source_tar']['path'])
+  assert set(contents)==set(oldcontents);changed=[k for k in contents if contents[k]!=oldcontents[k]];assert changed==[plname]
+  raw=contents[plname];plan=json.loads(raw);prior=json.loads(oldcontents[plname]);assert plan['pins']==prior['pins']
+  assert (plan['pair_start'],plan['pair_count'],plan['job_index'],plan['max_tasks'],plan['concurrency'])==(24,16,job,8,2)
+  assert sha(raw)==manifest['transport']['plan_sha256']
+  disk=ROOT/Path(c['jobs'][job]['path']).parent/'certificate_plan_candidate.json';assert disk.read_bytes()==raw
+  sm=json.loads(uploads['source_manifest']);assert sm['plan_sha256']==sha(raw)
+  for k,v in contents.items():assert sm['files'][k]['sha256']==sha(v) and sm['files'][k]['bytes']==len(v)
+  for k,v in plan['pins'].items():assert sha(contents[k])==v
+  for virtual,source in packet['source_mapping'].items():assert contents[virtual]==(ROOT/source).read_bytes()
+  for name in ('pipeline','selector','setup'):assert packet['uploads'][name]==op['uploads'][name]
+  for k in set(plan)-{'pair_start','pair_count','tasks'}:assert plan[k]==prior[k]
+  for task,oldtask in zip(plan['tasks'],prior['tasks']):
+   assert {k:v for k,v in task.items() if k not in ('pair_indices','numerators_mod3')}=={k:v for k,v in oldtask.items() if k not in ('pair_indices','numerators_mod3')}
+   assert (task['max_cpu_seconds'],task['child_wall_seconds'],task['parent_kill_seconds'])==(120,150,160)
+   model=json.loads(contents[task['record_path']]);pairs=model['transport']['eligible_nonzero_pairs'];assert task['numerators_mod3']==[pairs[k] for k in task['pair_indices']]
+   for i,n in zip(task['pair_indices'],task['numerators_mod3']):
+    key=(task['catalog_index'],i);assert key not in selected and key not in previous;selected.add(key)
+    assert tuple(n)<tuple(-x%3 for x in n)
+  with tempfile.TemporaryDirectory() as folder:
+   root=Path(folder)
+   for name,data in contents.items():p=root/name;p.parent.mkdir(parents=True,exist_ok=True);p.write_bytes(data)
+   assert w.validate_plan(plan,root)==plan['tasks']
+   for label in ['old_grid','duplicate_chunk','omitted_task','old_numerator','raised_cpu','raised_wall','raised_parent','wrong_record']:
+    bad=copy.deepcopy(plan)
+    if label=='old_grid':bad['pair_start']=0
+    if label=='duplicate_chunk':bad['tasks'][1]['pair_indices']=bad['tasks'][0]['pair_indices']
+    if label=='omitted_task':bad['tasks'].pop()
+    if label=='old_numerator':bad['tasks'][0]['numerators_mod3'][0]=prior['tasks'][0]['numerators_mod3'][0]
+    if label=='raised_cpu':bad['tasks'][0]['max_cpu_seconds']=121
+    if label=='raised_wall':bad['tasks'][0]['child_wall_seconds']=151
+    if label=='raised_parent':bad['tasks'][0]['parent_kill_seconds']=161
+    if label=='wrong_record':bad['tasks'][0]['record_path']=bad['tasks'][2]['record_path']
+    try:w.validate_plan(bad,root)
+    except RuntimeError:rejected.append([job,label])
+    else:raise AssertionError(label)
+  summary.append({'job':job,'archive_bytes':len(uploads['source_tar']),'changed_members':changed,'pair_counts_per_task':[len(t['pair_indices']) for t in plan['tasks']],'observations':sum(len(t['pair_indices']) for t in plan['tasks'])})
+ assert selected=={(i,j) for i in (0,1,2,3,6,12,15,17,40,91) for j in range(24,40)} and len(selected)==160
+ result={'status':'PASS_INPUT_ONLY_EXECUTION_GATE','candidate_pins_verified':len(c['pins']),'jobs':summary,'new_distinct_observations':160,'prior240_disjoint':True,'unchanged_bootstrap_numerical_sources':True,'actual_load_packet_function_pass':True,'actual_worker_validation_pass':True,'negative_plan_rejections':rejected,'wall_seconds':time.monotonic()-started,'theta_calls':0,'provider_calls':0}
+ Path(__file__).with_suffix('.json').write_text(json.dumps(result,indent=2,sort_keys=True)+'\n');print(json.dumps(result,sort_keys=True))
+if __name__=='__main__':
+ resource.setrlimit(resource.RLIMIT_CPU,(20,20));signal.alarm(30);main()

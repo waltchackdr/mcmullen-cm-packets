@@ -1,0 +1,147 @@
+"""Bounded exact regressions; no partition search, cloud or theorem promotion."""
+from collections import Counter
+from copy import deepcopy
+from fractions import Fraction
+import hashlib
+import importlib.util
+import json
+import math
+from pathlib import Path
+import unittest
+from unittest.mock import patch
+
+ROOT=Path(__file__).resolve().parents[1]
+
+def module(name,path):
+    spec=importlib.util.spec_from_file_location(name,ROOT/path)
+    result=importlib.util.module_from_spec(spec);spec.loader.exec_module(result);return result
+
+def read(path):return json.loads((ROOT/path).read_text())
+
+class V109Reductions(unittest.TestCase):
+    def test_six_orbit_exact_identification_by_fractional_ages(self):
+        data=read('experiments/six_orbit_v109/identification.json')
+        census=read('experiments/fixed_field_cm_census_v98/primary.json')
+        G=[a for a in range(1,42) if math.gcd(a,42)==1]
+        self.assertEqual([r['census_orbit'] for r in data['rows']],[0,1,4,5,6,7])
+        for row in data['rows']:
+            t=row['mod21_triple'];self.assertEqual(sum(t),21)
+            self.assertTrue(all(type(a)is int and 0<a<21 for a in t))
+            # Independent fractional-age construction, with no producer import.
+            hol=[g for g in G if sum(Fraction(g*a,21)%1 for a in t)==1]
+            self.assertEqual(hol,row['M_induced_holomorphic_type'])
+            h=row['transporter_h'];actual=sorted(h*a%42 for a in hol)
+            self.assertEqual(actual,census['orbits'][row['census_orbit']]['representative'])
+            self.assertEqual(actual,row['canonical_type'])
+            d=math.gcd(21,*t);q=21//d;U=[a for a in range(1,q) if math.gcd(a,q)==1]
+            lower=[a for a in U if sum(Fraction(a*x,21)%1 for x in t)==1]
+            self.assertEqual(lower,row['E_holomorphic_type'])
+            self.assertEqual([g for g in G if g%q in lower],hol)
+            self.assertEqual(q,row['character_order'])
+            self.assertEqual(len(U),row['E_degree'])
+            self.assertEqual(len(U)//2,row['admissible_factor_dimension'])
+            self.assertEqual(12//len(U),row['copies_for_sixfold'])
+            self.assertEqual(row['admissible_factor_dimension']*row['copies_for_sixfold'],6)
+            fibers={str(a):[g for g in G if g%q==a] for a in U}
+            self.assertEqual(fibers,row['embedding_fibers'])
+            stabilizer=[g for g in G if {g*a%42 for a in hol}==set(hol)]
+            self.assertEqual(stabilizer,row['type_stabilizer'])
+            self.assertEqual([g for g in G if g%q==1],row['character_kernel'])
+            self.assertEqual(sorted((-h*a)%42 for a in G if a not in hol),actual)
+        producer=data.pop('producer')
+        canonical=(json.dumps(data,sort_keys=True,separators=(',',':'),allow_nan=False)+'\n').encode()
+        self.assertEqual(hashlib.sha256(canonical).hexdigest(),producer['mathematical_payload_sha256'])
+
+    def test_joint_integer_kernel_and_source_domains_independent(self):
+        independent=module('v109_separate','experiments/all_eight_v109/review/independent_check.py')
+        r=independent.check()
+        self.assertEqual((r['synchronized_columns'],r['rank'],r['integral_kernel_rank']),(32,6,26))
+        self.assertEqual((r['saturated_known_rank'],r['quotient_rank']),(19,7))
+        self.assertEqual((r['actual_conjugate_pair_coordinates'],r['duplicate_divisor_kernel_rank']),(48,16))
+        self.assertEqual(r['actual_source_cases'],168)
+        self.assertFalse(r['algebraicity_claim'])
+
+    def test_independent_kernel_checker_rejects_inverse_corruption(self):
+        independent=module('v109_separate_corrupt','experiments/all_eight_v109/review/independent_check.py')
+        original=independent.read
+        def corrupted(path):
+            data=original(path)
+            if path=='experiments/all_eight_v109/lattice.json':data['known_plus_seven_inverse'][0][0]+=1
+            return data
+        with patch.object(independent,'read',side_effect=corrupted):
+            with self.assertRaisesRegex(ValueError,'Saturation unimodular inverse'):independent.check()
+
+    def test_retained_production_witnesses_exact_source_and_blocks(self):
+        path='experiments/all_eight_v109/positive_witnesses.json'
+        raw=(ROOT/path).read_bytes()
+        self.assertEqual(hashlib.sha256(raw).hexdigest(),'ca8d67d5e5026f4dae416d6f096d445c99aca256071b563eaf2ebac2bf378167')
+        data=json.loads(raw)
+        # Only portable repository inputs are read; old build locations remain provenance.
+        for name,pin in data['validated_input_sha256'].items():
+            if name.startswith('experiments/'):
+                self.assertEqual(hashlib.sha256((ROOT/name).read_bytes()).hexdigest(),pin)
+        validator=module('v109_production_witnesses','experiments/all_eight_v109/validate_witness.py')
+        manifest_path='experiments/all_eight_v109/cloud/job_manifest.json'
+        manifest_raw=(ROOT/manifest_path).read_bytes();manifest=json.loads(manifest_raw)
+        source=read('experiments/all_eight_v109/source_manifest.json')
+        extras={'worker_sha256','partition_search_sha256','source_manifest_sha256'}
+        self.assertEqual({k:v for k,v in manifest.items() if k not in extras},source)
+        self.assertEqual(len(data['tasks']),2)
+        self.assertEqual([t['positive_attempt']['case_id'] for t in data['tasks']],[0,48])
+        for i,retained in enumerate(data['tasks']):
+            task=manifest['tasks'][i];attempt=retained['positive_attempt']
+            self.assertEqual(retained['task_index'],i)
+            self.assertEqual(retained['copies'],task['copies'])
+            self.assertEqual(retained['tensor_degree'],task['tensor_degree'])
+            self.assertEqual(retained['case_count'],task['case_count'])
+            self.assertEqual(retained['manifest_sha256'],hashlib.sha256(manifest_raw).hexdigest())
+            for key in ('worker_sha256','partition_search_sha256'):
+                self.assertEqual(retained[key],manifest[key])
+            case=task['cases'][attempt['case_id']]
+            self.assertEqual({k:attempt[k] for k in case},case)
+            gamma=validator.validate_case(case,task['copies'],manifest['canonical_types'])
+            blocks=[validator.block_check(b) for b in attempt['blocks']]
+            self.assertEqual(Counter(x for b in blocks for x in b['entries']),Counter(gamma))
+
+    def test_witness_blocks_require_balance_and_explicit_split(self):
+        validator=module('v109_witness_blocks','experiments/all_eight_v109/validate_witness.py')
+        self.assertEqual(validator.block_check({'entries':[1,41],'triple_positions':None})['all_Galois_ages'],1)
+        valid={'entries':[1,41,2,40,3,39],'triple_positions':[0,2,5]}
+        self.assertEqual(validator.block_check(valid)['zero_sum_triples'],[[1,2,39],[41,40,3]])
+        invalid=[{'entries':[1,40],'triple_positions':None},
+            {'entries':[True,41],'triple_positions':None},
+            {'entries':[1,41,2,40,3,39,4,38],'triple_positions':None},
+            dict(valid,triple_positions=[0,0,5]),dict(valid,triple_positions=[0,1,2])]
+        for block in invalid:
+            with self.subTest(block=block):
+                with self.assertRaises(ValueError):validator.block_check(block)
+
+    def test_positive_record_fixture_and_identity_multiset_rejections(self):
+        validator=module('v109_witness_record','experiments/all_eight_v109/validate_witness.py')
+        # A small opposite-pair fixture tests the generic receipt checker only;
+        # production check() separately requires the pinned degree4/6 seeds.
+        copies=[{'copy_id':0,'orbit':0,'embedding':1},{'copy_id':1,'orbit':0,'embedding':41}]
+        types={'0':[1,5,11,13,17,19]}
+        case={'case_id':0,'sources':[{'copy_id':0,'triple':[1,1,40],'residues':[1,1,40]},
+            {'copy_id':1,'triple':[1,1,40],'residues':[41,41,2]}],
+            'concatenated_residues':[1,1,40,41,41,2]}
+        task={'task_index':0,'tensor_degree':2,'copies':copies,'case_count':1,'cases':[case]}
+        attempt=dict(deepcopy(case),status='FOUND',blocks=[{'entries':[1,41],'triple_positions':None},
+            {'entries':[1,41],'triple_positions':None},{'entries':[2,40],'triple_positions':None}])
+        record={'terminal':True,'status':'FOUND','task_index':0,'tensor_degree':2,'copies':copies,
+            'case_count':1,'manifest_sha256':'a'*64,'worker_sha256':'b'*64,'partition_search_sha256':'c'*64,'attempts':[attempt]}
+        check=lambda r:validator.validate_record(r,task,'a'*64,'b'*64,'c'*64,types)
+        self.assertEqual(check(record)['status'],'POSITIVE_WITNESS_EXACTLY_VERIFIED')
+        variants=[]
+        for key,value in [('terminal',False),('task_index',1),('manifest_sha256','d'*64),('worker_sha256','d'*64),('partition_search_sha256','d'*64)]:
+            bad=deepcopy(record);bad[key]=value;variants.append(bad)
+        bad=deepcopy(record);bad['attempts'][0]['blocks'].pop();variants.append(bad)
+        bad=deepcopy(record);bad['attempts'][0]['sources'][0]['copy_id']=1;variants.append(bad)
+        bad=deepcopy(record);bad['attempts'][0]['case_id']=1;variants.append(bad)
+        for i,bad in enumerate(variants):
+            with self.subTest(corruption=i):
+                with self.assertRaises(ValueError):check(bad)
+        negative=deepcopy(record);negative['status']='PARTIAL_UNRESOLVED';negative['attempts']=[]
+        self.assertEqual(check(negative)['status'],'SOURCE_SEARCH_UNRESOLVED')
+
+if __name__=='__main__':unittest.main()

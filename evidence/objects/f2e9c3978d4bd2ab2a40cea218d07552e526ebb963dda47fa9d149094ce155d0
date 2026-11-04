@@ -1,0 +1,7 @@
+{
+  "network_volumes": 0,
+  "no_active_resources": true,
+  "observed_utc": "2026-11-03T06:43:42.298219+00:00",
+  "pods": 0,
+  "scope": "Fresh authenticated inventory after failed sparse13session10 verifiedcleanup; no billing release."
+}

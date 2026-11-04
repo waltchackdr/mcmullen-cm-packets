@@ -1,0 +1,172 @@
+"""Candidate deterministic-function cache; no authority to execute/adopt an audit.
+
+All concrete execution inputs are checked against their Store's already-hashed
+inventory on every access. Only canonical structural summaries may cross paths;
+backend-specific row journals never do. The unchanged outer audit must still
+finish every Store.unchanged(), all source guards and the conditional policy.
+"""
+import copy
+from collections import Counter
+import hashlib
+import json
+from pathlib import Path
+
+
+def need(ok, message):
+    if not ok:
+        raise ValueError(message)
+
+
+def encoded(value):
+    return (json.dumps(value, sort_keys=True, separators=(',', ':'), allow_nan=False)+'\n').encode()
+
+
+class ValidationCache:
+    def __init__(self, auditor, stores, output, source_pins):
+        self.a = auditor
+        self.stores = tuple(stores)
+        self.output = self.a.safe(output)
+        self.sources = {self.a.safe(p): h for p, h in source_pins.items()}
+        need(self.sources, 'Explicit validator source closure required')
+        self.source_signatures = {}
+        for path, checksum in self.sources.items():
+            before = self.a.signature(path)
+            need(self.a.sha(path) == checksum and self.a.signature(path) == before,
+                 'Validator source seal changed')
+            self.source_signatures[path] = before
+        self.source_key = tuple(sorted((str(p), h) for p, h in self.sources.items()))
+        self.structural = {}
+        self.normalized = {}
+        self.statistics = dict(structural_computations=0, structural_reuses=0,
+                               row_computations=0, row_reuses=0)
+
+    def inputs(self, item):
+        folder = self.a.safe(item['_folder'])
+        stores = [s for s in self.stores if folder.is_relative_to(s.root)]
+        need(len(stores) == 1, 'Unique captured execution root required')
+        store = stores[0]
+        prefix = folder.relative_to(store.root).as_posix()+'/'
+        seals = item['output_sha256']
+        need(type(seals) is dict and 'result.json' in seals,
+             'Complete output inventory required')
+        need(store.sha(prefix+'result.json') == item['result_sha256'] == seals['result.json'],
+             'Complete result identity differs')
+        for name, checksum in seals.items():
+            need(store.sha(prefix+name) == checksum, 'Concrete execution input changed')
+        need(set(item['canonical_artifact_sha256']) == set(self.a.CANONICAL),
+             'Exact canonical8 required')
+        for name, checksum in item['canonical_artifact_sha256'].items():
+            need(seals[name] == checksum, 'Canonical hash lacks concrete-path binding')
+        need(item['backend'] in self.a.BACKENDS, 'Exact backend required')
+        return (str(folder), item['backend'], item['result_sha256'],
+                tuple(sorted(seals.items())), self.source_key)
+
+    def geometry(self, item):
+        before = self.inputs(item)
+        raw = item['_result']
+        counts = {name: raw[name] for name in self.a.COUNTS}
+        need(encoded(counts) == encoded(item['counts']), 'Raw and saved counts differ')
+        # inspect_geometry reads only canonical files and these exact result
+        # fields; geometry, plan and all other result guards run outside here.
+        key = (self.source_key, tuple(sorted(item['canonical_artifact_sha256'].items())),
+               encoded(counts))
+        if key not in self.structural:
+            value = self.a.inspect_geometry(item['_folder'], raw)
+            need(encoded(value) == encoded(counts), 'Structural counts differ')
+            self.structural[key] = encoded(value)
+            self.statistics['structural_computations'] += 1
+        else:
+            self.statistics['structural_reuses'] += 1
+        need(self.inputs(item) == before, 'Structural input changed during validation')
+        # A fresh value prevents caller mutation from changing cached results.
+        return json.loads(self.structural[key])
+
+    def rows(self, item):
+        key = self.inputs(item)
+        if key in self.normalized:
+            path, checksum, signature = self.normalized[key]
+            need(self.a.signature(path) == signature and self.a.sha(path) == checksum,
+                 'Sealed normalized row output changed')
+            rows = self.a.read(path)
+            need(hashlib.sha256(encoded(rows)).hexdigest() == checksum and
+                 self.a.signature(path) == signature, 'Normalized serialization changed')
+            self.statistics['row_reuses'] += 1
+        else:
+            rows = item['_runner'].row_coverage(item['_folder'], item['backend'])
+            self.statistics['row_computations'] += 1
+        if '_row_evidence_sha256' in item:
+            need(hashlib.sha256(encoded(rows)).hexdigest() == item['_row_evidence_sha256'],
+                 'Saved normalized row evidence differs')
+        need(self.inputs(item) == key, 'Row inputs changed during validation')
+        return rows
+
+    def remember_rows(self, item, rows, relative, checksum):
+        key = self.inputs(item)
+        path = self.a.below(self.output, relative)
+        signature = self.a.signature(path)
+        need(hashlib.sha256(encoded(rows)).hexdigest() == checksum == self.a.sha(path),
+             'Existing normalized output does not encode validated rows')
+        need(self.a.signature(path) == signature and self.inputs(item) == key,
+             'Normalized output/input changed during publication')
+        need(key not in self.normalized, 'Repeated row-cache publication')
+        self.normalized[key] = (path, checksum, signature)
+
+    def normalize(self, item):
+        need(self.geometry(item) == item['counts'], 'Structural counts differ')
+        self.a.survivor_journal(item['_folder'])
+        return self.rows(item)
+
+    def unchanged(self):
+        for path, checksum in self.sources.items():
+            need(self.a.signature(path) == self.source_signatures[path] and
+                 self.a.sha(path) == checksum, 'Validator source changed at end')
+        for path, checksum, signature in self.normalized.values():
+            need(self.a.signature(path) == signature and self.a.sha(path) == checksum,
+                 'Normalized output changed at end')
+        # All underlying captured trees are independently rechecked by the
+        # unchanged audit. This cache neither replaces nor weakens that gate.
+        return copy.deepcopy(self.statistics)
+
+
+def object_sha(value):
+    return hashlib.sha256(encoded(value)).hexdigest()
+
+
+def reconcile(cache,closed_status,a,c,labels,accepted,new,records,partition_reports,output):
+ need(not set(accepted)&set(new),'Duplicate old/new completed task')
+ all_results={**accepted,**new};expected={c.key(label,b) for label in labels for b in c.BACKENDS}
+ need(set(all_results)<=expected,'Foreign successful obligation');points={}
+ for label in labels:
+  keys=[c.key(label,b) for b in c.BACKENDS];missing=[k for k in keys if k not in all_results]
+  if missing:
+   present=[]
+   for k in keys:
+    if k not in all_results:continue
+    item=all_results[k];cache.geometry(item);a.survivor_journal(item['_folder'])
+    rows=cache.rows(item)
+    if '_row_evidence_sha256' in item:need(object_sha(rows)==item['_row_evidence_sha256'],'Unpaired saved row digest differs')
+    name='unpaired-rows/'+item['_runner'].slug(label)+'-'+item['backend']+'.json'
+    present.append({'backend':item['backend'],'result_sha256':item['result_sha256'],'row_evidence':{'path':name,'sha256':a.save(output,name,rows)}})
+   points[label]={'outcome':'INCOMPLETE_NO_EXCLUSION','missing_backend_keys':missing,'validated_present_backends':present};continue
+  pair=[all_results[k] for k in keys];c.compare_paths(pair[0],pair[1])
+  # Equal artifact hashes permit one structural parse, but both journals are parsed.
+  counts=cache.geometry(pair[0]);need(counts==pair[1]['counts'],'Structural counts differ')
+  normalized=[]
+  for item in pair:
+   a.survivor_journal(item['_folder']);rows=cache.rows(item);normalized.append(rows)
+   if '_row_evidence_sha256' in item:need(object_sha(rows)==item['_row_evidence_sha256'],'Saved normalized journal digest differs')
+  need(normalized[0]==normalized[1],'Cross-cohort normalized journals differ')
+  name='rows/'+pair[0]['_runner'].slug(label)+'.json';row_sha=a.save(output,name,normalized[0])
+  detail=[{k:v for k,v in item.items() if not k.startswith('_')} for item in pair]
+  points[label]={'target_id':a.TARGET,'point_label':label,
+   'outcome':'PAIRED_EMPTY_DISCOVERY' if counts['survivor_count']==0 else 'PAIRED_SURVIVORS_REQUIRE_GEOMETRY',
+   'counts':counts,'accepted_backends':detail,'canonical_artifact_sha256':pair[0]['canonical_artifact_sha256'],
+   'plan_sha256':pair[0]['plan_sha256'],'preparation_sha256':pair[0]['preparation_sha256'],
+   'target_geometry_sha256':pair[0]['target_geometry_sha256'],'row_evidence':{'path':name,'sha256':row_sha}}
+ missing=sorted(expected-set(all_results));normal=all(p['status']==closed_status and p['source_runtime_postguards'] for p in partition_reports)
+ return {'status':'COMPLETE_730_CROSSCOHORT_DISCOVERY_AUDIT_NO_PROMOTION' if not missing and normal else 'PARTIAL_CROSSCOHORT_AUDIT_NO_COMPLETENESS',
+  'obligation_count':len(expected),'original_completed_paths':len(accepted),'continuation_completed_paths':len(new),
+  'complete_backend_count':len(all_results),'missing_backend_keys':missing,'points':points,
+  'summary':dict(Counter(x['outcome'] for x in points.values())),'continuation_partitions':partition_reports,
+  'attempt_status_counts':dict(Counter(r['status'] for r in records)),
+  'failed_attempts_are_exclusions':False,'original_cohort_complete':False,'theorem_promotion':False}

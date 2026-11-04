@@ -1,0 +1,46 @@
+"""Check source preservation and syntactic links, not mathematical correctness."""
+from pathlib import Path
+import re,json,hashlib,collections,csv
+D=Path(__file__).resolve().parent
+sha=lambda p:hashlib.sha256(p.read_bytes()).hexdigest()
+source=(D/'source_snapshot.tex').read_text()
+def normal(x):
+ x=re.sub(r'\\externalref\{[^}]+\}\{([^}]+)\}',r'\\ref{\1}',x)
+ x=re.sub(r'\\eqref\{([^}]+)\}',r'(\\ref{\1})',x)
+ x=x.replace('Theorem~A','Theorem~\\ref{thm:A}').replace('Theorem A','Theorem~\\ref{thm:A}')
+ x=x.replace('Supplement, Section~','Section~').replace('Appendix~','Section~')
+ return re.sub(r'\s+','',x)
+def statements(x):
+ pattern=r'\\begin\{(theorem|theoremA|theoremB|proposition|lemma|corollary)\}.*?\\end\{\1\}'
+ return [m[0] for m in re.finditer(pattern,x,re.S)]
+proof=lambda x:re.findall(r'\\begin\{proof\}.*?\\end\{proof\}',x,re.S)
+files=list((D/'sections').rglob('*.tex'));combined='\n'.join(p.read_text() for p in files)
+for kind,extract in [('proof',proof),('statement',statements)]:
+ a=collections.Counter(map(normal,extract(source)));b=collections.Counter(map(normal,extract(combined)))
+ assert a==b,(kind,'mismatch',sum((a-b).values()),sum((b-a).values()))
+rows=[]
+for i,block in enumerate(statements(source),1):
+ targets=[]
+ for p in files:
+  for candidate in statements(p.read_text()):
+   if normal(block)==normal(candidate):targets.append(str(p.relative_to(D)))
+ assert len(targets)==1,(i,targets)
+ labels=re.findall(r'\\label\{([^}]+)\}',block)
+ rows.append({'source_id':i,'labels':';'.join(labels),'destination':targets[0],'review_scope':'SOURCE_PRESERVED_NOT_INDIVIDUALLY_REPROVED'})
+with (D/'statement_disposition.csv').open('w') as f:
+ w=csv.DictWriter(f,fieldnames=list(rows[0]));w.writeheader();w.writerows(rows)
+owners=json.loads((D/'label_owners.json').read_text());stats={};edges={}
+for doc in ['packet','quotients','hodge','supplement']:
+ txt='\n'.join(p.read_text() for p in files if p.parent.name==doc)
+ labels=re.findall(r'\\label\{([^}]+)\}',txt);refs=re.findall(r'\\(?:ref|eqref|pageref|autoref)\{([^}]+)\}',txt)
+ assert len(labels)==len(set(labels))
+ assert not(set(refs)-set(labels)),(doc,set(refs)-set(labels))
+ external=re.findall(r'\\externalref\{([^}]+)\}\{([^}]+)\}',txt)
+ assert all(owners.get(label)==target for target,label in external)
+ cited={k.strip() for keys in re.findall(r'\\cite(?:\[[^\]]*\])?\{([^}]+)\}',txt) for k in keys.split(',')}
+ bib=re.findall(r'\\bibitem\{([^}]+)\}',(D/(doc+'-references.tex')).read_text())
+ assert cited==set(bib),(doc,'citation mismatch')
+ stats[doc]={'statements':len(statements(txt)),'proofs':len(proof(txt)),'labels':len(labels),'bibliography_entries':len(bib),'external_references':len(external)}
+ edges[doc]=sorted({target for target,_ in external})
+receipt={'status':'PASS_SCOPED_EDITORIAL_PRESERVATION','source_statements_preserved':140,'source_proofs_preserved':132,'normalization':'Whitespace and explicit local/external reference routing only; proof text and theorem statements otherwise preserved','not_checked':['Mathematical proof correctness','Full transitive evidence closure','Historical priority','Fresh computational theorem verification'],'documents':stats,'syntactic_reference_edges_not_proof_dependencies':edges,'pins':{str(p.relative_to(D)):sha(p) for p in [D/'source_snapshot.tex',D/'prepare.py',D/'check.py',D/'build.py',D/'statement_disposition.csv']+files}}
+(D/'preservation_receipt.json').write_text(json.dumps(receipt,indent=2)+'\n');print(json.dumps({'status':receipt['status'],'documents':stats},indent=2))

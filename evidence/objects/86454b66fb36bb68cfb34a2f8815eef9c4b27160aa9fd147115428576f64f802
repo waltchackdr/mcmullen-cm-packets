@@ -1,0 +1,150 @@
+{
+  "status": "PASS",
+  "producer_imports": false,
+  "theta_evaluations": 0,
+  "fixed_point_enumeration": false,
+  "scope": "Exact seven-signature block character algebra; not the universal geometric proof",
+  "negative_gauss_incompatible_with_balanced_denominator": true,
+  "rows": [
+    {
+      "zeta_tangent_multiplicity": 0,
+      "levels": [
+        225,
+        252,
+        252
+      ],
+      "gauss": [
+        -27,
+        0
+      ],
+      "complex_lefschetz_denominator": [
+        -27,
+        0
+      ],
+      "section_character": [
+        1,
+        0
+      ]
+    },
+    {
+      "zeta_tangent_multiplicity": 1,
+      "levels": [
+        261,
+        234,
+        234
+      ],
+      "gauss": [
+        27,
+        0
+      ],
+      "complex_lefschetz_denominator": [
+        0,
+        27
+      ],
+      "section_character": [
+        -1,
+        -1
+      ]
+    },
+    {
+      "zeta_tangent_multiplicity": 2,
+      "levels": [
+        225,
+        252,
+        252
+      ],
+      "gauss": [
+        -27,
+        0
+      ],
+      "complex_lefschetz_denominator": [
+        27,
+        27
+      ],
+      "section_character": [
+        0,
+        1
+      ]
+    },
+    {
+      "zeta_tangent_multiplicity": 3,
+      "levels": [
+        261,
+        234,
+        234
+      ],
+      "gauss": [
+        27,
+        0
+      ],
+      "complex_lefschetz_denominator": [
+        27,
+        0
+      ],
+      "section_character": [
+        1,
+        0
+      ]
+    },
+    {
+      "zeta_tangent_multiplicity": 4,
+      "levels": [
+        225,
+        252,
+        252
+      ],
+      "gauss": [
+        -27,
+        0
+      ],
+      "complex_lefschetz_denominator": [
+        0,
+        -27
+      ],
+      "section_character": [
+        -1,
+        -1
+      ]
+    },
+    {
+      "zeta_tangent_multiplicity": 5,
+      "levels": [
+        261,
+        234,
+        234
+      ],
+      "gauss": [
+        27,
+        0
+      ],
+      "complex_lefschetz_denominator": [
+        -27,
+        -27
+      ],
+      "section_character": [
+        0,
+        1
+      ]
+    },
+    {
+      "zeta_tangent_multiplicity": 6,
+      "levels": [
+        225,
+        252,
+        252
+      ],
+      "gauss": [
+        -27,
+        0
+      ],
+      "complex_lefschetz_denominator": [
+        -27,
+        0
+      ],
+      "section_character": [
+        1,
+        0
+      ]
+    }
+  ]
+}

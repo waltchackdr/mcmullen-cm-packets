@@ -1,0 +1,154 @@
+"""Synthetic installation-metadata mutations; no certificate or kernel imports."""
+import copy
+import hashlib
+import json
+from pathlib import Path
+import tempfile
+import unittest
+from unittest.mock import patch
+
+import check_combined_registration_installation as gate
+
+
+class InstallationMetadataTests(unittest.TestCase):
+    def fixture(self, root):
+        files = ["scripts/run_certificates.py", "scripts/certificate_execution.py", "tests/test_certificate_registration.py",
+                 "tests/test_combined_registration_installation.py",
+                 "tests/check_combined_registration_installation.py", "verify_all.sh", gate.INVENTORY,
+                 "certificates/continuous_primary_v82.py", "independent/continuous_sturm_v82.py",
+                 "certificates/reflected_primary_v83.py", "independent/reflected_sturm_v83.py",
+                 "certificates/reflected_packet_v83/selection.json",
+                 "certificates/reflected_packet_v83/expected.json"]
+        for name in files:
+            p = root / name
+            p.parent.mkdir(parents=True, exist_ok=True)
+            p.write_text("synthetic metadata fixture; never a mathematical source\n")
+        sums = {name: gate.digest((root/name).read_bytes()) for name in files}
+        evidence = {}
+        for role in gate.EVIDENCE - {"registration_installation_review"}:
+            relative = "reviews/" + role + ".json"
+            path = root/relative
+            path.parent.mkdir(exist_ok=True)
+            path.write_text(json.dumps({"status": "SYNTHETIC_METADATA_FIXTURE", "role": role}))
+            evidence[role] = {"path": relative, "sha256": gate.digest(path.read_bytes())}
+        receipt = {"schema_version": 1, "status": "REVIEWED_COMBINED1405_REGISTRATION_INSTALLATION",
+            "registered_commands": 1405, "registration_inventory_sha256": sums[gate.INVENTORY],
+            "v82_package_sha256": gate.V82, "v83_package_sha256": "b"*64,
+            "installed_file_sha256": sums, "evidence": evidence}
+        self.approve(root, receipt)
+        return receipt
+
+    def approve(self, root, receipt):
+        role = "registration_installation_review"
+        review = {"status": "ACCEPTED_EXACT_COMBINED1405_REGISTRATION_INSTALLATION",
+            "binds": {"registration_inventory_sha256": receipt["registration_inventory_sha256"],
+                "v82_package_sha256": receipt["v82_package_sha256"],
+                "v83_package_sha256": receipt["v83_package_sha256"],
+                "installed_file_sha256": receipt["installed_file_sha256"],
+                "evidence_sha256": {r: v["sha256"] for r,v in receipt["evidence"].items() if r != role}},
+            "actual_adoption_and_final_package_reviews_accepted": True,
+            "full_suite_execution_inferred": False}
+        p = root/"reviews/installation.json"
+        p.write_text(json.dumps(review))
+        receipt["evidence"][role] = {"path": "reviews/installation.json", "sha256": gate.digest(p.read_bytes())}
+        (root/gate.RECEIPT).write_text(json.dumps(receipt))
+
+    def test_complete_synthetic_metadata_does_not_claim_execution(self):
+        with tempfile.TemporaryDirectory() as d:
+            root = Path(d)
+            self.fixture(root)
+            result = gate.check(root)
+            self.assertEqual(result["regressions_executed_by_this_check"], 0)
+            self.assertEqual(result["status"], "COMBINED1405_INSTALLATION_BYTES_VERIFIED_NOT_EXECUTED")
+
+    def test_pending_receipt_refused(self):
+        with tempfile.TemporaryDirectory() as d:
+            root = Path(d)
+            r = self.fixture(root)
+            r["status"] = "PENDING_COMBINED1405_INSTALLATION_REVIEW"
+            (root/gate.RECEIPT).write_text(json.dumps(r))
+            with self.assertRaises(ValueError):
+                gate.check(root)
+
+    def test_missing_evidence_bad_package_and_changed_source_refused(self):
+        for mode in ("missing", "package", "source", "inventory", "boolean-count"):
+            with self.subTest(mode=mode), tempfile.TemporaryDirectory() as d:
+                root = Path(d)
+                r = self.fixture(root)
+                if mode == "missing":
+                    r["evidence"].pop("whole730_outcome_review")
+                elif mode == "package":
+                    r["v83_package_sha256"] = None
+                elif mode == "source":
+                    (root/"scripts/run_certificates.py").write_text("mutation")
+                elif mode == "inventory":
+                    (root/gate.INVENTORY).write_text("mutation")
+                else:
+                    r["registered_commands"] = True
+                (root/gate.RECEIPT).write_text(json.dumps(r))
+                with self.assertRaises((ValueError, KeyError)):
+                    gate.check(root)
+
+    def test_resealed_receipt_cannot_change_reviewed_bindings(self):
+        with tempfile.TemporaryDirectory() as d:
+            root = Path(d)
+            r = self.fixture(root)
+            r["v83_package_sha256"] = "c"*64
+            (root/gate.RECEIPT).write_text(json.dumps(r))
+            with self.assertRaises(ValueError):
+                gate.check(root)
+
+    def test_dispatcher_and_installation_test_must_be_bound_and_unchanged(self):
+        for name in ("scripts/certificate_execution.py", "tests/test_combined_registration_installation.py"):
+            for mode in ("missing", "mutated"):
+                with self.subTest(name=name, mode=mode), tempfile.TemporaryDirectory() as d:
+                    root = Path(d)
+                    r = self.fixture(root)
+                    if mode == "missing":
+                        r["installed_file_sha256"].pop(name)
+                        self.approve(root, r)
+                    else:
+                        (root/name).write_text("changed execution dependency")
+                    with self.assertRaises(ValueError):
+                        gate.check(root)
+
+    def test_late_evidence_mutation_and_symlink_refused(self):
+        with tempfile.TemporaryDirectory() as d:
+            root = Path(d)
+            self.fixture(root)
+            original = gate.read
+            def change_after_review(base, relative):
+                raw = original(base, relative)
+                if relative == "reviews/installation.json":
+                    (root/"scripts/run_certificates.py").write_text("late mutation")
+                return raw
+            with patch.object(gate, "read", change_after_review), self.assertRaises(ValueError):
+                gate.check(root)
+        with tempfile.TemporaryDirectory() as d:
+            root = Path(d)
+            self.fixture(root)
+            file = root/"scripts/run_certificates.py"
+            saved = file.with_suffix(".saved")
+            file.rename(saved)
+            file.symlink_to(saved.name)
+            with self.assertRaises(ValueError):
+                gate.check(root)
+
+    def test_approval_must_not_infer_full_suite_or_accept_numeric_boolean(self):
+        for key, value in (("full_suite_execution_inferred", True),
+                           ("actual_adoption_and_final_package_reviews_accepted", 1)):
+            with tempfile.TemporaryDirectory() as d:
+                root = Path(d)
+                r = self.fixture(root)
+                p = root/"reviews/installation.json"
+                obj = json.loads(p.read_text())
+                obj[key] = value
+                p.write_text(json.dumps(obj))
+                r["evidence"]["registration_installation_review"]["sha256"] = gate.digest(p.read_bytes())
+                (root/gate.RECEIPT).write_text(json.dumps(r))
+                with self.assertRaises(ValueError):
+                    gate.check(root)
+
+
+if __name__ == "__main__":
+    unittest.main()

@@ -1,0 +1,45 @@
+{
+  "O_coboundary_image_order": 42,
+  "Phi42": [
+    1,
+    1,
+    0,
+    -1,
+    -1,
+    0,
+    1,
+    0,
+    -1,
+    -1,
+    0,
+    1,
+    1
+  ],
+  "R_and_S_coboundary_image_order": 3,
+  "cyclic": {
+    "42": {
+      "polarized_twists": 2,
+      "real_polarized_automorphism_exponents": [
+        0,
+        21
+      ]
+    },
+    "6": {
+      "polarized_twists": 2,
+      "real_polarized_automorphism_exponents": [
+        0,
+        3
+      ]
+    }
+  },
+  "forgetful_fiber_size": 2,
+  "gamma_absolute_norm": 1,
+  "gamma_conjugation_ratio_exponent_mod42": 35,
+  "gamma_cubed_ratio_exponent_mod42": 21,
+  "omitting_gamma_wrongly_leaves_two_source_twists": true,
+  "polarized_real_forms": 58,
+  "scope": "Exact cyclotomic unit identity and finite coboundary corroboration; geometric descent and full unit groups are scoped adopted premises",
+  "status": "PASS",
+  "underlying_real_forms": 29,
+  "wall_seconds": 0.00047274999087676406
+}

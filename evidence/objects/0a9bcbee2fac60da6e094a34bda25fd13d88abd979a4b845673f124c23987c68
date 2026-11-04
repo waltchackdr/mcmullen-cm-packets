@@ -1,0 +1,49 @@
+"""Projective-line kernel regression, not a new identification of O/P."""
+from itertools import product
+import json
+
+
+def check():
+    # F27=F3[t]/(t^3-t-1); degree3 and no root gives irreducibility.
+    assert all((x**3-x-1) % 3 for x in range(3))
+    field = list(product(range(3), repeat=3))
+    zero = (0,0,0)
+    def mul(a,b):
+        c=[0]*5
+        for i,x in enumerate(a):
+            for j,y in enumerate(b):
+                c[i+j]+=x*y
+        for k in (4,3):
+            c[k-3]+=c[k]
+            c[k-2]+=c[k]
+        return tuple(x % 3 for x in c[:3])
+    lines = [frozenset(x+mul(t,x) for x in field) for t in field]
+    lines.append(frozenset(zero+x for x in field))
+    origin=(0,)*6
+    assert len(set(lines)) == 28
+    assert all(len(line)==27 and origin in line for line in lines)
+    nonzero=set()
+    for line in lines:
+        assert not nonzero.intersection(line-{origin})
+        nonzero.update(line-{origin})
+        for x in line:
+            assert tuple(2*v % 3 for v in x) in line
+            assert tuple(3*v % 3 for v in x)==origin
+            for y in line:
+                assert tuple((a+b) % 3 for a,b in zip(x,y)) in line
+    assert len(nonzero)==728
+    # C63's independently established cyclic quotient and full-unit image.
+    subgroup=set(range(0,28,2))
+    orbits={frozenset((i+j) % 28 for j in subgroup) for i in range(28)}
+    assert len(orbits)==2 and sorted(map(len,orbits))==[14,14]
+    return {'status':'FINITE_KERNEL_MODEL_REGRESSION_NOT_GEOMETRIC_ADOPTION',
+            'field_size':27,'ambient_size':729,'distinct_lines':len(lines),
+            'line_cardinalities':sorted(set(map(len,lines))),
+            'nonzero_partition_size':len(nonzero),'additive_exponent':3,
+            'conditional_unit_orbit_sizes':sorted(map(len,orbits)),
+            'minimum_degree_from_conductor_index':729//27,
+            'premise':'C63 identifies the actual residue extension and full unit image; this model does not reprove those global inputs.'}
+
+
+if __name__=='__main__':
+    print(json.dumps(check(),indent=2))

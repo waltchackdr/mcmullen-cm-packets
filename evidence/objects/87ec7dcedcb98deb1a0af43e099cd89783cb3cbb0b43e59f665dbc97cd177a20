@@ -1,0 +1,25 @@
+{
+  "status": "C60_PROPOSED_NOT_ADOPTED_ACTIVE_PAPER_UNCHANGED",
+  "base_sha256": "5a01d6e9268dfb56e0f28c68210901c8e96ff9acf1ee451b5d97e835aebbddc6",
+  "candidate_sha256": "e18a5e22f48a3bf30aa23f2d8435aeb82ef303e0372350222ca0aca1c51965db",
+  "insertion_sha256": "2ea7c23a4e753d5de7ac66e60c166959825bf4d3b166b9efebdbb2afad5dd1bc",
+  "replacements": [
+    {
+      "old": "fibers remain pairwise nonisomorphic even after forgetting the real\nmultiplication marking: an exact norm-lattice obstruction separates\n$B$ and $C$.",
+      "new": "fibers remain pairwise nonisomorphic even after forgetting both their\npolarizations and real multiplication markings: an exact local unit\nobstruction separates $B$ and $C$."
+    },
+    {
+      "old": "unmarked isogeny relation unchanged and asserts nothing about their\nisomorphism as unpolarized abelian varieties, the injectivity of the\nwhole principal curve, or its identification with Mostaed's named image.",
+      "new": "unmarked isogeny relation unchanged. The stronger unpolarized distinction\nis proved in Proposition~\\ref{pp:prop:unpolarizeddistinct} below; neither\nargument asserts injectivity of the whole principal curve or identifies\nit with Mostaed's named image."
+    },
+    {
+      "old": "at least three points whose underlying principally polarized abelian\nvarieties are pairwise nonisomorphic, even after forgetting the fixed\n$\\OL$ markings.",
+      "new": "at least three points whose underlying abelian varieties are pairwise\nnonisomorphic, even after forgetting their polarizations and fixed\n$\\OL$ markings."
+    },
+    {
+      "old": "Proposition~\\ref{pp:prop:unmarkeddistinct} preserves their distinction\nafter forgetting the $\\OL$ marking. No global $K$-action is required.",
+      "new": "Proposition~\\ref{pp:prop:unpolarizeddistinct} preserves their distinction\nafter forgetting both the polarization and the $\\OL$ marking.\nNo global $K$-action is required."
+    }
+  ],
+  "insertion_anchor": "\\begin{corollary}[Weil points on the specified principal image]"
+}

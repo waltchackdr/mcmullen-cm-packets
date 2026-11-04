@@ -1,0 +1,57 @@
+"""Map the provisional fixed-weight list into the reduced period basis exactly."""
+import hashlib
+import json
+from pathlib import Path
+import resource
+import signal
+import sympy as s
+
+
+def main():
+    base = Path(__file__).resolve().parent
+    names = ['period_setup.json', 'reduced_periods.json', 'fixed_weights_exact.json', 'interval_setup.json']
+    data = {n:json.loads((base/n).read_text()) for n in names}
+    sha = lambda n:hashlib.sha256((base/n).read_bytes()).hexdigest()
+    assert data['fixed_weights_exact.json']['input_sha256'] == sha('period_setup.json')
+    assert data['reduced_periods.json']['setup_sha256'] == sha('period_setup.json')
+    J = s.zeros(12)
+    J[:6,6:], J[6:,:6] = s.eye(6), -s.eye(6)
+    result = {}
+    for name, old in data['period_setup.json']['models'].items():
+        S = s.Matrix(data['reduced_periods.json']['models'][name]['symplectic_transform'])
+        assert all(x.q == 1 for x in S) and abs(S.det()) == 1
+        assert S.T*J*S == J
+        inv = -J*S.T*J
+        assert inv*S == s.eye(12)
+        F = inv*s.Matrix(old['delta_in_symplectic_basis'])*S
+        chi = old['invariant_quadratic_refinement_chi']
+        def q(v):
+            return (sum(v[i]*v[i+6] for i in range(6))+sum(v[i]*chi[i] for i in range(12))) % 2
+        new_chi = [int(q(S[:,i])) for i in range(12)]
+        check = data['interval_setup.json']['models'][name]
+        assert new_chi == check['chi']
+        assert sum(bit << (11-j) for j,bit in enumerate(new_chi)) == check['flint_characteristic_index']
+        pairs = set()
+        for v in data['fixed_weights_exact.json']['models'][name]['weight_zero_nonzero_pairs']:
+            transported = inv*s.Matrix(v)
+            assert all(x.q == 1 for x in transported)
+            a = tuple(int(x) % 3 for x in transported)
+            a = min(a,tuple((-x) % 3 for x in a))
+            assert any(a)
+            k = (F-s.eye(12))*s.Matrix(a)/3
+            assert all(x.q == 1 for x in k)
+            refinement = sum(k[i]*k[i+6] for i in range(6))+sum(k[i]*new_chi[i] for i in range(12))
+            assert (3*refinement+(s.Matrix(a).T*J*k)[0]) % 6 == 0
+            pairs.add(a)
+        assert len(pairs) == 130
+        result[name] = {'chi':new_chi, 'characteristic_index':check['flint_characteristic_index'],
+                        'reduced_basis_pairs':sorted(pairs)}
+    print(json.dumps({'status':'EXACT_COORDINATE_MAP_PROVISIONAL_FILTER',
+                      'pins':{n:sha(n) for n in names},'models':result,
+                      'theta_values_computed':False},indent=2))
+
+
+if __name__ == '__main__':
+    resource.setrlimit(resource.RLIMIT_CPU,(20,20))
+    signal.alarm(30)
+    main()

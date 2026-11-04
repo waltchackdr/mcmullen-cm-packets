@@ -1,0 +1,32 @@
+"""Discovery: actual multiplier orders, exact rational lattice duality.
+A coefficient vector x is a multiplier iff every entry of I^-1 M(x) I is integral.
+The row lattice of the144 by12 coefficient matrix has dual the multiplier order.
+Not a promoted theorem certificate; independent reconstruction/review required.
+"""
+import hashlib,json,resource,signal,importlib.util,time
+from pathlib import Path
+import sympy as s
+from sympy.matrices.normalforms import hermite_normal_form
+resource.setrlimit(resource.RLIMIT_CPU,(20,20));signal.alarm(30);start=time.monotonic()
+root=Path(__file__).resolve().parents[2];p=root/'certificates/principal_unmarked_bc_v122.py'
+assert hashlib.sha256(p.read_bytes()).hexdigest()=='a73582098061839d7405a1fe00576b8bc50b703d0d830bb7d3977ecad446fdd3'
+spec=importlib.util.spec_from_file_location('c58',p);b=importlib.util.module_from_spec(spec);spec.loader.exec_module(b)
+raw=b.DATA.read_bytes();assert hashlib.sha256(raw).hexdigest()==b.DATA_SHA;d=json.loads(raw)['data'];K=b.K;z=K([0,1]);N=12
+mat=lambda vs:s.Matrix.hstack(*(s.Matrix(v.c) for v in vs));zp=[z**i for i in range(N)]
+sigma=mat([z**((31*i)%42) for i in range(N)])
+def order(name):
+ I=mat([K(v) for v in d['I_'+name+'_basis']]);II=I.inv();mult=[]
+ for q in zp:
+  T=II*mat([q*K(list(I[:,j])) for j in range(N)]);mult.append(s.Matrix(list(T)))
+ A=s.Matrix.hstack(*mult);den=s.ilcm(*[x.q for x in A]);B=hermite_normal_form((den*A).applyfunc(int).T);R=den*B.T.inv()
+ assert A.rows==144 and A.cols==12 and B.shape==(12,12)
+ assert all(v.q==1 for v in A*R)
+ return R,A,{'denominator':int(den),'basis':[[str(x) for x in row] for row in R.tolist()],'covolume':str(abs(R.det()))}
+RB,AB,ob=order('B');RC,AC,oc=order('C');T=RC.inv()*sigma*RB;TI=T.inv();eq=all(x.q==1 for x in T) and all(x.q==1 for x in TI)
+witness=[]
+for side,change,base,target in [('sigma31(RB) to RC',T,sigma*RB,AC),('RC to sigma31(RB)',TI,RC,AB*sigma.inv())]:
+ for j in range(N):
+  if any(x.q!=1 for x in change[:,j]):
+   image=target*base[:,j];bad=next(i for i,x in enumerate(image) if x.q!=1);witness.append({'direction':side,'column':j,'coefficient_vector':[str(x) for x in base[:,j]],'nonintegral_matrix_flat_index':bad,'value':str(image[bad])});break
+out={'status':'EXPERIMENT_EXACT_MULTIPLIER_ORDER_COMPARISON','source_data_sha256':b.DATA_SHA,'orders':{'B':ob,'C':oc},'sigma31_RB_equals_RC':eq,'change':[[str(x) for x in row] for row in T.tolist()],'witnesses':witness,'seconds':time.monotonic()-start,'scope':'Necessary unpolarized isomorphism obstruction only; independent review required'}
+print(json.dumps(out,indent=2,sort_keys=True))

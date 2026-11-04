@@ -1,0 +1,66 @@
+{
+  "actual_final_join_executed": false,
+  "actual_join34_executed": false,
+  "added_already_accepted_final730_reference_roles": [
+    "audit_administrative_window",
+    "audit_audit_input",
+    "audit_configuration",
+    "audit_execution_window_approval",
+    "audit_guard_handoff",
+    "audit_parent_completion",
+    "audit_parent_launch",
+    "audit_parent_result",
+    "audit_retention_receipt",
+    "audit_runtime",
+    "audit_stderr",
+    "audit_stdout",
+    "audit_worker_limits",
+    "v83_attempts",
+    "v83_audit",
+    "v83_frozen_audit",
+    "v83_outcome_review"
+  ],
+  "final_join_input_sha256": "30b0891027c291f26a489168e8b907a593e9f52890648ad477f4fa160d295d53",
+  "final_join_unavailable_roles": [
+    "portable_adoption_record",
+    "portable_adoption_review",
+    "representative_control_audit",
+    "representative_control_review",
+    "source_isomorphism_review"
+  ],
+  "historical_v86_assumption_preserved": true,
+  "join34_input_sha256": "f21fa8d5d09cd0d2bea4524d0e3a5d6ecd5d412f2818dd3d50761dc7b2ec7d31",
+  "join34_unavailable_roles": [
+    "additional_pair_audit",
+    "additional_pair_review"
+  ],
+  "known_metadata_bytes_hashed": 165150299,
+  "known_reference_count": 1200,
+  "known_reference_seals_sha256": "f7052f202b3fb6ad643fc4935d7359da56447109582f98325ead78bd4e79d006",
+  "mathematical_execution": false,
+  "old_fixed32_failure_preserved": true,
+  "schema_version": 1,
+  "source_adoption_candidate": {
+    "path": "experiments/continuous_v83/whole_packet_adoption_preparation/actual_outcomes03_repaired_package34/candidate.json",
+    "sha256": "f191d3bdbb8a5911490e698814c3ba0a511c171457c539e63c683852e25413bb"
+  },
+  "source_adoption_unavailable_roles": [
+    "actual_additional_pair_audit_and_review",
+    "actual_adoption_record",
+    "actual_final371_strict12_and_review",
+    "actual_fixed34_conjunction_and_review",
+    "actual_source_isomorphism_review"
+  ],
+  "source_pins": {
+    "experiments/continuous_v82_review/conditional34_final_join_source_review.json": "5fa506f1bb8180c8395840250180c03418d3827a62e911fdff978abd5af2f7cb",
+    "experiments/continuous_v82_review/den_identity_representative34_join_source_review.json": "7eb45f8b01ad49974b174d2ba28beafb33c99e6730d585a5c11f0f8dc9f56359",
+    "experiments/continuous_v82_review/repaired_package34_source_runtime_preparation_review.json": "88a530380916ff30048ed29424ca6d77138cad049b2af9efe336fe77902e96b4",
+    "experiments/continuous_v83/continuation/representative_remaining/v86_partial_admission/canonical_configuration/cpu7200_cache/den_identity_pair/input.pending.json": "f21fa8d5d09cd0d2bea4524d0e3a5d6ecd5d412f2818dd3d50761dc7b2ec7d31",
+    "experiments/continuous_v83/continuation/representative_remaining/v86_partial_admission/canonical_configuration/cpu7200_cache/den_identity_pair/join34.py": "97e4b7af3c073ac08905fede52135a0221c9484e2fcfee07482bc97ef492cf8c",
+    "experiments/continuous_v83/final_join/configuration_serialization_cpu7200_cache34/join.py": "4c798276ae99d3286a8626e46e6daf80cafa9adf4e126cae90673602aa398014",
+    "experiments/continuous_v83/whole_packet_adoption_preparation/actual_outcomes03_repaired_package34/candidate.json": "f191d3bdbb8a5911490e698814c3ba0a511c171457c539e63c683852e25413bb"
+  },
+  "status": "KNOWN_ACTUAL_BINDINGS_PREPARED_PENDING_PAIR_AND_FINAL_ADOPTION",
+  "theorem_promotion": false,
+  "wall_seconds": 0.3550450801849365
+}

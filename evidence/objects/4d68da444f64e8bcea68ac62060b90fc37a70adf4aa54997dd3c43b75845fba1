@@ -1,0 +1,26 @@
+{
+  "command": [
+    "python3",
+    "-m",
+    "unittest",
+    "discover",
+    "-s",
+    "tests",
+    "-p",
+    "test_fermat_all_quotients_v155.py",
+    "-v"
+  ],
+  "cpu_limit_seconds": 20,
+  "independent_graph_cpu_limit_seconds": 20,
+  "independent_graph_wall_seconds": 0.285193,
+  "independent_graph_wall_timeout_seconds": 30,
+  "producer_optimized_mode_rejection": "PASS",
+  "producer_replay_matches_retained_json": true,
+  "returncode": 0,
+  "status": "PASS",
+  "stderr": "test_all_lagrangians_and_smaller_order_partition (test_fermat_all_quotients_v155.AllPrincipalQuotients.test_all_lagrangians_and_smaller_order_partition) ... ok\n\n----------------------------------------------------------------------\nRan 1 test in 0.133s\n\nOK\n",
+  "stdout": "",
+  "submitted_pins_verified": 14,
+  "wall_seconds": 0.185373,
+  "wall_timeout_seconds": 30
+}

@@ -1,0 +1,24 @@
+"""Regression of the adopted raw nonvanishing set, not an analytic evaluator."""
+from pathlib import Path
+import sys
+import unittest
+
+ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT/'experiments/bc_jacobian_v147'))
+from audit_cumulative_rectangles_candidate import audit
+
+
+class AdoptedClassificationData(unittest.TestCase):
+    def test_each_model_independently_exceeds_jacobian_bound(self):
+        result = audit(
+            ROOT/'experiments/bc_jacobian_v147/certificate_run07b_adoption.json',
+            '4f9cf9641026cffed17413c644b196dd3ebc09baa91630904c4d75a5cf223d24')
+        self.assertEqual(len(result['runs']), 8)
+        for model in ('B0', 'B1', 'C0', 'C1'):
+            self.assertEqual(result['pairs_per_model'][model], 107)
+            self.assertEqual(result['points_per_model'][model], 214)
+            self.assertGreater(result['points_per_model'][model], 213)
+
+
+if __name__ == '__main__':
+    unittest.main()

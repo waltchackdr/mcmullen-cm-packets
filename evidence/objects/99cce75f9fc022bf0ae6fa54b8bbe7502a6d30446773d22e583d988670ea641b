@@ -1,0 +1,73 @@
+{
+  "allocation_sha256": "27fd48603c124ca8cfc31dd94cf6eeb66e95ce3df00816331183051151aa8b52",
+  "configuration_core_sha256": "13c8a0736cfd8f8357c4c351c3d718bad6c6406d20977e3f6d1b4e8617eafc08",
+  "existing_execution_configuration_sha256": "76bd4acafec50390afba073fb542ab1ebe611ad4f69f4724d141b9dce4210ae1",
+  "logical_slot_to_actual_pod_id": {
+    "fanout-01": "3cyxa23ndbql0c",
+    "fanout-02": "a68l0s873od685",
+    "fanout-03": "e2upo3vxtg7n03",
+    "fanout-04": "eth919mwmrd4nk",
+    "fanout-05": "eekrbm9ptouhaj",
+    "fanout-06": "wfk9rf1p0i7ryq"
+  },
+  "reserved_partition_must_never_be_initialized_or_run": "woqi0t1lpjuqq3",
+  "source_runtime_resource_reviews": {
+    "3cyxa23ndbql0c": {
+      "budget_sha256": "b429b55d8a16d5775122bed6ed26aef799fb2387e92addea841ddf51e3f300c0",
+      "host_observation_sha256": "fc585d4d066374fe745525ddc3e2b48f858d1e3e197be9cb42d24ea998324866",
+      "runtime_review_sha256": "18e8b23953fd45ad5fa2207ce13c402d19a19655225472d1afb2062b0149687d",
+      "runtime_sha256": "3367025426ef717d3a31389eecc68f5ab577dc8e09a4d9e4a1afd1068c41a708",
+      "slot": "fanout-01",
+      "smoke_result_sha256": "33be30bc127cc9c5424bef5f64fbdcddaceb0d11ef4dfbf0e572df4a7947a314"
+    },
+    "a68l0s873od685": {
+      "budget_sha256": "9a8bc0bfa7d9c683c75b76ad3d42c77d98d78637b6b68e7cbe97656e8c723bda",
+      "host_observation_sha256": "d46efd357f8f3504b4bfa26c83e13c948da6adc8d60f2792ed6ebea416fc5f01",
+      "runtime_review_sha256": "037a1349a56ff6fc7d9dc9600843692af7cb1eb6f4b81321b1e95444915f10ad",
+      "runtime_sha256": "affc03af04683b8b38254663058527fb2b2666229dd9452a24a8102b9ec33302",
+      "slot": "fanout-02",
+      "smoke_result_sha256": "1c2096410ae067eeeaf639f27279d08cc09e9c633937d4a5b2598586df8001dd"
+    },
+    "e2upo3vxtg7n03": {
+      "budget_sha256": "66076131a52f7a985175f4675b548e6118521cc3b013ee5ea7b9258fb83658ea",
+      "host_observation_sha256": "cb01711a0ff6c9696a6ed318be01461c4ef922d72873e151216902771279f490",
+      "runtime_review_sha256": "bbdf7f9fa782208b9e02a235b810088e233b9f6bf12c6c5f84cd287d2705b5dc",
+      "runtime_sha256": "affc03af04683b8b38254663058527fb2b2666229dd9452a24a8102b9ec33302",
+      "slot": "fanout-03",
+      "smoke_result_sha256": "5d472797e1f26a62194e4ad1f5c39f078c8ba7cd77e697f92060994406fb12ed"
+    },
+    "eekrbm9ptouhaj": {
+      "budget_sha256": "2401543f83b87368eafb649c3a8d7c30806793aacee6ca79539b11a383e2b537",
+      "host_observation_sha256": "92456d50342e43c1d3e036a229a8d5d69c03733226cb7ce781b1fdd72e357b3b",
+      "runtime_review_sha256": "f6996fdba9105b94f9e9db334b3ba2b71ceb595150d5c3c5929a5ed42f4afb37",
+      "runtime_sha256": "221f37033efde599883afc4e12989f110c727ffd7073285c6e224ab3c1e8bc5f",
+      "slot": "fanout-05",
+      "smoke_result_sha256": "da2391f653de48aea64b5b5f0f1fe4656e47a91207516d335814331eede0bd49"
+    },
+    "eth919mwmrd4nk": {
+      "budget_sha256": "d020a0a799f1409c42b9161fa723527635d3dca130714d63664a2e3f889c56f4",
+      "host_observation_sha256": "0568ae95df69d2a25c41c46d94c0a80783898269d02fdeaac28d9c564ae8d189",
+      "runtime_review_sha256": "cf4ef6d77c94a60b52f67c5132c240fd21d4daff85f95b3e70b6c2afadc5390d",
+      "runtime_sha256": "6cbd9648d0350abeebd6bc0cad94402a37ae41a75507d34b2ea8307f58467087",
+      "slot": "fanout-04",
+      "smoke_result_sha256": "bcdac8bfc548c449ff65545224a5520318ce5d752f40073348647f4c18e0a06b"
+    },
+    "wfk9rf1p0i7ryq": {
+      "budget_sha256": "650da292f6469260e3f313c672ff51eb037e33d70239e1d00b9d640afd9c6bad",
+      "host_observation_sha256": "29a76ef95d8fad8bb43bac28c23dc90d308803c416e73fa47ca93ddac0305603",
+      "runtime_review_sha256": "2300e2131027181a614cced4252f06449844e468b069b2b02074691f707c7bd6",
+      "runtime_sha256": "221f37033efde599883afc4e12989f110c727ffd7073285c6e224ab3c1e8bc5f",
+      "slot": "fanout-06",
+      "smoke_result_sha256": "6a51376927e12a399744029fbf2221587c5b8c589272252b312ec12b1f7c2c4a"
+    }
+  },
+  "status": "ROOT_APPROVED_FIXED_FANOUT_ALLOCATION",
+  "theorem_promotion": false,
+  "new_configuration_sha256": "36f7c248b52843470867ff1aeb2847bcc83aba20bd85371af9336c5e944ac8ca",
+  "root_authorization_sha256": "71b1f985cb7067c55853885680466213f5d9530583b9ac7494511ca4bce59d9e",
+  "created_epoch": 1791854757.605366,
+  "reserved_partition_never_initialized_or_run_under_new_configuration": true,
+  "substitution_for_missing_selected_source": "FORBIDDEN_WITHOUT_SEPARATE_REVIEWED_AMENDMENT",
+  "all_original_and_duplicate_attempts_preserved": true,
+  "completed_duplicates_require_full_canonical_and_journal_agreement": true
+}

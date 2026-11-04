@@ -1,0 +1,96 @@
+"""Independent bounded finite checks; no curve-homology model or numerical imports.
+
+The geometric proof is reviewed in REVIEW.md. This script verifies its finite
+arithmetic by polynomial interpolation and enumerating possible group types,
+not by importing or copying the producer's convolution/torsion-size checks.
+"""
+from pathlib import Path
+import hashlib
+import itertools
+import json
+import math
+import resource
+import signal
+
+
+def main():
+    resource.setrlimit(resource.RLIMIT_CPU, (20, 20))
+    signal.alarm(30)
+    root = Path(__file__).resolve().parents[2]
+    here = Path(__file__).resolve().parent
+    sha = lambda p: hashlib.sha256(p.read_bytes()).hexdigest()
+    packet = json.loads((here / 'review_inputs.json').read_text())
+    pins = dict(packet['pins'])
+    adoption = root / 'experiments/polarization_literature_v144/fermat_factor_adoption.json'
+    pins.update(json.loads(adoption.read_text())['pins'])
+    for path, digest in pins.items():
+        assert sha(root / path) == digest, path
+
+    # A degree <=6 polynomial with seven distinct roots is zero identically.
+    phi = lambda d, t: sum(t ** j for j in range(d))
+    residual = lambda t: phi(7, t) - (t + t ** 4) * phi(3, t) - 1
+    values = [residual(t) for t in range(-3, 4)]
+    assert values == [0] * 7
+    assert any(phi(7, t) + (t + t ** 4) * phi(3, t) - 1
+               for t in range(-3, 4))
+    assert any(phi(7, t) - (t + t ** 3) * phi(3, t) - 1
+               for t in range(-3, 4))
+
+    # All elementary divisors divide the known group exponent 21.
+    # Its 3-primary and 7-primary parts are elementary of ranks 6 and 2.
+    def types(dimension):
+        return [list(t) for t in itertools.product((1, 3, 7, 21), repeat=dimension)
+                if all(y % x == 0 for x, y in zip(t, t[1:]))
+                and 2 * sum(x % 3 == 0 for x in t) == 6
+                and 2 * sum(x % 7 == 0 for x in t) == 2]
+
+    lower, primitive = types(4), types(6)
+    assert lower == [[1, 3, 3, 21]]
+    assert primitive == [[1, 1, 1, 3, 3, 21]]
+    product = math.prod(primitive[0])
+    degree = 3 ** 6 * 7 ** 2
+    assert product == 189 and degree == 35721 and product ** 2 == degree
+    # Same product is insufficient to determine the discriminant group.
+    false_type = [1, 1, 1, 1, 1, 189]
+    assert all(y % x == 0 for x, y in zip(false_type, false_type[1:]))
+    assert math.prod(false_type) == product
+    assert max(false_type) != 21
+    assert 2 * sum(x % 3 == 0 for x in false_type) != 6
+
+    # Exact character orders; covers all 20 characters, with no eigenvalue 1.
+    characters = {str(d): [k for k in range(1, 21)
+                           if 21 // math.gcd(k, 21) == d] for d in (3, 7, 21)}
+    assert [len(characters[str(d)]) for d in (3, 7, 21)] == [2, 6, 12]
+    for d, e in ((3, 7), (3, 21), (7, 21)):
+        assert all((a + b) % 21 != 0 for a in characters[str(d)]
+                   for b in characters[str(e)])
+    # RH agrees with the three fully ramified points: (0,+i), (0,-i),
+    # and the unique point at infinity.
+    for d in (3, 7):
+        q = 21 // d
+        assert 2 * 10 - 2 == q * (2 * ((d - 1) // 2) - 2) + 3 * (q - 1)
+
+    result = {
+        'status': 'PASS_INDEPENDENT_FINITE_CHECKS_ONLY',
+        'pins_checked': len(pins),
+        'bezout_seven_point_residuals': values,
+        'unique_lower_type': lower[0],
+        'unique_primitive_type': primitive[0],
+        'polarization_degree': degree,
+        'product_of_elementary_divisors': product,
+        'character_partition': characters,
+        'negative_controls_rejected': [
+            'wrong Bezout sign', 'wrong Bezout t^3 exponent',
+            'same-product type (1,1,1,1,1,189)', 'degree 189'],
+        'excluded_inputs': ['discovery chain-cycle homology model',
+                            'producer arithmetic implementation',
+                            'numerical libraries', 'theta/runtime evidence'],
+        'scope': 'Finite identities and evidence hashes only; geometric proof is human-reviewed.'
+    }
+    (here / 'referee_arithmetic01.json').write_text(
+        json.dumps(result, indent=2, sort_keys=True) + '\n')
+    print(json.dumps(result, indent=2, sort_keys=True))
+
+
+if __name__ == '__main__':
+    main()

@@ -1,0 +1,127 @@
+"""Offline archive/plan/loader audit and completion-gap reproduction; no FLINT."""
+import ast
+import copy
+import hashlib
+import importlib.util
+import io
+import json
+from pathlib import Path
+import resource
+import signal
+import tarfile
+import tempfile
+import time
+
+ROOT=Path(__file__).resolve().parents[2]
+BASE=ROOT/'build/s-order-v164/preparation01'
+def sha(x):return hashlib.sha256(x).hexdigest()
+def load(p):return json.loads(Path(p).read_bytes())
+def module(path,name):
+    spec=importlib.util.spec_from_file_location(name,path);m=importlib.util.module_from_spec(spec);spec.loader.exec_module(m);return m
+def funcs(path):return {f.name:ast.dump(f,include_attributes=False) for f in ast.parse(Path(path).read_text()).body if isinstance(f,ast.FunctionDef)}
+RECOVERY={}
+def recovered(path,h):
+    current=ROOT/path
+    if sha(current.read_bytes())==h:return current
+    retained=ROOT/'experiments/s_order_theta_v164/attempt01'/Path(path).name
+    assert retained.is_file() and sha(retained.read_bytes())==h,path
+    RECOVERY[path]={'retained_path':str(retained.relative_to(ROOT)),'sha256':h,'current_path_superseded':True}
+    return retained
+
+def run():
+    inputs=load(ROOT/'experiments/s_order_theta_v164/review_inputs01.json');current=load(BASE/'execution_candidate.json')
+    for table in (inputs['pins'],current['pins']):
+        for path,h in table.items():recovered(path,h)
+    prior=load(ROOT/current['baseline_postprocess_authority']['path'])
+    assert current['status']=='CANDIDATE_V164_THETA_NOT_AUTHORIZED'
+    assert current['local_entrypoint']==prior['local_entrypoint'] and current['execution_distinctions']==prior['execution_distinctions']
+    for key,value in current['bootstrap_code'].items():
+        if key!='job_manifest.json':assert value==prior['bootstrap_code'][key]
+    assert current['bootstrap_code']['job_manifest.json']==current['session_manifest']
+    sessionraw=(ROOT/current['session_manifest']['path']).read_bytes();session=json.loads(sessionraw)
+    assert sha(sessionraw)==current['session_manifest']['sha256'] and sessionraw==(json.dumps(session,sort_keys=True)+'\n').encode()
+    workerpath=recovered('experiments/s_order_theta_v164/worker_candidate.py',inputs['pins']['experiments/s_order_theta_v164/worker_candidate.py'])
+    oldfunc=funcs(ROOT/'experiments/s_order_census_v162/postprocess_worker_candidate.py');newfunc=funcs(workerpath)
+    assert oldfunc.keys()==newfunc.keys()
+    changed=[k for k in oldfunc if oldfunc[k]!=newfunc[k]];assert set(changed)=={'validate_plan','successful_results','main'}
+    worker=module(workerpath,'ref164worker')
+    loader=module(ROOT/'experiments/s_order_theta_v164/period_loader_candidate.py','ref164loader')
+    pipeline=module(ROOT/'experiments/s_order_census_v162/pipeline_candidate.py','ref164pipeline')
+    archives=[];selected=[];manifests=[];negative=[]
+    with tempfile.TemporaryDirectory() as temp:
+        temp=Path(temp)
+        for job,ref in enumerate(current['jobs']):
+            raw=(ROOT/ref['path']).read_bytes();assert sha(raw)==ref['sha256'] and len(raw)==ref['bytes']
+            packet=json.loads(raw);old=load(ROOT/prior['jobs'][job]['path'])
+            for key in ('pipeline','setup','selector'):assert packet['uploads'][key]==old['uploads'][key]
+            for key in packet['code']:
+                if key!='job_manifest.json':assert packet['code'][key]==old['code'][key]
+            jmraw=(ROOT/packet['code']['job_manifest.json']['path']).read_bytes();jm=json.loads(jmraw);manifests.append(jm)
+            assert sha(jmraw)==packet['code']['job_manifest.json']['sha256'] and jmraw==(json.dumps(jm,sort_keys=True)+'\n').encode()
+            for key,entry in packet['uploads'].items():
+                value=(ROOT/entry['path']).read_bytes();assert sha(value)==entry['sha256'] and len(value)==entry['bytes']
+                assert jm['transport']['blobs'][key]=={'sha256':sha(value),'bytes':len(value)}
+            folder=BASE/f'job{job}';mf=load(folder/'source_manifest.json');planraw=(folder/'certificate_plan_candidate.json').read_bytes();plan=json.loads(planraw)
+            mapping=packet['source_mapping'];tarraw=(folder/'source.tar').read_bytes()
+            assert len(tarraw)==327680 and sha(tarraw)==mf['archive_sha256']
+            assert sha(planraw)==mf['plan_sha256']==jm['transport']['plan_sha256']
+            assert plan['pins']=={v:sha(recovered(p,plan['pins'][v]).read_bytes()) for v,p in mapping.items()}
+            assert plan['pair_start']==0 and plan['pair_count']==8
+            with tarfile.open(fileobj=io.BytesIO(tarraw),mode='r:') as tf:
+                members=tf.getmembers();assert len(members)==13 and len({m.name for m in members})==13
+                assert set(mf['files'])=={m.name for m in members}==set(mapping)|{'experiments/bc_jacobian_v147/certificate_plan_candidate.json'}
+                for member in members:
+                    assert member.isfile() and member.size<=2*1024**2 and not member.name.startswith('/') and '..' not in Path(member.name).parts
+                    value=tf.extractfile(member).read();assert mf['files'][member.name]=={'sha256':sha(value),'bytes':len(value)}
+                    assert value==(recovered(mapping[member.name],plan['pins'][member.name]).read_bytes() if member.name in mapping else planraw)
+            dest=temp/f'job{job}'
+            pipeline.unpack(folder/'source.tar',folder/'source_manifest.json',sha((folder/'source_manifest.json').read_bytes()),dest)
+            tasks=worker.validate_plan(plan,dest)
+            frozen=temp/f'frozen{job}';worker.snapshot(plan,planraw,frozen,dest);worker.validate_plan(plan,frozen)
+            for p in frozen.rglob('*'):
+                if p.is_dir():p.chmod(0o700)
+            frozen.chmod(0o700)
+            for task in tasks:
+                record=load(dest/task['record_path']);loader.validate_record(record,task['catalog_index'])
+                assert task['numerators_mod3']==record['transport']['eligible_nonzero_pairs'][:8]
+                selected.extend((task['catalog_index'],k) for k in task['pair_indices'])
+            for label,mutate in [('wrong_job',lambda p:p.__setitem__('job_index',1-job)),('wrong_target',lambda p:p['tasks'][0].__setitem__('catalog_index',91)),('wrong_coordinates',lambda p:p['tasks'][0]['numerators_mod3'].__setitem__(0,[0]*12)),('over_limit',lambda p:p['tasks'][0].__setitem__('max_cpu_seconds',121))]:
+                bad=copy.deepcopy(plan);mutate(bad)
+                try:worker.validate_plan(bad,dest)
+                except (RuntimeError,ValueError):negative.append(f'job{job}/{label}')
+                else:raise AssertionError(label)
+            archives.append({'job':job,'bytes':len(tarraw),'files':13,'unpack_snapshot_admission':'PASS'})
+        assert session=={'version':1,'jobs':manifests}
+        assert len(selected)==len(set(selected))==80 and sorted({i for i,k in selected})==loader.REPRESENTATIVES
+        # Deliberately data-free placeholder streams: this is a negative fixture,
+        # not an actual mathematical output and not a valid completion.
+        tasks=load(BASE/'job0/certificate_plan_candidate.json')['tasks'];results=[{'status':'EXITED','returncode':0} for _ in tasks]
+        output=temp/'fake_output';output.mkdir();streams=[]
+        for i,t in enumerate(tasks):
+            first={'stage':'EXACT_PERIOD_INPUT','catalog_index':t['catalog_index'],'task_index':i}
+            digest=sha(json.dumps(first,sort_keys=True).encode())
+            records=[first]+[{'stage':'EXACT_THETA_OBSERVATION','catalog_index':t['catalog_index'],'task_index':i,'pair_index':k,'numerator_mod3':v,'input_sha256':digest,'mathematical_conclusion':None} for k,v in zip(t['pair_indices'],t['numerators_mod3'])]
+            records.append({'stage':'BATCH_COMPLETE','catalog_index':t['catalog_index'],'task_index':i,'pair_indices':t['pair_indices']})
+            streams.append(records);(output/f'task{i:02d}').mkdir()
+        def write():
+            for i,records in enumerate(streams):(output/f'task{i:02d}/stdout.jsonl').write_text(''.join(json.dumps(v)+'\n' for v in records))
+        write();assert worker.successful_results(results,output,tasks) is True
+        accepted_invalid=['all_period_and_theta_payload_absent']
+        streams[0][0].update(plan_sha256='0'*64,period_record_sha256='0'*64,source_pins={},characteristic_index=-1,precision_bits=53,mathematical_conclusion='FALSE_PROMOTION')
+        digest=sha(json.dumps(streams[0][0],sort_keys=True).encode())
+        for observation in streams[0][1:-1]:observation['input_sha256']=digest
+        write();assert worker.successful_results(results,output,tasks) is True
+        accepted_invalid.append('wrong_plan_record_sources_characteristic_precision_and_input_conclusion')
+        streams[0][1].update(finite=False,enclosure={'INVALID':True},excludes_zero=True,quantity='WRONG',argument=[])
+        write();assert worker.successful_results(results,output,tasks) is True
+        accepted_invalid.append('nonfinite_with_invalid_enclosure_and_true_exclusion_wrong_quantity_empty_argument')
+    return {'status':'BLOCKING_COMPLETION_GAP_REPRODUCED','packet_pins':len(inputs['pins']),'candidate_pins':len(current['pins']),
+            'archives':archives,'selected_pairs':80,'targets':loader.REPRESENTATIVES,'pair_indices_per_target':list(range(8)),
+            'unchanged_worker_functions':sorted(set(newfunc)-set(changed)),'changed_worker_functions':changed,
+            'negative_plan_rejections':negative,'invalid_completions_accepted':accepted_invalid,
+            'actual_loader_record_validation':10,'recovered_superseded_sources':RECOVERY,'flint_imported':False,'theta_calls':0,'provider_calls':0,'full_suite':False}
+
+if __name__=='__main__':
+    resource.setrlimit(resource.RLIMIT_CPU,(20,20));signal.alarm(30)
+    started=time.monotonic();result=run();result['wall_seconds']=time.monotonic()-started
+    print(json.dumps(result,indent=2,sort_keys=True))

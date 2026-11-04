@@ -1,0 +1,152 @@
+"""Retained standard-library arithmetic path from the V138 referee check.
+
+The original in-memory code is retained from this review's tool transcript.
+Adaptations for retention: resolve the witness beside this file and include
+source/runtime hashes in the printed run receipt. This checks fixed matrix
+identities only, not triangle equivariance or image geometry. No primary
+implementation is imported. No residue search is performed.
+"""
+import hashlib
+import json
+import resource
+import signal
+import sys
+import time
+from fractions import Fraction as Q
+from pathlib import Path
+
+resource.setrlimit(resource.RLIMIT_CPU, (20, 20))
+signal.alarm(30)
+if not __debug__:
+    raise RuntimeError("Enabled assertions are required")
+start = time.monotonic()
+f = [1, 8, 8, -6, -6, 1]
+
+
+def e(xs):
+    return tuple(map(Q, list(xs) + [0] * (6 - len(xs))))
+
+
+Z = e([])
+I = e([1])
+t = e([0, 1])
+
+
+def add(x, y):
+    return tuple(a + b for a, b in zip(x, y))
+
+
+def neg(x):
+    return tuple(-a for a in x)
+
+
+def sub(x, y):
+    return add(x, neg(y))
+
+
+def mul(x, y):
+    c = [Q(0)] * 11
+    for i, a in enumerate(x):
+        for j, b in enumerate(y):
+            c[i + j] += a * b
+    for k in range(10, 5, -1):
+        for j, a in enumerate(f):
+            c[k - 6 + j] -= c[k] * a
+    return tuple(c[:6])
+
+
+def inv(x):
+    cols = [mul(x, e([0] * j + [1])) for j in range(6)]
+    rows = [[cols[j][i] for j in range(6)] + [I[i]] for i in range(6)]
+    for j in range(6):
+        p = next(k for k in range(j, 6) if rows[k][j])
+        rows[j], rows[p] = rows[p], rows[j]
+        a = rows[j][j]
+        rows[j] = [v / a for v in rows[j]]
+        for k in range(6):
+            if k != j:
+                a = rows[k][j]
+                rows[k] = [v - a * w for v, w in zip(rows[k], rows[j])]
+    ans = tuple(row[6] for row in rows)
+    assert mul(x, ans) == I
+    return ans
+
+
+def mm(A, B):
+    return [[add(mul(A[i][0], B[0][j]), mul(A[i][1], B[1][j]))
+             for j in range(2)] for i in range(2)]
+
+
+def diag(x, y):
+    return [[x, Z], [Z, y]]
+
+
+def det(A):
+    return sub(mul(A[0][0], A[1][1]), mul(A[0][1], A[1][0]))
+
+
+def sm(x, A):
+    return [[mul(x, v) for v in row] for row in A]
+
+
+def mi(A):
+    return sm(inv(det(A)), [[A[1][1], neg(A[0][1])],
+                           [neg(A[1][0]), A[0][0]]])
+
+
+def tr(A):
+    return [list(v) for v in zip(*A)]
+
+
+def integral(A):
+    return all(v.denominator == 1 for row in A for x in row for v in x)
+
+
+A = [[e([0, 3, -1, -4, 0, 1]), e([0, -10, -3, 6, 1, -1])],
+     [e([-1, 0, 0, 1]), e([0, -6, 1, 5, 0, -1])]]
+B = [[Z, neg(I)], [I, t]]
+C = [[e([0, 2, -4, -4, 1, 1]), e([0, -5, -4, 1, 1])],
+     [e([-1, 5, 4, -1, -1]), e([0, -1, 4, 4, -1, -1])]]
+N = diag(t, I)
+Ni = mi(N)
+A, B, C = [mm(mm(N, X), Ni) for X in (A, B, C)]
+s = e([-2, -3, 4, 1, -1])
+q = e([4, 0, -1])
+assert mul(s, s) == sub(e([2]), t)
+assert all(x.denominator == 1 for x in inv(s) + inv(q))
+h = sm(s, [[add(I, C[0][0]), C[0][1]],
+           [C[1][0], add(I, C[1][1])]])
+k = mm(mm(mm(B, A), C), h)
+assert det(h) == q and det(k) == q
+u = sub(t, I)
+beta = e([-2, -8, -2, 6, 1, -1])
+a = inv(mul(beta, mul(u, u)))
+b = inv(mul(mul(u, u), u))
+delta = mul(a, b)
+T = [[a, mul(e([3]), b)], [Z, b]]
+K = mm(mm(mi(T), tr(mi(k))), T)
+assert integral(K) and integral(mi(K)) and det(K) == inv(q)
+W = [[mul(a, a), Z], [e([3]), I]]
+gamma = mm(mm(mm(diag(inv(q), I), W), k), mi(W))
+U = mm(mm(diag(inv(delta), I), gamma), diag(delta, I))
+assert det(U) == I and integral(U)
+witness_path = Path(__file__).with_name("witness01.json")
+witness_bytes = witness_path.read_bytes()
+w = json.loads(witness_bytes)
+for key, value in [("odd_projective_representative", h),
+                   ("k_equals_word_times_h", k),
+                   ("lattice_transition_Tinv_rho_k_T", K),
+                   ("ambient_SL2O_matrix", U)]:
+    retained = [[tuple(map(Q, x)) for x in row] for row in w[key]]
+    assert retained == value, key
+print(json.dumps({
+    "status": "PASS",
+    "independent_path": "stdlib Fraction coefficient convolution/reduction and Gaussian field inversion; no discovery import or SymPy",
+    "fixed_word": "BAC",
+    "all_four_retained_matrices_match": True,
+    "elapsed_seconds": time.monotonic() - start,
+    "python_version": sys.version,
+    "source_sha256": hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
+    "witness_sha256": hashlib.sha256(witness_bytes).hexdigest(),
+    "scope": "Fixed exact matrix identities only; no geometric equivariance or image theorem verified by this executable.",
+}, indent=2, sort_keys=True))

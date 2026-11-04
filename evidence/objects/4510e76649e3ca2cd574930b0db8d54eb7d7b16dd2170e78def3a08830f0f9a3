@@ -1,0 +1,11 @@
+{
+  "elapsed_seconds": 0.06783758394885808,
+  "pins": {
+    "experiments/principal_normalization_v111/explicit_basis.json": "1eb7015345817d76bc948fe3108e6a7bbd3995e36eadf7af11949ba61fc4e6e0",
+    "experiments/principal_normalization_v111/review/independent_basis_check.py": "3fac93eeaf58c06615ec41c6ec1113e1704430b55256661800e644cff2a86a32",
+    "tests/test_principal_model_v111.py": "c66270a354540307bc6d8b4d461b766113954b15122690c5d7451cc6fa7920ef"
+  },
+  "scope": "Exact arithmetic regression registered in tests; human geometric proof separate; old1405 registry unchanged",
+  "status": "ONE_EXACT_INDEPENDENT_REGRESSION_PASS",
+  "test_id": "test_principal_model_v111.PrincipalModel.test_independent_lattice_polarization_and_conjugation_identities"
+}

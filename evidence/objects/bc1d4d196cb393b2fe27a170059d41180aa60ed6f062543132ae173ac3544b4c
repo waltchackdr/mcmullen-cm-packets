@@ -1,0 +1,74 @@
+{
+  "claim": "Ordinary nonzero full rank-one fractional R-ideal class monoid has exactly three classes R,J,O; PicR=C2 and O absorbing idempotent.",
+  "independent_review": null,
+  "inputs": [
+    {
+      "bytes": 3113,
+      "path": "experiments/principal_order_class_v129/adoption.json",
+      "sha256": "da3614e79cd27fa71f23971d54beba2b89b3de737a0e3306979f7b3ab9efae6f"
+    },
+    {
+      "bytes": 7601,
+      "path": "experiments/principal_order_class_v129/PROOF_PROPOSAL.txt",
+      "sha256": "470eae84a92f5eb47fd64ad09b3c18527fc6e31764a6c199a1732643d3c76f43"
+    },
+    {
+      "bytes": 1383,
+      "path": "experiments/principal_order_class_v129/adversarial_review/root_human_review01.json",
+      "sha256": "249d9e00b38324c012b7e810b6277f1b8b86d820e96715ec94f651595e3b53c0"
+    },
+    {
+      "bytes": 1887,
+      "path": "experiments/principal_order_class_v129/adversarial_review/root_primary_citation_review01.json",
+      "sha256": "d6fa30c04357cbd4391d2d33d7f760dad450907e31d1c7c5dda9b60d95be8035"
+    },
+    {
+      "bytes": 1504,
+      "path": "experiments/principal_order_class_v129/sources/application01.json",
+      "sha256": "436b3b709a967e9d7ba27c4419bdfbf7aed1210f547f75b27edb720b534e9155"
+    },
+    {
+      "bytes": 2897,
+      "path": "experiments/principal_bc_hom_v127/adoption.json",
+      "sha256": "c9e156f1aa6e3ca37ed2b3964348652a6576f3858b1c0b6ba88f97f56c037502"
+    },
+    {
+      "bytes": 4487,
+      "path": "certificates/principal_order_class_v129.py",
+      "sha256": "c72efaebd8fd81c2c84a1ea245bdc5a92f8f48b76948cc22b876925c01127d73"
+    },
+    {
+      "bytes": 5762,
+      "path": "independent/principal_order_class_v129.py",
+      "sha256": "d6ce198aaf2802c5ec0b355985f86224416af12fc749b7b0abe99e6b1164477b"
+    }
+  ],
+  "key_new_steps": [
+    "Normalize arbitrary full fractional ideal by PicO1",
+    "Conductor sandwich without invertibility",
+    "Residue dimension1 or2 gives lines orO",
+    "Global line product J_a J_b=J_ab proves invertibility",
+    "C63 unit orbits give two lines, plusO",
+    "Multipliers R orO; O absorbs every normalized ideal"
+  ],
+  "manuscript_or_governance_changed": false,
+  "new_arithmetic_computation": false,
+  "new_external_theorem_required": false,
+  "proof": {
+    "bytes": 8301,
+    "path": "experiments/principal_ideal_monoid_v132/PROOF_PROPOSAL01.txt",
+    "sha256": "3c106c273c99b6b324de318ab8c576a6e9e1e5e6a6825bcabb9e8eeac3da480f"
+  },
+  "scope_exclusions": [
+    "zero ideal",
+    "narrow or oriented classes",
+    "semilinear equivalence",
+    "CM point realization",
+    "polarization classification",
+    "literal Mostaed locus",
+    "all orders in M",
+    "current frozen source integration"
+  ],
+  "status": "PROVISIONAL_HUMAN_PROOF_NOT_ADOPTED",
+  "theorem_adoption": null
+}

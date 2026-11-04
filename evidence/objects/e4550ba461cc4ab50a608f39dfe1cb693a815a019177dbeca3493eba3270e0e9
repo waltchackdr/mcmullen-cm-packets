@@ -1,0 +1,141 @@
+"""Serialized-model audit, without importing producer construction helpers.
+
+Checks lattice containments/determinants instead of replaying HNF/LLL, exhausts
+the tiny residue multiplier field, and labels actual fixed numerators with
+the Appell--Humbert semicharacter formula rather than the quotient b formula.
+"""
+import hashlib
+import itertools
+import json
+from pathlib import Path
+import resource
+import signal
+import sympy as s
+
+ROOT = Path(__file__).resolve().parents[2]
+HERE = Path(__file__).resolve().parent
+
+
+def run():
+    d = json.loads((HERE/'model.json').read_text())
+    matrix = lambda key: s.Matrix([[s.Rational(x) for x in row] for row in d[key]])
+    integral = lambda m: all(x.q == 1 for x in m)
+    a = json.loads((ROOT/'certificates/actual_bc_polarizations_data.json').read_text())['models']['C']
+    bc = json.loads((ROOT/'certificates/principal_unmarked_bc_data.json').read_text())
+    r = s.Matrix(json.loads((ROOT/'certificates/principal_bc_unpolarized_data.json').read_text())['R_C_basis'])
+    old = s.Matrix(bc['data']['I_C_basis']).T
+    e0 = s.Matrix(bc['data']['principal_alternating_matrix'])
+    # Explicit Phi_42, independently of producer's cyclotomic_poly call.
+    coeff = [1, 1, 0, -1, -1, 0, 1, 0, -1, -1, 0, 1]
+    z = s.zeros(12)
+    for i in range(11):
+        z[i+1, i] = 1
+    z[:, 11] = s.Matrix([-x for x in coeff])
+    powers = [z**i for i in range(12)]
+    scalar = sum((s.Rational(x)*powers[i] for i,x in enumerate(a['rescaling'])), s.zeros(12))
+    ru = r*s.Matrix(a['basis_change'])
+    assert scalar*old == ru
+    e = matrix('ambient_form')
+    assert ru.T*e*ru == e0 and e.T == -e
+    f = z**14; pi = s.eye(12)-f
+    assert z**42 == s.eye(12) and z**21 == -s.eye(12)
+    assert matrix('source_lattice_basis') == pi
+    assert matrix('source_form') == pi.T*e*pi
+    assert integral(pi.T*e*pi) and (pi.T*e*pi).det() == 729
+    assert integral(pi.inv()*e.inv()) and abs((pi.inv()*e.inv()).det()) == 1
+    assert integral(3*pi.inv()) and abs(pi.det()) == 729
+    assert integral(r.inv()*pi) and abs((r.inv()*pi).det()) == 27
+
+    q, v = matrix('quotient_projection'), matrix('quotient_lifts')
+    zero3 = lambda m: integral(m) and all(int(x) % 3 == 0 for x in m)
+    assert zero3(q*pi) and zero3(q*v-s.eye(6))
+    omega = matrix('discriminant_gram')
+    assert zero3(omega-3*v.T*e*v) and zero3(omega.T+omega)
+    assert int(omega.det()) % 3 != 0
+    h = matrix('non_real_stable_lagrangian')
+    assert zero3(h.T*omega*h)
+    lat = matrix('target_lattice_basis')
+    assert integral(lat) and abs(lat.det()) == 27
+    assert integral(lat.inv()*pi) and integral(lat.inv()*v*h)
+    assert matrix('target_form') == lat.T*e*lat
+    assert integral(lat.T*e*lat) and (lat.T*e*lat).det() == 1
+    assert zero3(matrix('order7_action')-q*z**6*v)
+    assert zero3(matrix('real_subfield_action')-q*(z+z.inv())*v)
+
+    def tuples(m):
+        return [[int(x) % 3 for x in row] for row in m.tolist()]
+    hv = tuples(h)
+    hpoints = {tuple(sum(hv[i][j]*a[j] for j in range(3)) % 3 for i in range(6))
+               for a in itertools.product(range(3), repeat=3)}
+    assert len(hpoints) == 27
+    # All 729 elements of O/P, each tested on three H generators. This
+    # computes the full residue multiplier field, not merely a t witness.
+    products = []
+    for j in range(6):
+        mult = sum((v[i,j]*powers[i] for i in range(12)), s.zeros(12))
+        products.append(tuples(q*mult*v*h))
+    multipliers = []
+    for a6 in itertools.product(range(3), repeat=6):
+        if all(tuple(sum(a6[k]*products[k][i][j] for k in range(6)) % 3
+                     for i in range(6)) in hpoints for j in range(3)):
+            multipliers.append(a6)
+    one = [int(x) % 3 for x in q[:,0]]
+    expected = {tuple(c*x % 3 for x in one) for c in range(3)}
+    assert set(multipliers) == expected
+
+    symp = matrix('symplectic_change'); short = matrix('short_basis_change')
+    jmat = s.zeros(12); jmat[:6,6:] = s.eye(6); jmat[6:,:6] = -s.eye(6)
+    assert integral(symp) and abs(symp.det()) == 1
+    assert integral(short) and abs(short.det()) == 1
+    assert matrix('short_basis_form') == short.T*lat.T*e*lat*short
+    u = matrix('symplectic_power_basis')
+    assert u == lat*symp and u.T*e*u == jmat
+    act = matrix('delta_in_symplectic_basis')
+    assert integral(act) and f*u == u*act
+    assert act.T*jmat*act == jmat and act**2+act+s.eye(12) == s.zeros(12)
+    chi = d['invariant_refinement_chi']
+    af = [[int(x) for x in row] for row in act.tolist()]
+    mv = lambda a,x: [sum(c*y for c,y in zip(row,x)) for row in a]
+    pairing = lambda x,y: sum(x[i]*y[i+6]-x[i+6]*y[i] for i in range(6))
+    quadratic = lambda x: (sum(x[i]*x[i+6] for i in range(6))+sum(c*y for c,y in zip(chi,x))) % 2
+    for bits in itertools.product(range(2), repeat=12):
+        fb = mv(af,bits)
+        assert quadratic(bits) == quadratic(fb) == pairing(bits,fb) % 2
+    assert sum(chi[i]*chi[i+6] for i in range(6)) % 2 == 0
+    nums = tuples(matrix('fixed_torsion_numerator_basis'))
+    points = {tuple(sum(nums[i][j]*a[j] for j in range(6)) % 3 for i in range(12))
+              for a in itertools.product(range(3), repeat=6)}
+    assert len(points) == 729
+    sectors = {0:[], 2:[], 4:[]}
+    for point in points:
+        delta = [x-y for x,y in zip(mv(af,point),point)]
+        assert all(x % 3 == 0 for x in delta)
+        k = [x//3 for x in delta]
+        exponent = (3*quadratic(k)+pairing(point,k)) % 6
+        assert exponent in sectors
+        sectors[exponent].append(point)
+    assert [len(sectors[k]) for k in (0,2,4)] == [261,234,234]
+    eligible = set(sectors[0])
+    assert all(tuple(-x % 3 for x in v) in eligible for v in eligible)
+    pairs = sorted(v for v in eligible if any(v) and v < tuple(-x % 3 for x in v))
+    assert pairs == [tuple(v) for v in d['eligible_nonzero_pairs']]
+    attempt = json.loads((HERE/'model_attempt03.json').read_text())
+    previous = s.Matrix([[s.Rational(x) for x in row] for row in attempt['symplectic_power_basis']])
+    change = previous.inv()*u
+    assert integral(change) and abs(change.det()) == 1 and change.T*jmat*change == jmat
+    return {'status':'PASS', 'model_sha256':hashlib.sha256((HERE/'model.json').read_bytes()).hexdigest(),
+            'producer_imports':False, 'construction_replay':False,
+            'actual_C_form_transport':'EXACT', 'source_and_target_lattice_indices':[729,27],
+            'residue_multiplier_field_order':len(multipliers),
+            'full_order':'S = Z + P, using common-saturation multiplier bridge',
+            'binary_refinement_inputs_checked':4096, 'fixed_numerators_checked':len(points),
+            'fiber_counts_by_exponent_mod6':{str(k):len(v) for k,v in sectors.items()},
+            'all_130_pairs_match':True, 'attempt03_to_final_symplectic_transport':'EXACT',
+            'theta_evaluations':0,
+            'scope':'Serialized rational/integral model and labels; actual CM identity and positivity inherited from pinned accepted inputs.'}
+
+
+if __name__ == '__main__':
+    resource.setrlimit(resource.RLIMIT_CPU,(20,20))
+    signal.alarm(30)
+    print(json.dumps(run(),indent=2))

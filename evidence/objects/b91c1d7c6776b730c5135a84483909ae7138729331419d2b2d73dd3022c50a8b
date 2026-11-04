@@ -1,0 +1,63 @@
+{
+  "status": "EXACT_FINITE_MODEL_GEOMETRIC_PROOF_PENDING",
+  "inertia": [
+    1,
+    1,
+    1,
+    1,
+    2,
+    2,
+    2,
+    2
+  ],
+  "space_size": 2187,
+  "class_count": 729,
+  "h0_counts": {
+    "0": 213,
+    "1": 456,
+    "2": 60
+  },
+  "degree_triple_counts": [
+    {
+      "degrees": [
+        -3,
+        -1,
+        1
+      ],
+      "count": 12
+    },
+    {
+      "degrees": [
+        -3,
+        0,
+        0
+      ],
+      "count": 24
+    },
+    {
+      "degrees": [
+        -2,
+        -2,
+        1
+      ],
+      "count": 24
+    },
+    {
+      "degrees": [
+        -2,
+        -1,
+        0
+      ],
+      "count": 456
+    },
+    {
+      "degrees": [
+        -1,
+        -1,
+        -1
+      ],
+      "count": 213
+    }
+  ],
+  "BC_theta_evaluation_performed": false
+}

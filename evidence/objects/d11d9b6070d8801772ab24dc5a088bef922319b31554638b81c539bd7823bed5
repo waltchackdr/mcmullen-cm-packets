@@ -1,0 +1,28 @@
+"""Replay the separate raw-data/rational audit, not an analytic theta evaluator."""
+import importlib.util
+from pathlib import Path
+import unittest
+
+ROOT = Path(__file__).resolve().parents[1]
+SPEC = importlib.util.spec_from_file_location(
+    "theta164_independent_audit",
+    ROOT / "experiments/s_order_theta_v164/referee_actual_data01.py",
+)
+AUDIT = importlib.util.module_from_spec(SPEC)
+SPEC.loader.exec_module(AUDIT)
+
+
+class AdoptedSOrderNonvanishing(unittest.TestCase):
+    def test_actual_raw_inputs_and_eighty_rectangles(self):
+        result = AUDIT.run()
+        self.assertEqual(result["status"], "INDEPENDENT_RATIONAL_AND_RAW_AUDIT_PASS")
+        self.assertEqual(len(result["observations"]), 80)
+        for counts in result["counts"].values():
+            self.assertEqual(counts, {"observations": 8, "finite": 8, "nonzero": 8})
+            self.assertLess(counts["nonzero"], 107)
+        self.assertTrue(result["nonfinite_and_zero_containing_not_counted"])
+        self.assertGreaterEqual(len(result["negative_cases_rejected"]), 10)
+
+
+if __name__ == "__main__":
+    unittest.main()

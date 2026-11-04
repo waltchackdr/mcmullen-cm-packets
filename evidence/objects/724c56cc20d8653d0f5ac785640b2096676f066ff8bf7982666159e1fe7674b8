@@ -1,0 +1,130 @@
+"""Bounded exact symplectic/torsion setup and NONCERTIFIED period reconnaissance."""
+import hashlib
+import importlib.util
+import json
+import resource
+import signal
+import sys
+from pathlib import Path
+import sympy as s
+import mpmath as mp
+
+ROOT = Path(__file__).resolve().parents[2]
+PINS = {
+    'certificates/principal_unmarked_bc_v122.py': 'a73582098061839d7405a1fe00576b8bc50b703d0d830bb7d3977ecad446fdd3',
+    'certificates/principal_unmarked_bc_data.json': 'b9792b7ebe38ab8235d8b7b603a2596768d182b7863c6ca975eac56f9cb0437f',
+}
+
+
+def require(ok, message):
+    if not ok:
+        raise ValueError(message)
+
+
+def rref_mod(matrix, prime):
+    a = [[int(x) % prime for x in row] for row in matrix]
+    pivots = []
+    for j in range(len(a[0])):
+        p = next((i for i in range(len(pivots), len(a)) if a[i][j]), None)
+        if p is None:
+            continue
+        k = len(pivots)
+        a[k], a[p] = a[p], a[k]
+        scale = pow(a[k][j], -1, prime)
+        a[k] = [(x*scale) % prime for x in a[k]]
+        for i in range(len(a)):
+            if i != k:
+                scale = a[i][j]
+                a[i] = [(x-scale*y) % prime for x, y in zip(a[i], a[k])]
+        pivots.append(j)
+        if len(pivots) == len(a):
+            break
+    return a, pivots
+
+
+def main():
+    for name, expected in PINS.items():
+        require(hashlib.sha256((ROOT/name).read_bytes()).hexdigest() == expected, 'Pin '+name)
+    spec = importlib.util.spec_from_file_location('field122', ROOT/'certificates/principal_unmarked_bc_v122.py')
+    field = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(field)
+    K = field.K
+    z = K([0, 1])
+    powers = [z**i for i in range(12)]
+    mat = lambda xs: s.Matrix.hstack(*(s.Matrix(x.c) for x in xs))
+    mm = lambda x: mat([x*p for p in powers])
+    integral = lambda a: all(x.q == 1 for x in a)
+    serial = lambda a: [[str(x) for x in row] for row in a.tolist()]
+    data = json.loads((ROOT/'certificates/principal_unmarked_bc_data.json').read_text())
+    E0 = s.Matrix(data['data']['principal_alternating_matrix'])
+    standard = s.zeros(12)
+    standard[:6, 6:] = s.eye(6)
+    standard[6:, :6] = -s.eye(6)
+    t = z+z**41
+    q = 4-t*t
+    mp.mp.dps = 80
+    out = {}
+    for name in ('B', 'C'):
+        I = mat([K(v) for v in data['data']['I_'+name+'_basis']])
+        delta0 = I.inv()*mm(z**14)*I
+        Q = I.inv()*mm(q)*I
+        require(integral(delta0) and integral(Q), 'Integral actions')
+        for twist in (0, 1):
+            E = E0 if twist == 0 else E0*Q
+            H = E[:6, 6:]
+            require(E[:6, :6] == s.zeros(6) and E[6:, 6:] == s.zeros(6), 'Block form')
+            U = s.diag(s.eye(6), H.inv())
+            require(integral(U) and abs(U.det()) == 1 and U.T*E*U == standard, 'Symplectic basis')
+            F = U.inv()*delta0*U
+            require(integral(F) and F*F+F+s.eye(12) == s.zeros(12), 'Cyclotomic action')
+            require(F.T*standard*F == standard, 'Polarized action')
+            # q_chi(x)=x_A.x_B+chi.x. Enforce q_chi(F e_i)=q_chi(e_i).
+            equations = []
+            for i in range(12):
+                col = [int(F[j, i]) for j in range(12)]
+                equations.append([col[j]-int(i == j) for j in range(12)] + [sum(col[j]*col[j+6] for j in range(6))])
+            reduced, piv = rref_mod(equations, 2)
+            require(piv == list(range(12)), 'Unique invariant quadratic refinement')
+            chi = [r[-1] for r in reduced]
+            require(sum(chi[i]*chi[i+6] for i in range(6)) % 2 == 0, 'Expected even parity')
+            A3 = s.eye(12)-F
+            rows, piv = rref_mod(A3.tolist(), 3)
+            free = [i for i in range(12) if i not in piv]
+            require(len(free) == 6 and A3.det() == 729, 'Fixed torsion rank/degree')
+            torsion_basis = []
+            for j in free:
+                v = [0]*12
+                v[j] = 1
+                for k, lead in enumerate(piv):
+                    v[lead] = -rows[k][j] % 3
+                require(all(int(x) % 3 == 0 for x in A3*s.Matrix(v)), 'Torsion generator')
+                torsion_basis.append(v)
+            basis = I*U
+            period = mp.matrix(6, 12)
+            for i, exponent in enumerate(data['actual_tangent_types'][name]):
+                root = mp.exp(2*mp.pi*mp.j*exponent/42)
+                for j in range(12):
+                    period[i, j] = sum(mp.mpf(str(basis[k, j]))*root**k for k in range(12))
+            tau = period[:, :6]**-1 * period[:, 6:]
+            symmetry = max(abs(tau[i, j]-tau[j, i]) for i in range(6) for j in range(6))
+            require(symmetry < mp.mpf('1e-60'), 'Numerical Riemann symmetry sanity check')
+            Y = mp.matrix([[mp.im(tau[i, j]) for j in range(6)] for i in range(6)])
+            eig = mp.eigsy(Y, eigvals_only=True)
+            require(min(eig) > 0, 'Numerical positivity sanity check')
+            out[name+str(twist)] = {
+                'symplectic_basis_in_original_lattice': serial(U), 'delta_in_symplectic_basis': serial(F),
+                'invariant_quadratic_refinement_chi': chi, 'fixed_3torsion_basis_numerators': torsion_basis,
+                'tau_noncertified': [[[mp.nstr(mp.re(tau[i, j]), 65), mp.nstr(mp.im(tau[i, j]), 65)] for j in range(6)] for i in range(6)],
+                'imaginary_eigenvalues_noncertified': [mp.nstr(x, 15) for x in eig],
+                'symmetry_error_noncertified': mp.nstr(symmetry, 5),
+            }
+    print(json.dumps({'status': 'EXACT_SETUP_WITH_NONCERTIFIED_PERIOD_RECONNAISSANCE',
+                      'pins': PINS, 'runtime': {'python': sys.version, 'sympy': s.__version__, 'mpmath': mp.__version__},
+                      'precision_decimal': 80, 'models': out,
+                      'theta_values_computed': False, 'jacobian_conclusion': None}, indent=2))
+
+
+if __name__ == '__main__':
+    resource.setrlimit(resource.RLIMIT_CPU, (20, 20))
+    signal.alarm(30)
+    main()

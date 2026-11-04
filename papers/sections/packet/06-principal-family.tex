@@ -1,0 +1,251 @@
+% !TeX root = ../../packet-and-principal-models.tex
+\section{A common principal lattice and family}
+The construction is a change of integral lattice, not a declaration that
+the original trace polarization is principal. The subgroup at $7$ is
+nonfree; requiring a common free line would incorrectly rule it out.
+The special-fiber K-actions need not extend to a single global K-action.
+
+\begin{proposition}[A common marked principal lattice at the three vertices]\label{prop:commonprincipal}
+Use the common marking $\Lambda=\OL^2$, with $(a,b)\mapsto az_X+b$ at
+$X=A,B,C$. There is one self-dual overlattice
+$\Lambda\subset\Lambda^{\mathrm{common}}\subset\Lambda^\#$ of index
+$453789$ stable under $\OL$ and all three specialized $\mathcal O_K$-actions
+$\Sigma_X=S_X^{\mathsf T}$. With the respective complex structures it gives
+three principally polarized isogenous special fibers with unchanged rational
+CM Hodge structures.
+\end{proposition}
+\begin{proof}
+Put $R=\OL/\mathfrak p_7^5=\mathbb F_7[u]/(u^5)$, where $u=t-1$.
+The actual homology residues are
+\[
+ \Sigma_A\equiv\begin{pmatrix}1&3\\1&6\end{pmatrix},\qquad
+ \Sigma_B\equiv\begin{pmatrix}6&2\\5&1\end{pmatrix},\qquad
+ \Sigma_C\equiv\begin{pmatrix}5&5\\0&2\end{pmatrix}\pmod u.
+\]
+They all preserve the line of $v=(3,1)$. Define
+\[
+ H_7=u^2Rv+u^3R^2.
+\]
+Taking $w=(1,0)$, the vectors $v,w$ are an $R$-basis and
+$H_7=u^2Rv\oplus u^3Rw$ has $\mathbb F_7$-basis
+\[
+ u^2v,\ u^3v,\ u^4v,\ u^3w,\ u^4w.
+\]
+Thus $|H_7|=7^5$.
+For each $X$, write $\Sigma_Xv=\lambda_Xv+uq_X$; this immediately proves
+$\Sigma_XH_7\subset H_7$. The determinant of any two elements of $H_7$
+vanishes modulo $u^5$.
+
+At $\mathfrak p_3$, all three $\Sigma_X$ vanish. Choose the same
+first-coordinate $\mathbb F_{27}$-line $H_3$, and put $H=H_3\oplus H_7$.
+To verify isotropy for the actual discriminant pairing, let $d=f'(t)$.
+Multiplication by $d$ identifies $\Lambda^\#/\Lambda$ with
+$(\OL/(d))^2$. Representatives $x,y\in\Lambda$ of elements of $H$ have
+$\det(x,y)\in(d)$, by the two local determinant calculations. Hence
+\[
+ E_1(d^{-1}x,d^{-1}y)
+ =-\operatorname{Tr}_{L/\Ql}\!\left(\frac{\det(x,y)}{d^2}\right)
+ \in\mathbb Z,
+\]
+since the trace argument lies in the codifferent $d^{-1}\OL$.
+As $|H|=3^3 7^5=\sqrt{|\Lambda^\#/\Lambda|}$, H is maximal isotropic.
+Exact power-basis reduction verifies that all three
+$U_X=(\Sigma_X-I)/2$ are integral. They preserve $\Lambda^\#$ as
+$L$-linear integral matrices; since 2 is invertible on the discriminant
+module, they preserve $H$. Thus its inverse image is simultaneously
+$\OL$- and $\mathcal O_K$-stable and self-dual. The unchanged positive
+Riemann form supplies the asserted principal polarizations.
+\end{proof}
+
+\begin{remark}[Free lines and the scope of the common construction]\label{rem:ABprincipallevels}
+The common $H_7$ above is nonfree. Exhaustion of $\mathbb P^1(\mathbb F_7)$
+shows that each pair of the three homology operators has only the common
+residue line $(3,1)$. Its free lifts modulo $u^2$ have the form
+$(3+au,1)$, with respective unique coefficients
+\[
+ a_A=3,\qquad a_B=6,\qquad a_C=2.
+\]
+Consequently no pair admits a common invariant \emph{free rank-one summand}
+on $R^2$. This restricted obstruction does not exclude the common nonfree
+maximal isotropic subgroup. Proposition~\ref{prop:commonprincipal} concerns
+three specialized $K$-actions on one marked lattice. The global construction
+below gives a family with RM and these three special fibers, without
+asserting a single global $K$-action or a realization of Mostaed's literal
+principally polarized locus.
+\end{remark}
+
+\begin{proposition}[Ambient and curve stabilizers of the common level]\label{prop:principalstabilizer}
+Let $\Gamma=\mathrm{SL}_2(\OL)$, let $j:\Delta_0\to\Gamma$ be the
+normalized integral representation of McMullen's quadrilateral group, and
+let $H$ be the subgroup in Proposition~\ref{prop:commonprincipal}, with
+$H_3=\mathbb F_{27}(1,0)$. For the transition representation
+$\rho(g)=g^{-\mathsf T}$ put
+\[
+ \Gamma_H=\{g\in\Gamma:\rho(g)H=H\},
+ \qquad \Delta_H=j^{-1}(\Gamma_H).
+\]
+Then
+\[
+ [\Gamma:\Gamma_H]=224,\qquad
+ [\Delta_0:\Delta_H]=[\bar\Delta_0:\bar\Delta_H]=28.
+\]
+The exact ideal congruence level of $\Gamma_H$ is
+$\mathfrak p_3\mathfrak p_7$: it contains $\Gamma(\mathfrak p_3\mathfrak p_7)$,
+and $\Gamma(J)\subset\Gamma_H$ implies $J\subset\mathfrak p_3\mathfrak p_7$.
+The number $28$ is the covering degree over the explicit parametrizing
+orbifold $\mathbb H/\bar\Delta_0$, before an auxiliary neat refinement.
+\end{proposition}
+\begin{proof}
+With the marking $(a,b)\mapsto az+b$, the isomorphism from the fiber at $z$
+to the fiber at $gz$ is $w\mapsto w/(cz+d)$. Its homology matrix is
+$g^{-\mathsf T}$. This transition action is a representation; it differs
+from the fixed-point endomorphism matrix $g^{\mathsf T}$.
+
+For any residue line $\ell\subset\mathbb F_7^2$, write
+$H(\ell)=u^2Rv+u^3R^2$, where $v$ lifts $\ell$. An invertible matrix $T$
+over $R$ preserves $H(\ell)$ precisely when its reduction preserves $\ell$.
+Necessity follows by projecting to $u^2R^2/u^3R^2$. Conversely,
+$Tv=\lambda v+uq$ gives $TH(\ell)\subset H(\ell)$, and finiteness gives
+equality. Thus $\Gamma_H$ is the inverse image of two line stabilizers in
+$\mathrm{SL}_2(\mathbb F_{27})\times\mathrm{SL}_2(\mathbb F_7)$.
+Reduction is surjective: the finite groups are generated by elementary
+matrices, whose entries lift by the Chinese remainder theorem. Hence the
+ambient index is $(27+1)(7+1)=224$.
+
+This description proves containment of $\Gamma(\mathfrak p_3\mathfrak p_7)$.
+If $J$ is not contained in one of these primes, an elementary unipotent
+with entry in $J$ can move the corresponding residue line. At $7$ use the
+integral determinant-one basis with columns $(3,1),(-1,0)$. Applying
+$\rho^{-1}$ gives an element of $\Gamma(J)$ outside $\Gamma_H$, proving
+the asserted exactness of the level.
+
+McMullen's generators $A,B,C,D$ generate $\Delta_0$ and satisfy $ABCD=I$
+\cite[Sec.~4]{McMullen2026}, so $A,B,C$ suffice. Exact reduction of
+$\rho(j(A)),\rho(j(B)),\rho(j(C))$ on the $224$-element set
+$\mathbb P^1(\mathbb F_{27})\times\mathbb P^1(\mathbb F_7)$ fixes
+$(3,1)$ in the second factor. Exhaustive closure of
+$(\mathbb F_{27}(1,0),\mathbb F_7(3,1))$ is exactly
+\[
+ \mathbb P^1(\mathbb F_{27})\times\{\mathbb F_7(3,1)\}.
+\]
+The two separate implementations in Supplement, Section~\externalref{supplement}{app:computer} verify
+the permutations and this entire finite orbit. Forward closure suffices
+because inverses are positive powers of finite permutations. Orbit--stabilizer
+therefore gives $28$, without a surjectivity assumption for the curve
+group. Both $\Delta_0$ and $\Delta_H$ contain $-I$, so projectivization
+preserves this index.
+\end{proof}
+
+\begin{theorem}[A connected principally polarized RM family]\label{thm:principalfamily}
+The normalized modular embedding admits a connected finite cover $C'$
+of its parametrizing orbifold and algebraic RM abelian schemes
+$\mathcal A,\mathcal B$ of relative dimension six over $C'$, with an
+$\OL$-linear isogeny
+\[
+ q:\mathcal A\longrightarrow\mathcal B,\qquad
+ \deg(q)=453789,\qquad q^*\lambda_{\mathcal B}=\lambda_{\mathcal A}.
+\]
+Here $\lambda_{\mathcal A}$ is the original trace polarization and
+$\lambda_{\mathcal B}$ is principal. The same connected cover contains
+lifts of all three specified normalized vertices whose $\mathcal B$-fibers
+are the common-lattice models of Proposition~\ref{prop:commonprincipal}.
+Their specialized $\mathcal O_K$-actions and rational CM Hodge structures
+are preserved, so the Hodge conjecture holds for these three fibers.
+
+The moduli image lies in the principally polarized Hilbert--Blumenthal
+component determined by the self-dual module $\Lambda_{\mathrm{common}}$.
+No identification with Mostaed's named curve or global $K$-action is
+included. The degree of a chosen auxiliary fine-level cover is not
+asserted to be $28$.
+\end{theorem}
+\begin{proof}
+Choose a neat finite-index subgroup $\Gamma_{\rm aux}\subset\Gamma_H$;
+it exists by \cite[Thm.~3.6]{MilneModuli2011}, since $\Gamma_H$ is
+arithmetic in $\operatorname{Res}_{L/\mathbb Q}\mathrm{SL}_2$.
+Set $\Delta'=j^{-1}(\Gamma_{\rm aux})$ and
+$C'=\mathbb H/\bar\Delta'$. The group $\bar\Delta'$ is torsion-free and
+finite index in the cocompact quadrilateral group, so $C'$ is a connected
+compact Riemann surface, hence a smooth projective algebraic curve.
+Its map to the parametrizing orbifold is finite; the coarse map may
+ramify at elliptic points. Since the neat group excludes $-I$, its
+geometric degree is measured using projective group indices.
+
+Over $\mathbb H$ use the fixed normalized embedding $F_t$ and the constant
+lattices $\Lambda=\OL^2$ and $\Lambda'=\Lambda_{\mathrm{common}}$.
+The transition action $\rho j$ descends both to integral local systems.
+Their homology Hodge filtration $F^0$ is the kernel of the holomorphic map
+\[
+ (a,b)\longmapsto
+ \bigl(\sigma_i(a)F_{t,i}(z)+\sigma_i(b)\bigr)_{i=1}^6.
+\]
+It has rank six and Hodge types $\{(-1,0),(0,-1)\}$; Griffiths
+transversality is automatic for these types. The form $E_1$ is flat,
+integral and positive by the Riemann-form identity already proved, and
+is unimodular on $\Lambda'$. Thus both are polarizable integral
+variations of Hodge structure. The discriminant local system
+$\Lambda^\#/\Lambda$ has invariant subgroup $H$, and its inverse-image
+lattice sheaf is exactly $\Lambda'$. This identifies the monodromy descent
+of the common level.
+
+Milne's equivalence for polarizable integral variations of these homology
+types over smooth complex algebraic varieties
+\cite[Thm.~7.13]{MilneModuli2011} algebraizes both families; the proof
+explicitly includes nonprincipal polarizations. Full faithfulness
+algebraizes the lattice inclusion, the $\OL$-actions and the
+polarizations. The inclusion has index $453789$, and both forms are
+$E_1$, giving the degree and pullback identity. Real multiplication is
+self-adjoint and $\lambda_{\mathcal B}$ is principal.
+
+Finally take the original three universal-cover parameters $z_A,z_B,z_C$.
+Their images lie on the same connected curve $\mathbb H/\bar\Delta'$.
+The constant marking $\Lambda'$ makes these fibers precisely the
+three models in Proposition~\ref{prop:commonprincipal}. No choice of
+components of a fiber product is involved. The specialized $K$-actions
+need not be one global Hodge endomorphism. The RM family defines the
+stated moduli map, and additional level gives a fine moduli interpretation.
+\end{proof}
+\begin{proposition}[The surviving order in the selected CM field]\label{prop:survivingorder}
+For each of the three common principal fibers $B_X$, let
+$\iota_X:M\hookrightarrow\operatorname{End}^0(B_X)$ be the selected CM
+field embedding. Then
+\[
+ \operatorname{End}(B_X)\cap\iota_X(M)
+ =\iota_X(R_K),\qquad
+ R_K=\OL[\mathcal O_K]=\OL+\mathfrak p_3\OM.
+\]
+This order has index $27$ in $\OM$ and conductor $\mathfrak p_3\OM$.
+The retained powers of the actual vertex automorphism are $0,7$ modulo
+$14$ at $A$, and $0,7,14,21,28,35$ modulo $42$ at $B,C$.
+The intersection assertion does not identify the full endomorphism
+ring at the imprimitive $A$-fiber, or the generic endomorphism ring
+of the family.
+\end{proposition}
+\begin{proof}
+Put $z=\zeta_{42}$, so $\OM=\OL+\OL z$. Exact arithmetic gives
+\[
+ z^{14}=a+bz,\quad
+ \begin{cases}
+ a=-t^5+4t^3-3t-1,\\
+ b=-t^5+t^4+6t^3-2t^2-8t-2.
+ \end{cases}
+\]
+Both implementations verify $N_{L/\mathbb Q}(b)=-27$ and
+$b\equiv0\pmod{\mathfrak p_3}$. Thus $(b)=\mathfrak p_3$, proving the
+order formula and index. If $x=a_0+b_0z$ and both $x,xz$ lie in $R_K$,
+their $z$ coefficients force $a_0,b_0\in\mathfrak p_3$; the reverse
+inclusion is immediate. This proves the conductor assertion.
+
+The intersection order $R'$ contains $R_K$ by the common-lattice theorem
+and lies in $\OM$, since lattice endomorphisms are integral over $\mathbb Z$.
+The quotient $\OM/R_K\simeq\OL/\mathfrak p_3$ is a simple $\OL$-module.
+Consequently $R'$ is either $R_K$ or $\OM$. The latter would preserve the
+full vertex automorphism, contradicted by the $\mathfrak p_3$ obstruction
+proved above for all three vertices. Hence $R'=R_K$. Exhausting the
+$14$ or $42$ powers on the two finite local subgroups gives the stated
+surviving powers, with separate exact checks in both implementations.
+\end{proof}
+
+\begin{remark}[Imprimitive CM type at the $A$-vertex]
+The stabilizer of $\Phi_A$ in $G=(\mathbb Z/42\mathbb Z)^\times$ is $\{1,29\}$.  Its fixed field is $\Ql(\zeta_7)$, and $\Phi_A$ is induced from the three-element CM type on that sextic CM field.  Thus the larger divisor algebra at the $A$-vertex is consistent with the fact that this CM type is imprimitive; in particular the associated sixfold is isogenous to the square of a CM threefold.
+\end{remark}
+

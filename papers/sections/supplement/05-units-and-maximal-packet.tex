@@ -1,0 +1,419 @@
+% !TeX root = ../../arithmetic-and-computation.tex
+\section{Units, orientations and the maximal subpacket}
+The class-number and unit-norm arguments are also inputs to the integral
+geometry of both papers. Maximal-subpacket curve conclusions retain the
+packet execution premise; arithmetic orientation statements do not acquire
+an unrelated geometric-search assumption.
+
+\begin{theorem}[Collapse of the maximal-order integral conjugacy problem]\label{thm:GLcollapse}
+Fix one of the $16$ indices in Theorem \ref{thm:maxorder}, and let
+\[
+ R_c=\OL[\alpha_k]=\OM,\qquad \alpha_k^2-c_k\alpha_k+\pi=0.
+\]
+Then every matrix $A\in M_2(\OL)$ whose characteristic polynomial is
+$X^2-c_kX+\pi$ and whose induced $\OL[\alpha_k]$-lattice is locally free of rank one is
+$\mathrm{GL}_2(\OL)$-conjugate to the companion matrix $A_{c_k}$ in
+\eqref{eq:companion}.  In particular, for these $16$ traces the ordinary
+ideal-class part of the integral-conjugacy enumeration consists of a single class.
+
+The possible splitting of this single $\mathrm{GL}_2(\OL)$-class into
+$\mathrm{SL}_2(\OL)$-classes is controlled by the finite quotient
+\begin{equation}\label{eq:unitnormquotient}
+ \OL^\times/N_{M/L}(\OM^\times).
+\end{equation}
+More precisely, if $P\in\mathrm{GL}_2(\OL)$ conjugates $A$ to $A_{c_k}$,
+then the determinant class of $P$ modulo $N_{M/L}(\OM^\times)$ is the only
+obstruction to replacing $P$ by a determinant-one conjugator.
+\end{theorem}
+\begin{proof}
+Generalized Latimer--MacDuffee theory identifies integral similarity classes with
+isomorphism classes of rank-one lattices over the order $R_c$.  Here
+$R_c=\OM$.  Masley's class-number-one conclusion for
+$\Ql(\zeta_{21})=M$ implies that every fractional $\OM$-ideal is principal.
+Moreover $\OM=\OL[\alpha_k]$ is free of rank two over $\OL$, with basis
+$(1,\alpha_k)$.  Hence every admissible lattice is $\OM$-isomorphic to
+$\OM$, and multiplication by $\alpha_k$ is represented, after a change of
+$\OL$-basis, by the companion matrix.  This proves uniqueness up to
+$\mathrm{GL}_2(\OL)$.
+
+For the determinant-one refinement, the centralizer of multiplication by
+$\alpha_k$ is $M$, and its integral automorphisms are $\OM^\times$.  If a
+conjugator $P$ is replaced by $PC_\varepsilon$, where $C_\varepsilon$
+represents multiplication by $\varepsilon\in\OM^\times$, its determinant is
+multiplied by
+$\det_L(C_\varepsilon)=N_{M/L}(\varepsilon)$.  Thus $P$ can be adjusted to
+have determinant one exactly when $\det(P)^{-1}$ lies in the relative unit-norm
+image.  Dirichlet's unit theorem gives equal rank $5$ to $\OL^\times$ and
+$\OM^\times/\mu(M)$, so the quotient in \eqref{eq:unitnormquotient} is finite.
+\end{proof}
+
+
+\begin{lemma}[Class and narrow class numbers of $L$]\label{lem:narrowclass}
+The ordinary class number of $L$ is $h(L)=1$, the narrow class number is
+\[
+ h^+(L)=2,
+\]
+and $M/L$ is the narrow Hilbert class field.  Moreover
+\[
+ [E_L:E_L^+]=2^5,\qquad [E_L^+:E_L^2]=2.
+\]
+\end{lemma}
+\begin{proof}
+The discriminant is $\operatorname{disc}(L)=3^3 7^5=453789$.  Minkowski's bound for a totally real sextic field is
+\[
+ \frac{6!}{6^6}\sqrt{\operatorname{disc}(L)}<10.4.
+\]
+Factoring the defining polynomial $f$ modulo the rational primes below $11$ gives
+\[
+\begin{array}{c|c}
+2&\text{irreducible of degree }6\\
+3&(T^3-T^2+T+1)^2\\
+5&(T^3-T-2)(T^3+T^2+2)\\
+7&(T-1)^6.
+\end{array}
+\]
+Thus the only prime ideal of norm below $11$ is the prime above $7$, and it is principal because $N_{L/\Ql}(t-1)=f(1)=7$.  Hence $h(L)=1$.
+
+Let $\rho=\zeta_{21}$ and, for $a\in\{5,11,13,17,19\}$, set
+\[
+ \xi_a=\rho^{(1-a)/2}\frac{1-\rho^a}{1-\rho}
+      =\frac{\sin(a\pi/21)}{\sin(\pi/21)}\in E_L.
+\]
+These are real cyclotomic units.  At the six real embeddings $k=1,5,11,13,17,19$, their signs, together with $-1$, are
+\[
+\begin{array}{c|rrrrrr}
+ &1&5&11&13&17&19\\ \hline
+\xi_5  &+&-&+&-&+&+\\
+\xi_{11}&+&+&-&+&+&-\\
+\xi_{13}&+&-&+&+&+&-\\
+\xi_{17}&+&+&+&+&-&-\\
+\xi_{19}&+&+&-&-&-&-\\
+-1      &-&-&-&-&-&-
+\end{array}
+\]
+and the corresponding vectors in $\mathbf F_2^6$ have rank $5$.  Hence the image of the unit-sign map has order at least $2^5$, so $[E_L:E_L^+]\ge2^5$.
+
+The cyclotomic discriminant formula gives
+\[
+ |\operatorname{disc}(M)|=3^6 7^{10}=\operatorname{disc}(L)^2,
+\]
+so the relative discriminant of $M/L$ is trivial.  Thus the quadratic extension $M/L$ is unramified at every finite prime and is contained in the narrow Hilbert class field of $L$; hence $h^+(L)\ge2$.  The standard narrow/ordinary class-number exact sequence gives
+\[
+ \frac{h^+(L)}{h(L)}=\frac{2^6}{[E_L:E_L^+]}.
+\]
+Since $h(L)=1$ and the denominator is at least $2^5$, we have $h^+(L)\le2$.  Therefore $h^+(L)=2$, $M$ is the narrow Hilbert class field, and $[E_L:E_L^+]=2^5$.  Finally $[E_L:E_L^2]=2^6$ by Dirichlet's unit theorem, so $[E_L^+:E_L^2]=2$.
+\end{proof}
+
+\begin{theorem}[Exact unit-norm image]\label{thm:unitnorm}
+Let $E_M=\OM^\times$ and $E_L=\OL^\times$.  Then
+\[
+ N_{M/L}(E_M)=E_L^+,
+\]
+and hence
+\[
+ E_L/N_{M/L}(E_M)\cong E_L/E_L^+\cong(\mathbf Z/2\mathbf Z)^5.
+\]
+\end{theorem}
+\begin{proof}
+The inclusion $N_{M/L}(E_M)\subseteq E_L^+$ is immediate from
+$\sigma(N_{M/L}(\varepsilon))=|\widetilde\sigma(\varepsilon)|^2>0$ at every real place.
+For the reverse inclusion let $u\in E_L^+$.  The quadratic extension $M/L$ is cyclic and,
+by the discriminant calculation above, unramified at every finite prime.  At a split finite
+place the local norm map is tautologically surjective, and at an unramified finite place the
+norm map on local units is surjective \cite[Chap.~III, Prop.~1.2, p.~98]{MilneCFT2020}.  At each real place the norm $\C^\times\to\R^\times$
+has image $\R_{>0}$, and $u$ is totally positive.  Thus $u$ is a local norm everywhere.
+By the Hasse norm theorem for cyclic extensions, $u=N_{M/L}(x)$ for some $x\in M^\times$;
+see, for example, \cite[Chap.~VI, \S4, Cor.~(4.5), p.~384]{Neukirch}.
+
+It remains to make the norming element a unit.  Since $u$ is a unit, the fractional ideal
+$I=(x)$ satisfies $I\bar I=\OM$.  Hence the valuations of $I$ occur in opposite pairs at
+conjugate primes and vanish at conjugation-fixed primes.  Choose a fractional ideal $J$ with
+$I=J/\bar J$.  Masley's class-number-one conclusion for
+$M=\Ql(\zeta_{21})$ implies that $J=(y)$ for some $y\in M^\times$ \cite[p.~179]{Masley1976}.
+Then
+\[
+ \varepsilon=x\,\frac{\bar y}{y}
+\]
+is a unit and $N_{M/L}(\varepsilon)=N_{M/L}(x)=u$.  Therefore
+$E_L^+\subseteq N_{M/L}(E_M)$, proving equality.  The quotient statement follows from
+Lemma~\ref{lem:narrowclass}.
+\end{proof}
+
+\begin{corollary}[No oriented splitting for holomorphic Hilbert-modular conjugacy]\label{cor:orientedcollapse}
+Fix one of the $16$ maximal-order traces.  If two corresponding matrices are
+$\mathrm{GL}_2(\OL)$-conjugate by a matrix $P$ with totally positive determinant, then
+they are already $\mathrm{SL}_2(\OL)$-conjugate.  Thus each maximal-order
+$\mathrm{GL}_2^+(\OL)$ similarity class gives a single
+$\mathrm{SL}_2(\OL)$ class relevant to the holomorphic action on $\mathbb H^6$.
+\end{corollary}
+\begin{proof}
+By Theorem \ref{thm:unitnorm}, $\det(P)^{-1}=N_{M/L}(\varepsilon)$ for some
+$\varepsilon\in\OM^\times$.  Multiplication by $\varepsilon$ lies in the integral
+centralizer and has $L$-determinant $N_{M/L}(\varepsilon)$.  Replacing $P$ by the
+correspondingly adjusted conjugator gives determinant one.  A matrix acting
+holomorphically on every factor of $\mathbb H^6$ has totally positive determinant, so this
+is exactly the orientation class relevant to the Hilbert modular variety.
+\end{proof}
+
+\begin{corollary}[Sharp arithmetic reduction for the strongest $d=3$ candidates]\label{cor:12collapse}
+For each of the $12$ maximal-order, arithmetic-$(3,3)$ indices
+\[
+ 1,11,16,17,19,20,22,32,37,38,40,41,
+\]
+there is only one $\mathrm{GL}_2(\OL)$ integral similarity class to test.  By
+Corollary \ref{cor:orientedcollapse}, the holomorphically relevant
+$\mathrm{GL}_2^+(\OL)$ class does not split further under
+$\mathrm{SL}_2(\OL)$.  Thus these $12$ cases have no unresolved integral-conjugacy or
+unit-norm enumeration.  The vertex computations below resolve eight of the twelve
+holomorphic orbit classes exactly; the remaining four are excluded by the full
+geometric Hilbert-modular orbit criterion \eqref{eq:orbit-test}.
+\end{corollary}
+
+\begin{proposition}[Six maximal-order companion classes lie in normalized vertex orbits]\label{prop:sixvertexorbits}
+Among the twelve maximal-order arithmetic-$(3,3)$ indices of Corollary~\ref{cor:12collapse},
+\[
+  k\in\{11,16,19,32,37,40\}
+\]
+have companion representatives in normalized elliptic-vertex
+$\mathrm{SL}_2(\OL)$-orbits.  More precisely, $k=11,32$ lie in the normalized $B$-vertex
+orbit and $k=16,19,37,40$ lie in the normalized $C$-vertex orbit.  For $k=32,37,40$
+one uses the conjugate root $c_k-\alpha_k$, which has the same characteristic polynomial.
+Consequently only
+\[
+  k\in\{1,17,20,22,38,41\}
+\]
+remain among the maximal-order arithmetic-$(3,3)$ packet for a separate geometric orbit test.
+\end{proposition}
+\begin{proof}
+Let $T$ be the corresponding integral vertex endomorphism supplied by
+Proposition~\externalref{packet}{prop:Cvertex}, using $B_t$ for $k=11,32$ and $C_t$ for
+$k=16,19,37,40$, and write
+\[
+ A_{c_k}=\begin{pmatrix}0&-\pi\\1&c_k\end{pmatrix}.
+\]
+For any such $T$ with characteristic polynomial $X^2-c_kX+\pi$, set
+\[
+ P_0=(e_1,Te_1).
+\]
+Then $P_0A_{c_k}=TP_0$.  Exact rational-interval evaluation at the six real
+embeddings shows that $\det P_0$ is totally positive for
+\[
+ (B,11),\ (B,\overline{32}),\ (C,16),\ (C,19),\
+ (C,\overline{37}),\ (C,\overline{40}),
+\]
+where the bar means that $T$ is replaced by $c_kI-T$.  The determinant of $P_0$
+need not be a unit (at the four displayed $C$-cases its absolute norm is $127$),
+so $P_0$ is used only to determine the orientation class.
+
+Indeed, any two $L$-conjugators between $A_{c_k}$ and $T$ differ on the right by
+an element of the centralizer $M^\times$.  The ratio of their determinants is
+therefore $N_{M/L}(x)$ for some $x\in M^\times$, which is positive at every real
+place.  Hence the six-sign vector of the determinant is independent of the chosen
+conjugator.  For these six indices $\OL[T]\cong\OL[\alpha_k]=\OM$ by
+Theorem~\ref{thm:maxorder}; hence the induced $\OM$-module on $\OL^2$ is a
+torsion-free rank-one module over the Dedekind domain $\OM$, and is therefore locally free.
+Theorem~\ref{thm:GLcollapse} consequently supplies an integral
+$Q\in\mathrm{GL}_2(\OL)$ conjugating the same two matrices.
+The preceding sign calculation forces $\det Q$ to be a totally positive unit.
+Theorem~\ref{thm:unitnorm} then writes $\det(Q)^{-1}=N_{M/L}(\varepsilon)$ for
+some $\varepsilon\in\OM^\times$; multiplying $Q$ by the corresponding integral
+centralizer element produces determinant one.  Thus the companion matrix lies in
+the asserted normalized vertex $\mathrm{SL}_2(\OL)$-orbit.
+\end{proof}
+
+
+\begin{proposition}[The last imprimitive pair lies in the normalized $A$ orbit]\label{prop:Amaximalpair}
+The canonical maximal-order companion classes for $k=20,41$ both lie in the
+normalized $A$-vertex $\mathrm{SL}_2(\OL)$-orbit.  The $k=41$ realization uses
+the direct $A$-type action, while $k=20$ uses its complex-conjugate CM action.
+\end{proposition}
+\begin{proof}
+Let $A_t=h_tAh_t^{-1}$ be the normalized $A$ generator.  Exact reduction in
+$\OL=\mathbb Z[t]$ gives the integral matrix
+\[
+Z_A=
+\begin{pmatrix}
+-t^5+7t^3-11t-1&-t^5+8t^3-15t-2\\
+-t^4+6t^2-7&t^5-7t^3+12t+1
+\end{pmatrix}
+\]
+with
+\[
+ Z_A^2-tZ_A+I=0,\qquad Z_A^3=A_t,\qquad Z_A^{21}=-I.
+\]
+The element $4-t^2$ is totally positive, and $Z_A$ commutes with the elliptic
+matrix $A_t$; hence it fixes the same upper $A$-vertex point.  Moreover
+$|N_{L/\mathbb Q}(t^2-4)|=1$, so $\OL[Z_A]=\OM$.
+
+Write
+\[
+c_{20}=-t^3+2t-2,\qquad c_{41}=-c_{20}.
+\]
+For $\alpha_k=\zeta_{42}^k(1+\zeta_{42}+\zeta_{42}^4)$, put
+\[
+ T_{20}=\alpha_{20}(Z_A^{-1}),\qquad T_{41}=\alpha_{41}(Z_A).
+\]
+These integral matrices have characteristic polynomial
+$X^2-c_kX+\pi$.  If
+$A_{c_k}=\left(\begin{smallmatrix}0&-\pi\\1&c_k\end{smallmatrix}\right)$,
+the explicit matrices
+\[
+Q_{20}=\begin{pmatrix}
+0&3t^5-17t^3-2t^2+23t+3\\
+1&-2t^5+11t^3+t^2-15t-2
+\end{pmatrix},
+\]
+\[
+Q_{41}=\begin{pmatrix}
+0&3t^5-17t^3-2t^2+23t+3\\
+1&-2t^5+12t^3+t^2-17t
+\end{pmatrix}
+\]
+satisfy $Q_kA_{c_k}=T_kQ_k$.  Their common determinant is the totally
+positive norm-one unit
+\[
+ q=-3t^5+17t^3+2t^2-23t-3.
+\]
+
+For a pair-specific determinant-one adjustment, take
+\[
+ \varepsilon=(1-\zeta_{21}^{11})(1-\zeta_{21}^{13}).
+\]
+Exact cyclotomic multiplication gives $N_{M/L}(\varepsilon)=q^{-1}$ and,
+in the two companion bases, integral expressions
+$\varepsilon=x+y_k\alpha_k$.  Thus
+$C_{\varepsilon,k}=xI+y_kA_{c_k}$ is integral, centralizes $A_{c_k}$, and has
+determinant $q^{-1}$.  Consequently
+\[
+ G_k=Q_kC_{\varepsilon,k}\in\mathrm{SL}_2(\OL),\qquad
+ G_kA_{c_k}=T_kG_k.
+\]
+The positive centralizer $C_{\varepsilon,k}$ fixes the unique upper companion
+point, while the positive intertwiner $Q_k$ sends it to the unique upper fixed
+point of $T_k$, namely the normalized $A$ vertex.  Hence $G_k$ gives the
+claimed holomorphic $\mathrm{SL}_2(\OL)$ orbit equality.
+
+Finally the full CM action, rather than the lower-left signs of the single
+Hecke matrix, determines the type.  The assignments
+$\zeta_{42}\mapsto Z_A$ and $\zeta_{42}\mapsto Z_A^{-1}$ give respectively
+\[
+ \{1,5,17,19,29,31\},\qquad
+ \{11,13,23,25,37,41\},
+\]
+which are the certified canonical types for $k=41$ and $k=20$.
+\end{proof}
+
+
+\begin{theorem}[Hodge classification of the maximal-order $(3,3)$ packet]\label{thm:packetHodge}
+For the twelve maximal-order arithmetic-$(3,3)$ indices
+\[
+  1,11,16,17,19,20,22,32,37,38,40,41,
+\]
+the canonical upper-half-plane companion CM types fall into exactly two
+$\operatorname{Gal}(M/\Ql)$-orbits:
+\[
+ \{1,20,22,41\}
+ \qquad\text{and}\qquad
+ \{11,16,17,19,32,37,38,40\}.
+\]
+The first orbit is imprimitive: its CM types have stabilizer $\{1,29\}$ and
+are induced from the sextic CM subfield $\Ql(\zeta_7)$.  Their rational Hodge
+algebras are generated by divisor classes.  The second orbit is primitive;
+its Hodge eigenline counts in codimensions $1,\ldots,6$ are
+\[
+ 6,15,22,15,6,1,
+\]
+and the only non-divisor eigenlines are the two lines of the
+$K=\Ql(\sqrt{-3})$ Weil space.
+
+For every one of the twelve companions, the $K$-Hermitian discriminant of the
+trace polarization is the class of $-1$.  Consequently the Hodge conjecture
+holds for every one of the twelve associated polarized CM sixfolds: by
+Lefschetz $(1,1)$ in the imprimitive orbit and by Markman's theorem for the
+two Weil lines in the primitive orbit.  Therefore the four companion classes
+not covered by Propositions~\ref{prop:sixvertexorbits}
+and~\ref{prop:Amaximalpair} pose only a geometric curve-membership question,
+not a Hodge-algebraicity question.
+\end{theorem}
+\begin{proof}
+For each index $k$, let $\Phi_k$ be the CM type selected by the upper
+fixed point of the companion matrix.  Exact cyclotomic evaluation gives two
+Galois orbits of the displayed sizes.  On the four-element orbit the
+stabilizer is $\{1,29\}$; its fixed field is $\Ql(\zeta_7)$, exactly as for
+the $A$-type in the earlier divisor-algebra calculation.  Galois conjugacy
+therefore transfers the divisor-generated Hodge algebra to all four types.
+On the eight-element orbit the stabilizer is trivial.  The representative
+$\{1,5,23,25,29,31\}$ equals
+$31\Phi_C$ modulo $42$, so Lemma~\externalref{packet}{lem:primitivebinary} and its translation
+invariance give $6,15,22,15,6,1$ Hodge eigenlines and exactly two non-divisor
+middle-degree lines, the two $K$-Weil eigenspaces.  The two registered exact
+enumerations verify this conceptual classification for the full primitive
+packet.  The imprimitive four-element orbit still uses its separate exact
+degree-two and product enumeration.
+
+Finally write $\sqrt{-3}=x_k+y_k\alpha_k$ over $L$.  Exact reduction in
+$\Ql[t]/(f)$ gives
+\[
+ N_{L/\Ql}(y_k)=-1728=-2^6 3^3
+\]
+for every one of the twelve indices. The Mobius representative is
+$S_k=x_kI+y_kA_{c_k}$ and the actual action is $S_k^{\mathsf T}$.
+In the $K$-basis $(0,t^j)$ the Gram matrix is
+$(-\operatorname{Tr}_{L/\Ql}(y_kt^{i+j}))_{0\le i,j\le5}$.
+Its rank is six, so the determinant of the associated Hermitian form is
+\[
+ \operatorname{disc}(L)N_{L/\Ql}(y_k)
+ =-2^6 3^6 7^5.
+\]
+The factors $2^6 3^6 7^5$ are norms from $K$ up to the remaining negative
+sign, so the discriminant class is $-1$.  The claimed algebraicity follows
+from the preceding Hodge-algebra descriptions and Markman's theorem in the
+primitive case.
+\end{proof}
+
+\begin{proposition}[Exact exclusion of the four nonvertex maximal-order companions]\label{prop:residualexclusions}
+The canonical companion quotient points for
+\[
+ k\in\{1,17,22,38\}
+\]
+do not lie on the normalized McMullen curve.
+\end{proposition}
+\begin{proof}
+McMullen's doubled-triangle construction gives a compact convex labeled
+quadrilateral in each of the six normalized coordinates.  Exact vertex
+invariants and rational Sturm intervals give strict outward lower height and
+upper modulus bounds.  If a companion point is carried into all six
+quadrilaterals by an element of $\mathrm{SL}_2(\OL)$, the entries of that
+matrix lie in explicit archimedean boxes.
+
+The positive trace form
+$\operatorname{Tr}_{L/\mathbb Q}(x^2)=\sum_i\sigma_i(x)^2$, together with an
+exact rational $LDL^{\mathsf T}$ decomposition, enumerates every integral
+point in the resulting finite ellipsoids.  Determinant one is imposed exactly,
+with a separate complete $c=0$ branch.  Final geodesic-side predicates are
+elements of $L$ and are signed by rational root intervals, retaining exact
+boundary zeros.
+
+For each of $k=17,38$, the search produces $2{,}307$ coupled bottom rows and
+$9{,}812$ final matrices; for each of $k=1,22$, it produces $1{,}849$ bottom
+rows and $9{,}072$ final matrices.  No matrix survives all six coordinate
+quadrilaterals.  Separate SymPy/rational and standard-library/Sturm
+implementations reproduce the complete matrix/failure records and canonical
+digests for all four indices. This establishes avoidance of the original
+product only. The determinant-one companion transfers in the proof of
+Theorem~\ref{thm:maximalallorientations} identify the two labelled
+points as masks $2,13$. That theorem also supplies their complete
+reflected-product exclusions. Lemma~\externalref{packet}{lem:twochambers} then gives
+the claimed full-curve conclusion; the original-product calculation
+alone is insufficient.
+\end{proof}
+
+\begin{corollary}[Complete maximal-order geometric packet]\label{cor:maximalgeometrycomplete}
+Among the twelve maximal-order arithmetic-$(3,3)$ companion classes, eight
+lie in normalized elliptic-vertex orbits---$k=20,41$ at $A$, $k=11,32$ at
+$B$, and $k=16,19,37,40$ at $C$---and the remaining four are excluded by
+Proposition~\ref{prop:residualexclusions}.  No geometric orbit-membership case remains within these twelve selected
+canonical companions. The stronger all-orientation statement is
+Theorem~\ref{thm:maximalallorientations}.
+\end{corollary}
+

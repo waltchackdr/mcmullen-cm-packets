@@ -1,0 +1,120 @@
+{
+  "date": "2026-10-13",
+  "dependency_chain": {
+    "C45": "64-type/eight-orbit exact census + independent weights or unique unit relation + pullback spanning + first primitive Weil input + explicit D polarization and Markman. Every power of each individual rank-one-M sixfold; not arbitrary mixtures of all eight types.",
+    "C46": "Shioda Example6.3 + exact factor comparison + base factor descent + reviewed B/Y structural generation.",
+    "C47": "Exact Fermat42 type/support/partition certificates + Shioda Lemmas4.1-4.2/Theorem4.3; powers variant has a separate structural proof.",
+    "C48": "One-copy exterior atom enumeration + C45/C47 + supportwise degree-six Shioda witnesses. Optional for C50/C51.",
+    "C49": "Signed-graph/Graver structural reduction with exact checks; a Hodge-generation statement, not independently an algebraicity input.",
+    "C50_minimal": "One pure-D Weil relation from C45 and five quartets from C47 + exact six-generator saturated kernel + algebraic contraction.",
+    "C51_minimal": "Same six classes + three B/Y quartets from base C46 + exact nine-generator saturated kernel and algebraic contraction. C35 adds A/B/C/D corollary.",
+    "supplemental_not_required": [
+      "Full C48 one-copy result",
+      "Full C49 Graver enumeration",
+      "V101 cloud144 positive signed source witnesses",
+      "The two failed cloud source searches",
+      "Full C46 all-powers conclusion when using the displayed nine unit generators"
+    ]
+  },
+  "editorial_cautions": [
+    "POWERS.md originally leaves K7 algebraicity open; K7_SPLIT_POLARIZATION.md and its hostile review explicitly close that premise. Preserve the historical note rather than quoting its old open status as current.",
+    "Earlier V100 literature review labels the structural step conditional; subsequent exact reviews supply those hypotheses.",
+    "C45 does not imply arbitrary mixed products of the eight fixed-field types. C51 concerns the three underlying B,D,Y isogeny classes.",
+    "The source audit verifies cited statements and applicability, not external specialist approval or the full proofs of the literature."
+  ],
+  "local_hypothesis_checks": {
+    "A_B_C_D_consequence": "C35 gives underlying complex isogenies A~Y^2 and C~B, hence A^a B^b C^c D^d~Y^(2a) B^(b+c) D^d. This is not a marked/polarized isomorphism and adds no geometric point D.",
+    "B_D_quartets": "The fixed exact-type Fermat42 presentations B=(10,12,20), D=(1,14,27) and retained independent residue-sum certificates cover all78 degree-four invariant supports:66 divisor products and12 exceptional supports in one Galois orbit. The five lattice-basis quartets occur among these supports. The source criterion is Shioda4.3, not5.4. Effective conductor21 for the B triple does not merge its12 distinct orbit labels.",
+    "B_Y_quartets": "Shioda HC(J21), complex isogeny J21~B x Y x J3, and factor descent give algebraicity of every rational Hodge class on one B x Y. This alone supplies the three displayed quartets; the stronger C46 all-powers result is not needed for the minimal C51 proof.",
+    "D_Weil_input": "For Phi_D={1,5,11,13,19,25}, K=Q(sqrt(-7)), the retained exact sign/norm construction gives a positive K-compatible rational polarization of signature (3,3). Its Hermitian determinant class is -1: det Tr_M/K(b x conjugate(y))=-3^6*7^8=-64827^2. The associated form differs by -14, whose sixth-power determinant factor is a norm. A positive integer clearing lattice denominators multiplies determinant by a sixth power, also a norm. Markman therefore applies on every lattice of this CM isogeny class. No principal polarization follows.",
+    "actual_Y_marking": "Y=J(y^2=x^7-1) has six H1 embedding lines, actual type {1,2,3} for rho. In the synchronized presentation zeta7 acts as rho^4, producing type {1,4,5}. Primary labels (1,5,4) correspond to actual (2,3,1). Independent CRT comparison matches all180 weight entries with a common row permutation and only this legitimate Y column relabeling; no independent Galois row twist of a factor is allowed.",
+    "contraction": "The H1 projector is a rational polynomial in actual multiplication maps; splitting projectors are E-linear combinations of actual CM endomorphism correspondences. Addition and these projectors tensorize unit support cycles. Opposite lines are paired on separate singleton slots by diagonal pullback, cup with theta^(g-1), and proper pushforward. This uses theta^5 for B,D and theta^2 for Y and lowers codimension by one. Nondegeneracy plus distinct nonzero weights proves each required pairing nonzero. No inverse-Lefschetz correspondence or principal polarization is used.",
+    "descent": "All extracted eigenclasses belong to the rational cycle-class image tensor E. Maps and varieties remain over C; only coefficients lie in E. Integer combinations of the nine known relations, their conjugates, and within-factor contractions construct all invariant exterior monomials. Faithful scalar extension gives rational algebraicity. Zero target exponents are valid because temporary slots contract completely.",
+    "integral_generation": "The retained nine basis vectors have degrees6,4,4,4,4,4,4,4,4 and an integer inverse in the full integral kernel chart. Independent W_Y=W_B H proves the pair-kernel gluing integrally. Index one, not just rational rank, is necessary; extracting roots of cycle classes is not used."
+  },
+  "open_source_hypothesis_gaps_within_scoped_minimal_proof": [],
+  "primary_sources": {
+    "Goodson": {
+      "citation": "Heidi Goodson, An exploration of degeneracy in abelian varieties of Fermat type, arXiv:2211.03909v2; DOI 10.1080/10586458.2024.2362953.",
+      "locations": [
+        "Equation 4.2",
+        "Proposition 4.1 and Lemma 4.2",
+        "Section 5.3"
+      ],
+      "required_for_minimal_C51": false,
+      "url": "https://arxiv.org/html/2211.03909v2",
+      "verified_scope": "The pq Jacobian decomposition and primitive CM factor description specialize to J21 isogenous to X21 x J7 x J3, with X21 an absolutely simple sixfold. Section 5.3 explicitly treats y^2=x^21-1. These facts corroborate Shioda and the local type comparison; Goodson does not identify the packet markings for this project."
+    },
+    "Markman": {
+      "citation": "Eyal Markman, Cycles on abelian 2n-folds of Weil type from secant sheaves on abelian n-folds, arXiv:2502.03415v2 (2025).",
+      "locations": [
+        "Section 1.1, printed p3",
+        "Theorem 1.5.1, printed p9",
+        "Section 9.3 proof of Theorem 1.5.1, printed p88"
+      ],
+      "proof_dependency_note": "The paper proves the semiregularity conjecture needed for families of abelian varieties in Section 7.4.2. We rely on its stated theorem and do not independently certify the full paper.",
+      "retrieval": "Official versioned PDF browsed; direct local download returned HTTP 406, so no local content hash is claimed.",
+      "url": "https://arxiv.org/pdf/2502.03415v2",
+      "verified_scope": "The rational Hodge-Weil space is algebraic for polarized complex abelian sixfolds of Weil type over an imaginary quadratic field with discriminant class -1. The definition requires equal eigenspace dimensions (3,3) and an ample rational class transformed by the field norm. There is no principal-polarization or genericity restriction. This is a Weil-space theorem, not an all-powers theorem.",
+      "version_note": "Canonical versioned PDF is the audit anchor. ArXiv header is 8 June 2025; manuscript cover date is 10 June 2025. The HTML render showed a later date; it is not used as a publication date."
+    },
+    "Milne": {
+      "citation": "J.S. Milne, Complex Multiplication, version 0.10, 14 July 2020.",
+      "locations": [
+        "Section 3.11 and Proposition 3.12, pp29-30",
+        "Proposition 3.17, p31"
+      ],
+      "retrieval": "Official author PDF browsed. No local content hash claimed.",
+      "url": "https://www.jmilne.org/math/CourseNotes/CM.pdf",
+      "verified_scope": "Rank-one marked CM abelian varieties with the same CM pair are classified up to isogeny; simplicity is not needed. An equality of CM types supplies a complex equivariant isogeny after clearing lattice denominators. Polarized isomorphism requires additional Riemann-form and lattice data."
+    },
+    "Shioda": {
+      "citation": "Tetsuji Shioda, Algebraic Cycles on Abelian Varieties of Fermat Type, Math. Ann. 258 (1981), 65-80.",
+      "doi": "10.1007/BF01450347",
+      "excluded_inferences": [
+        "Example 6.3 does not directly assert HC on all powers.",
+        "Theorem 4.4 does not give arbitrary degree21/42 Fermat-type algebraicity.",
+        "Theorem 5.4 is restricted to odd-degree hyperelliptic character multisets and cannot replace the degree42 Theorem4.3 application."
+      ],
+      "locations": [
+        "Fermat character decomposition, Section 2 pp67-68",
+        "Lemmas 4.1-4.2 and Theorem 4.3 pp70-71",
+        "Equation 5.1 p72",
+        "Example 6.3 pp76-77"
+      ],
+      "retrieval": "Original public library scan visually inspected; relevant source-review pins retained below. No scan copied into repository.",
+      "sha256": "8ddf82f4ba396607b3d1e1b337bf2ebe50d14f5292f737584bccdae0e398c3b8",
+      "url": "https://gdz.sub.uni-goettingen.de/download/pdf/PPN235181684_0258/LOG_0017.pdf",
+      "verified_scope": "Equation 5.1 defines C_m by y^2=x^m-1. Example 6.3 proves HC for J(C_21) itself in all codimensions and records its J3, J7 and simple-sixfold decomposition. Lemmas 4.1-4.2 transfer character tensors through algebraic correspondences; their supportwise proof permits applying the block criterion to specified supports. Theorem 4.3 allows balanced blocks of lengths two and four, or balanced length-six blocks partitionable into two nonzero zero-sum triples. It has no odd-degree restriction."
+    }
+  },
+  "resources": {
+    "full_suite_run": false,
+    "new_search": false,
+    "paid_compute": false,
+    "work": "File inspection, source browsing and hashing only."
+  },
+  "schema_version": 1,
+  "scope": "Independent source-hypothesis audit for C45-C51 integration; not a re-proof of cited literature, new theorem promotion, or release approval.",
+  "source_pins": {
+    "docs/KNOWN_CM_COMPARISON_2026-09-18.md": "3f19e9ee5e32674e6fe7e5720062110880d1bed90bc5d2e53957488afd446f26",
+    "experiments/fixed_field_cm_census_v98/K7_SPLIT_POLARIZATION.md": "7a100a4d6db239e564a6ebf7f5d84bd624151c266a1a0e89061429677a0f5967",
+    "experiments/fixed_field_cm_census_v98/POWERS.md": "dc7dd88dd48415d6d4c988fd4241dbff87f342443d3e563f7018bce96896443c",
+    "experiments/fixed_field_cm_census_v98/final_extension_exposition_review.json": "0d4f270262fe4ac4e1b117a9004160da40079abcb3881e07feb3189533bd68e9",
+    "experiments/fixed_field_cm_census_v98/k7_polarization_hostile_review.json": "28d7088dd4889d60ae26abcb6955ae57010809316e8e59c8f6e1c73c807c15b2",
+    "experiments/fixed_field_cm_census_v98/powers_final_review.json": "066f1da72aebb7b43e9a22788d678d5723fe58d9761ffc573311b98433dee07c",
+    "experiments/mixed_powers_v101/CONTRACTION_REDUCTION.md": "3766abce0d1b91584a962f3165aa113ef177dbace02f48af8c0597a3d895904d",
+    "experiments/mixed_powers_v101/contraction_review.json": "fbeda9bce7f2264fd81af4f361f69d29fda57e36c4fc67b349d14280c282aef8",
+    "experiments/mixed_powers_v101/lattice_generation.json": "7e4e74255ec5daf2e71c0079736b327245eef2819fe016348e8033f9997dbb31",
+    "experiments/mixed_products_v100/abc_mixed_powers_final_review.json": "8a834ef0ee6372e9f00bb686a7942a2dd33dfc4279283eafec92f2a507552e22",
+    "experiments/mixed_products_v100/literature_scope_review.json": "89801a6e773c5950e8b1dd8d5a29d7bcc74b2c39ab664b6e9aa33ffc4d1c009c",
+    "experiments/mixed_products_v100/second_primitive_review.json": "bb7589a4eaf0cc41f73bc899d808460b01618254b26f64afd863ccc46b87bb5a",
+    "experiments/mixed_products_v100/second_primitive_scope.json": "d1f1d732b5598765e9ba9c6f154fc2fc9f3e075d9555ed8dccf9bf4f3dfbb5b7",
+    "experiments/mixed_triple_v102/PROOF.md": "7d4710aa314790bc89a0f9d81578ca63de33fe6ffd292517e34621fde934a536",
+    "experiments/mixed_triple_v102/comparison_review.json": "7563513605b197a2f4e19adeceec0cd8a8d59932bee7ab395917f927b0787c53",
+    "experiments/mixed_triple_v102/final_review.json": "cca87ea7fe09f90c221e2ff2c5376172f79e8a64ba240edf0bbd04bf7a1f87ba",
+    "experiments/mixed_triple_v102/independent.json": "a5c2bd0f922cfaa18d751ab47d457a3d2a81aac2d211009cdd50958667775722",
+    "experiments/mixed_triple_v102/primary.json": "c0bd18267d6b13aed97e34f670c3bb39585f57e1add019b2f434fbab642b46cf"
+  },
+  "status": "SOURCE_HYPOTHESES_AND_MINIMAL_DEPENDENCIES_ACCEPTED_FOR_SCOPED_SUPPLEMENT_PREPARATION"
+}

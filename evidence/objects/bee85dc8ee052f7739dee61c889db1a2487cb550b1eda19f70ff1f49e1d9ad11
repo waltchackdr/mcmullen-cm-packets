@@ -1,0 +1,17 @@
+{
+  "actual_outcome_claimed": false,
+  "files_sha256": {
+    "README.md": "1ae9161b3a5b0667a014a38491f35e5c1dc36460ef3a73e26243e0e153f59032",
+    "input-template.json": "128e25f4f137647a21a221edced5c6b872e30a385382f71211b95fb702bb96f9",
+    "inputs-bound-known-evidence.json": "e90eb0bb86bc4e5d0c4b569bf3c0952b27de461687ff37a9025c3c1f36e5a273",
+    "join.py": "76914e3d3c5bba220ef2894be3550b36a420cf1b3bb4a9ec60547127ad70be6f",
+    "join.py.diff": "9e7418f70c49e2eef4b974e4edddd461441aecd7fed816c90b02a761b8b620aa",
+    "lineage.json": "2c418c18b24fdee27c15cca88a7fdf5ad48eb784d476a4ffb63cbfe828d8cece",
+    "test_join.py": "afc02e6bf5a7a3e58b67fb4b73536d50e377fdf4e9af8130d757ceeaf1ceadd6"
+  },
+  "schema_version": 1,
+  "source_sha256": "76914e3d3c5bba220ef2894be3550b36a420cf1b3bb4a9ec60547127ad70be6f",
+  "status": "SOURCE_REVIEW_CANDIDATE_ONLY",
+  "theorem_promotion": false,
+  "validation_run_sha256": "d6b062e611049ba1d84edb8009ea6558452f85f463603a58eb5e169443fa6072"
+}

@@ -1,0 +1,19 @@
+{
+  "started_context": "after adding2 independent mixed-product regressions",
+  "completed_utc": "2026-10-13T14:24:27.179160+00:00",
+  "argv": [
+    ".venv/bin/python",
+    "-m",
+    "unittest",
+    "discover",
+    "-s",
+    "tests",
+    "-p",
+    "test_*.py"
+  ],
+  "returncode": 0,
+  "elapsed_seconds": 11.263491375022568,
+  "stdout": "",
+  "stderr": "..........................................................................\n----------------------------------------------------------------------\nRan 74 tests in 11.107s\n\nOK\n",
+  "full_certificate_suite": false
+}

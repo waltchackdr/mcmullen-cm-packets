@@ -1,0 +1,72 @@
+"""Bounded exact type table; reuses, does not re-prove, C64/C65."""
+import hashlib
+import itertools
+import json
+import math
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[2]
+PINS = {
+    'experiments/fixed_field_cm_census_v98/primary.json': '2135edfe6a09b1a2c51a254f80e4570a761674e5be3208c15c549087f225917e',
+    'experiments/fixed_field_cm_census_v98/independent.json': '8d2a5d643e3fca75f06270d9fa5d102d7d7711f1dfebd1dc7184c75445a1d4fe',
+    'experiments/cm_polarization_v135/adoption.json': 'a0b57b45dc479e7ad8aa0f3d36d7f762476f4d3ad277e210e54d2150c5aaec55',
+    'experiments/cm_polarization_v135/actual_bc_adoption.json': '756f8b531dbdf90afada30fe75824c861ee358a025d18f7f2df25187a0773cb3',
+}
+
+
+def require(condition, message):
+    if not condition:
+        raise ValueError(message)
+
+
+def main():
+    loaded = []
+    for path, expected in PINS.items():
+        raw = (ROOT / path).read_bytes()
+        require(hashlib.sha256(raw).hexdigest() == expected, 'Pin mismatch: ' + path)
+        loaded.append(json.loads(raw))
+    p, q = loaded[:2]
+    phi0 = (1, 5, 11, 13, 17, 19)
+    units = [a for a in range(42) if math.gcd(a, 42) == 1]
+    types = {tuple(sorted(phi0[i] if bit[i] == 0 else 42-phi0[i] for i in range(6)))
+             for bit in itertools.product((0, 1), repeat=6)}
+    canonical = lambda rows, key: {tuple(sorted(tuple(x) for x in r[key])): r for r in rows}
+    first, second = canonical(p['orbits'], 'orbit'), canonical(q['orbits'], 'orbit_members')
+    require(first.keys() == second.keys(), 'Separate census orbit disagreement')
+    seen = set()
+    table = []
+    for orbit, row in sorted(first.items()):
+        rep = tuple(row['representative'])
+        computed = {tuple(sorted(a*x % 42 for x in rep)) for a in units}
+        require(computed == set(orbit), 'Galois orbit mismatch')
+        require(not seen.intersection(computed), 'Overlapping orbits')
+        seen.update(computed)
+        stab = [a for a in units if tuple(sorted(a*x % 42 for x in rep)) == rep]
+        require(stab == row['stabilizer'] == second[orbit]['stabilizer'], 'Stabilizer mismatch')
+        primitive = len(stab) == 1
+        require(primitive == row['primitive'] == second[orbit]['primitive'], 'Primitive mismatch')
+        parities = {len(set(phi0)-set(t)) % 2 for t in computed}
+        require(len(parities) == 1, 'Parity varies within orbit')
+        if primitive:
+            parity = next(iter(parities))
+            table.append({'representative': list(rep), 'orbit_size': len(computed),
+                          'stabilizer': stab, 'flip_parity': parity,
+                          'classes_by_order_and_ideal': {'R': 2 if parity == 0 else 0,
+                                                        'J': 2 if parity == 0 else 0,
+                                                        'O': 1 if parity == 1 else 0}})
+    require(seen == types and len(types) == 64, 'Type coverage incomplete')
+    require(len(table) == 4, 'Primitive orbit count')
+    counts = {k: sum(r['classes_by_order_and_ideal'][k] for r in table) for k in ('R', 'J', 'O')}
+    require(counts == {'R': 4, 'J': 4, 'O': 2}, 'Unexpected count')
+    actual_b = (1, 5, 23, 25, 29, 31)
+    require(tuple(sorted(31*x % 42 for x in phi0)) == actual_b, 'Actual B/C type relation')
+    result = {'status': 'EXACT_DERIVED_TABLE_NOT_THEOREM_ADOPTION', 'pins': PINS,
+              'type_count': 64, 'orbit_count': len(first), 'primitive_orbits': table,
+              'counts': counts, 'unmarked_total_conditional_on_proposal': sum(counts.values()),
+              'proof_inputs': ['C64 ideal exhaustion', 'C65 marked polarization theorem',
+                               'V145 unmarked reduction (pending review)']}
+    print(json.dumps(result, indent=2, sort_keys=True))
+
+
+if __name__ == '__main__':
+    main()

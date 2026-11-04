@@ -1,0 +1,74 @@
+{
+  "files": {
+    "README.md": {
+      "bytes": 5737,
+      "sha256": "34dd203a7cece73153a667a5dbcd9de7419347907e2322bf5608fe87a9ef9eaf"
+    },
+    "check.py": {
+      "bytes": 1609,
+      "sha256": "621eff57d7005969054fc8c7a13a7fac787d6a273b3be130438aa16b1c623f76"
+    },
+    "content-screening.json": {
+      "bytes": 469,
+      "sha256": "93d9388847b25314daeb5db34735a0323dda5a9e9c8fa3429eb549ec03ad86dc"
+    },
+    "manifest.json": {
+      "bytes": 1994,
+      "sha256": "9221086a7d3ebeb6d728bf1ebffff7f70d098073aa1ff6059d1d58f2e3551a36"
+    },
+    "overlay/tests/test_staged_packet_release_v96.py": {
+      "bytes": 4937,
+      "sha256": "84e5b7ceb23ca965d01aa3e29c0ef08dc537fd9e0ae8a68ad5fe744b59f5875f"
+    },
+    "payload-contract.json": {
+      "bytes": 1684,
+      "sha256": "0faea89ee5978f9fbf551d00e2ae3b0eaeefec73ae9284fe32ea097cc339abef"
+    },
+    "prepare_manifest.py": {
+      "bytes": 7701,
+      "sha256": "f9ead2d523c2df066514b70c59dd874595cde0ab4973a1037375c93260cb92ee"
+    },
+    "selected-files.json": {
+      "bytes": 1161675,
+      "sha256": "45c2ab17df1fab7a17dcf9d1830400588a3896f00183743cf63fb4faac198395"
+    },
+    "test-revision01.py": {
+      "bytes": 4501,
+      "sha256": "e626aac0a12eadedb615a331afef54d1f108ade93bda89f7958f30c7bbd01197"
+    },
+    "validation01/run.json": {
+      "bytes": 921,
+      "sha256": "d5640f2b88322542b9e6c735f1362a99a2d6b5f5b01d1c460ae617842fff01df"
+    },
+    "validation01/stderr.log": {
+      "bytes": 2655,
+      "sha256": "6042c4df578db27905d031257d7cf1a0677213108cde2174284d7d1d6f8674ea"
+    },
+    "validation01/stdout.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "validation02/0.stderr": {
+      "bytes": 563,
+      "sha256": "393483833b37ece5cd6f4ca1f1b98b59bbc62de825e1ce8ed6d7f1e29ad6eba1"
+    },
+    "validation02/0.stdout": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "validation02/1.stderr": {
+      "bytes": 484,
+      "sha256": "fdc9214c0b46132b8c547e5f4071449a5028d45354c4f2c635dd9a40f04f6889"
+    },
+    "validation02/1.stdout": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "validation02/run.json": {
+      "bytes": 2657,
+      "sha256": "159b21d52333ddcbf5c737dec3a67b4ffec288532c5b11215ba37c4c21a70bf3"
+    }
+  },
+  "no_git_install_or_mathematical_execution": true,
+  "schema_version": 1
+}

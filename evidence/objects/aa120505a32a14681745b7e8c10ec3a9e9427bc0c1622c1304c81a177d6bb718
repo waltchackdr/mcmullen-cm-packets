@@ -1,0 +1,187 @@
+{
+  "ambient_point_count": 368,
+  "artifact_sha256": {
+    "all_42_matrix_classes.jsonl": "08492a608ce13b99b6e9470241379a1a01746e78539b126aeb785a15af9b9761",
+    "ambient_points.json": "c0e84da6c266c087cbce65a6e8aca8e3f30350ce56b5a1089c4ae4978a381f36",
+    "local_quotients.json": "9ef01be9df80366e398b75a7aad39b4705ea06c9a84ff884d6b4a08b69f05613",
+    "module_templates.json": "09ccff217511a67e946567135f9ffb74da020843621d0895ecce8746d25c245d",
+    "root_bridges.jsonl": "13dcf16cd44e5359659b307dc9f0eb45d8d0864b8dda9c3aabb4291bb620ece6"
+  },
+  "embedded_orders": 9,
+  "implementation_sha256": "6804ac1923d6e669b09510fa9c75813d2f070b65992e7434411e0f4c69c41e98",
+  "incidences_per_point": {
+    "OM": 84,
+    "R127": 4,
+    "R41_12": 4,
+    "R41_22": 4,
+    "R43_20": 4,
+    "R43_31": 4,
+    "R7": 28,
+    "R7sq": 4,
+    "R83": 4
+  },
+  "matrix_class_count": 3520,
+  "point_counts_by_multiplier": {
+    "OM": 16,
+    "R127": 96,
+    "R41_12": 32,
+    "R41_22": 32,
+    "R43_20": 32,
+    "R43_31": 32,
+    "R7": 32,
+    "R7sq": 32,
+    "R83": 64
+  },
+  "root_bridge_count": 736,
+  "scope": "Arithmetic classes and ambient SL2 quotient points; no curve membership or geometric CM claims",
+  "source_sha256": {
+    "independent/d3_completeness_quadratic_v60.py": "7b34e8c676a0045b8c02d1ae065b395003bb48191d1cddf8d085a458db4f0363",
+    "independent/packet_order_coverage_stdlib_v58.py": "ed328d11d87d2cc9e93322bddb2b3207b1edf8c5d8dc66dea2026f0a07ea07c3",
+    "independent/quadrilateral_k17_stdlib_v41.py": "c5bd45f334a028820a071b5c758acfb8e48afc1e8454b18a3174dd04ca58a38c"
+  },
+  "status": "PASS_EXACT_FULL_PACKET_ARITHMETIC_3520_CLASSES_368_POINTS",
+  "table_by_generated_order": [
+    {
+      "conductor": [
+        1,
+        0,
+        0
+      ],
+      "matrix_classes_per_trace": 32,
+      "total_matrix_classes": 512,
+      "trace_indices": [
+        1,
+        7,
+        11,
+        13,
+        16,
+        17,
+        19,
+        20,
+        22,
+        28,
+        32,
+        34,
+        37,
+        38,
+        40,
+        41
+      ]
+    },
+    {
+      "conductor": [
+        7,
+        1,
+        1
+      ],
+      "matrix_classes_per_trace": 96,
+      "total_matrix_classes": 1152,
+      "trace_indices": [
+        0,
+        3,
+        6,
+        9,
+        15,
+        18,
+        21,
+        24,
+        27,
+        30,
+        36,
+        39
+      ]
+    },
+    {
+      "conductor": [
+        7,
+        1,
+        2
+      ],
+      "matrix_classes_per_trace": 160,
+      "total_matrix_classes": 320,
+      "trace_indices": [
+        12,
+        33
+      ]
+    },
+    {
+      "conductor": [
+        41,
+        12,
+        1
+      ],
+      "matrix_classes_per_trace": 96,
+      "total_matrix_classes": 192,
+      "trace_indices": [
+        14,
+        35
+      ]
+    },
+    {
+      "conductor": [
+        41,
+        22,
+        1
+      ],
+      "matrix_classes_per_trace": 96,
+      "total_matrix_classes": 192,
+      "trace_indices": [
+        5,
+        26
+      ]
+    },
+    {
+      "conductor": [
+        43,
+        20,
+        1
+      ],
+      "matrix_classes_per_trace": 96,
+      "total_matrix_classes": 192,
+      "trace_indices": [
+        4,
+        25
+      ]
+    },
+    {
+      "conductor": [
+        43,
+        31,
+        1
+      ],
+      "matrix_classes_per_trace": 96,
+      "total_matrix_classes": 192,
+      "trace_indices": [
+        8,
+        29
+      ]
+    },
+    {
+      "conductor": [
+        83,
+        36,
+        1
+      ],
+      "matrix_classes_per_trace": 160,
+      "total_matrix_classes": 320,
+      "trace_indices": [
+        2,
+        23
+      ]
+    },
+    {
+      "conductor": [
+        127,
+        94,
+        1
+      ],
+      "matrix_classes_per_trace": 224,
+      "total_matrix_classes": 448,
+      "trace_indices": [
+        10,
+        31
+      ]
+    }
+  ],
+  "trace_count": 42
+}

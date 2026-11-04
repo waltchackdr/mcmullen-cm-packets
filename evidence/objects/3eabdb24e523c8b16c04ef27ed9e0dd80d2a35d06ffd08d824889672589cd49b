@@ -1,0 +1,73 @@
+#!/usr/bin/env python3
+"""Install only the pinned official Node binary and retain tiny resource probes.
+
+Administrative runtime preparation only. No certificate is imported or run.
+Execute on the authorized Linux pod, never against the Python runtime tree.
+"""
+import hashlib,json,os,platform,resource,subprocess,tarfile,time,urllib.request
+from pathlib import Path
+
+VERSION='v22.14.0'
+ARCHIVE='node-'+VERSION+'-linux-x64.tar.xz'
+BASE='https://nodejs.org/dist/'+VERSION+'/'
+RUNTIME=Path('/opt/v81-node')
+EVIDENCE=Path('/workspace/v81-legacy-node-evidence')
+
+
+def digest(path):
+    h=hashlib.sha256()
+    with path.open('rb') as stream:
+        for chunk in iter(lambda:stream.read(1024**2),b''):h.update(chunk)
+    return h.hexdigest()
+
+
+def main():
+    assert platform.system()=='Linux' and platform.machine()=='x86_64'
+    EVIDENCE.mkdir(exist_ok=False)
+    resource.setrlimit(resource.RLIMIT_CPU,(20,21))
+    resource.setrlimit(resource.RLIMIT_CORE,(0,0))
+    started=time.monotonic()
+    source=globals().get('SCRIPT_SOURCE')
+    if source is not None:(EVIDENCE/'prepare_node.py').write_text(source)
+    RUNTIME.mkdir(exist_ok=False)
+    for name in ('SHASUMS256.txt',ARCHIVE):
+        with urllib.request.urlopen(BASE+name,timeout=30) as response,(RUNTIME/name).open('xb') as target:
+            while True:
+                block=response.read(1024**2)
+                if not block:break
+                target.write(block)
+    checks={line.split()[1]:line.split()[0] for line in (RUNTIME/'SHASUMS256.txt').read_text().splitlines() if len(line.split())==2}
+    assert checks[ARCHIVE]==digest(RUNTIME/ARCHIVE),'Official SHA256 mismatch before extraction'
+    prefix='node-'+VERSION+'-linux-x64'
+    node=RUNTIME/VERSION/'bin/node';node.parent.mkdir(parents=True)
+    with tarfile.open(RUNTIME/ARCHIVE,'r:xz') as archive:
+        member=archive.getmember(prefix+'/bin/node')
+        assert member.isfile() and not member.issym() and not member.islnk()
+        with archive.extractfile(member) as stream,node.open('xb') as target:
+            while True:
+                block=stream.read(1024**2)
+                if not block:break
+                target.write(block)
+    node.chmod(0o755)
+    (EVIDENCE/'SHASUMS256.txt').write_bytes((RUNTIME/'SHASUMS256.txt').read_bytes())
+    test="const a=require('node:assert/strict');a.equal((2n**127n-1n).toString(),'170141183460469231731687303715884105727');console.log(JSON.stringify({version:process.version,bigint:'PASS',rss:process.memoryUsage().rss}));"
+    probes=[]
+    for mib in (2048,3072):
+        command=['/usr/bin/prlimit','--as='+str(mib*1024**2),'--cpu=2:3','--core=0','--',str(node),'-e',test]
+        run=subprocess.run(command,stdout=subprocess.PIPE,stderr=subprocess.PIPE,timeout=5,env={'PATH':'/usr/bin:/bin','LANG':'C'})
+        (EVIDENCE/('probe-'+str(mib)+'.stdout')).write_bytes(run.stdout)
+        (EVIDENCE/('probe-'+str(mib)+'.stderr')).write_bytes(run.stderr)
+        probes.append({'memory_mib':mib,'cpu_soft':2,'cpu_hard':3,'wall_limit':5,'command':command,'returncode':run.returncode,'pass':run.returncode==0})
+        if run.returncode==0:break
+    record={'status':'NODE_RUNTIME_PREPARED_TINY_PROBE_ONLY','version':VERSION,'node':str(node),'node_sha256':digest(node),
+      'archive_url':BASE+ARCHIVE,'official_checksums_url':BASE+'SHASUMS256.txt','archive_sha256':checks[ARCHIVE],
+      'official_checksums_sha256':digest(RUNTIME/'SHASUMS256.txt'),'hash_verified_before_extract':True,
+      'probes':probes,'chosen_memory_mib':next((p['memory_mib'] for p in probes if p['pass']),None),
+      'python_runtime_tree_modified':False,'math_jobs_launched':False,'wall_seconds':time.monotonic()-started,
+      'cpu_seconds':time.process_time(),'git_version':subprocess.check_output(['git','--version'],text=True).strip(),
+      'cgroup_memory_max_bytes':int(next(path for path in (Path('/sys/fs/cgroup/memory.max'),Path('/sys/fs/cgroup/memory/memory.limit_in_bytes')) if path.is_file()).read_text()),
+      'file_sha256':{p.name:digest(p) for p in EVIDENCE.iterdir() if p.is_file()}}
+    (EVIDENCE/'result.json').write_text(json.dumps(record,indent=2,sort_keys=True)+'\n')
+    print(json.dumps({k:record[k] for k in ('status','version','node_sha256','chosen_memory_mib','wall_seconds','cpu_seconds')}))
+
+if __name__=='__main__':main()

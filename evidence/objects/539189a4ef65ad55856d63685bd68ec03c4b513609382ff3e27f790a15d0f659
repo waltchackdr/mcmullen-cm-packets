@@ -1,0 +1,66 @@
+{
+  "files": {
+    "PROOF_FOR_MANUSCRIPT.txt": {
+      "bytes": 4204,
+      "sha256": "d840dc9fbc066fffb48ce959689d395129c602ead55a25c41bcf6ae956a2d227"
+    },
+    "certificates/principal_unmarked_bc_data.json": {
+      "bytes": 22180,
+      "sha256": "b9792b7ebe38ab8235d8b7b603a2596768d182b7863c6ca975eac56f9cb0437f"
+    },
+    "certificates/principal_unmarked_bc_v122.py": {
+      "bytes": 7515,
+      "sha256": "a73582098061839d7405a1fe00576b8bc50b703d0d830bb7d3977ecad446fdd3"
+    },
+    "check01/producer.source": {
+      "bytes": 7515,
+      "sha256": "a73582098061839d7405a1fe00576b8bc50b703d0d830bb7d3977ecad446fdd3"
+    },
+    "check01/receipt.json": {
+      "bytes": 147,
+      "sha256": "91a0c84f44af35055941d014d07a56a267f7df96c9a4ffcac26a243f8e8d7a5e"
+    },
+    "check01/stdout.txt": {
+      "bytes": 270,
+      "sha256": "41e9ba8e878c0e190f7f9a4f63919f999f302870f2ca6612ed8f3df0164574dc"
+    },
+    "tests/test_principal_unmarked_bc_v122.py": {
+      "bytes": 1775,
+      "sha256": "66129e716d86f257a2069b46f3aa5d687cbebd06ce3c989ad62d7efe1910bedf"
+    }
+  },
+  "integration_requirements": [
+    "Hostile review and explicit theorem adoption",
+    "Install self-contained certificate+data and minimal regression only after review",
+    "Install genuinely separate companion-matrix and split-box path with pins",
+    "Exact reviewed manuscript patch and updated governance; separate successor source epoch, not V121 rewrite"
+  ],
+  "not_installed": true,
+  "primary_check": {
+    "cpu_limit": 20,
+    "result": "PASS",
+    "wall_limit": 30,
+    "wall_seconds": 1.776297207979951
+  },
+  "regression_observation": {
+    "checks": "Complete finite ball; altered Gram, nonunimodular U, incomplete bound and corrupt LDL rejected. Full field reconstruction is the certificate obligation, not repeated by this lightweight regression.",
+    "command": [
+      ".venv/bin/python",
+      "-B",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "experiments/unmarked_principal_bc_v122/promotion/tests",
+      "-p",
+      "test_*.py"
+    ],
+    "result": "OK",
+    "runtime_seconds": 0.367,
+    "tests": 3
+  },
+  "source_epoch_unchanged": "Frozen V121 is not modified.",
+  "status": "PREPARED_PROMOTION_CANDIDATE_PENDING_HOSTILE_REVIEW",
+  "theorem_adoption": false,
+  "wording_correction": "J_X maps M to L^2; its inverse carries P to I_X. No mathematical data/code changed."
+}

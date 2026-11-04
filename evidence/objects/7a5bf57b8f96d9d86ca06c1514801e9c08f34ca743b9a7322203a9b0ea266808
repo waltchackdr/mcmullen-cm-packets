@@ -1,0 +1,69 @@
+"""Integer regression for the human Burnside proof; no Grassmannian enumeration."""
+import json
+from pathlib import Path
+
+
+def gaussian(n, r, q=3):
+    numerator = denominator = 1
+    for i in range(r):
+        numerator *= q ** (n - i) - 1
+        denominator *= q ** (r - i) - 1
+    assert numerator % denominator == 0
+    return numerator // denominator
+
+
+def compute():
+    assert gaussian(6, 3) == 33880
+    assert [gaussian(3, r) for r in range(4)] == [1, 13, 13, 1]
+    jordan33 = (3**6 - 3**4) // (3**3 - 3**2) + gaussian(2, 1)
+    involution = sum(gaussian(3, r) * gaussian(3, 3-r) for r in range(4))
+    assert (jordan33, involution) == (40, 340)
+    full_sums = [2*33880+24*28, 364*4, 91*2*40,
+                 28*(340+12*2), 91*2*40, 364*4]
+    assert all(x % 728 == 0 for x in full_sums)
+    fixed_scalar_orbits = [x // 728 for x in full_sums]
+    assert fixed_scalar_orbits == [94, 2, 10, 14, 10, 2]
+    underlying = {2: 2, 4: 4, 6: 4, 12: 12}
+    principal_underlying = {2: 2, 4: 1, 6: 4, 12: 4}
+    obstructed_underlying = {k: underlying[k]-principal_underlying[k] for k in underlying}
+    assert sum(underlying.values()) == sum(fixed_scalar_orbits)//6 == 22
+    assert sum(k*v for k,v in underlying.items()) == 188
+    assert {k:v for k,v in obstructed_underlying.items() if v} == {4:3, 12:8}
+    g_sums = [67760, 112, 560, 9520, 560, 112]
+    assert sum(g_sums) % 336 == 0
+    all_orbits = sum(g_sums)//336
+    g0_lagrangian = (2*1120+28*sum(gaussian(3,r) for r in range(4)))//112
+    assert (all_orbits, g0_lagrangian) == (234, 27)
+    incidence = 11+4*g0_lagrangian
+    principalizable = incidence-5+1
+    minimum_orbits = all_orbits-principalizable
+    assert (incidence, principalizable, minimum_orbits) == (119,115,119)
+    minimum = {8:3, 24:116}
+    assert sum(minimum.values()) == minimum_orbits
+    assert sum(k*v for k,v in minimum.items()) == 2808
+    assert 8*minimum[8] == 40-16 == 24
+    # Nonnegativity forces the unique solution, not just a fitted solution.
+    assert 0 <= 6-2*3 and 0 <= 2*3-6
+    assert 3*(8+4*24)+8*(13*24) == 2808
+    complete_polarized = {1:1, 4:2, 8:4, 12:4, 24:120}
+    assert sum(complete_polarized.values()) == 131
+    assert sum(k*v for k,v in complete_polarized.items()) == 2969
+    return {
+        "status":"PROVISIONAL_INTEGER_REGRESSION_PASS",
+        "scope":"Checks displayed sums only; semilinear fixed-space counts and Galois identifications require the human proof and hostile review.",
+        "fixed_scalar_orbits":fixed_scalar_orbits,
+        "underlying_orbits":underlying,
+        "obstructed_underlying_orbits":{k:v for k,v in obstructed_underlying.items() if v},
+        "all_subspace_G_orbits":all_orbits,
+        "principalizable_subspace_G_orbits":principalizable,
+        "obstructed_minimum_polarized_orbits":minimum,
+        "complete_minimum_polarized_orbits":complete_polarized,
+    }
+
+
+if __name__ == "__main__":
+    if not __debug__:
+        raise RuntimeError("Assertions required")
+    result = compute()
+    Path(__file__).with_suffix(".json").write_text(json.dumps(result,indent=2,sort_keys=True)+"\n")
+    print(json.dumps(result,sort_keys=True))

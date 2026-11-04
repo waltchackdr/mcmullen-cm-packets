@@ -1,0 +1,205 @@
+{
+  "status": "PROVISIONAL_FINITE_GROUP_REFINEMENT_NOT_ADOPTED",
+  "source": "experiments/s_order_galois_v163/finite_action01.json",
+  "source_sha256": "328723f421035083ad11209db9331ac8acd39ef2787dc7c66faa4620d8daeb29",
+  "rows": [
+    {
+      "representative": 0,
+      "orbit_size": 12,
+      "stabilizer_a_i_b_j": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          3
+        ]
+      ],
+      "reflection_a_parity": [
+        0
+      ]
+    },
+    {
+      "representative": 1,
+      "orbit_size": 12,
+      "stabilizer_a_i_b_j": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          3
+        ]
+      ],
+      "reflection_a_parity": [
+        0
+      ]
+    },
+    {
+      "representative": 2,
+      "orbit_size": 12,
+      "stabilizer_a_i_b_j": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          3
+        ]
+      ],
+      "reflection_a_parity": [
+        0
+      ]
+    },
+    {
+      "representative": 3,
+      "orbit_size": 24,
+      "stabilizer_a_i_b_j": [
+        [
+          0,
+          0
+        ]
+      ],
+      "reflection_a_parity": []
+    },
+    {
+      "representative": 6,
+      "orbit_size": 24,
+      "stabilizer_a_i_b_j": [
+        [
+          0,
+          0
+        ]
+      ],
+      "reflection_a_parity": []
+    },
+    {
+      "representative": 8,
+      "orbit_size": 4,
+      "stabilizer_a_i_b_j": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          2
+        ],
+        [
+          0,
+          3
+        ],
+        [
+          0,
+          4
+        ],
+        [
+          0,
+          5
+        ]
+      ],
+      "reflection_a_parity": [
+        0
+      ]
+    },
+    {
+      "representative": 12,
+      "orbit_size": 12,
+      "stabilizer_a_i_b_j": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          3
+        ]
+      ],
+      "reflection_a_parity": [
+        0
+      ]
+    },
+    {
+      "representative": 15,
+      "orbit_size": 24,
+      "stabilizer_a_i_b_j": [
+        [
+          0,
+          0
+        ]
+      ],
+      "reflection_a_parity": []
+    },
+    {
+      "representative": 17,
+      "orbit_size": 24,
+      "stabilizer_a_i_b_j": [
+        [
+          0,
+          0
+        ]
+      ],
+      "reflection_a_parity": []
+    },
+    {
+      "representative": 40,
+      "orbit_size": 4,
+      "stabilizer_a_i_b_j": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          2
+        ],
+        [
+          0,
+          4
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          2,
+          3
+        ],
+        [
+          2,
+          5
+        ]
+      ],
+      "reflection_a_parity": [
+        0
+      ]
+    },
+    {
+      "representative": 91,
+      "orbit_size": 8,
+      "stabilizer_a_i_b_j": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          2
+        ],
+        [
+          0,
+          4
+        ]
+      ],
+      "reflection_a_parity": []
+    }
+  ],
+  "scope": "Finite permutation stabilizers only; arithmetic field identification requires proof and review."
+}

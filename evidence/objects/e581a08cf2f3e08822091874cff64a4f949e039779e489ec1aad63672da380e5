@@ -1,0 +1,21 @@
+{
+  "actual_theta_count": "UNKNOWN",
+  "cleanup_absence_observations": 2,
+  "last_request": {
+    "endpoint": "snapshot",
+    "event": "FAILED",
+    "exception_type": "HTTPError",
+    "http_status": 404,
+    "job": 0,
+    "method": "GET",
+    "observed_epoch": 1793681260.5854678,
+    "sequence": 17
+  },
+  "pins": {
+    "build/s-order-v164/session_run02/controller/cleanup.json": "af73ac247de408050810ca35b8353feaf5aed1b4e808fb1a9303894fea47359f",
+    "build/s-order-v164/session_run02/controller/outcome.json": "14727336e2908705401b52e8c8ad9b81fae4ecc7dd589f819b3b76bf52d318ca",
+    "build/s-order-v164/session_run02/controller/request_events.jsonl": "d563ccda4c07338279ebf85ecb00c4cfe7bc0ad8fd5d54abc6177d7849f75320"
+  },
+  "provider_calls": 0,
+  "status": "PASS_RETAINED_POST_START_FAILURE_METADATA"
+}

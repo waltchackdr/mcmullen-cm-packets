@@ -1,0 +1,234 @@
+#!/usr/bin/env python3
+"""Exact, standalone census of rank-one Q(zeta_42) CM Hodge structures.
+
+This is discovery/preparation, not a geometric realization or claim adoption.
+Only the Python standard library is used.  No repository module is imported.
+"""
+
+from fractions import Fraction
+from hashlib import sha256
+from itertools import product
+from math import gcd
+from pathlib import Path
+import json
+import resource
+import sys
+import time
+
+
+MODULUS = 42
+G = tuple(a for a in range(MODULUS) if gcd(a, MODULUS) == 1)
+PAIRS = tuple((a, MODULUS - a) for a in G if a < MODULUS - a)
+POSITION = {a: i for i, a in enumerate(G)}
+FULL = (1 << len(G)) - 1
+
+
+def encoded(value):
+    return (json.dumps(value, sort_keys=True, separators=(",", ":")) + "\n").encode()
+
+
+def digest(value):
+    return sha256(encoded(value)).hexdigest()
+
+
+def rank(rows):
+    """Rational row rank, using exact Fraction Gaussian elimination."""
+    matrix = [[Fraction(x) for x in row] for row in rows]
+    pivot = 0
+    for col in range(len(matrix[0]) if matrix else 0):
+        found = next((i for i in range(pivot, len(matrix)) if matrix[i][col]), None)
+        if found is None:
+            continue
+        matrix[pivot], matrix[found] = matrix[found], matrix[pivot]
+        divisor = matrix[pivot][col]
+        matrix[pivot] = [x / divisor for x in matrix[pivot]]
+        for i in range(len(matrix)):
+            if i != pivot and matrix[i][col]:
+                scalar = matrix[i][col]
+                matrix[i] = [x - scalar * y for x, y in zip(matrix[i], matrix[pivot])]
+        pivot += 1
+        if pivot == len(matrix):
+            break
+    return pivot
+
+
+def translate(support, multiplier):
+    return tuple(sorted((multiplier * a) % MODULUS for a in support))
+
+
+def mask(support):
+    return sum(1 << POSITION[a] for a in support)
+
+
+def support(bits):
+    return [a for i, a in enumerate(G) if bits & (1 << i)]
+
+
+def type_orbit(cm_type):
+    return tuple(sorted({translate(cm_type, g) for g in G}))
+
+
+def analyze(cm_type):
+    orbit = type_orbit(cm_type)
+    stabilizer = [g for g in G if translate(cm_type, g) == cm_type]
+    assert len(orbit) * len(stabilizer) == len(G)
+    assert MODULUS - 1 not in stabilizer
+    signs6 = [[1 if a in phi else -1 for a, _ in PAIRS] for phi in orbit]
+    signs12 = [[1 if a in phi else -1 for a in G] for phi in orbit]
+    hodge_rank = rank(signs6)
+    assert hodge_rank == rank(signs12)
+    orbit_masks = [mask(phi) for phi in orbit]
+
+    # For a subset S of size 2p, every conjugate circle has weight zero
+    # exactly when |S intersect g*Phi|=p for every g in G.
+    invariant = [set() for _ in range(7)]
+    for bits in range(FULL + 1):
+        size = bits.bit_count()
+        if size % 2:
+            continue
+        p = size // 2
+        if all((bits & phi).bit_count() == p for phi in orbit_masks):
+            invariant[p].add(bits)
+    all_invariant = set().union(*invariant)
+    assert invariant[0] == {0} and invariant[6] == {FULL}
+    assert all((FULL ^ bits) in all_invariant for bits in all_invariant)
+
+    # An actual disjoint-pair decomposition is retained for every divisor
+    # product.  The first occupied embedding must belong to one such pair.
+    pairs = sorted(invariant[1])
+    decompositions = {0: ()}
+    for p in range(1, 7):
+        for bits in sorted(invariant[p]):
+            first = bits & -bits
+            for pair in pairs:
+                if pair & first and pair & bits == pair and (bits ^ pair) in decompositions:
+                    decompositions[bits] = (pair,) + decompositions[bits ^ pair]
+                    break
+    for bits, decomposition in decompositions.items():
+        union = 0
+        for pair in decomposition:
+            assert pair in invariant[1] and not union & pair
+            union |= pair
+        assert union == bits
+
+    # Minimal positive-degree invariant supports: no proper nonempty
+    # invariant subset.  Any such subset has invariant complement, so
+    # this is exactly indecomposability in the full invariant algebra.
+    indecomposable = [[] for _ in range(7)]
+    split_witness = {}
+    earlier = []
+    for p in range(1, 7):
+        for bits in sorted(invariant[p]):
+            factor = next((sub for sub in earlier if sub & bits == sub), None)
+            if factor is None:
+                indecomposable[p].append(bits)
+            else:
+                other = bits ^ factor
+                assert other and other in all_invariant
+                split_witness[bits] = [factor, other]
+        earlier.extend(sorted(invariant[p]))
+
+    # Independently close under disjoint unions of the minimal supports;
+    # this also verifies that no invariant support was left unexplained.
+    atoms = sorted(bits for row in indecomposable for bits in row)
+    generated = {0}
+    for p in range(1, 7):
+        for bits in sorted(invariant[p]):
+            if any(atom & bits == atom and (bits ^ atom) in generated for atom in atoms):
+                generated.add(bits)
+    assert generated == all_invariant
+    assert (len(decompositions) == len(all_invariant)) == (not any(indecomposable[2:]))
+    for g in G:
+        assert {mask(translate(support(bits), g)) for bits in all_invariant} == all_invariant
+
+    dimensions = [len(row) for row in invariant]
+    divisor_dimensions = [sum(bits in decompositions for bits in row) for row in invariant]
+    assert dimensions == dimensions[::-1]
+    return {
+        "representative": list(cm_type),
+        "orbit": [list(phi) for phi in orbit],
+        "orbit_size": len(orbit),
+        "stabilizer": stabilizer,
+        "primitive": len(stabilizer) == 1,
+        "minimal_inducing_cm_subfield_degree": len(G) // len(stabilizer),
+        "circle_sign_rows_conjugate_pair_coordinates": signs6,
+        "rational_hodge_group_rank": hodge_rank,
+        "hodge_dimensions_codimensions_0_through_6": dimensions,
+        "divisor_generated_dimensions_codimensions_0_through_6": divisor_dimensions,
+        "quotient_by_divisor_subalgebra_dimensions": [a - b for a, b in zip(dimensions, divisor_dimensions)],
+        "divisor_generated": len(decompositions) == len(all_invariant),
+        "indecomposable_counts_codimensions_1_through_6": [len(row) for row in indecomposable[1:]],
+        "minimal_higher_degree_invariant_supports": {
+            str(p): [support(bits) for bits in indecomposable[p]]
+            for p in range(2, 7) if indecomposable[p]
+        },
+        "invariant_supports_sha256": digest([sorted(row) for row in invariant]),
+        "actual_divisor_decompositions_sha256": digest({str(bits): list(parts) for bits, parts in sorted(decompositions.items())}),
+        "invariant_split_witnesses_sha256": digest({str(bits): parts for bits, parts in sorted(split_witness.items())}),
+    }
+
+
+def census():
+    assert len(G) == 12 and len(PAIRS) == 6
+    all_types = {tuple(sorted(pair[bit] for pair, bit in zip(PAIRS, choices))) for choices in product((0, 1), repeat=6)}
+    assert len(all_types) == 64
+    representatives = sorted({min(type_orbit(phi)) for phi in all_types})
+    records = [analyze(phi) for phi in representatives]
+    seen = set()
+    for record in records:
+        orbit = {tuple(phi) for phi in record["orbit"]}
+        assert not seen & orbit
+        seen |= orbit
+    assert seen == all_types and sum(row["orbit_size"] for row in records) == 64
+    return {
+        "schema_version": 1,
+        "status": "EXACT_FIXED_FIELD_CM_TYPE_CENSUS_DISCOVERY_PREPARATION",
+        "field": "Q(zeta_42)=Q(zeta_21)",
+        "units_mod_42": list(G),
+        "conjugate_pairs": [list(pair) for pair in PAIRS],
+        "type_count": 64,
+        "galois_orbit_count": len(records),
+        "geometry_or_actual_variety_realization_asserted": False,
+        "theorem_or_claim_adoption": False,
+        "all_powers_conclusion_asserted": False,
+        "scope_and_method": {
+            "finite_domain": "A CM type selects exactly one of each of six conjugate embedding pairs, giving 2^6=64. All 12 Galois multipliers act explicitly; disjoint orbit union is checked.",
+            "hodge_structure": "Weight-one polarizable CM Hodge structure with rational H1 of rank one over M (dimension 12 over Q), hence a hypothetical sixfold cohomology exterior algebra. No curve point, marked lattice, order, polarization, or orbit realization is inferred.",
+            "primitivity": "For this abelian Galois CM field, a type is induced from a proper CM subfield iff its multiplication stabilizer is nontrivial. The stabilizer excludes complex conjugation; its fixed field is CM and the type is a union of its cosets.",
+            "hodge_rank": "Rank over Q of all Galois conjugates of the circle cocharacter mu-minus-conjugate(mu), with +1 on the type and -1 on its complement. Exact Fraction elimination in both 6 pair coordinates and 12 embedding coordinates agrees.",
+            "hodge_classes": "For every embedding subset S of even cardinality 2p, require |S intersect g*Phi|=p for every Galois translate. At most 4096 subsets per orbit. The resulting invariant basis over a splitting field counts rational Hodge classes because invariants commute with field extension.",
+            "divisor_algebra": "Compute actual disjoint decompositions into invariant two-element supports. Their spans are the degree-two-generated subalgebra. The property descends to Q by faithful field extension of each rational multiplication-map cokernel.",
+            "minimal_supports": "Report invariant supports of cardinality greater than two with no proper nonempty invariant subset. These are algebra indecomposables, not merely failures of one chosen pairing algorithm. Closure under all these supports is checked against the entire invariant set.",
+            "limitations": "Fixed-field CM-type algebra only; distinct from the fixed marked 368-point geometry. Counts are not a proof about arbitrary CM fields or arbitrary powers. No floating point or repository mathematical imports.",
+        },
+        "orbits": records,
+    }
+
+
+def main():
+    if not __debug__:
+        raise RuntimeError("Assertions must be enabled")
+    # Never enlarge a pre-existing finite limit; the process gets at most
+    # twenty CPU seconds, including module startup and JSON publication.
+    old_soft, old_hard = resource.getrlimit(resource.RLIMIT_CPU)
+    soft = 20 if old_soft == resource.RLIM_INFINITY else min(20, old_soft)
+    hard = 20 if old_hard == resource.RLIM_INFINITY else min(20, old_hard)
+    resource.setrlimit(resource.RLIMIT_CPU, (min(soft, hard), hard))
+    start_ns = time.process_time_ns()
+    result = census()
+    result["mathematical_payload_sha256"] = digest(result)
+    result["producer"] = {
+        "source_sha256": sha256(Path(__file__).read_bytes()).hexdigest(),
+        "python_version": sys.version.split()[0],
+        "cpu_limit_seconds": list(resource.getrlimit(resource.RLIMIT_CPU)),
+        "measured_cpu_nanoseconds_before_publication": time.process_time_ns() - start_ns,
+        "no_mathematical_repository_imports": True,
+    }
+    destination = Path(__file__).with_name("primary.json")
+    with destination.open("xb") as stream:
+        stream.write(json.dumps(result, sort_keys=True, indent=2).encode() + b"\n")
+    print(json.dumps({"status": result["status"], "orbits": len(result["orbits"]), "output": str(destination), "mathematical_payload_sha256": result["mathematical_payload_sha256"]}, sort_keys=True))
+
+
+if __name__ == "__main__":
+    main()

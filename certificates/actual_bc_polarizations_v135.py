@@ -1,0 +1,65 @@
+"""Exact finite identities for actual B/C representatives (C66).
+
+Reuses adopted C58 arithmetic. This is not an independent implementation and
+certifies only finite lattice/form identities; the reviewed human proof supplies
+the polarization-class and geometric conclusions.
+"""
+import hashlib, importlib.util, json, resource, signal, sys
+from pathlib import Path
+import sympy as s
+
+if sys.flags.optimize: raise RuntimeError('Enabled assertions required')
+resource.setrlimit(resource.RLIMIT_CPU, (20,20)); signal.alarm(30)
+ROOT=Path(__file__).resolve().parents[1]
+def load(name,pin):
+    raw=(ROOT/'certificates'/name).read_bytes()
+    assert hashlib.sha256(raw).hexdigest()==pin
+    return json.loads(raw)
+src=ROOT/'certificates/principal_unmarked_bc_v122.py'
+assert hashlib.sha256(src.read_bytes()).hexdigest()=='a73582098061839d7405a1fe00576b8bc50b703d0d830bb7d3977ecad446fdd3'
+spec=importlib.util.spec_from_file_location('c58',src)
+base=importlib.util.module_from_spec(spec); spec.loader.exec_module(base)
+K=base.K; z=K([0,1]); zp=[z**i for i in range(12)]
+def auto(v,g):return sum((c*z**((g*i)%42) for i,c in enumerate(v.c)),K())
+def mat(vs):return s.Matrix.hstack(*(s.Matrix(v.c) for v in vs))
+def mm(v):return mat([v*p for p in zp])
+def integral(A):return all(q.q==1 for q in A)
+def cs(v):return [str(c) for c in v.c]
+d=load('principal_unmarked_bc_data.json','b9792b7ebe38ab8235d8b7b603a2596768d182b7863c6ca975eac56f9cb0437f')['data']
+d59=load('principal_bc_isogeny_data.json','4796d9f3b2ddfe3fefbf80e6fff1b7842c7e7d40cd35b3795deec0974ab49cee')
+d60=load('principal_bc_unpolarized_data.json','f4481b8162c2a8aac0db7dcc9afdbb0e8d6f56eb252e1ede92670034d6deb86e')
+d62=load('principal_bc_hom_data.json','9f815f1592c8e22a2a14b15086d8d9cb63092f9ab84bb90a3d5ee4935b3fe22c')
+R=s.Matrix(d60['R_C_basis']);J=s.Matrix(d62['J_basis'])
+cB=K([8,11,4,4,8,-5,-22,-24,-2,20,18,3])
+alpha=K(d60['alpha']);m0=K(d59['witness_m'])
+cC=alpha*auto(cB,31)*m0.inverse()
+t=z+auto(z,41)
+beta=-t**5+t**4+6*t**3-2*t**2-8*t-2
+derivative=6*t**5+5*t**4-24*t**3-18*t**2+16*t+8
+kappa=(derivative*(z-auto(z,41))*beta).inverse()
+gamma=z**6*(1-z**2); positive_unit=gamma*auto(gamma,41)
+assert auto(positive_unit,41)==positive_unit
+assert integral(mm(positive_unit)) and mm(positive_unit).det()==1
+ratio=gamma*auto(gamma,41).inverse()
+assert ratio==-z**14 and ratio**21==-K(1)
+out={}
+for name,c,A in [('B',cB,J),('C',cC,R)]:
+    I=mat([K(v) for v in d['I_'+name+'_basis']])
+    U=A.inv()*mm(c)*I
+    assert integral(U) and abs(U.det())==1, name+' lattice equality'
+    xi=K(d['xi_'+name])*(c*auto(c,41)).inverse()
+    u=xi*kappa.inverse()
+    assert auto(xi,41)==-xi and auto(u,41)==u
+    assert integral(mm(u)) and abs(mm(u).det())==1, name+' real unit'
+    # Exact transported Gram matrix reproduces the specified principal form.
+    Av=[K(list(A[:,j])) for j in range(12)]
+    def trace(v):return s.trace(mm(v))
+    E=s.Matrix(12,12,lambda i,j:trace(xi*Av[i]*auto(Av[j],41)))
+    assert E.T==-E and E.det()==1 and integral(E)
+    assert U.T*E*U==s.Matrix(d['principal_alternating_matrix'])
+    out[name]={'ideal_class':'J' if name=='B' else 'R','rescaling':cs(c),
+               'polarization_parameter':cs(xi),'unit_relative_to_kappa_R':cs(u),
+               'basis_change':[[str(x) for x in U.row(i)] for i in range(12)],
+               'gram_det':str(E.det())}
+print(json.dumps({'status':'ACTUAL_BC_POLARIZATION_IDENTITIES_PASS', 'models':out,
+                  'positive_unit_gamma_bar_gamma':cs(positive_unit)},indent=2))

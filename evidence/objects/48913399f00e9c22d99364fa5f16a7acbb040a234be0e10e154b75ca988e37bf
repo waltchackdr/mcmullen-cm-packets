@@ -1,0 +1,476 @@
+#!/usr/bin/env python3
+"""Explicit V89/V90/V91 selected-source amendments to the frozen V88 metadata audit.
+
+No mathematical execution or promotion. All original/old/new completed paths
+are checked; failed V88 histories remain failed, and a missing newly selected result never
+falls back to a duplicate. Original argv coordinates are not local byte paths.
+"""
+import argparse,fcntl,hashlib,json,os,resource,signal,stat,sys,time
+from contextlib import contextmanager
+from pathlib import Path
+FANOUT='experiments/continuous_v83/continuation/fanout/audit.py'
+FANOUT_SHA='0789892d46569d667a2fd27aecf91895d93da1c44df8c965cedaecf2178250ed'
+BASE='experiments/continuous_v83/continuation/crosscohort/fixed730-revision01/audit.py'
+BASE_SHA='3d125c2cbbe65d18f084e9495ffd03dbea853f20aad43dad20b78d6715898b65'
+CONTROLLER='experiments/continuous_v83/continuation/controller_v89.py'
+CONTROLLER_SHA='55e3cbd936e850b9368915835d2e2a8c9927be35c1ce442cb52776358294ba6d'
+CONFIG='5e03561b7e2aefa96c094e82714e1abaa08cebf14747a4a6d445992e53321a9a'
+AMENDMENT='1d145801f3ed4012270132412bc3834a4d09866cafa16400a4dd3262262195a6'
+AMENDMENT_REVIEW='d96a31bf81195ae4bdfb8b8f95ddc10a28a7ba378c08a0319062698a960eef03'
+FAILED_REVIEW='ead99b30627eb1f46d9e88628ccc9b34191f9f91eeac9af77b2e7f9f9dc81693'
+SOURCE_REVIEW='456c46a566805758aa2198276fa148d23a1644660f3c00f14df994dccc956853'
+SCOPE='FIXED730_EXPLICIT_V89_V90_V91_SELECTION_CHAIN_ALL_PREDECESSORS_NO_PROMOTION'
+REPLACED={'eth919mwmrd4nk':'04','wfk9rf1p0i7ryq':'06'}
+def need(ok,message):
+ if not ok:raise ValueError(message)
+def encoded(v):return (json.dumps(v,sort_keys=True,separators=(',',':'),allow_nan=False)+'\n').encode()
+def sha(p):
+ h=hashlib.sha256()
+ with Path(p).open('rb')as stream:
+  for block in iter(lambda:stream.read(1048576),b''):h.update(block)
+ return h.hexdigest()
+def object_sha(v):return hashlib.sha256(encoded(v)).hexdigest()
+def helpers(root):
+ import importlib.util
+ root=Path(root);p=root/FANOUT
+ need(all(not q.is_symlink()for q in(p,*p.parents))and sha(p)==FANOUT_SHA,'Unreviewed frozen fanout helper')
+ s=importlib.util.spec_from_file_location('v89_frozen_fanout',p);f=importlib.util.module_from_spec(s);s.loader.exec_module(f)
+ x,a,c,h=f.helpers(root)
+ new_c=x.load(root/CONTROLLER,CONTROLLER_SHA,'v89_reviewed_controller')
+ return f,x,a,c,h,new_c
+
+def execution_id(config,partition):return config['cohort_id']+'/'+partition
+
+
+# Each step is independently pinned; the order is mathematical evidence policy.
+CHAIN_PINS=[
+ {'amendment_sha256':AMENDMENT,'configuration_sha256':CONFIG,'review_sha256':AMENDMENT_REVIEW,
+  'failed_review_sha256':FAILED_REVIEW,'source_review_sha256':SOURCE_REVIEW,
+  'review_status':'PASS_EXPLICIT48_V89_CONFIGURATION_SELECTION_AND_PARENT_REVIEW',
+  'failed_status':'PASS_RETAINED_FAILED_V88_COHORT_HISTORY_NOT_ADOPTION','nodes':REPLACED},
+ {'amendment_sha256':'c45be993dc5d75ed3c9323b0d890dbc44be1a00d943dc9923b0f89f7c7b13852',
+  'configuration_sha256':'e34ce76a1243e558df2b7b94b8039fc7b78ee01452c0be752382c6d8d9d24687',
+  'review_sha256':'1b50f53bf1fb9779dbb6470280e7dab9fe2701e00b709826df271cf0383c5698','failed_review_sha256':'baeb931c2ea1a08c33457d206e8698524774501435cd05e17c95e42b3d369b2d',
+  'source_review_sha256':SOURCE_REVIEW,
+  'review_status':'PASS_V90_NODE05_CONFIGURATION_SELECTION_AND_ADMIN_SOURCE_REVIEW',
+  'failed_status':'PASS_RETAINED_FAILED_V88_NODE05_HISTORY_NOT_ADOPTION',
+  'nodes':{'eekrbm9ptouhaj':'05'}},
+ {'amendment_sha256':'25a1ee38fe4a654480df5574e398037da2d7e906c2542bec1aad3edda1488111',
+  'configuration_sha256':'a101b705b261f8dab58ed8ba1ecd5479660931ed2db6cde6aeabe16e2084e7d7',
+  'review_sha256':'2de618a8eb34b0d0adc7aaa404694aa33fa4c255448431b717e5e800f35a66d6',
+  'failed_review_sha256':'f2d30147f9e85a70a0f6afdc3a712b3305f0593f9789b172282b400f5dabaeb8',
+  'source_review_sha256':SOURCE_REVIEW,
+  'review_status':'PASS_V91_NODE01_CONFIGURATION_SELECTION_AND_ADMIN_SOURCE_REVIEW',
+  'failed_status':'PASS_RETAINED_FAILED_V88_NODE01_HISTORY_NOT_ADOPTION',
+  'nodes':{'3cyxa23ndbql0c':'01'}}]
+
+
+def load_amendment_chain(x,a,references,anchors=None):
+ """Read the complete exact approved step files; shared by the auditor and collectors."""
+ need(type(references)is list and len(references)==len(CHAIN_PINS),'Complete ordered amendment references')
+ chain=[]
+ for refs,pins in zip(references,CHAIN_PINS):
+  need(set(refs)=={'configuration','amendment','review','failed_review','source_review'},'Exact amendment references')
+  step={}
+  for name,ref in refs.items():
+   p,value=x.reference(a,ref,pins[name+'_sha256']);digest=sha(p)
+   if anchors is not None:anchors[str(p)]=digest
+   step[name]=value;step[name+'_sha256']=digest
+  chain.append(step)
+ return chain
+
+
+def replay_selection_chain(f,x,c,labels,index,allocation,binding,old,fanout,chain,continuation_ids=None):
+ """Return selected173 and every actual execution; never identify by pod alone.
+
+ Each chain step has configuration/amendment/review/failed_review/source_review
+ objects and their raw-file *_sha256 fields, verified by the caller's references.
+ Hash authority is restricted to CHAIN_PINS; objects receive all semantic checks.
+ Returned specs bind configuration/controller/partition plus failed predecessor
+ projection and raw-retention authority. No old bytes or source globals mutate.
+ """
+ old_selected,mapping=f.allocation_binding(x,c,labels,index,allocation,binding,old,fanout,f.NEW_CONFIG,set(fanout['hosts']))
+ need(type(chain)is list and len(chain)==len(CHAIN_PINS),'All separately reviewed amendments are mandatory')
+ old_controller=x.PINS[x.HERE+'/continuation/controller.py']
+ def spec(config,digest,host,controller):
+  return {'configuration':config,'configuration_sha256':digest,'controller_sha256':controller,
+          'partition_id':host,'failed_record':None,'failed_review_sha256':None,'retention_sha256':None}
+ executions={execution_id(old,f.OLD_POD):spec(old,x.CONFIG,f.OLD_POD,old_controller)}
+ executions.update({execution_id(fanout,p):spec(fanout,f.NEW_CONFIG,p,old_controller)for p in mapping.values()})
+ selected={k:execution_id(old if host==f.OLD_POD else fanout,host)for k,host in old_selected.items()}
+ previous=fanout;previous_sha=f.NEW_CONFIG;previous_selection=f.EXECUTION_BINDING
+ for step,pin in zip(chain,CHAIN_PINS):
+  need(all(step[k]==pin[k]for k in ('amendment_sha256','configuration_sha256','review_sha256','failed_review_sha256','source_review_sha256')),'Unreviewed or reordered amendment chain')
+  new=step['configuration'];amendment=step['amendment'];review=step['review'];failed_review=step['failed_review'];sr=step['source_review'];nodes=pin['nodes']
+  keys_expected=sorted(k for host in nodes for k in fanout['partitions'][host]);count=len(keys_expected)
+  need(amendment['status']==f'ROOT_APPROVED_EXPLICIT{count}_SELECTED_SOURCE_REPLACEMENT','Explicit replacement authority')
+  need(amendment['previous_configuration_sha256']==previous_sha and amendment['previous_selection_sha256']==previous_selection and amendment['new_configuration_sha256']==pin['configuration_sha256'] and amendment['new_controller_sha256']==CONTROLLER_SHA,'Amendment chain ancestry')
+  for key in ('unaffected_selections_unchanged','old_failed_history_mandatory','missing_new_selected_results_remain_incomplete','future_completed_duplicates_require_full_canonical_and_journal_agreement','require_external_adversarial_gate_before_launch'):
+   need(amendment[key]is True,'Replacement safeguard '+key)
+  need(amendment['theorem_promotion']is False,'No promotion')
+  need(sr['status']=='PASS_V89_LIVE_ACCOUNTING_ONLY_CONTROLLER_SOURCE_REVIEW' and sr['controller_sha256']==CONTROLLER_SHA and sr['only_measured_bytes_changed_reverse_entire_bytes']is True and sr['unchanged_kernel_source_and_result_validation']is True,'Only reviewed disk-accounting source delta')
+  need(review['status']==pin['review_status'] and review['selection_amendment_sha256']==pin['amendment_sha256'] and review['configuration_sha256']==pin['configuration_sha256'] and review['source_review_sha256']==SOURCE_REVIEW and review['failed_history_review_sha256']==pin['failed_review_sha256'] and type(review['exact_keys'])is int and review['exact_keys']==count and review['mathematical_adoption']is False,'Actual amendment review')
+  need(review['allowed_partitions']==sorted(nodes),'Actual replacement launch domain')
+  if 'all_other_partitions_reserved_never_launch'in review:need(review['all_other_partitions_reserved_never_launch']is True,'Reserved partition restriction')
+  need(failed_review['status']==pin['failed_status'] and failed_review['mathematical_outcome_adopted']is False and set(failed_review['cohorts'])==set(nodes.values()),'Explicit retained-failure review')
+  need(new['partitions']==previous['partitions'] and set(new['hosts'])==set(previous['hosts']),'Unchanged173 partition data')
+  need(new['cohort_id']not in{v['configuration']['cohort_id']for v in executions.values()},'Fresh replacement cohort identity')
+  need(amendment['configuration_core_sha256']==object_sha({k:v for k,v in new.items()if k!='authorization'})==review['configuration_core_sha256'] and new['authorization']['sha256']==review['authorization_sha256'],'Reviewed replacement core/authorization')
+  normalized=json.loads(json.dumps(new));normalized['cohort_id']=previous['cohort_id'];normalized['authorization']=previous['authorization']
+  need(set(amendment['replacement_partitions'])==set(nodes) and amendment['replacement_keys']==keys_expected,'Exact replacement partitions/keys')
+  for host,node in nodes.items():
+   row=amendment['replacement_partitions'][host];history=failed_review['cohorts'][node];keys=fanout['partitions'][host]
+   need(row['keys']==keys and row['node']==int(node),'Exact sealed predecessor partition population')
+   predecessors={selected[k]for k in keys};need(len(predecessors)==1,'Replacement crosses selected predecessor executions')
+   predecessor_id=next(iter(predecessors));predecessor=executions[predecessor_id]
+   need(predecessor['partition_id']==host and predecessor['configuration_sha256']==f.NEW_CONFIG and predecessor['failed_record']is None,'Only the actual selected old V88 failure may be replaced')
+   need(history['complete_attempts']==0 and history['interrupted_attempts']==len(keys) and history['producer_end_guards_reconstructed']is False and history['all_local_campaign_regular_bytes_rehashed']is True and history['exact_directories_verified']is True,'Retained failed population/assumptions')
+   need(row['old_terminal_state_sha256']==history['state_sha256'] and row['retention']['sha256']==history['retention_sha256'] and row['failed_bytes']==history['bytes'],'Failed history amendment binding')
+   need(row['new_byte_limit']==new['hosts'][host]['limits']['max_campaign_bytes']==9000000000 and row['reserved_old_plus_new_bytes']==row['failed_bytes']+row['new_byte_limit']<=previous['hosts'][host]['limits']['max_campaign_bytes'],'No storage increase or hidden predecessors')
+   need(new['hosts'][host]['campaign_path']not in{v['configuration']['hosts'][v['partition_id']]['campaign_path']for v in executions.values()},'Replacement cannot reuse any retained output')
+   normalized['hosts'][host]['campaign_path']=previous['hosts'][host]['campaign_path'];normalized['hosts'][host]['limits']['max_campaign_bytes']=previous['hosts'][host]['limits']['max_campaign_bytes']
+   predecessor.update(failed_record=history,failed_review_sha256=pin['failed_review_sha256'],failed_review_node=node,retention_sha256=history['retention_sha256'])
+   eid=execution_id(new,host);executions[eid]=spec(new,pin['configuration_sha256'],host,CONTROLLER_SHA)
+   executions[eid]['launch_only_partitions']=sorted(nodes)
+   executions[eid]['previous_configuration_sha256']=previous_sha
+   executions[eid]['predecessor_execution_id']=predecessor_id
+   need(type(amendment['created_epoch'])in(int,float) and 0<amendment['created_epoch']<float('inf'),'Finite amendment time')
+   executions[eid]['selection_amendment_created_epoch']=amendment['created_epoch']
+   for key in keys:selected[key]=eid
+  need(normalized==previous,'Unreviewed configuration/deadline/runtime/source difference')
+  previous=new;previous_sha=pin['configuration_sha256'];previous_selection=pin['amendment_sha256']
+ need(set(selected)==set(index['unresolved']) and len(selected)==173,'Unchanged selected173 obligations')
+ replacement_executions=sum(len(p['nodes'])for p in CHAIN_PINS)
+ need(len(executions)==1+len(mapping)+replacement_executions and sum(v['failed_record']is not None for v in executions.values())==replacement_executions,'Every original and explicitly approved replacement execution, including all failed predecessors')
+ if continuation_ids is not None:need(set(continuation_ids)==set(executions),'Missing/extra actual execution; reserved partition cannot run')
+ return {'selected173':selected,'executions':executions,'mandatory_historical_executions':sorted(executions),
+         'logical_slot_to_actual_pod_id':mapping,'final_selection_sha256':previous_selection}
+
+
+def capture_for_controller(x,controller_sha,failed_record,a,store,receipt,receipt_sha,review,config,partition,config_sha,inventory_sha,documents):
+ host=config['hosts'][partition];state=store.read('state.json')
+ need(receipt['status']=='TERMINAL_COHORT_BYTES_CAPTURED_NOT_ADOPTED' and receipt['kind']=='REFLECTED_CONTINUATION','Capture scope')
+ need(receipt['cohort_id']==config['cohort_id'] and receipt['partition_id']==partition and
+      receipt['original_campaign_path']==host['campaign_path']==str(store.coordinate),'Capture identity')
+ expected={'manifest_sha256':store.sha('manifest.json'),'configuration_sha256':config_sha,
+  'state_sha256':store.sha('state.json'),'controller_sha256':controller_sha,
+  'runtime_sha256':host['runtime']['sha256'],'source_sha256':a.PINS}
+ need(all(receipt[k]==v for k,v in expected.items()),'Capture anchor differs')
+ need(receipt['file_inventory']['sha256']==inventory_sha and receipt['file_inventory']['files']==len(store.files) and receipt['file_inventory']['bytes']==sum(v['bytes'] for v in store.files.values()) and receipt['file_inventory']['scope']=='ALL_PERSISTED_COHORT_REGULAR_FILES_EXCEPT_COORDINATOR_LOCK','Capture inventory differs')
+ if failed_record is None:
+  need(review['status']=='ACCEPTED_TERMINAL_COHORT_CAPTURE' and review['receipt_sha256']==receipt_sha
+       and review['file_inventory_sha256']==inventory_sha and review['state_sha256']==expected['state_sha256']
+       and review['configuration_sha256']==config_sha,'Unaccepted captured closure')
+  need(review['parent_completion_sha256']==receipt['parent_completion']['sha256'] and
+       review['process_observation_sha256']==receipt['process_observation']['sha256'],'Closure evidence review binding')
+ else:
+  # Explicitly reviewed failed captures: normal observer closure, failed producer.
+  # This branch never manufactures ACCEPTED_TERMINAL_COHORT_CAPTURE or end guards.
+  need(review==failed_record,'Only the pinned failure-review projection is admitted')
+  need(failed_record['receipt_sha256']==receipt_sha and failed_record['inventory_sha256']==inventory_sha and
+       failed_record['state_sha256']==expected['state_sha256'] and failed_record['parent_completion_sha256']==receipt['parent_completion']['sha256'],'Failed capture anchors')
+  need(state['status']=='COHORT_HALTED_NO_ADOPTION' and receipt['parent_returncode']==1 and
+       receipt['producer_sources_unchanged_flag']is False and receipt['producer_runtime_unchanged_flag']is False and
+       state.get('sources_unchanged')is not True and state.get('runtime_unchanged')is not True,'Failed producer remains failed with missing end guards')
+  need(set(state['jobs'])==set(config['partitions'][partition]) and state['pending_tasks']==[] and
+       len(state['jobs'])==len(config['partitions'][partition])==failed_record['interrupted_attempts'] and all(len(j['attempts'])==1 and j['attempts'][0]['status']=='INTERRUPTED'for j in state['jobs'].values()),'Entire exact failed predecessor partition retained; no completed result')
+ need(type(state['schema_version'])is int and state['schema_version']==1 and state['status'] in (x.CLOSED,'COHORT_HALTED_NO_ADOPTION') and state['theorem_promotion'] is False,'Nonterminal continuation')
+ x.capture_documents(a,receipt,receipt_sha,review,state,host,documents)
+ return state
+
+def continuation_for_controller(x,config_sha,controller_sha,failed_record,a,c,store,index,config,partition,receipt,receipt_sha,review,inventory_sha,documents):
+ state=capture_for_controller(x,controller_sha,failed_record,a,store,receipt,receipt_sha,review,config,partition,config_sha,inventory_sha,documents);host=config['hosts'][partition]
+ manifest=store.read('manifest.json');r=x.mapped_runner(a,store)
+ need(manifest==c.expected_manifest(config,index,host,partition,config_sha),'Continuation manifest differs from reviewed configuration')
+ need(state['manifest_sha256']==store.sha('manifest.json') and state['configuration_sha256']==config_sha and
+      store.sha('configuration.json')==config_sha and store.sha('controller.py')==controller_sha and
+      state['controller_sha256']==controller_sha,'Continuation state/source/config binding')
+ need(state['runtime']==store.read('approvals/runtime.json') and store.sha('approvals/runtime.json')==host['runtime']['sha256'],'Approved cohort runtime')
+ rr=store.read('approvals/runtime-review.json');need(store.sha('approvals/runtime-review.json')==host['runtime_review']['sha256'] and rr['status']=='APPROVED_CONTINUATION_RUNTIME' and rr['runtime_sha256']==host['runtime']['sha256'],'Actual runtime review')
+ for name,ref in (('origin-index',config['origin_index']),('origin-review',config['origin_review']),('root-authorization',config['authorization']),('guard-source',host['guard']['source']),('guard-config',host['guard']['configuration'])):
+  need(store.sha('approvals/'+name+'.json')==ref['sha256'],'Copied authorization/input changed')
+ auth=store.read('approvals/root-authorization.json')
+ need(auth['status']=='ROOT_APPROVED_BOUNDED_CONTINUATION' and auth['configuration_core_sha256']==x.object_sha({k:v for k,v in config.items() if k!='authorization'}) and auth['controller_sha256']==controller_sha and auth['theorem_promotion'] is False and auth['funding_and_volume_reservations_verified'] is True and auth['linux_resource_probe_accepted'] is True,'Root authorization contract')
+ labels=sorted({c.task(k)[0] for k in config['partitions'][partition]});x.source_and_plans(a,store,index,labels,r)
+ need(a.number(state['started_epoch']) and a.number(state['finished_epoch']) and state['finished_epoch']>=state['started_epoch'],'Coordinator times')
+ need(type(state['coordinator_pid'])is int and state['coordinator_pid']>1 and type(state['coordinator_identity']['start_ticks'])is int and state['coordinator_identity']['start_ticks']>0 and state['coordinator_identity']['boot_id']==host['guard']['boot_id'],'Coordinator host/process identity')
+ c.validate_limits(host['limits'])
+ assigned=set(config['partitions'][partition]);need(set(state['jobs'])<=assigned and state['pending_tasks']==sorted(set(state['pending_tasks'])) and set(state['pending_tasks'])==assigned-set(state['jobs']),'Continuation pending domain')
+ records=[];results={};dirs=set()
+ for k,job in sorted(state['jobs'].items()):
+  need(type(job['attempts'])is list and len(job['attempts'])==1,'No hidden retry');row=job['attempts'][0]
+  need(row['task_key']==k and row['directory'] not in dirs,'Repeated/mislabeled attempt');dirs.add(row['directory'])
+  records.append(x.continuation_row(a,c,r,store,manifest,state,index,config,partition,row))
+  if row['status']=='COMPLETE':
+   value=x.complete(a,c,r,store,manifest,row,index,config['cohort_id'])
+   validation={n:value[n] for n in ('result_sha256','counts','canonical_artifact_sha256','target_geometry_sha256','preparation_sha256','plan_sha256')}
+   validation['outcome']='EMPTY_COMPUTATION' if value['counts']['survivor_count']==0 else 'SURVIVORS_REQUIRE_RESEARCH_REVIEW'
+   # row_evidence is independently recomputed during the paired structural stage.
+   need(all(row['validation'][n]==v for n,v in validation.items()),'Saved validation differs')
+   value['_row_evidence_sha256']=row['validation']['row_evidence_sha256'];results[k]=value
+ need({n[:-len('/attempt.json')] for n in store.files if n.startswith('attempts/') and n.endswith('/attempt.json')}==dirs,'Unrecorded continuation intent')
+ for n in store.files:
+  if n.startswith('attempts/'):need(any(n.startswith(d+'/') for d in dirs),'Orphan continuation output')
+ need({n[:-len('/lease.json')] for n in store.files if n.startswith('attempts/') and n.endswith('/lease.json')}=={r['directory'] for j in state['jobs'].values() for r in j['attempts'] if r['status']!='NEVER_STARTED'},'Unrecorded/missing lease')
+ peak=x.overlap(records,host['limits']['workers'])
+ guards=state.get('sources_unchanged') is True and state.get('runtime_unchanged') is True and state.get('full730_crosscohort_audit_required') is True
+ if state['status']==x.CLOSED:need(guards,'Normal closure lacks source/runtime guards')
+ return results,records,{'partition_id':partition,'status':state['status'],'pending_tasks':state['pending_tasks'],
+  'maximum_observed_concurrency':peak,'source_runtime_postguards':guards,
+  'over_effective_wall_observations':[x['global_attempt_id'] for x in records if x['wall_seconds']>x['effective_wall_limit']],
+  'timing_limitation':'Parent-observed finish includes polling/validation; it is not exact child lifetime.'}
+
+def select_all_executions(frozen_normalize,x,a,c,index,allocation,selected_hosts,by_host,output):
+ need(set(selected_hosts.values())<=set(by_host),'Missing selected cohort result map')
+ selected={};duplicates=[];extra_completed={}
+ for key in sorted(index['unresolved']):
+  paths=[(host,results[key])for host,results in by_host.items()if key in results]
+  target=selected_hosts[key]
+  if key in by_host[target]:selected[key]=by_host[target][key]
+  normalized=[]
+  for host,item in paths:
+   need(c.key(item['point_label'],item['backend'])==key,'Completed result under wrong key')
+   rows=frozen_normalize(x,a,item);normalized.append(rows)
+   name='complete-path-rows/'+host+'/'+item['_runner'].slug(item['point_label'])+'-'+item['backend']+'.json'
+   row_sha=a.save(output,name,rows)
+   detail={k:v for k,v in item.items()if not k.startswith('_')}
+   duplicates.append({'task_key':key,'host':host,'selected':host==target,'completed_result':detail,'row_evidence':{'path':name,'sha256':row_sha}})
+   if host!=target:extra_completed.setdefault(key,[]).append(host)
+  for (_,first),(_,other),rows in zip(paths,paths[1:],normalized[1:]):
+   c.compare_paths(first,other)
+   need(normalized[0]==rows,'Duplicate normalized row journals conflict')
+ # Each declared complete result has been visited, including all extra V86 work.
+ need(all(set(results)<=set(index['unresolved'])for results in by_host.values()),'Foreign complete continuation result')
+ need(sum(len(r)for r in by_host.values())==len(duplicates),'Hidden complete duplicate')
+ return selected,{'status':'ALL_RETAINED_COMPLETE_DUPLICATES_AGREE','complete_path_count':len(duplicates),
+  'selected_complete_count':len(selected),'additional_complete_path_count':sum(len(v)for v in extra_completed.values()),
+  'missing_selected_keys':sorted(set(index['unresolved'])-set(selected)),
+  'additional_completed_hosts_by_key':extra_completed,'paths':duplicates,
+  'substitution_performed':False,'failure_or_partial_is_exclusion':False}
+
+
+def cross_execution_lifecycle(x,executions,reports,records):
+ """Same-host replacement is admitted only after its failed capture closed."""
+ by_id={p['execution_id']:p for p in reports}
+ need(set(by_id)==set(executions) and len(by_id)==len(reports),'Exact lifecycle execution inventory')
+ capacities={};peaks={}
+ for eid,spec in executions.items():
+  report=by_id[eid];host=spec['partition_id'];limit=spec['configuration']['hosts'][host]['limits']['workers']
+  need(host not in capacities or capacities[host]==limit,'Same-host worker limit changed');capacities[host]=limit
+  if 'predecessor_execution_id'in spec:
+   previous=by_id[spec['predecessor_execution_id']]
+   need(previous['retained_failure_only']is True and previous['complete_results']==0,'Unreviewed replacement predecessor')
+   need(previous['capture_observed_epoch']<=report['started_epoch'] and spec['selection_amendment_created_epoch']<=report['started_epoch'],'Fresh execution predates closed failure capture or selection authority')
+ for host,capacity in capacities.items():
+  local=[r for r in records if r.get('partition_id')==host]
+  need(all(r['cohort']+'/'+host in executions for r in local),'Undeclared same-host execution')
+  peaks[host]=x.overlap(local,capacity)
+ return {'status':'SAME_HOST_PREDECESSORS_CLOSED_BEFORE_REPLACEMENT_AND_CAPS_VERIFIED',
+         'maximum_observed_concurrency_by_pod':peaks,'source':'sealed parent-observed intervals and capture receipts',
+         'limitation':'Parent-observed finish includes polling/validation; capture/host reviews remain external prerequisites.'}
+
+
+def reconcile_amended(x,a,c,labels,accepted,selected,records,reports,expected,output):
+ # Keep the frozen point/geometry/journal checks and every partition report.
+ report=x.reconcile(a,c,labels,accepted,selected,records,reports,output)
+ need({p['execution_id']for p in reports}==set(expected) and len(reports)==len(expected),'Complete execution-report inventory')
+ failed_ids=sorted(k for k,spec in expected.items()if spec['failed_record']is not None)
+ need(len(failed_ids)==sum(len(p['nodes'])for p in CHAIN_PINS),'Exactly the explicitly reviewed failed predecessors')
+ for p in reports:
+  if p['execution_id']in failed_ids:
+   need(p['retained_failure_only']is True and p['status']=='COHORT_HALTED_NO_ADOPTION' and p['source_runtime_postguards']is False and p['complete_results']==0,'Failed history must not become normal math success')
+  else:need(p['retained_failure_only']is False,'No additional failed-cohort exemption')
+ normal=all(p['status']==x.CLOSED and p['source_runtime_postguards']for p in reports if p['execution_id']not in failed_ids)
+ complete=not report['missing_backend_keys'] and report['complete_backend_count']==730 and normal
+ report['status']='COMPLETE_730_AMENDED_FANOUT_DISCOVERY_AUDIT_NO_PROMOTION'if complete else'PARTIAL_AMENDED_FANOUT_AUDIT_NO_COMPLETENESS'
+ report['explicit_failed_predecessors']=failed_ids
+ report['normal_success_required_executions']=sorted(set(expected)-set(failed_ids))
+ report['old_failed_producer_end_guards_reconstructed']=False
+ return report
+
+
+
+SIDECARS=('parent-completion.json','process-observation.json','observer-completion.json','runtime-observed.json','stdout.log','stderr.log','parent-stdout.log','parent-stderr.log')
+
+
+def protect_output_and_metadata(a,output,inputs,input_path,helper_paths):
+ """Validate every directly referenced metadata byte before creating output.
+
+ Receipt sidecar directories are themselves evidence containers. Ordinary file
+ references and helpers are protected in both directions without treating an
+ entire repository as a captured tree. No unbound late-created output may be
+ nested in a receipt directory or become an ancestor of any input file.
+ """
+ files={a.safe(input_path),a.safe(inputs['audit_lock'])}
+ protected={a.safe(inputs['original_root']),*(a.safe(e['root'])for e in inputs['continuations'].values())}
+ def visit(value):
+  if type(value)is dict:
+   if set(value)=={'path','sha256'}:
+    need(type(value['path'])is str and Path(value['path']).is_absolute(),'Absolute metadata reference')
+    path=a.safe(value['path']);a.signature(path);need(sha(path)==value['sha256'],'Preflight metadata seal');files.add(path)
+   else:
+    for v in value.values():visit(v)
+  elif type(value)is list:
+   for v in value:visit(v)
+ visit(inputs)
+ for entry in inputs['continuations'].values():
+  directory=a.safe(entry['receipt']['path']).parent;protected.add(directory)
+  for name in SIDECARS:files.add(a.below(directory,name))
+ files.update(a.safe(p)for p in helper_paths)
+ protected.update(files)
+ need(all(not output.is_relative_to(p)and not p.is_relative_to(output)for p in protected),'Output overlaps external metadata, source, lock or evidence before mkdir')
+ return {str(p):{'signature':a.signature(p),'sha256':sha(p)}for p in files}
+
+
+def metadata_unchanged(a,seals):
+ for path,seal in seals.items():
+  need(a.signature(path)==seal['signature'] and sha(path)==seal['sha256'],'Metadata/source/lock changed during audit')
+
+
+@contextmanager
+def exclusive_audit_lock(a,path):
+ """NFS-compatible exclusive lock; open existing regular bytes without writing."""
+ path=a.safe(path);before=a.signature(path);digest=sha(path)
+ fd=os.open(path,os.O_RDWR|os.O_NOFOLLOW)
+ try:
+  info=os.fstat(fd)
+  need(stat.S_ISREG(info.st_mode)and info.st_nlink==1,'Audit lock is not unique regular file')
+  need((info.st_dev,info.st_ino,info.st_size,info.st_mtime_ns,info.st_ctime_ns)==before,'Audit lock identity changed while opening')
+  fcntl.flock(fd,fcntl.LOCK_EX|fcntl.LOCK_NB)
+  yield
+  need(a.signature(path)==before and sha(path)==digest,'Audit lock changed')
+ finally:os.close(fd)
+
+
+def audit_locked(args):
+ root=Path(args.helpers);f,x,a,c,h,new_c=helpers(root)
+ input_path,inputs=x.reference(a,{'path':str(args.input),'sha256':args.input_sha256})
+ need(type(inputs['schema_version'])is int and inputs['schema_version']==1 and inputs['scope']==SCOPE,'Explicit V89 audit scope')
+ refs={};anchors={str(input_path):sha(input_path)}
+ pins={'origin_index':x.INDEX,'origin_review':x.ORIGIN_REVIEW,'existing_configuration':x.CONFIG,
+       'fanout_configuration':f.NEW_CONFIG,'original_inventory':x.ORIGIN_INVENTORY,
+       'allocation':f.ALLOCATION,'allocation_execution_binding':f.EXECUTION_BINDING}
+ for name,pin in pins.items():
+  p,value=x.reference(a,inputs[name],pin);refs[name]=(p,value);anchors[str(p)]=sha(p)
+ values={k:v for k,(_,v)in refs.items()};index=values['origin_index'];origin_review=values['origin_review']
+ old=values['existing_configuration'];fanout=values['fanout_configuration']
+ chain=load_amendment_chain(x,a,inputs['amendment_chain'],anchors)
+ c.validate_origin_acceptance(index,origin_review,x.INDEX);labels=a.declared_domain()
+ need(len(index['accepted'])==557 and len(index['unresolved'])==173,'Fixed557/173 original domain')
+ authority=replay_selection_chain(f,x,c,labels,index,values['allocation'],values['allocation_execution_binding'],old,fanout,chain,inputs['continuations'])
+ selected_sources=authority['selected173'];expected=authority['executions'];mapping=authority['logical_slot_to_actual_pod_id']
+ inv=values['original_inventory'];need(inv['scope']=='ALL_PERSISTED_ORIGINAL_CAMPAIGN_REGULAR_FILES_EXCEPT_COORDINATOR_LOCK','Original inventory scope')
+ output=a.safe(args.output);roots=[a.safe(inputs['original_root'])]+[a.safe(e['root'])for e in inputs['continuations'].values()]
+ f.output_outside_evidence(output,roots)
+ helper_pins={**x.PINS,BASE:BASE_SHA,FANOUT:FANOUT_SHA,CONTROLLER:CONTROLLER_SHA}
+ metadata_seals=protect_output_and_metadata(a,output,inputs,input_path,[root/name for name in helper_pins]+[Path(__file__)])
+ original=x.Store(a,inputs['original_root'],x.ORIGIN,inv,True);stores=[original]
+ output.mkdir(parents=True,exist_ok=False);args.owned_output=True
+ accepted,records,_=x.original(a,c,h,original,index,origin_review,labels)
+ need(set(accepted)==set(index['accepted']),'Exact557 accepted original paths')
+ by_execution={};reports=[]
+ for execution,entry in sorted(inputs['continuations'].items()):
+  spec=expected[execution];host=spec['partition_id'];config=spec['configuration'];config_sha=spec['configuration_sha256'];controller_sha=spec['controller_sha256']
+  controller=new_c if controller_sha==CONTROLLER_SHA else c;failure_only=spec['failed_record']is not None
+  need(set(entry)==({'root','inventory','receipt','review','retention'}if failure_only else{'root','inventory','receipt','review'}),'Exact captured-execution reference')
+  vp,inv=x.reference(a,entry['inventory']);pp,receipt=x.reference(a,entry['receipt']);qp,approval=x.reference(a,entry['review'],spec['failed_review_sha256'] if failure_only else None)
+  need(inv['scope']=='ALL_PERSISTED_COHORT_REGULAR_FILES_EXCEPT_COORDINATOR_LOCK','Continuation inventory scope')
+  for p in(vp,pp,qp):anchors[str(p)]=sha(p)
+  failed_record=None
+  if failure_only:
+   need(approval['cohorts'][spec['failed_review_node']]==spec['failed_record'],'Failed history review changed')
+   failed_record=spec['failed_record']
+   tp,retention=x.reference(a,entry['retention'],failed_record['retention_sha256']);anchors[str(tp)]=sha(tp)
+   need(retention['status']=='FAILED_COHORT_RAW_BYTES_RETAINED_NOT_ADOPTED' and type(retention['returncode'])is int and retention['returncode']==0 and retention['sha256_verified']is True,'Actual retained-failure receipt')
+   for key in ('files','bytes','receipt_sha256','inventory_sha256','observer_completion_sha256'):
+    need(retention[key]==failed_record[key],'Retained failure receipt differs: '+key)
+   approval=failed_record  # Explicit failed-review projection, never a normal-success review.
+  store=x.Store(a,entry['root'],config['hosts'][host]['campaign_path'],inv);stores.append(store)
+  documents={}
+  for name in SIDECARS:
+   p=a.below(pp.parent,name);a.signature(p);digest=sha(p);anchors[str(p)]=digest
+   documents[name]={'sha256':digest,'value':a.read(p)if name.endswith('.json')else None}
+  results,attempts,part=continuation_for_controller(x,config_sha,controller_sha,failed_record,a,controller,store,index,config,host,receipt,entry['receipt']['sha256'],approval,entry['inventory']['sha256'],documents)
+  auth=store.read('approvals/root-authorization.json')
+  if config_sha==f.NEW_CONFIG:need(auth['never_launch_partition']==f.OLD_POD and auth['allocation_sha256']==f.ALLOCATION,'Old fanout reserved-partition prohibition')
+  if controller_sha==CONTROLLER_SHA:
+   need(auth['launch_only_partitions']==spec['launch_only_partitions'] and auth['never_launch_partitions']==sorted(set(config['partitions'])-set(spec['launch_only_partitions'])) and auth['previous_configuration_sha256']==spec['previous_configuration_sha256'] and auth['no_deadline_extension']is True and auth['mathematical_sources_unchanged']is True,'Exact replacement partition launch authority')
+  if failure_only:need(not results and len(attempts)==len(config['partitions'][host])==spec['failed_record']['interrupted_attempts'] and all(row['status']=='INTERRUPTED'for row in attempts),'No complete predecessor result may be adopted')
+  by_execution[execution]=results;records+=attempts
+  part.update(execution_id=execution,configuration_sha256=config_sha,controller_sha256=controller_sha,
+   cohort_id=config['cohort_id'],inventory_sha256=entry['inventory']['sha256'],receipt_sha256=entry['receipt']['sha256'],review_sha256=entry['review']['sha256'],state_sha256=store.sha('state.json'),manifest_sha256=store.sha('manifest.json'),retained_failure_only=failure_only,complete_results=len(results),started_epoch=store.read('state.json')['started_epoch'],finished_epoch=store.read('state.json')['finished_epoch'],capture_observed_epoch=receipt['observed_epoch'])
+  reports.append(part)
+ lifecycle=cross_execution_lifecycle(x,expected,reports,records)
+ selected,duplicates=select_all_executions(f.normalize_complete,x,a,c,index,values['allocation'],selected_sources,by_execution,output)
+ report=reconcile_amended(x,a,c,labels,accepted,selected,records,reports,expected,output)
+ helper_pins={**x.PINS,BASE:BASE_SHA,FANOUT:FANOUT_SHA,CONTROLLER:CONTROLLER_SHA}
+ report.update(schema_version=1,scope=SCOPE,target_id=a.TARGET,known_positive_hits_outside_domain=a.HITS,
+  allocation_sha256=f.ALLOCATION,allocation_execution_binding_sha256=f.EXECUTION_BINDING,
+  selection_chain_sha256=[{k:v for k,v in pin.items()if k.endswith('_sha256')}for pin in CHAIN_PINS],final_selection_sha256=authority['final_selection_sha256'],
+  existing_configuration_sha256=x.CONFIG,fanout_configuration_sha256=f.NEW_CONFIG,replacement_configuration_sha256=[p['configuration_sha256']for p in CHAIN_PINS],
+  selected_source_executions=selected_sources,logical_slot_to_actual_pod_id=mapping,same_host_lifecycle=lifecycle,
+  reserved_new_configuration_partitions_executed=False,complete_duplicate_comparison=duplicates,
+  source_sha256=a.PINS,administrative_source_sha256=helper_pins,
+  origin_index_sha256=x.INDEX,origin_review_sha256=x.ORIGIN_REVIEW,origin_manifest_sha256=a.MANIFEST,
+  origin_state_sha256=index['origin']['state_sha256'],origin_inventory_sha256=x.ORIGIN_INVENTORY,
+  origin_prior_transfer_extras=original.extra_seals,origin_prior_transfer_extra_directories=original.extra_directories,
+  original_runtime_sha256=index['origin']['runtime_sha256'],historical_runtime_profiles_verified_from_sealed_bytes=True,
+  installed_historical_runtimes_reverified=False,actual_remote_process_absence_source='Accepted closed-capture receipts and reviews; never audit-host /proc',
+  mathematical_recomputation=False,archival_retention='Separate final archive/local-retention review remains mandatory',
+  limitations=['Exactly557 original and173 selected obligations; the48+24+25 substitutions require the explicit pinned amendment chain.',
+   'All eleven continuation captures are mandatory, including failed predecessors without reconstructed producer end guards.',
+   'Every complete duplicate is independently inspected and compared; missing selected results stay incomplete.',
+   'Finite-domain mathematics is not re-proved by metadata; survivors remain research candidates.',
+   'Ordinary immutable evidence files are assumed; hashes cannot rule out adversarial transient mutation.'])
+ report['attempts']={'path':'attempts.json','sha256':a.save(output,'attempts.json',records)}
+ for p,digest in anchors.items():need(sha(p)==digest,'Audit input changed')
+ for store in stores:
+  for name,digest in a.PINS.items():need(sha(store.path('source/'+name))==digest,'Frozen mathematical source changed')
+  store.unchanged()
+ for name,digest in helper_pins.items():need(sha(root/name)==digest,'Administrative helper changed')
+ metadata_unchanged(a,metadata_seals)
+ report['metadata_and_source_seals']={p:s['sha256']for p,s in metadata_seals.items()}
+ report['anchors_sha256']=anchors;report['bytes_hashed_once']=sum(store.cache.bytes_hashed for store in stores)
+ return a,output,report
+
+
+def administrative_window(x,a,inputs,args):
+ p,w=x.reference(a,inputs['administrative_window']);core={k:v for k,v in inputs.items()if k!='administrative_window'}
+ need(type(w['schema_version'])is int and w['schema_version']==1 and w['status']=='ROOT_APPROVED_CLOSED_CAPTURE_AUDIT_WINDOW','Explicit administrative window')
+ need(w['auditor_sha256']==sha(__file__)and w['input_core_sha256']==object_sha(core),'Exact amended auditor/input authorization')
+ need(type(w['deadline_epoch'])is int and w['deadline_epoch']==args.deadline_epoch and type(w['guard_deadline_epoch'])is int and args.deadline_epoch<=w['guard_deadline_epoch']-60,'Administrative guard reserve')
+ need(type(w['wall_limit_seconds'])is int and 0<w['wall_limit_seconds']<=1200 and w['cpu_limits_seconds']==[600,610]and all(type(v)is int for v in w['cpu_limits_seconds'])and type(w['memory_bytes'])is int and w['memory_bytes']==4*1024**3,'Admin resource approval')
+ need(all(w[n]is True for n in('exclusive_administrative_capacity_reserved','read_only_closed_captures_only','producer_deadlines_unchanged'))and w['mathematical_execution']is False and w['theorem_promotion']is False,'Read-only administrative scope')
+ return p,w
+
+
+def audit(args):
+ _,x,a,_,_,_=helpers(args.helpers);p=a.safe(args.input);a.signature(p);need(sha(p)==args.input_sha256,'Audit input hash');inputs=a.read(p)
+ wp,window=administrative_window(x,a,inputs,args);window_sha=sha(wp);lock=a.safe(inputs['audit_lock']);a.signature(lock)
+ with exclusive_audit_lock(a,lock):
+  need(time.time()<args.deadline_epoch,'Audit cutoff passed')
+  result=audit_locked(args);need(time.time()<args.deadline_epoch and sha(wp)==window_sha,'Admin window crossed/changed')
+  result[2].update(administrative_window_sha256=window_sha,administrative_deadline_epoch=args.deadline_epoch,producer_deadlines_unchanged=True)
+  return result
+
+
+def main():
+ p=argparse.ArgumentParser(description=__doc__)
+ for name in('helpers','input','output'):p.add_argument('--'+name,type=Path,required=True)
+ p.add_argument('--input-sha256',required=True);p.add_argument('--deadline-epoch',type=int,required=True);args=p.parse_args()
+ need(__debug__ and sys.flags.isolated and sys.flags.dont_write_bytecode,'Raw Python -I -B required')
+ soft,hard=resource.getrlimit(resource.RLIMIT_CPU);memory,_=resource.getrlimit(resource.RLIMIT_AS)
+ need(0<soft<=600 and soft<=hard<=610 and 0<memory<=4*1024**3,'Administrative600/610CPU4GiB required')
+ own=sha(__file__);binary=sha(Path(sys.executable).resolve());start=time.monotonic();cpu=time.process_time()
+ def interrupted(signum,frame):raise InterruptedError('Audit interrupted '+str(signum))
+ for sig in(signal.SIGTERM,signal.SIGINT):signal.signal(sig,interrupted)
+ try:
+  a,output,report=audit(args);need(sha(__file__)==own and sha(Path(sys.executable).resolve())==binary,'Auditor/runtime changed')
+  report.update(auditor_sha256=own,cpu_seconds=time.process_time()-cpu,wall_seconds=time.monotonic()-start,
+   audit_runtime={'invocation_path':sys.executable,'python_version':sys.version,'binary_sha256':binary,'binary_unchanged':True,'cpu_limits_seconds':[soft,hard],'memory_bytes':memory})
+  digest=a.save(output,'audit.json',report);print(json.dumps({'status':report['status'],'audit_sha256':digest,'summary':report['summary']}));return 0 if report['status'].startswith('COMPLETE_730')else 2
+ except BaseException as error:
+  failure={'status':'V89_AMENDED_AUDIT_FAILED_NO_CONCLUSION','error':repr(error),'auditor_sha256':own,'theorem_promotion':False}
+  if getattr(args,'owned_output',False)and not(args.output/'failure.json').exists():(args.output/'failure.json').write_bytes(encoded(failure))
+  print(json.dumps(failure),file=sys.stderr);return 1
+if __name__=='__main__':raise SystemExit(main())

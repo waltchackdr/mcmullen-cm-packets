@@ -1,0 +1,20 @@
+"""Cheap retained-byte/coverage regression; full exact audit ran remotely."""
+import hashlib,json,unittest
+from pathlib import Path
+ROOT=Path(__file__).resolve().parents[1]
+class RetainedCoverage(unittest.TestCase):
+    def test_complete_bound_model_and_period_indices(self):
+        original=json.loads((ROOT/'build/s-order-v162/models01/compact_inventory.json').read_text())
+        post=json.loads((ROOT/'build/s-order-v162/postprocessed01/inspection.json').read_text())
+        self.assertEqual([x['index'] for x in original['models']],list(range(160)))
+        self.assertEqual([x['index'] for x in post['records']],list(range(160)))
+        self.assertFalse(post['mathematical_adoption'])
+        for a,b in zip(original['models'],post['records']):
+            raw=(ROOT/b['path']).read_bytes();self.assertEqual(hashlib.sha256(raw).hexdigest(),b['sha256'])
+            model=json.loads(raw);self.assertEqual(b['input_model_sha256'],a['sha256'])
+            self.assertEqual(model['exact_audit']['model_sha256'],a['sha256'])
+            self.assertEqual(model['catalog_index'],a['index'])
+            self.assertEqual(model['theta_evaluations'],0)
+            self.assertEqual(model['exact_audit']['status'],'EXACT_SERIALIZED_MODEL_CHECK_PASS')
+            self.assertEqual(model['interval_period']['precision_bits'],512)
+if __name__=='__main__':unittest.main()

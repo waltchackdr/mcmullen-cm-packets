@@ -1,0 +1,41 @@
+"""Regression of the real-witness fibers used in C102's conjugation proof.
+
+Reuses the accepted independent C97 group implementation; this is not a new
+independent proof of the Galois action or the field-compositum theorem.
+"""
+import json
+from pathlib import Path
+import subprocess
+import sys
+import tempfile
+import unittest
+
+ROOT=Path(__file__).resolve().parents[1]
+CHECK = r'''
+import json,runpy,sys
+n=runpy.run_path(sys.argv[1]);G=n['G'];mul=n['product'];c=n['cc']
+H=n['H_DJ'];K=n['H_realM']
+cosets=lambda H:{frozenset(mul(g,h) for h in H) for g in G}
+polar,underlying=cosets(H),cosets(K)
+fixed=lambda C:frozenset(mul(c,g) for g in C)==C
+fibers=sorted(sum(P <= U and fixed(P) for P in polar) for U in underlying)
+assert len(polar)==12 and len(underlying)==6
+assert all(fixed(U) for U in underlying)
+assert fibers==[0,0,0,2,2,2]
+print(json.dumps({'polarized':len(polar),'underlying':len(underlying),'real_fibers':fibers}))
+'''
+
+
+class DefinitionDegrees(unittest.TestCase):
+    def test_each_size_six_orbit_has_real_witnesses(self):
+        source=ROOT/'experiments/all_underlying_galois_v165/referee_moduli_fields01.py'
+        with tempfile.TemporaryDirectory() as folder:
+            target=Path(folder)/source.name
+            target.write_bytes(source.read_bytes())
+            result=subprocess.run([sys.executable,'-c',CHECK,str(target)],check=True,
+                                  capture_output=True,text=True,timeout=20)
+        data=json.loads(result.stdout.splitlines()[-1])
+        self.assertEqual(data['real_fibers'],[0,0,0,2,2,2])
+
+
+if __name__=='__main__':unittest.main()

@@ -1,0 +1,408 @@
+% !TeX root = ../../packet-and-principal-models.tex
+\section{The unit twist and the principal curve image}
+\begin{proposition}[A global unit twist and its coarse involution]
+\label{pp:prop:unitfamily}
+On the actual family $(\mathcal B,\iota,\lambda_0)$ of
+Theorem~\ref{thm:principalfamily}, the homomorphism
+$\lambda_1=\lambda_0\circ\iota(\varepsilon_+)$ is another
+principal polarization over the same base $C'$.
+After forgetting auxiliary level, the two polarized families are
+nonisomorphic over the identity of $C'$, and twisting twice returns
+their polarized-family isomorphism class. On the full coarse
+component of Proposition~\ref{pp:prop:explicit}, this operation is
+the nontrivial involution
+\[
+ \tau_+(w)_i=\frac{w_i}{\sigma_i(\varepsilon_+)},\qquad
+ F_{+,i}(z)=\frac{\sigma_i(a^2/\varepsilon_+)F_{t,i}(z)}
+                         {3F_{t,i}(z)+1}.
+\]
+The specified B/C fibers receive their second polarization classes
+from Proposition~\ref{pp:prop:actualpolarizations}.
+\end{proposition}
+\begin{proof}
+Global RM self-adjointness makes $\lambda_1$ symmetric.
+Its Riemann form multiplies each real eigenspace block of the
+original positive form by $\sigma_i(\varepsilon_+)>0$.
+Since $\varepsilon_+^{-1}\in\OL$, it is a principal polarization.
+This is a global algebraic polarization homomorphism; no choice
+of a global ample line bundle is required. The exact marking
+comparison in Proposition~\ref{pp:prop:markeddistinct} identifies
+$z+z^{-1}$ with the fixed global $t$, so the B/C twists are literal
+instances of the preceding proposition.
+
+In the standard module $P_{\rm std}$ put
+$D=\operatorname{diag}(\varepsilon_+^{-1},1)$.
+It preserves the lattice and satisfies
+$E_{\varepsilon_+}(Dx,Dy)=E_1(x,y)$.
+Evaluation at $w$ after $D$ is evaluation at $w/\varepsilon_+$.
+This gives the displayed period formula with its stated direction.
+Conjugating $\left(\begin{smallmatrix}r&\delta s\\v/\delta&h\end{smallmatrix}\right)$
+by $D$ gives
+$\left(\begin{smallmatrix}r&\delta s/\varepsilon_+\\
+\varepsilon_+v/\delta&h\end{smallmatrix}\right)$,
+so $D$ normalizes $\Gamma_{\rm std}$. Moreover
+$D^2=\varepsilon_+^{-1}\operatorname{diag}(\varepsilon_+^{-1},\varepsilon_+)$;
+the second factor belongs to $\Gamma_{\rm std}$ and the scalar
+acts trivially on the domain. This proves the coarse involution.
+Equivalently, twisting twice is pullback by $\iota(\varepsilon_+)$.
+The distinct B/C polarization classes witness nontriviality of
+both the coarse action and the two families over the identity base.
+\end{proof}
+
+\begin{proposition}[The unit involution preserves the principal curve]
+\label{pp:prop:unitcurve}
+The involution $\tau_+$ preserves the entire image $V_{\rm std}$ of
+\eqref{pp:eq:curve}, and its restriction to that image is nontrivial.
+More precisely, let $a_\triangle,b_\triangle,c_\triangle$ be the
+original triangle generators, so that
+$A=a_\triangle^2$, $B=b_\triangle$, $C=c_\triangle^2$, and put
+$g=BACc_\triangle$. For the actual coarse moduli map
+$f_0(z)=[WF_t(z)]$ one has
+\[
+ \tau_+f_0(z)=f_0(g^{-1}z).
+\]
+\end{proposition}
+\begin{proof}
+The full-triangle equivariance of the actual constructed map is essential.
+McMullen's Section~4 identifies the quadratic trace-field extension and
+its nontrivial automorphism, which sends the triangle generators to
+$(-a_\triangle,b_\triangle,-c_\triangle)$.
+Thus the two extensions of each real embedding of $L$ give identical
+projective matrices and ordered target vertices. The vertex-respecting
+triangle maps in \cite[Thm.~6.3, Eq.~(6.1)]{McMullen2026} therefore agree
+for the two lifts. Keeping one from each pair yields the six components
+of the actual $F$, with equivariance for the full triangle group.
+Conjugating target coordinates by $h_t$ preserves this equivariance.
+This argument would not follow from arbitrary $\Delta_0$-equivariance.
+
+Set
+\[
+ s_0=-2-3t+4t^2+t^3-t^4,\quad
+ h=s_0(I+C_t),\quad k=B_tA_tC_th.
+\]
+Exact field arithmetic gives $s_0^2=2-t$ and integral inverses for
+$s_0$ and $\varepsilon_+=4-t^2$. Consequently
+$\det h=\det k=\varepsilon_+$ and $h,k\in\GL_2^+(\OL)$.
+If $\theta=2\cos(\pi/42)$, Cayley--Hamilton gives
+$I+c_\triangle^2=\theta c_\triangle$.
+Therefore $h$ is projectively the normalized $c_\triangle$, and
+$F_t(gz)=kF_t(z)$, componentwise. The first-component base matrix
+is $h_{t,1}^{-1}k_1h_{t,1}$ projectively; it is not $k_1$ in the
+original base marking.
+
+For $D=\operatorname{diag}(\varepsilon_+^{-1},1)$ the explicit witness
+satisfies
+\[
+ T^{-1}k^{-\mathsf T}T\in\GL_2(\OL),\qquad
+ U=\operatorname{diag}(\delta,1)^{-1}
+       DWkW^{-1}\operatorname{diag}(\delta,1)\in\SL_2(\OL).
+\]
+The exact coefficient arrays, integral inverses and determinant identities
+are checked by \path{certificates/curve_twist_image_v138.py} with
+\path{certificates/curve_twist_image_data.json}.
+Only this fixed word is needed; no search-completeness assertion enters.
+In particular $\gamma=DWkW^{-1}$ belongs to the specified
+$\Gamma_{\rm std}$. Hence
+\[
+ [DWF_t(z)]=[\gamma Wk^{-1}F_t(z)]
+          =[WF_t(g^{-1}z)].
+\]
+Since $g^{-1}$ maps $\HH$ bijectively to itself, this proves equality
+of the entire images. They are the actual algebraic images by
+Theorem~\ref{thm:principalfamily} and
+Proposition~\ref{pp:prop:unitfamily}.
+The moved B/C points in Proposition~\ref{pp:prop:actualpolarizations}
+show that the restricted involution is nontrivial.
+\end{proof}
+
+\begin{proposition}[Two principal classes over each specified RM variety]
+\label{pp:prop:sixprincipal}
+For each $X=A,B,C$, the underlying marked variety $(B_X,\iota_L)$ has
+exactly two RM-compatible principal-polarization isomorphism classes,
+represented by $\lambda_X$ and
+$\lambda_X\circ\iota_L(\varepsilon_+)$.
+Their origin-preserving RM-polarized automorphism groups are $\mu_6$.
+The resulting six marked objects are pairwise distinct and all lie
+on $V_{\rm std}$.
+\end{proposition}
+\begin{proof}
+Identify rational homology with the rank-one module over the chosen
+$M$. This remains valid for the induced A type. Since $M/L$ is
+quadratic, every $L$-linear rational endomorphism has the unique form
+$m_a+m_b\,\overline{(\cdot)}$, for $a,b\in M$.
+After complexification the first summand preserves each embedding line,
+while the second exchanges every line with its conjugate.
+Each CM type contains exactly one line from every conjugate pair;
+if $b\ne0$, all its embedding values are nonzero. Thus the second
+summand cannot preserve the Hodge decomposition or cancel with the
+first. It follows that
+\[
+ \operatorname{End}^0_L(B_X)=M,\qquad
+ \operatorname{End}_L(B_X)=R,
+\]
+where the integral equality uses Proposition~\ref{prop:survivingorder}
+for all three selected field actions. The first equality is a
+centralizer statement, not an assertion that the full endomorphism
+algebra at A is $M$.
+
+If $\lambda$ is another RM-compatible principal polarization, then
+$a=\lambda_X^{-1}\lambda$ is an integral automorphism commuting
+with $L$. Symmetry makes $a$ fixed by the original Rosati, hence
+$a\in E_L$, and positivity gives $a\in E_L^+$.
+Conversely each such unit supplies a compatible principal polarization.
+The $L$-linear automorphisms are precisely $R^\times$, whose norms
+are $E_L^2$. Therefore the classes are
+$E_L^+/E_L^2=\{1,\varepsilon_+\}$ by
+Propositions~\ref{pp:prop:markedpolarizations}
+and~\ref{pp:prop:actualpolarizations}.
+The same norm computation gives the stated automorphism groups.
+Proposition~\ref{pp:prop:unpolarizeddistinct} excludes identifications
+between different $X$, while Proposition~\ref{pp:prop:unitcurve}
+realizes each second class on the same image at $g^{-1}z_X$.
+\end{proof}
+
+\begin{proposition}[Unmarked separation at the induced A fiber]
+\label{pp:prop:unmarkeda}
+The principally polarized varieties
+$(B_A,\lambda_A)$ and $(B_A,\lambda_A\circ\iota_L(\varepsilon_+))$
+are nonisomorphic after forgetting all CM and RM markings.
+\end{proposition}
+\begin{proof}
+Use the actual selected generator $Z_A=(A_t+tI)/(t^2-1)$.
+Its lower-left and lower-right entries are
+\[
+ c=\frac{t^3-1}{t(t^2-1)},\qquad
+ d_0=\frac{-t^5+5t^3+t^2-5t}{t^2-1}.
+\]
+In $M=\Ql(z)$, set $w=(z-d_0)/c$.
+The row $(w,1)$ is an eigenvector of $Z_A^{\mathsf T}$, so
+$(x,y)\mapsto xw+y$ identifies the actual rational homology with $M$.
+On the common principal basis of Proposition~\ref{pp:prop:explicit},
+its lattice and polarization parameter are
+\[
+ I_A=\sum_{j=0}^5\mathbf Z\,awt^j
+       +\sum_{j=0}^5\mathbf Z\,b(1+3w)t^j,\qquad
+ \xi_A=-\frac{c}{z-\bar z}.
+\]
+The trace form $\operatorname{Tr}_{M/\Ql}(\xi_Ax\bar y)$
+reproduces the actual principal alternating matrix $E$ exactly.
+
+In $\operatorname{End}_{\Ql}(M)=\bigoplus_\sigma M\sigma$,
+the summands have disjoint permutation supports on the complex
+embedding lines. A nonzero summand is a Hodge endomorphism precisely
+when its automorphism stabilizes the actual type
+$\{1,5,17,19,29,31\}$. Its stabilizer is $\{1,29\}$, and therefore
+\[
+ \operatorname{End}^0(B_A)=M+M\sigma_{29}.
+\]
+In particular the full algebra, of rational dimension $24$, is used;
+restricting to multiplication or to one semilinear summand would
+not prove the assertion.
+
+Let $U_1,\ldots,U_{24}$ be the rational homology matrices for
+$z^j$ and $z^j\sigma_{29}$, $0\le j<12$, in the displayed basis
+of $I_A$. Form the $144\times24$ matrix $C$ by flattening them.
+The full integral endomorphism coefficient lattice is
+\[
+ \mathcal L=\{v\in\Ql^{24}:Cv\in\mathbf Z^{144}\}.
+\]
+Equivalently, it is the rational dual of the integer lattice
+generated by the constraint rows. This gives a complete lattice
+calculation, including cancellations between the two summands.
+
+Let $Q_+$ be the homology action of $\varepsilon_+$.
+An unmarked polarized isomorphism $U$ would satisfy
+$U^{\mathsf T}EU=EQ_+$, hence
+\[
+ \operatorname{Tr}_{\Ql}(Q_+^{-1}U^\dagger U)=12,\qquad
+ U^\dagger=E^{-1}U^{\mathsf T}E.
+\]
+This is a positive definite quadratic form on the real Hodge
+endomorphism algebra: the positive Hodge metric makes $\dagger$
+the adjoint, and $Q_+$ is positive self-adjoint.
+Its exact Gram matrix on $\mathcal L$ has an integral unimodular
+reduction $H$ with positive rational LDL data $(\mu,d)$.
+Every vector in its closed norm-$12$ ball satisfies
+$|x_i|^2\le12(H^{-1})_{ii}$. The exact decomposition
+\[
+ x^{\mathsf T}Hx=\sum_i d_i
+       \left(x_i+\sum_{j>i}\mu_{ji}x_j\right)^2
+\]
+therefore supplies finite coordinate bounds and exhaustive
+suffix pruning using only rational comparisons.
+
+The certificate \path{certificates/a_unmarked_polarization_v140.py}
+reconstructs the actual model, full dual lattice and Gram matrix,
+checks the integral unimodular reduction, positive LDL data and
+bounds in \path{certificates/a_unmarked_polarization_data.json},
+and exhausts this ball in $347$ nodes: only zero occurs.
+The separate implementation
+\path{independent/a_unmarked_polarization_v140.py} works directly
+on $L^2$ homology, constructs $\sigma_{29}$ by a cyclic vector,
+proves fullness by integer row saturation, and recomputes the
+Gram and LDL in reverse coordinate order. Its $925$ nodes again
+leave only zero. Thus the required norm-$12$ vector does not exist.
+\end{proof}
+
+\begin{proposition}[The four B/C polarization pairs]
+\label{pp:prop:polarizationsquare}
+Put $B_e=(B_B,\lambda_B\varepsilon_+^e)$ and
+$C_f=(B_C,\lambda_C\varepsilon_+^f)$, for $e,f\in\{0,1\}$.
+For every pair $B_e\to C_f$ the least positive integer scalar
+polarization multiplier is $2$, attained by exactly six isogenies,
+all of degree $64$.
+With $\gamma_0=z^6(1-z^2)$ and
+$v_{ef}=\sigma_{31}(\gamma_0)^e\gamma_0^{-f}$,
+their normalized Hom parameters are
+\[
+ \eta=\begin{cases}
+ \alpha v_{ef}z^{7j},&e=f,\\
+ \bar\alpha v_{ef}z^{7j},&e\ne f,
+ \end{cases}\qquad 0\le j<6.
+\]
+The six maps share one kernel for each pair. The pairs $(0,0),(1,1)$
+have the same kernel $K_+$, while $(0,1),(1,0)$ have a second kernel
+$K_-$. These are complementary order-$64$ subgroups of $B_B[2]$.
+\end{proposition}
+\begin{proof}
+Proposition~\ref{pp:prop:homideal} gives every rational homomorphism
+as $F_\eta=(m_0/\alpha)\eta\sigma_{31}$, integral exactly when
+$\eta\in\mathfrak a$. Its source pullback multiplier is
+$\sigma_{19}(\eta\bar\eta)$. For the two twisted forms the required
+multiplier-$n$ equation is consequently
+\[
+ \eta\bar\eta=n\frac{\sigma_{31}(\varepsilon_+)^e}
+                         {\varepsilon_+^f}.
+\]
+Since $\gamma_0\bar\gamma_0=\varepsilon_+$,
+$N_{M/L}(v_{ef})$ is the unit factor on the right.
+
+The polynomial $\Phi_{42}$ modulo $2$ is the product of the two
+irreducible sextics
+\[
+ (X^6+X^4+X^2+X+1)(X^6+X^5+X^4+X^2+1).
+\]
+Together with $\alpha\bar\alpha=2$ and
+$\alpha+\bar\alpha=1$, this identifies the two conjugate primes
+above $2$ as $(\alpha),(\bar\alpha)$.
+Every integral solution for $n=2$ therefore has one of these two
+ideals. Division by $\alpha v_{ef}$ or $\bar\alpha v_{ef}$ gives
+an integral unit of relative norm one, hence a root of unity.
+Thus the complete candidates are the two families
+$\alpha v_{ef}z^j$, $\bar\alpha v_{ef}z^j$, $0\le j<42$.
+
+For membership in $\mathfrak a=\alpha\OL+\mathfrak P$,
+consider the quotient $\mathbf F_{729}^\times/\mathbf F_{27}^\times$
+of order $28$. The class of $z$ has order $7$.
+The class of $\gamma_0$ is the unique element of order two:
+$\gamma_0/\bar\gamma_0=-z^{14}$ reduces to $-1$.
+The class of $\bar\alpha/\alpha$ is that same element, since
+$\alpha^2-\alpha+2=0$ modulo $3$ gives
+$\alpha^4=-1$ and $(\alpha/\bar\alpha)^2=-1$ there.
+The automorphism $\sigma_{31}$ fixes this unique order-two class.
+Consequently the displayed branch cancels the order-two class
+exactly as stated, and the remaining exponent must be divisible by $7$.
+There are exactly six maps. Their full norm, ideal membership,
+integral homology matrices and polarization identities are verified in
+\path{certificates/bc_polarization_square_v141.py} with its retained data.
+
+Multiplier one would imply an isomorphism of the underlying B/C
+varieties, excluded by Proposition~\ref{pp:prop:unpolarizeddistinct}.
+Thus the displayed multiplier two is minimal. Multiplication by
+$z^{7j}\in R^\times$ preserves each target form, so the six maps
+for a fixed pair have the same kernel.
+
+Let $T_{ef}$ denote the integral homology matrix for $j=0$.
+The certificate verifies $\det T_{ef}=64$ and the four actual
+polarization equations. The polarized adjoint relation implies
+that every kernel lies in $B_B[2]$. It is therefore identified with
+$\ker(T_{ef}\bmod2)$ on the common source basis.
+All four ranks are $6$; the stacked ranks for $(00,11)$ and
+$(01,10)$ are $6$, and the stacked rank for $(00,01)$ is $12$.
+These exact finite calculations prove the asserted equality and
+complementarity of kernels.
+\end{proof}
+
+\begin{remark}[Image and level boundaries]\label{pp:rem:unitimage}
+The two parametrized moduli maps differ at the specified B/C parameters,
+but their images agree by Proposition~\ref{pp:prop:unitcurve}.
+The diagonal matrix in the square calculation need not lie in a chosen
+neat subgroup, so no involution preserving an arbitrary fine-level
+marking is asserted. These constructions neither add a point to the
+original trace-polarized packet nor identify a principal image with
+Mostaed's literal normalization.
+\end{remark}
+
+\begin{corollary}[Six Weil points on the specified principal image]
+\label{pp:cor:weilimage}
+Let $\mathcal W_{K,\rm std}$ denote the intrinsic $K$-Weil locus in the
+specified principal RM component. Then
+$V_{\rm std}\cap\mathcal W_{K,\rm std}$ contains the six distinct
+marked points of Proposition~\ref{pp:prop:sixprincipal}.
+All have $K$-signature $(3,3)$ and Hermitian discriminant $-1$.
+The actual CM types and Hodge algebras are those of their respective
+A/B/C underlying varieties. All six remain distinct as principally polarized varieties after
+forgetting the RM and CM markings.
+\end{corollary}
+\begin{proof}
+Keep the original lattice $P$, chosen field actions and integral
+$\mathcal O_K$ generators of Proposition~\ref{prop:commonprincipal}.
+Twisting replaces $E_1$ by
+$E_{\varepsilon_+}(v,w)=E_1(\varepsilon_+v,w)$, where
+$\varepsilon_+I_2$ is an integral automorphism of $P$.
+The chosen $M$ action and therefore the actual CM type are unchanged.
+When the new point is represented at $g^{-1}z_X$, these are the
+transported actions through the explicit orbit identification above;
+they are not inferred from a companion CM type.
+
+The integral $K$ action commutes with $\varepsilon_+$ and its Rosati
+remains conjugation. The complex $K$ action is unchanged, so the
+signature is still $(3,3)$. On the six-dimensional $K$ homology space,
+$M=LK$ and $L\cap K=\Ql$ give
+\[
+ \det_K(m_{\varepsilon_+})
+ =N_{M/K}(\varepsilon_+)=N_{L/\Ql}(\varepsilon_+)=1.
+\]
+The last norm is also checked in the exact transport certificate.
+Thus twisting the Hermitian form in one variable leaves its determinant
+and discriminant unchanged. Positivity and principality were established
+in Proposition~\ref{pp:prop:unitfamily}.
+Changing polarization does not change the Hodge structure, so the
+previous divisor/Weil generator and algebraicity conclusions apply.
+Finally, the four B/C polarized objects remain distinct without markings
+by Proposition~\ref{pp:prop:actualpolarizations}, and
+Proposition~\ref{pp:prop:unmarkeda} separates the two A objects.
+The underlying A variety is different from both B/C varieties by
+Proposition~\ref{pp:prop:unpolarizeddistinct}. Hence all six remain
+distinct without markings; no classification of all A polarizations
+is needed.
+\end{proof}
+
+\begin{remark}[The integral comparison still required]
+\label{pp:rem:obstruction}
+For any full $O$ lattice $P'\subset L^2$ self-dual for $E_1$, its
+determinant fractional ideal is $\bigwedge_O^2P'=\mathfrak D_L^{-1}$.
+Indeed at every finite prime a local basis matrix $T_{\mathfrak p}$
+turns the pairing into the standard alternating form multiplied by
+$\det T_{\mathfrak p}$; perfection of the trace pairing is equivalent
+to $(\det T_{\mathfrak p})O_{\mathfrak p}
+=\mathfrak D_{L,\mathfrak p}^{-1}$. These equalities determine the
+fractional ideal globally. Proposition~\ref{prop:noprincipal} shows
+that the codifferent has no totally positive generator. Thus no
+$T'\in\GL_2^+(L)$ satisfies $T'O^2=P'$. The positive matrix $W$ above
+compares $P$ to the different module $P_{\rm std}$ and does not contradict
+this obstruction.
+
+The original trace-polarized fibers do not become principal by passing
+to a cover alone. The chosen quotient kernel has orbit size $28$, so its
+marked descent requires its stabilizer; this does not rule out descent
+of an unmarked target or a suitable unspecified finite-index subgroup.
+In particular Corollary~\ref{pp:cor:weilimage} concerns the explicit
+principal image just constructed. Identifying it with Mostaed's named
+$V$ requires an integral polarization/level comparison and equality of
+curve images or direct point membership. Neither that identification
+nor disjointness of the two images follows here. The original
+standard lattice, a principal isogenous model, and literal membership
+in a prescribed principally polarized locus remain distinct assertions.
+\end{remark}
+

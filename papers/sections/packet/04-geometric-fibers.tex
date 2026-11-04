@@ -1,0 +1,684 @@
+% !TeX root = ../../packet-and-principal-models.tex
+\section{The three geometric fibers}
+We now supply the positive realizations and Hodge data used above. The B
+companion bridge fixes the geometric marking explicitly. The A and C
+calculations below use their actual vertex actions; their CM types are not
+inferred from an arithmetic companion signature.
+
+\subsection{The arithmetic certificate used in Theorem~\ref{thm:A}}\label{sec:maincertificate}
+Only a small part of the $\ell=43$ arithmetic is needed for the main theorem.  The full norm-fiber classification, signature enumeration, conjugacy reduction, component analysis, and unit calculation are deferred to Supplement, Section~\externalref{supplement}{app:arithdetail}.
+
+Put
+\[
+ \pi=t^4+t^3-4t^2-2t+5,
+ \qquad
+ \alpha_0=1+\zeta_{42}+\zeta_{42}^4,
+ \qquad
+ \alpha_{11}=\zeta_{42}^{11}\alpha_0,
+\]
+and $c_{11}=\alpha_{11}+\overline{\alpha}_{11}$.  Define
+\[
+ A_{c_{11}}=\begin{pmatrix}0&-\pi\\1&c_{11}\end{pmatrix},
+ \qquad
+ B=\begin{pmatrix}0&-1\\1&t\end{pmatrix}.
+\]
+
+\begin{proposition}[Arithmetic and component certificate]\label{prop:mainarith}
+The following assertions hold.
+\begin{enumerate}[label=(\roman*)]
+\item $N_{M/L}(\alpha_0)=\pi$, $N_{L/\Ql}(\pi)=43$, and $\pi$ is totally positive.  Thus $A_{c_{11}}$ is an integral determinant-$\pi$ Hecke matrix with characteristic polynomial $X^2-c_{11}X+\pi$.
+\item The six Galois triangles in McMullen's construction have orientations, relative to the identity component and ordered by $k=1,5,11,13,17,19$,
+\[
+ (+,+,-,-,-,-).
+\]
+The unit $t$ has the same sign vector.  Hence
+\[
+ h_t=\operatorname{diag}(t,1),\qquad B_t=h_tBh_t^{-1}
+\]
+changes all six components to $\mathbb H$ and normalizes $\mathrm{SL}_2(\OL)$.
+\item The point defined by $A_{c_{11}}$ belongs to the maximal-order branch $\OL[\alpha_{11}]=\OM$; no additional integral-conjugacy or unit-norm ambiguity is required for the exact certificate of Section~\ref{sec:vertexhit}.
+\end{enumerate}
+\end{proposition}
+\begin{proof}
+Part (i) is the exact cyclotomic calculation of Supplement, Section~\externalref{supplement}{app:prime43}.  For (ii), McMullen constructs the component maps by comparing the orientations of the six Galois triangles and sends an oppositely oriented component to $-\mathbb H$ while preserving the equivariance relation; see \cite[Prop.~6.1, Cor.~6.2, Thm.~6.3 and Eq.~(6.1)]{McMullen2026}.  The six signs are certified in Supplement, Section~\externalref{supplement}{app:components}; $N_{L/\Ql}(t)=1$, so $t\in\OL^\times$ and conjugation by $h_t$ preserves $\mathrm{SL}_2(\OL)$.  Part (iii) follows from the exact order-discriminant and unit-norm calculation in Supplement, Section~\externalref{supplement}{app:orders}.
+\end{proof}
+
+This proposition is deliberately a certificate, not a reconstruction of the entire search.  The proof of Theorem~\ref{thm:A} from this point onward uses only the explicit matrices and the polarized Hodge structure at their common vertex.
+
+\begin{proposition}[Geometric meaning of the normalized $B$-vertex]\label{prop:geometricB}
+Let $F:\HH\to(\pm\HH)^6$ be McMullen's modular embedding constructed from the six Galois triangles, with the identity embedding as the first component.  Let $z_B\in\HH$ be the vertex fixed by the order-$42$ generator $B$ in the identity triangle and put
+\[
+ F_t=h_t\circ F,\qquad h_t=\operatorname{diag}(t,1).
+\]
+Then $F_t$ takes values in $\HH^6$, is equivariant for the conjugated integral representation $g\mapsto h_tgh_t^{-1}$, and $F_t(z_B)$ is the componentwise upper-half-plane fixed point of
+\[
+ B_t=h_tBh_t^{-1}.
+\]
+Consequently the image of $F_t(z_B)$ in $X_L$ is a point of the normalized McMullen geodesic, independently of any Hecke calculation.
+\end{proposition}
+\begin{proof}
+McMullen's Theorem~6.3 constructs each component $f_i$ by the unique vertex-respecting conformal map from the identity triangle to the $i$-th Galois triangle.  When the two orientations agree, $f_i$ takes values in $\HH$; when they disagree, it takes values in $-\HH$, and in both cases
+\[
+ f_i(g_1z)=g_i f_i(z)
+\]
+for every triangle-group element $g$ \cite[Thm.~6.3, Eq.~(6.1)]{McMullen2026}.  In particular $f_i(z_B)$ is the vertex fixed by $B_i$.  Proposition~\ref{prop:mainarith} gives the component signs $(+,+,-,-,-,-)$ and the identical sign vector for the real determinants $\sigma_i(t)$ of $h_t$.  Since
+\[
+ \operatorname{Im}(h_{t,i}w)=\frac{\sigma_i(t)\operatorname{Im}(w)}{|c_iw+d_i|^2}
+\]
+for a real fractional-linear map of determinant $\sigma_i(t)$, $h_t$ carries the raw component of $F$ to $\HH^6$.  As $t\in\OL^\times$, conjugation by $h_t$ preserves $\mathrm{SL}_2(\OL)$.  Finally, conjugating the equation $B_i f_i(z_B)=f_i(z_B)$ by $h_{t,i}$ shows that the $i$-th coordinate of $F_t(z_B)$ is fixed by $(B_t)_i$.
+\end{proof}
+
+\subsection{An exact $k=11$ vertex intersection}\label{sec:vertexhit}
+The finite orbit search described above contains a particularly rigid case.  It is not merely a numerical near-hit: after the integral component normalization $h_t=\operatorname{diag}(t,1)$, one of the $k=11$ Hecke fixed points is exactly the elliptic $B$-vertex of McMullen's normalized fundamental quadrilateral.
+
+Let
+\[
+ B=\begin{pmatrix}0&-1\\1&t\end{pmatrix},\qquad B_t=h_tBh_t^{-1},
+\]
+and let $A_{c_{11}}=\left(\begin{smallmatrix}0&-\pi\\1&c_{11}\end{smallmatrix}\right)$ be the companion representative associated with $\alpha_{11}=\zeta_{42}^{11}\alpha_0$.  Define
+\[
+ G=\begin{pmatrix}g_{11}&g_{12}\\g_{21}&g_{22}\end{pmatrix}
+\]
+with
+\begin{align*}
+ g_{11}&=2t^5-t^4-9t^3+3t^2+7t+1,\\
+ g_{12}&=(t^2-t-1)(t^3-4t-1),\\
+ g_{21}&=-2(t^5-5t^3-t^2+5t+3),\\
+ g_{22}&=-(t-2)(3t^4+7t^3-4t^2-16t-7).
+\end{align*}
+
+\begin{theorem}[Exact $B_t$-vertex certificate]\label{thm:Bvertex}
+In $M_2(L)$ one has
+\[
+ \det G=1,
+ \qquad
+ [GA_{c_{11}}G^{-1},B_t]=0.
+\]
+More precisely,
+\[
+ GA_{c_{11}}G^{-1}=xI+yB_t
+\]
+with
+\[
+ x=(t^2-2)(t^3-t^2-6t-2),\qquad
+ y=t(t^2-2)(t^2+t-1).
+\]
+Consequently the Hecke fixed point represented by $A_{c_{11}}$ is
+$\mathrm{SL}_2(\OL)$-equivalent to the geometrically defined point $F_t(z_B)$ of Proposition~\ref{prop:geometricB}.  In particular the corresponding quotient point lies on the normalized McMullen curve in $X_L$.
+\end{theorem}
+\begin{proof}
+All identities are polynomial identities in $L=\Ql[t]/(f)$.  Direct reduction modulo $f$ gives $\det G=1$ and the displayed linear expression in $B_t$.  Since $B_t$ is elliptic, every non-scalar element of the $L$-algebra $L[B_t]$ has the same pair of fixed points at each real embedding.  The chosen upper-half-plane fixed point is therefore carried by $G$ from the companion Hecke fixed point to the $B_t$ vertex.  The accompanying exact certificate performs no floating-point comparison.
+\end{proof}
+
+
+\subsection{From fixed matrices to endomorphisms of the explicit lattice}\label{sec:latticetransport}
+The preceding vertex certificate is an identity in the Hilbert modular matrix model.  We now record explicitly why it is also an identity of endomorphisms of the polarized abelian variety constructed above in Section~\ref{sec:polarization}.  This removes a possible ambiguity between a Möbius fixed-point computation and the actual rational Hodge structure.
+
+Let
+\[
+ A=\begin{pmatrix}a&b\\ c&d\end{pmatrix}\in M_2(\OL)
+\]
+and suppose that $z=(z_i)\in\mathbb H^6$ is fixed componentwise by $A$, so that
+\[
+ z_i=\frac{\sigma_i(a)z_i+\sigma_i(b)}{\sigma_i(c)z_i+\sigma_i(d)}.
+\]
+Put $\lambda_i=\sigma_i(c)z_i+\sigma_i(d)$ and let $m_\lambda$ denote the diagonal complex-linear map with multipliers $\lambda_i$.
+
+\begin{proposition}[Fixed matrices act on the explicit lattice]\label{prop:fixedmatrixlattice}
+The map $m_\lambda$ preserves $\Lambda_z$ and hence induces an endomorphism of $A_z$.  Relative to the $\OL$-basis $(z,1)$ of the rank-two $\OL$-module defining $\Lambda_z$, its coordinate matrix is $A^{\mathsf T}$.  If $\det_L(A)=\delta\ne0$, then
+\[
+ [\Lambda_z:m_\lambda(\Lambda_z)]=|N_{L/\Ql}(\delta)|,
+\]
+so the induced isogeny has degree $|N_{L/\Ql}(\delta)|$.  In particular, $A_{c_{11}}$ induces a degree-$43$ endomorphism, while $B_t$ induces an automorphism.
+\end{proposition}
+\begin{proof}
+The fixed-point equation gives
+\[
+ \lambda_i z_i=\sigma_i(a)z_i+\sigma_i(b),\qquad
+ \lambda_i=\sigma_i(c)z_i+\sigma_i(d).
+\]
+Thus multiplication by $\lambda$ sends the two $\OL$-generators $z$ and $1$ to the $\OL$-linear combinations encoded by the columns of $A^{\mathsf T}$, proving lattice preservation and the matrix assertion.  The index of the image of the rank-two $\OL$-lattice under an $L$-linear matrix is the absolute norm of its $L$-determinant.  For $A_{c_{11}}$ this is $N_{L/\Ql}(\pi)=43$, while $\det B_t=1$.
+\end{proof}
+
+Now let $\gamma=\left(\begin{smallmatrix}r&s\\u&v\end{smallmatrix}\right)\in\mathrm{SL}_2(\OL)$ and put $z'=\gamma z$.  The standard analytic isomorphism
+\[
+ q_\gamma:A_z\longrightarrow A_{z'},\qquad
+ (w_i)_i\longmapsto\left(\frac{w_i}{\sigma_i(u)z_i+\sigma_i(v)}\right)_i
+\]
+is an isomorphism of lattices.  On the abstract $\OL^2$ coordinates it is represented by $\gamma^{-\mathsf T}$.  Since $\det\gamma=1$, it preserves the determinant pairing and hence the trace polarization $E_1$.
+
+\begin{corollary}[The exact $G$-certificate transports the endomorphism]\label{cor:Gtransport}
+Under the polarized isomorphism $q_G$ from the $k=11$ companion fixed point to the normalized $B_t$-vertex, the endomorphism represented by $A_{c_{11}}^{\mathsf T}$ is carried to
+\[
+ (GA_{c_{11}}G^{-1})^{\mathsf T}=(xI+yB_t)^{\mathsf T}.
+\]
+Consequently the field generated by the corrected Hecke endomorphism is identified inside the actual endomorphism algebra of the certified vertex with the field generated by $B_t^{\mathsf T}$. The $K$-operator $\Sigma_B=(I+2B_t^{14})^{\mathsf T}$ used below is therefore an endomorphism of the same polarized rational Hodge structure appearing in the exact Hecke certificate.
+\end{corollary}
+\begin{proof}
+In lattice coordinates, conjugation by $q_G$ sends $A^{\mathsf T}$ to
+\[
+ G^{-\mathsf T}A^{\mathsf T}G^{\mathsf T}=(GAG^{-1})^{\mathsf T}.
+\]
+Apply Theorem~\ref{thm:Bvertex}.  Preservation of $E_1$ follows from $G\in\mathrm{SL}_2(\OL)$.
+\end{proof}
+
+
+\subsection{The actual CM type at the vertex}\label{sec:actualcmtype}
+
+There is a small orientation point here which is essential.  McMullen's construction
+associates to the $i$-th real embedding a triangle $T_i\subset\mathbb H$; when the
+orientation of $T_i$ agrees with $T_1$, the component map lands in $\mathbb H$, and
+when the orientations disagree it lands in $-\mathbb H$ \cite[Thm.~6.3 and Eq.~(6.1)]{McMullen2026}.
+Using McMullen's printed matrices $A,B,C$ and their six real embeddings, the oriented
+vertex triples have relative orientation signs
+\[
+ (+,+,-,-,-,-)
+\]
+for $k=1,5,11,13,17,19$.  These are exactly the signs of
+$\sigma_k(t)$, where $t=2\cos(\pi/21)$.  Thus the fixed $B$-vertex contributes the
+eigenvalue $\zeta^{k}$ in the first two components and $\zeta^{-k}$ in the last four.
+This gives a geometric derivation of the CM-type signs below, independent of the
+normalizing matrix $h_t$ alone.  The signs are certified by rational isolating intervals
+for all six real roots of the minimal polynomial of $t$ and exact rational interval
+evaluation of the three fixed points; no floating-point sign decision enters the proof.
+
+\begin{remark}[The caption of McMullen's Figure~5]\label{rem:fig5signs}
+McMullen's general construction is explicitly formulated in
+$(\pm\mathbb H)^6$ and sends an oppositely oriented Galois triangle to
+$-\mathbb H$ \cite[Thm.~6.3, Eq.~(6.1)]{McMullen2026}.  The caption of Figure~5
+writes $\widetilde f_0:\mathbb H\to\mathbb H^6$.  For the printed matrix model,
+however, the direct certified orientation calculation above gives the mixed sign vector
+$(+,+,-,-,-,-)$.  We therefore use the matrices and Theorem~6.3, rather than the
+caption alone, to determine the raw component of $Y_L$.  Proposition~\externalref{supplement}{prop:orientationt}
+then transfers that raw component to $X_L$ by the integral matrix $h_t$.
+\end{remark}
+
+\begin{proposition}[CM type and Weil signature]\label{prop:actualcmtype}
+The CM type of the vertex in Theorem~\ref{thm:Bvertex} is
+\[
+ \Phi=\{1,5,31,29,25,23\}\subset (\Z/42\Z)^\times.
+\]
+For the quadratic subfield $K=\Ql(\sqrt{-3})=\Ql(\zeta_3)$, the restrictions of these six embeddings have residues
+\[
+ 1,2,1,2,1,2\pmod 3.
+\]
+Hence the $K$-action on $H^{1,0}$ has multiplicities $(3,3)$: the certified vertex is an abelian sixfold of $K$-Weil type.
+\end{proposition}
+\begin{proof}
+The sign statement above selects the exponents $1,5,-11,-13,-17,-19$ modulo $42$, which are exactly the displayed set.  Restriction to $K=\Ql(\zeta_3)$ is determined by the exponent modulo $3$, giving three copies of each of the two embeddings of $K$.
+\end{proof}
+
+
+\subsection{The Weil discriminant and Markman's theorem}\label{sec:markman}
+Let $s=\sqrt{-3}\in K$, acting as $\Sigma_B$. With respect to $E_1$, define
+\begin{equation}\label{eq:HermitianE1}
+ H(v,w)=E_1(\Sigma_B v,w)+sE_1(v,w).
+\end{equation}
+The identities $\Sigma_B^\dagger=-\Sigma_B$ and $\Sigma_B^2=-3I$ imply $H(\Sigma_B v,w)=sH(v,w)$ and $H(v,\Sigma_B w)=\bar sH(v,w)$, so \eqref{eq:HermitianE1} is a $K$-Hermitian form for the polarized Weil structure (up to the conventional nonzero rational normalization, which does not change the determinant class in rank six).
+
+Let $\eta\in L$ be the lower-left entry of the Mobius representative $S_B=I+2B_t^{14}$. Exact reduction gives
+\[
+ \eta=2(t^2-2)(2t^3+t^2-7t-4),\qquad N_{L/\Ql}(\eta)=-1728.
+\]
+The six vectors $f_j=(0,t^j)$, $0\le j\le5$, form a $K$-basis of $L^2$. Since $E_1(f_i,f_j)=0$, the Hermitian matrix in this basis is
+\[
+ \bigl(-\operatorname{Tr}_{L/\Ql}(\eta t^{i+j})\bigr)_{0\le i,j\le5}.
+\]
+The basis assertion follows because $\eta\ne0$: the vectors $f_j,\Sigma_Bf_j$ span $L^2$ over $\Ql$. Since the rank is six, the minus sign does not change the determinant. Therefore
+\begin{equation}\label{eq:vertexdisc}
+ \det H=\operatorname{disc}(L)N_{L/\Ql}(\eta)
+ =(3^3 7^5)(-1728)=-2^6 3^6 7^5.
+\end{equation}
+Every identity here is exact in $\Ql[t]/(f)$.
+
+\begin{proposition}[Weil discriminant $-1$]\label{prop:discminusone}
+For the explicit polarization $E_1$, the $K$-Hermitian discriminant of the sixfold of Theorem~\ref{thm:Bvertex} is the class of $-1$ in
+\[
+ \Ql^\times/N_{K/\Ql}(K^\times).
+\]
+\end{proposition}
+\begin{proof}
+Equation~\eqref{eq:vertexdisc} represents the determinant class. Now
+\[
+ 2^6=N_{K/\Ql}(8),\qquad 3^6=N_{K/\Ql}(27),\qquad 7=N_{K/\Ql}(2+\sqrt{-3}).
+\]
+Therefore $2^6 3^6 7^5$ is a $K/\Ql$ norm, leaving precisely the class $-1$.
+\end{proof}
+
+Markman's Section~1.1 defines a polarized abelian variety of Weil type as a triple $(A,\eta,h)$ in which $h\in H^{1,1}(A,\Ql)$ is an ample class satisfying $\eta(k)^*h=N_{K/\Ql}(k)h$; no principality hypothesis is imposed \cite[Sec.~1.1]{Markman2025}.  In the present example the hypotheses match term by term: $\dim A_B=6$; Proposition~\ref{prop:actualcmtype} gives multiplicities $(3,3)$; $E_1$ is an ample integral, hence rational, $(1,1)$-class; Proposition~\ref{prop:Kcompatible} gives the required norm-similitude; and Proposition~\ref{prop:discminusone} gives discriminant class $-1$ for the associated $K$-Hermitian form.  Markman's Theorem~1.5.1 therefore applies exactly and states that the Hodge--Weil classes are algebraic \cite[Thm.~1.5.1]{Markman2025}.  The theorem does not exclude CM points.
+
+\begin{corollary}[Algebraicity of the exceptional Weil space]\label{cor:Weilalg}
+For the $k=11$ vertex of Theorem~\ref{thm:Bvertex}, the two-dimensional rational Hodge--Weil space
+\[
+ W_K(A)\subset H^6(A,\Ql)\cap H^{3,3}(A)
+\]
+is algebraic.
+\end{corollary}
+\begin{proof}
+Proposition~\ref{prop:actualcmtype} gives Weil type for $K=\Ql(\sqrt{-3})$, Proposition~\ref{prop:discminusone} gives discriminant $-1$, and Markman's theorem applies.
+\end{proof}
+
+
+\subsection{All Hodge classes on the $k=11$ CM sixfold}\label{sec:fullhodge}
+We finally determine the Hodge classes of this particular CM sixfold.  This is stronger than merely identifying the exceptional Weil subspace.
+
+Let $G=(\Z/42\Z)^\times=\Gal(M/\Ql)$ and let $e_a$ denote the one-dimensional complex eigenspace of $H^1(A,\C)$ indexed by $a\in G$.  For a subset $S\subset G$ put $e_S=\bigwedge_{a\in S}e_a$.  If $|S|=2p$, the standard CM-torus character criterion says that $e_S$ is a Hodge line in $H^{2p}(A,\C)$ precisely when
+\begin{equation}\label{eq:CMcriterion}
+ |gS\cap\Phi|=p\qquad\text{for every }g\in G.
+\end{equation}
+To make the character calculation explicit, let $T=\operatorname{Res}_{M/\Ql}\mathbf G_m$ and let $\mu$ be the Hodge cocharacter of the CM type $\Phi$.  The Mumford--Tate torus is the smallest $\Ql$-subtorus of $T$ through which all Galois conjugates $g\mu$ factor.  If $\chi_S$ is the $T_\C$-character of $e_S$, then
+\[
+ \langle\chi_S,g\mu\rangle=|gS\cap\Phi|.
+\]
+For $|S|=2p$, the line $e_S$ has Hodge type $(p,p)$ exactly when this pairing equals the weight $p$ for every Galois conjugate of the Hodge cocharacter.  Hence
+\[
+ |gS\cap\Phi|=p\quad\text{for every }g\in G,
+\]
+which is \eqref{eq:CMcriterion}.  Equivalently, after subtracting the central weight cocharacter, the character $\chi_S$ is trivial on the Hodge group.  This is the elementary character form of the CM-torus description used in the general theory of Hodge classes on CM abelian varieties; compare \cite{MilneHodge2020}.
+
+Complex conjugation on $G$ is $a\mapsto-a$.  The six conjugate pairs are
+\[
+ \{1,41\},\{5,37\},\{11,31\},\{13,29\},\{17,25\},\{19,23\}.
+\]
+Each corresponding degree-two Hodge line is a divisor line, and products of divisors correspond to unions of these pairs.
+
+\begin{lemma}[Fourier classification for the primitive CM type]\label{lem:primitivebinary}
+Let
+\[
+ \Phi=\{1,5,23,25,29,31\}\subset G
+\]
+and let $S\subset G$ have cardinality $2p$.  Then
+\[
+ |gS\cap\Phi|=p\quad\text{for every }g\in G
+\]
+if and only if either $S$ is a union of $p$ antipodal pairs
+$\{a,-a\}$, or $p=3$ and
+\[
+ S=\{a\in G:a\equiv1\pmod3\}
+ \quad\text{or}\quad
+ S=\{a\in G:a\equiv2\pmod3\}.
+\]
+Consequently the numbers of solutions for $p=1,\ldots,6$ are
+\[
+ \binom6p+2\delta_{p,3}=6,15,22,15,6,1.
+\]
+The same classification holds for every Galois translate of $\Phi$.
+\end{lemma}
+\begin{proof}
+Use the Chinese-remainder coordinates
+\[
+ G\simeq C_2\times C_6,\qquad
+ a\bmod3=(-1)^e,\qquad a\bmod7=3^n,
+\]
+where $e\in\{0,1\}$ and $n\in\mathbb Z/6\mathbb Z$.  In these coordinates
+complex conjugation $a\mapsto-a$ is translation by $(1,3)$.  Put
+$\varepsilon=2\mathbf 1_\Phi-1$.  With columns indexed by $n=0,\ldots,5$,
+direct CRT reduction gives
+\[
+ \bigl(\varepsilon(0,n)\bigr)_n=(1,1,-1,-1,1,-1),
+ \qquad
+ \bigl(\varepsilon(1,n)\bigr)_n=(1,-1,1,-1,-1,1).
+\]
+In particular $\varepsilon(x+(1,3))=-\varepsilon(x)$.
+
+Let $\zeta_6$ be a primitive sixth root of unity and use the Fourier
+convention
+\[
+ \widehat f(r,s)=\sum_{e=0}^1\sum_{n=0}^5
+ f(e,n)(-1)^{re}\zeta_6^{-sn},
+ \qquad r\in\mathbb Z/2\mathbb Z,\quad s\in\mathbb Z/6\mathbb Z.
+\]
+The character $\chi_{r,s}$ is odd under complex conjugation exactly when
+$r+s$ is odd.  Since $\varepsilon$ is odd, its even Fourier coefficients
+vanish.  For the six odd characters, summing the two displayed rows and using
+$\zeta_6^2-\zeta_6+1=0$ gives the exact table
+\[
+\begin{array}{c|cccccc}
+ (r,s)&(0,1)&(0,3)&(0,5)&(1,0)&(1,2)&(1,4)\\ \hline
+ \widehat\varepsilon(r,s)
+ &4&4&4&0&-4(2\zeta_6-1)&4(2\zeta_6-1).
+\end{array}
+\]
+Thus the only odd character missing from the Fourier support of
+$\varepsilon$ is
+\[
+ \eta=\chi_{1,0},\qquad \eta(e,n)=(-1)^e,
+\]
+the quadratic character modulo $3$.
+
+Let $F=\mathbf1_S$ and define the correlation
+\[
+ C_F(g)=\sum_{x\in G}F(x)\varepsilon(g^{-1}x)
+       =2|S\cap g\Phi|-|S|.
+\]
+The Hodge condition is equivalent to $C_F=0$, since $g$ ranges through all
+of $G$.  Character orthogonality, with the convention above, gives
+\[
+ \widehat C_F(\chi)=\widehat F(\chi)
+                    \widehat\varepsilon(\chi^{-1}).
+\]
+The odd support in the table is invariant under inversion.  Therefore every
+odd Fourier coefficient of $F$ vanishes except possibly the $\eta$-coefficient.
+Equivalently the odd part of $F$ has the form
+\[
+ F^-(x):=\frac{F(x)-F(-x)}2=c\eta(x)
+\]
+for some real number $c$.  Because $F$ is binary-valued,
+$F(x)-F(-x)\in\{-1,0,1\}$.  If $c=0$, $F$ is constant on each antipodal
+pair, so $S$ is a union of such pairs.  If $c\ne0$, the difference is nonzero
+and has the same absolute value on all six pairs; hence $c=\pm\tfrac12$ and
+each pair contributes exactly one element.  Solving for $F$ gives
+$F=(1+\eta)/2$ or $F=(1-\eta)/2$, the two residue fibers modulo $3$.
+They both have six elements, so they occur only when $p=3$.
+
+There are $\binom6p$ unions of $p$ antipodal pairs.  Finally, if
+$\Phi'=u\Phi$, then
+$\widehat\varepsilon_{\Phi'}(\chi)=\chi(u)^{-1}
+\widehat\varepsilon_\Phi(\chi)$, so its Fourier support is unchanged.  This
+proves the translated statement as well.
+\end{proof}
+
+The same finite Galois calculation shows that the stabilizer of $\Phi$ in $G$ is trivial.  Hence this CM type is primitive: it is not pulled back from a CM type on any proper CM subfield of $M$.  In particular, the example is not produced by the obvious induction of a lower-dimensional CM type.
+
+\begin{theorem}[Hodge ring of the certified CM sixfold]\label{thm:fullhodge}
+For the CM type
+\[
+ \Phi=\{1,5,23,25,29,31\},
+\]
+the numbers of complex Hodge eigenlines in codimensions $p=1,\ldots,6$ are
+\[
+ 6,\ 15,\ 22,\ 15,\ 6,\ 1.
+\]
+In every codimension except $p=3$, all of these lines are products of divisor lines.  In codimension $3$, exactly $20$ of the $22$ lines are products of three divisor lines; the two remaining lines are indexed by
+\[
+ S_+=\{1,13,19,25,31,37\},\qquad
+ S_-=\{5,11,17,23,29,41\}.
+\]
+These are precisely the two complex eigenspaces of $\bigwedge_K^6 H^1(A,\Ql)$; their rational span is $W_K(A)$.  Consequently the full rational Hodge algebra of $A$ is generated by divisor classes together with $W_K(A)$.
+\end{theorem}
+\begin{proof}
+Lemma~\ref{lem:primitivebinary} classifies every binary solution of
+criterion~\eqref{eq:CMcriterion}, giving the displayed Hodge counts.  The six
+degree-two solutions are precisely the antipodal pairs.  Their exterior
+products are nonzero exactly when the chosen pairs are distinct, so they give
+$\binom6p$, namely $6,15,20,15,6,1$, divisor-product eigenlines.  The only two
+additional lines occur in the middle degree.  The two sets displayed above
+are exactly the fibers $a\equiv1\pmod3$ and $a\equiv2\pmod3$, hence the two
+eigenspaces obtained after complexifying $\bigwedge_K^6H^1$.  This identifies
+their rational Galois-stable span with the two-dimensional Weil space.  The
+registered exact subset enumerations independently verify the classification
+and counts, but are not the sole explanation.
+Although the eigenline description is made after complexification, the divisor eigenlines are
+permuted by $G$ and their full span is the complexification of the rational divisor space;
+likewise $S_+$ and $S_-$ form one Galois-stable pair.  Hence the resulting spanning
+statement descends from complex eigenspaces to the rational Hodge algebra.
+\end{proof}
+
+\begin{corollary}[Hodge conjecture for the certified sixfold]\label{cor:HCspecific}
+The Hodge conjecture holds in every codimension for the specific polarized CM abelian sixfold represented by the $k=11$ normalized $B$-vertex.
+\end{corollary}
+\begin{proof}
+Divisor classes are algebraic by the Lefschetz $(1,1)$ theorem \cite[\S2, Remarks~(iii), p.~49]{DeligneHodge2006}, hence so are all their products.  Corollary~\ref{cor:Weilalg} gives algebraicity of the only two Hodge eigenlines not contained in the divisor algebra.  Theorem~\ref{thm:fullhodge} exhausts all Hodge classes in all degrees.
+\end{proof}
+
+
+
+\subsection{The A and C realizations and the fourth vertex}
+\begin{theorem}[A second exact Hecke vertex]\label{thm:Avertex}
+Let $A$ be McMullen's order-$14$ lift of the projective order-$7$ quadrilateral vertex generator in the index-two $(7,21,21,21)$ model, and put
+\[
+ A_t=h_tAh_t^{-1},\qquad h_t=\operatorname{diag}(t,1).
+\]
+For every one of the four $d=7$ arithmetic signature candidates
+\[
+ k\in\{2,14,23,35\}
+\]
+there are explicit $x_k,y_k\in L$ such that
+\[
+ T_k=x_kI+y_kA_t\in M_2(\OL),
+ \qquad
+ \operatorname{tr}(T_k)=c_k,
+ \qquad
+ \det(T_k)=\pi.
+\]
+Thus $T_k$ is an integral degree-$43$ Hecke representative and has exactly the same componentwise fixed points as $A_t$.  Consequently all four corrected $d=7$ trace classes admit a Hecke representative fixing the normalized $A$-vertex of McMullen's curve.
+
+The CM type of the resulting $A$-vertex rational Hodge structure is
+\[
+ \Phi_A=\{1,5,31,29,17,19\}.
+\]
+Its restriction to $\Ql(\sqrt{-7})$ has multiplicities $(2,4)$, so the $A$-vertex is \emph{not} of $\Ql(\sqrt{-7})$-Weil type despite the arithmetic $d=7$ coefficient-sign filter.  Its restriction to $K=\Ql(\sqrt{-3})$, however, has multiplicities $(3,3)$.
+\end{theorem}
+\begin{proof}
+McMullen's matrix $A$ has trace
+\[
+ \operatorname{tr}(A)=t^3-3t=\zeta_{42}^3+\zeta_{42}^{-3}.
+\]
+Hence $L[A_t]=M$.  Writing $\lambda_A=\zeta_{42}^3$, each $\alpha_k$ has a unique expansion
+\[
+ \alpha_k=x_k+y_k\lambda_A.
+\]
+For the two conjugate pairs these coefficients are
+\[
+\begin{aligned}
+ x_2&=\frac{3t^5-t^4-19t^3+5t^2+29t-10}{7},\\
+ y_2&=-\frac{4t^5+t^4-30t^3-5t^2+48t-4}{7},\\
+ x_{14}&=\frac{3t^5-t^4-26t^3-2t^2+43t+4}{7},\\
+ y_{14}&=\frac{(t-1)(3t^4+9t^3-3t^2-26t-18)}{7},
+\end{aligned}
+\]
+and
+\[
+ (x_{23},y_{23})=-(x_2,y_2),\qquad
+ (x_{35},y_{35})=-(x_{14},y_{14}).
+\]
+Although the displayed coefficients have denominator $7$ in the power basis, exact reduction in $L=\Ql[t]/(f)$ shows that all four matrices $T_k=x_kI+y_kA_t$ have entries in $\OL$ and satisfy the displayed trace and determinant identities.  Since $y_k\ne0$, the fixed-point equation of $T_k$ is a nonzero scalar multiple of that of $A_t$, so their fixed points agree at every real embedding.  Because $N_{L/\Ql}(\pi)=43$ is prime, an integral matrix of determinant $\pi$ has the required local Hecke elementary-divisor type.
+
+For the CM type, the normalized $A_t$ fixed point lies in $\HH$ at every real place.  If $c_{A,t}$ denotes the lower-left entry of $A_t$, the eigenvalue on the $H^{1,0}$ fixed line has imaginary part $c_{A,t}\operatorname{Im}(z)$.  Exact interval evaluation at the six real embeddings, compared with the signs of $\sin(k\pi/7)$ for the eigenvalues $\zeta_{42}^{\pm3k}$, selects the extensions
+\[
+ 1,5,-11,-13,17,19\pmod{42},
+\]
+which gives the displayed $\Phi_A$.  Reduction modulo $7$ gives two quadratic-residue and four nonresidue restrictions, while reduction modulo $3$ gives three of each embedding.  This proves the two signature assertions.
+\end{proof}
+
+\begin{theorem}[Hodge conjecture at the normalized $A$-vertex]\label{thm:Ahodge}
+For the normalized $A$-vertex, every rational Hodge class is generated by divisor classes.  In particular the Hodge conjecture holds for the associated polarized abelian sixfold in every codimension.
+
+Moreover, for the $K=\Ql(\sqrt{-3})$ Weil structure its Hermitian discriminant is the class of $-1$.
+\end{theorem}
+\begin{proof}
+The element $\sqrt{-3}=1+2\zeta_{42}^{14}$ has a unique expression $x+y\zeta_{42}^3$ over $L$.  Replacing $\zeta_{42}^3$ by $A_t$ gives an integral Mobius representative $S_A$ with $S_A^2=-3I$. Its actual homology action is $\Sigma_A=S_A^{\mathsf T}$. For the trace polarization $E_1$, the corresponding Hermitian form
+\[
+ H_A(v,w)=E_1(\Sigma_Av,w)+\sqrt{-3}\,E_1(v,w)
+\]
+has Gram matrix $(-\operatorname{Tr}_{L/\Ql}((S_A)_{21}t^{i+j}))$ in the $K$-basis $(0,t^j)$, and exact determinant
+\[
+ \det H_A=-2^6 3^6 7^5\,127.
+\]
+Here $2^6=N(8)$, $3^6=N(27)$, $7=N(2+\sqrt{-3})$, and
+\[
+ 127=N(10+3\sqrt{-3}),
+\]
+so the determinant class is $-1$.
+
+It remains to determine all Hodge classes.  Applying the CM-character criterion to
+\[
+ \Phi_A=\{1,5,31,29,17,19\}
+\]
+gives respectively
+\[
+ 12,\ 51,\ 88,\ 51,\ 12,\ 1
+\]
+complex Hodge eigenlines in codimensions $1,\ldots,6$.  There are exactly twelve degree-two Hodge eigenlines, indexed by
+\[
+\begin{gathered}
+ \{1,13\},\ \{1,41\},\ \{5,23\},\ \{5,37\},\
+ \{11,17\},\ \{11,31\},\\
+ \{13,29\},\ \{17,25\},\ \{19,23\},\ \{19,37\},\
+ \{25,31\},\ \{29,41\}.
+\end{gathered}
+\]
+By the Lefschetz $(1,1)$ theorem their rational Galois-stable span consists of divisor classes.  In particular the two $K=\Ql(\sqrt{-3})$ Weil eigenlines are already divisor products; for example
+\[
+ \{a:a\equiv1\!\!\pmod3\}
+ =\{1,13\}\sqcup\{19,37\}\sqcup\{25,31\},
+\]
+with the conjugate line decomposing as
+\[
+ \{5,23\}\sqcup\{11,17\}\sqcup\{29,41\}.
+\]
+Exhaustive exact enumeration of disjoint products of the twelve degree-two eigenlines gives
+\[
+ 12,\ 51,\ 88,\ 51,\ 12,\ 1
+\]
+distinct eigenlines in the corresponding codimensions, exactly exhausting the preceding Hodge counts.  Thus the complexified Hodge algebra is generated in degree two, and Galois stability descends this statement to the rational Hodge algebra.  All such generators are algebraic divisors, proving the Hodge conjecture in every codimension.
+\end{proof}
+
+\begin{proposition}[The normalized $C$-vertex and saturation of the $43$-packet]\label{prop:Cvertex}
+Let $C_t=h_tCh_t^{-1}$ be the normalized second order-$42$ generator.  Then
+\[
+ \operatorname{tr}(C_t)=t,\qquad \det(C_t)=1,\qquad \OL[C_t]=\OM.
+\]
+For every $k=0,\ldots,41$, substitution $\zeta_{42}\mapsto C_t$ gives
+\[
+ T_{C,k}=\alpha_k(C_t)\in M_2(\OL),\qquad
+ \operatorname{tr}(T_{C,k})=c_k,\qquad
+ \det(T_{C,k})=\pi.
+\]
+Thus every corrected $\ell=43$ trace class has a representative fixing the
+normalized $C$-vertex.  The identical statement holds at $B_t$.
+
+The CM type at $C$ is
+\[
+ \Phi_C=\{1,5,11,13,17,19\}.
+\]
+It has $K=\Ql(\sqrt{-3})$-signature $(3,3)$ and $K$-Hermitian discriminant
+$-1$.  The Hodge eigenline counts are
+\[
+ 6,\ 15,\ 22,\ 15,\ 6,\ 1,
+\]
+and the only two non-divisor lines are the two complex lines of $W_K(A_C)$.
+Consequently the Hodge conjecture holds for the polarized $C$-vertex in every
+codimension.
+\end{proposition}
+\begin{proof}
+The relative discriminant of $X^2-tX+1$ is $t^2-4$, and exact norm
+computation gives $N_{L/\Ql}(t^2-4)=1$.  Hence the order generated by either
+$B_t$ or $C_t$ is the maximal order $\OM$.  Evaluating the integral element
+$\alpha_k=\zeta_{42}^k(1+\zeta_{42}+\zeta_{42}^4)$ at either matrix therefore
+gives an integral endomorphism.  Its $L$-trace and determinant are
+$c_k$ and $N_{M/L}(\alpha_k)=\pi$.  Since $N_{L/\Ql}(\pi)=43$ is prime, the
+matrix has the required local Hecke elementary-divisor type.
+
+Exact interval evaluation shows that the lower-left entry of $C_t$ is positive
+at all six real embeddings, so the upper fixed lines select the exponents
+$1,5,11,13,17,19$.  Put $S_C=I+2C_t^{14}$.  Then
+the actual homology action $\Sigma_C=S_C^{\mathsf T}$ satisfies $\Sigma_C^2=-3I$, $\Sigma_C^\dagger=-\Sigma_C$. In the $K$-basis $(0,t^j)$ the Hermitian Gram matrix is $(-\operatorname{Tr}_{L/\Ql}((S_C)_{21}t^{i+j}))$, and its determinant is
+\[
+ -2^6 3^6 7^5\,127.
+\]
+The factors outside the sign are norms because
+$7=N(2+\sqrt{-3})$ and $127=N(10+3\sqrt{-3})$, leaving discriminant class
+$-1$.  The exact CM-character enumeration then gives the displayed Hodge
+counts and exactly two exceptional middle-degree lines, namely the two
+$K$-Weil eigenspaces.  Markman's theorem applies.
+\end{proof}
+
+\begin{proposition}[The $B$- and $C$-vertices are distinct holomorphic classes]\label{prop:BCdistinct}
+The normalized $B$- and $C$-vertices are not
+$\mathrm{SL}_2(\OL)$-equivalent, although $B_t$ and $C_t$ are in the same
+unoriented $\mathrm{GL}_2(\OL)$ similarity class.
+\end{proposition}
+\begin{proof}
+The maximal order $\OM$ has class number one and $h(L)=1$, so the maximal-order
+module classification gives a single $\mathrm{GL}_2(\OL)$ similarity class.
+Let $P$ conjugate $B_t$ to $C_t$.  At the real embeddings $k=1,5$ the chosen
+upper fixed lines carry the same eigenvalue $\zeta_{42}^k$, while at
+$k=11,13,17,19$ the $B_t$ upper line carries $\zeta_{42}^{-k}$ and the
+$C_t$ upper line carries $\zeta_{42}^k$.  Thus
+\[
+ \operatorname{sgn}(\det P)=(+,+,-,-,-,-).
+\]
+Every other integral conjugator differs by a centralizer unit in $\OM^\times$,
+whose determinant is a relative unit norm and is totally positive.  Hence this
+sign vector cannot be changed.  No integral conjugator is totally positive,
+and in particular none lies in $\mathrm{SL}_2(\OL)$.
+\end{proof}
+
+\begin{proposition}[The fourth quadrilateral vertex is the $B$-class]\label{prop:DBsame}
+Let $D$ be McMullen's fourth printed generator for the symmetric quadrilateral $Q(7,21,21,21)$ and put $D_t=h_tDh_t^{-1}$.  Then
+\[
+ \operatorname{tr}(D_t)=t,\qquad \det(D_t)=1,\qquad \OL[D_t]=\OM,
+\]
+and $D_t$ is $\mathrm{SL}_2(\OL)$-conjugate to $B_t$.  Consequently the four elliptic vertices $A,B,C,D$ of McMullen's quadrilateral determine exactly three holomorphic classes in the normalized Hilbert modular quotient: $A$, $B=D$, and $C$.
+\end{proposition}
+\begin{proof}
+McMullen's explicit matrix for $D$ has trace $t$ and determinant one.  Since the relative discriminant of $X^2-tX+1$ is $t^2-4$ and $N_{L/\Ql}(t^2-4)=1$, both $\OL[B_t]$ and $\OL[D_t]$ equal the maximal order $\OM$.  The maximal-order integral similarity theorem therefore puts $B_t$ and $D_t$ in one $\mathrm{GL}_2(\OL)$ class.
+
+Let $B=\left(\begin{smallmatrix}0&-1\\1&t\end{smallmatrix}\right)$ be the companion matrix for $X^2-tX+1$.  The rational matrix $P_0=(e_1,D_te_1)$ satisfies $P_0B=D_tP_0$, and exact rational-interval evaluation gives
+\[
+ \operatorname{sgn}(\det P_0)=(+,+,-,-,-,-).
+\]
+The same sign vector occurs for $h_t=\operatorname{diag}(t,1)$, which satisfies $h_tB=B_th_t$.  Therefore $P_0h_t^{-1}$ conjugates $B_t$ to $D_t$ and has totally positive determinant.  Any two conjugators between $B_t$ and $D_t$ differ through the centralizer $M^\times$, whose determinant is a relative norm and hence positive at every real place.  Thus an integral conjugator supplied by the maximal-order classification lies in the same positive orientation class; Corollary~\externalref{supplement}{cor:orientedcollapse} adjusts it through an integral centralizer unit to determinant one.  Hence $B_t$ and $D_t$ are $\mathrm{SL}_2(\OL)$-conjugate.
+\end{proof}
+
+\subsection{Comparison of the underlying isogeny classes}
+\begin{proposition}[Comparison with known CM factors]\label{prop:knownCM}
+Let $J_n$ be the Jacobian of the smooth projective model of
+$y^2=x^n-1$, and let $r_n$ be the endomorphism induced by
+$(x,y)\mapsto(\zeta_nx,y)$. Put
+$X_{21}=\operatorname{im}(\Phi_3(r_{21})\Phi_7(r_{21}):J_{21}\to J_{21})$.
+Forgetting the chosen polarizations and fixed RM markings, the three fibers
+of Theorem~\ref{thm:A} satisfy
+\[
+ A_A\sim_{\mathbf C}J_7^2,\qquad
+ A_B\sim_{\mathbf C}A_C\sim_{\mathbf C}X_{21}.
+\]
+Here $X_{21}$ is a simple abelian sixfold. Thus the three marked quotient
+classes belong to exactly two underlying complex isogeny classes.
+\end{proposition}
+\begin{proof}
+For odd $n$, the differentials $x^{j-1}dx/y$, $1\leq j\leq(n-1)/2$,
+have $r_n$-characters $\zeta_n^j$. We use pushforward on divisor classes;
+equivariance of the Abel--Jacobi map identifies these with the Jacobian
+tangent eigenvalues. The polynomial $\Phi_3\Phi_7$ kills precisely the
+nonprimitive characters of $J_{21}$, so $X_{21}$ has dimension six and
+CM type $S=\{1,2,4,5,8,10\}$ for $\xi=\zeta_{21}$.
+This is the known primitive factor in
+\cite[Eq.~(4.2), Lem.~4.2, Prop.~4.1 and Sec.~5.3]{Goodson2024}.
+Its type has trivial stabilizer in $(\mathbf Z/21\mathbf Z)^\times$,
+hence is primitive and gives a simple variety
+\cite[Prop.~3.13]{MilneCM2020}.
+
+Since $z=\zeta_{42}=-\xi^{11}$, the action
+$z\mapsto-r_{21}^{11}|_{X_{21}}$ has type
+$\{21+22j\bmod42:j\in S\}=\Phi_B$.
+Precomposing this action by $z\mapsto z^{19}$ gives
+$19\Phi_B=\Phi_C$. This last automorphism acts nontrivially on $L$;
+it does not identify the two prescribed RM markings.
+
+For A, on $J_7^2$ define commuting endomorphisms
+\[
+ R=\operatorname{diag}(r_7,r_7),\quad
+ U=\begin{pmatrix}0&-1\\1&-1\end{pmatrix},\quad
+ T=-R^2U^2=\begin{pmatrix}r_7^2&-r_7^2\\r_7^2&0\end{pmatrix}.
+\]
+The identities $R^7=I$ and $U^2+U+I=0$ give
+$T^6=R^5$, $T^{21}=-I$ and $T^{42}=I$.
+Its tangent eigenvalues have $z$-exponents
+$21+12j+28b\pmod{42}$ for $j=1,2,3$ and $b=1,2$.
+Their set is $\{1,5,17,19,29,31\}=\Phi_A$.
+All are primitive, so $\Phi_{42}(T)=0$ and $z\mapsto T$ gives
+a faithful $M$-action. No compatibility with the product polarization is
+asserted.
+
+Each compared sixfold has rational homology of rank one over the
+degree-twelve field $M$. Equal specified CM types identify their rational
+complex structures; the corresponding full lattices in $M$ are
+commensurable. Multiplication by a suitable positive integer therefore
+gives an $M$-equivariant complex isogeny, which is algebraic. This is the
+CM classification up to isogeny \cite[Prop.~3.12]{MilneCM2020}, and it
+does not require the varieties to be simple. Finally, $J_7^2$ is not
+simple, so its isogeny class differs from that of $X_{21}$.
+\end{proof}
+

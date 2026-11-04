@@ -1,0 +1,93 @@
+"""Sparse11 adaptation of prior referee09 contract harness; synthetic128 nonfinite observations, no mathematical evidence or numerical/provider calls."""
+import copy,hashlib,importlib.util,json,resource,signal,tempfile,time
+from pathlib import Path
+ROOT=Path(__file__).resolve().parents[2]
+def sha(x):return hashlib.sha256(x).hexdigest()
+def raw(x):return (json.dumps(x,sort_keys=True)+'\n').encode()
+def mod(path,name):
+ s=importlib.util.spec_from_file_location(name,ROOT/path);m=importlib.util.module_from_spec(s);s.loader.exec_module(m);return m
+def run():
+ collector=mod('experiments/s_order_theta_v164/inspect_sparse11_candidate.py','refcollector164')
+ selector=mod('experiments/bc_jacobian_v147/runtime/artifact_selection.py','refselector164')
+ candidate=json.loads((ROOT/'build/s-order-v164/preparation11/execution_candidate.json').read_bytes())
+ jobs=[]
+ for j,ref in enumerate(candidate['jobs']):
+  folder=ROOT/Path(ref['path']).parent;planraw=(folder/'certificate_plan_candidate.json').read_bytes();plan=json.loads(planraw)
+  blobs={name:b'SYNTHETIC_NONNUMERICAL_FIXTURE\n' for name in selector.allowed_names() if name!='guard_delete.json'}
+  results=[]
+  for i,t in enumerate(plan['tasks']):
+   model=json.loads((ROOT/t['record_path']).read_bytes());transport=model['transport'];interval=model['interval_period']
+   first=dict(stage='EXACT_PERIOD_INPUT',catalog_index=t['catalog_index'],task_index=i,plan_sha256=sha(planraw),
+    period_record_sha256=plan['pins'][t['record_path']],precision_bits=96,input_precision_bits=512,
+    chi=transport['invariant_refinement_chi'],characteristic_index=transport['flint_characteristic_index'],python='SYNTHETIC_NO_RUNTIME',
+    flint='0.9.0',FLINT_RELEASE=30600,source_pins=plan['pins'],tau=interval['period_rectangles'],
+    positive_ldl_pivots=interval['positive_ldl_pivots'],mathematical_conclusion=None)
+   values=[first];digest=sha(json.dumps(first,sort_keys=True).encode())
+   wide={k:{'mid':[0,0],'rad':[1,14]} for k in ('real','imag')}
+   for k,v in zip(t['pair_indices'],t['numerators_mod3']):
+    values.append(dict(stage='EXACT_THETA_OBSERVATION',catalog_index=t['catalog_index'],task_index=i,pair_index=k,
+     input_sha256=digest,numerator_mod3=v,centered_lift=[(x+1)%3-1 for x in v],argument=[wide]*6,
+     characteristic_index=first['characteristic_index'],precision_bits=96,quantity='theta_characteristic_squared',finite=False,
+     mathematical_conclusion=None,enclosure=None,excludes_zero=False))
+   values.append(dict(stage='BATCH_COMPLETE',catalog_index=t['catalog_index'],task_index=i,pair_indices=t['pair_indices'],total_seconds=1,mathematical_conclusion=None))
+   output=b''.join(raw(v) for v in values);prefix=f'benchmark/task{i:02}/'
+   blobs[prefix+'stdout.jsonl']=output;blobs[prefix+'stderr.txt']=b''
+   result={'status':'EXITED','returncode':0,'task':t,'artifacts':{n:{'sha256':sha(blobs[prefix+n]),'bytes':len(blobs[prefix+n])} for n in ('stdout.jsonl','stderr.txt')}}
+   results.append(result);blobs[prefix+'result.json']=raw(result)
+  runtime=raw({'scope':'SYNTHETIC_NO_ACTUAL_RUNTIME'});blobs['setup/runtime.json']=runtime
+  blobs['setup/setup_complete.json']=raw({'runtime_sha256':sha(runtime)})
+  blobs['pipeline.json']=raw({'status':'ATTEMPT_ENDED_NO_THEOREM','benchmark_returncode':0,'setup_returncode':0,'runtime_sha256':sha(runtime)})
+  blobs['benchmark/started.json']=raw({'plan_sha256':sha(planraw),'worker_sha256':plan['pins']['experiments/bc_jacobian_v147/certificate_worker_candidate.py']})
+  blobs['benchmark/summary.json']=raw({'plan_sha256':sha(planraw),'status':'THETA_BATCH_REVIEW_REQUIRED','complete_observation_count':64,'mathematical_adoption':False,'results':results})
+  jobs.append(blobs)
+ with tempfile.TemporaryDirectory() as tmp:
+  tmp=Path(tmp);controller=tmp/'controller';controller.mkdir()
+  approval=copy.deepcopy(candidate);approval['status']='INDEPENDENTLY_ACCEPTED_V150_SESSION'
+  authority=tmp/'SYNTHETIC_ONLY_NOT_AUTHORITY.json';authority.write_bytes(raw(approval))
+  def evaluate(data,label,cleanup=True):
+   outcomes=[]
+   for j,blobs in enumerate(data):
+    destination=controller/f'jobs/job{j}/controller';dest=destination/'retained';(dest/'blobs').mkdir(parents=True,exist_ok=True)
+    entries={}
+    for name,value in blobs.items():
+     h=sha(value);(dest/'blobs'/f'{h}.blob').write_bytes(value);entries[name]={'sha256':h,'bytes':len(value)}
+    receipt=dest/'receipt.json';receipt.write_bytes(raw({'artifacts':entries,'missing':sorted(set(selector.allowed_names())-set(blobs)),'rejected':[]}))
+    outcome={'remote_stage':'PIPELINE_ENDED','returncode':0,'retention':{'receipt':str(receipt),'sha256':sha(receipt.read_bytes())}}
+    (destination/'outcome.json').write_bytes(raw(outcome));outcomes.append(outcome)
+   (controller/'outcome.json').write_bytes(raw({'status':'SESSION_QUEUE_ENDED','jobs':outcomes}))
+   (controller/'cleanup.json').write_bytes(raw({'provider_absence_verified':cleanup}))
+   return collector.inspect(authority,sha(authority.read_bytes()),controller,tmp/label)
+  positive=evaluate(jobs,'positive')
+  assert positive['observations']==128 and len(positive['reported_counts'])==10
+  for index,c in positive['reported_counts'].items():
+   assert c['observations']==(8 if index in (0,1,2,3) else 16) and c['finite']==c['reported_excluding_zero']==0
+   assert c['tasks']==(1 if index in (0,1,2,3) else 2)
+  rejected=[]
+  for label in ('truncated_stream','duplicate_pair','wrong_task','bad_nonfinite','wrong_input_record','wrong_result_spec','failed_child','missing_task07','runtime_mismatch','false_cleanup','old_summary_total'):
+   data=copy.deepcopy(jobs);key='benchmark/task00/stdout.jsonl';values=[json.loads(x) for x in data[0][key].splitlines()]
+   if label=='truncated_stream':values.pop(1)
+   if label=='duplicate_pair':values[2]['pair_index']=values[1]['pair_index']
+   if label=='wrong_task':values[1]['task_index']=1
+   if label=='bad_nonfinite':values[1]['excludes_zero']=True
+   if label=='wrong_input_record':
+    values[0]['period_record_sha256']='0'*64;h=sha(json.dumps(values[0],sort_keys=True).encode())
+    for v in values[1:-1]:v['input_sha256']=h
+   data[0][key]=b''.join(raw(v) for v in values)
+   if label in ('wrong_result_spec','failed_child'):
+    summary=json.loads(data[0]['benchmark/summary.json']);result=summary['results'][0]
+    if label=='wrong_result_spec':result['task']['pair_indices']=[99]
+    else:result['returncode']=1
+    data[0]['benchmark/summary.json']=raw(summary);data[0]['benchmark/task00/result.json']=raw(result)
+   if label=='missing_task07':data[0].pop('benchmark/task07/stdout.jsonl')
+   if label=='runtime_mismatch':data[0]['setup/runtime.json']=raw({'different':True})
+   if label=='old_summary_total':
+    summary=json.loads(data[0]['benchmark/summary.json']);summary['complete_observation_count']=80;data[0]['benchmark/summary.json']=raw(summary)
+   try:evaluate(data,label,cleanup=label!='false_cleanup')
+   except (AssertionError,RuntimeError,ValueError,KeyError):rejected.append(label)
+   else:raise AssertionError(('Malformed retained stream accepted',label))
+ return {'status':'PASS_SYNTHETIC_COLLECTOR_CONTRACT_ONLY','observations':128,'targets':10,'tasks':16,
+  'all_observations_inconclusive':True,'task_counts_by_target':{str(i):c['tasks'] for i,c in positive['reported_counts'].items()},
+  'negative_rejections':rejected,'actual_runtime_evidence':False,'theta_calls':0,'provider_calls':0,'mathematical_adoption':False}
+if __name__=='__main__':
+ resource.setrlimit(resource.RLIMIT_CPU,(20,20));signal.alarm(30);started=time.monotonic()
+ result=run();result['wall_seconds']=time.monotonic()-started;Path(__file__).with_suffix('.json').write_text(json.dumps(result,indent=2,sort_keys=True)+'\n');print(json.dumps(result,indent=2,sort_keys=True))

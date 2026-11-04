@@ -1,0 +1,300 @@
+#!/usr/bin/env python3
+from pathlib import Path
+import sys, os, time, shutil
+from certificate_execution import execute_tasks
+ROOT=Path(__file__).resolve().parents[1]
+if not __debug__:
+    raise SystemExit("FAIL assertions are disabled; run Python without -O/-OO.")
+# Current-source exact certificates that are expected to be runnable in the baseline environment.
+py = [
+ 'certificates/full_packet_arithmetic_v62.py',
+ 'independent/full_packet_cyclotomic_v62.py',
+ 'certificates/d3_points_v60.py',
+ 'independent/d3_points_quadratic_v60.py',
+ 'certificates/d3_completeness_v60.py',
+ 'independent/d3_completeness_quadratic_v60.py',
+ 'certificates/k11_vertex_bridge_v60.py',
+ 'independent/k11_vertex_bridge_stdlib_v60.py',
+ 'certificates/packet_order_coverage_v58.py',
+ 'independent/packet_order_coverage_stdlib_v58.py',
+ 'certificates/known_cm_comparison_v58.py',
+ 'certificates/principal_descent_v57.py',
+ 'independent/principal_descent_stdlib_v57.py',
+ 'certificates/principal_homology_v56.py',
+ 'independent/principal_homology_stdlib_v56.py',
+ 'certificates/a_vertex_certificate_v31.py',
+ 'certificates/d7_nonmaximal_classes_v29.py',
+ 'certificates/d7_ambient_points_v45.py',
+ 'certificates/vertex_saturation_v35.py',
+ 'certificates/a_principal_local_v33.py',
+ 'certificates/three_vertex_level_v37.py',
+ 'certificates/maximal_vertex_orbits_v38.py',
+ 'certificates/packet_hodge_v39.py',
+ 'certificates/four_vertex_audit_v40.py',
+ 'certificates/residual_orbit_k17_k38_v42.py',
+ 'certificates/residual_orbit_k1_k22_v43.py',
+ 'certificates/a_vertex_orbits_k20_k41_v44.py',
+ # v47 subsumes the retained v46 mask-14 certificate and adds mask 30
+ # without duplicating the multi-minute bounded-matrix enumeration.
+ 'certificates/d7_r83_masks14_30_v47.py',
+ # v48 is a new reflected pair with independently derived bounds and counts.
+ 'certificates/d7_r83_masks15_31_v48.py',
+ # v49 is another disjoint reflected pair with its own exact bounds and counts.
+ 'certificates/d7_r83_masks6_22_v49.py',
+ # v50 is a fourth disjoint reflected pair with new exact bounds and counts.
+ 'certificates/d7_r83_masks1_17_v50.py',
+ # v51 excludes ten further reflected pairs / twenty distinct ambient points.
+ 'certificates/d7_r83_batch10_v51.py',
+ # v52 and v53 close the final two reflected pairs in the nontrivial-R83 stratum.
+ 'certificates/d7_r83_masks13_29_v52.py',
+ 'certificates/d7_r83_masks7_23_v53.py',
+ 'independent/quadrilateral_k17_stdlib_v41.py',
+ 'independent/packet_cm_hodge_sturm_v41.py',
+ 'independent/residual_orbit_k17_k38_sturm_v42.py',
+ 'independent/residual_orbit_k1_k22_sturm_v43.py',
+ 'independent/a_vertex_orbits_k20_k41_sturm_v44.py',
+ 'independent/d7_ambient_points_sturm_v45.py',
+ 'independent/d7_r83_masks14_30_sturm_v47.py',
+ 'independent/d7_r83_masks15_31_sturm_v48.py',
+ 'independent/d7_r83_masks6_22_sturm_v49.py',
+ 'independent/d7_r83_masks1_17_sturm_v50.py',
+ 'independent/d7_r83_batch10_sturm_v51.py',
+ 'independent/d7_r83_masks13_29_sturm_v52.py',
+ 'independent/d7_r83_masks7_23_sturm_v53.py',
+]
+# Required reproducibility regressions.  These programs are registered and
+# must run when the full suite is claimed, but they are not promoted as
+# theorem-grade independent exact implementations.  In particular the packet
+# script uses floating-point CM-type inputs; the two exact packet paths are in
+# ``py`` above.
+js_regression = [
+ 'independent/a_vertex_hodge_node_v31.js',
+ 'independent/packet_hodge_node_v40.js',
+]
+failed=[]
+tasks=[]
+for rel in py:
+    p=ROOT/rel
+    if not p.exists():
+        print('FAIL missing expected certificate',rel)
+        failed.append(rel)
+        continue
+    tasks.append((rel, [sys.executable, str(p)]))
+
+# The v55 principal-Picard proper-R83 theorem has two exact implementations.
+# Each implementation is partitioned into four disjoint commands so the full
+# arithmetic is rerun on four cores without weakening mask coverage.
+v55_shards = (
+    "0,1,2,3,4,5,6,7",
+    "8,9,10,11,12,13,14,15",
+    "32,33,34,35,36,37,38,39",
+    "40,41,42,43,44,45,46,47",
+)
+v55_masks = tuple(
+    int(mask) for shard in v55_shards for mask in shard.split(",")
+)
+assert len(v55_masks) == 32
+assert len(set(v55_masks)) == len(v55_masks)
+assert tuple(sorted(v55_masks)) == tuple(range(16)) + tuple(range(32, 48))
+for rel, extra in (
+    ("certificates/d7_r83_principal_v55.py", ()),
+    ("independent/d7_r83_principal_sturm_v55.py", ("--mode", "enumerate")),
+):
+    p = ROOT / rel
+    if not p.exists():
+        print("FAIL missing expected v55 certificate", rel)
+        failed.append(rel)
+        continue
+    for shard in v55_shards:
+        label = f"{rel} --masks {shard}"
+        tasks.append(
+            (label, [sys.executable, str(p), "--masks", shard, *extra])
+        )
+# C40: each of the eleven remaining maximal points is replayed in both paths.
+v61_masks = (1, 3, 4, 5, 6, 8, 9, 10, 11, 12, 14)
+assert len(v61_masks) == len(set(v61_masks)) == 11
+assert set(v61_masks) | {0, 2, 7, 13, 15} == set(range(16))
+for rel in ("certificates/d7_remaining_maximal_v61.py",
+            "independent/d7_remaining_maximal_sturm_v61.py"):
+    p = ROOT / rel
+    if not p.exists():
+        print("FAIL missing expected v61 certificate", rel)
+        failed.append(rel)
+        continue
+    for mask in v61_masks:
+        label = f"{rel} --masks {mask}"
+        tasks.append((label, [sys.executable, str(p), "--masks", str(mask)]))
+
+# C41: all 32 proper-(41,t-12) points, one whole job per exact path and mask.
+v63_masks = tuple(range(16)) + tuple(range(32, 48))
+assert len(v63_masks) == len(set(v63_masks)) == 32
+assert {m for mask in v63_masks for m in (mask, mask ^ 16)} == set(range(64))
+for rel in ("certificates/d7_r41_v63.py", "independent/d7_r41_sturm_v63.py"):
+    p = ROOT / rel
+    if not p.exists():
+        print("FAIL missing expected v63 certificate", rel)
+        failed.append(rel)
+        continue
+    for mask in v63_masks:
+        label = f"{rel} --masks {mask}"
+        tasks.append((label, [sys.executable, str(p), "--masks", str(mask)]))
+
+# V75: replay the six named broader principal points in both exact paths.
+# Registration runs full arithmetic; promotion/release status lives in the ledger.
+v75_points = ("R127:pic0:00", "R43_20:pic0:00", "R7sq:pic0:00",
+              "R41_22:pic0:00", "R43_31:pic0:00", "R7:pic0:00")
+assert len(v75_points) == len(set(v75_points)) == 6
+for rel in ("certificates/broader_principal_v75.py",
+            "independent/broader_principal_sturm_v75.py"):
+    p = ROOT / rel
+    if not p.exists():
+        print("FAIL missing expected v75 certificate", rel)
+        failed.append(rel)
+        continue
+    for point in v75_points:
+        label = f"{rel} --point {point}"
+        tasks.append((label, [sys.executable, str(p), "--point", point]))
+
+# V80: the new Pic1 point and its principal control, with fresh finite sets.
+v80_points = ("R127:pic0:00", "R127:pic1:00")
+for rel in ("certificates/r127_pic1_v80.py", "independent/r127_pic1_sturm_v80.py"):
+    p = ROOT / rel
+    if not p.exists():
+        print("FAIL missing expected v80 certificate", rel)
+        failed.append(rel)
+        continue
+    for point in v80_points:
+        label = f"{rel} --point {point}"
+        tasks.append((label, [sys.executable, str(p), "--point", point]))
+
+node = shutil.which("node")
+if node:
+    for rel in js_regression:
+        p=ROOT/rel
+        if not p.exists():
+            print('FAIL missing expected regression source',rel)
+            failed.append(rel)
+            continue
+        tasks.append((rel, [node, str(p)]))
+else:
+    print('FAIL Node not available for required reproducibility regressions')
+    failed.extend(js_regression)
+
+# V82 exact registration domain from the reviewed immutable portable package.
+# Installation requires the separate aggregate + final-review gate; this runner
+# always recomputes every command. The six controls are an execution barrier.
+V82_PACKAGE_SHA256 = '18f75af69dfda0dbefde2f68ef7da79ecca701fd24cb625be8f74e44784d021c'
+V82_CONTROLS = ('R127:pic0:00', 'R127:pic1:00', 'R43_31:pic0:00')
+V82_POINTS = ('R127:pic0:01', 'R127:pic0:02', 'R127:pic0:03', 'R127:pic0:04', 'R127:pic0:05', 'R127:pic0:06', 'R127:pic0:07', 'R127:pic0:08', 'R127:pic0:09', 'R127:pic0:10', 'R127:pic0:11', 'R127:pic0:12', 'R127:pic0:13', 'R127:pic0:14', 'R127:pic0:15', 'R127:pic0:32', 'R127:pic0:33', 'R127:pic0:34', 'R127:pic0:35', 'R127:pic0:36', 'R127:pic0:37', 'R127:pic0:38', 'R127:pic0:39', 'R127:pic0:40', 'R127:pic0:41', 'R127:pic0:42', 'R127:pic0:43', 'R127:pic0:44', 'R127:pic0:45', 'R127:pic0:46', 'R127:pic0:47', 'R127:pic1:01', 'R127:pic1:02', 'R127:pic1:03', 'R127:pic1:04', 'R127:pic1:05', 'R127:pic1:06', 'R127:pic1:07', 'R127:pic1:08', 'R127:pic1:09', 'R127:pic1:10', 'R127:pic1:11', 'R127:pic1:12', 'R127:pic1:13', 'R127:pic1:14', 'R127:pic1:15', 'R127:pic1:16', 'R127:pic1:17', 'R127:pic1:18', 'R127:pic1:19', 'R127:pic1:20', 'R127:pic1:21', 'R127:pic1:22', 'R127:pic1:23', 'R127:pic1:24', 'R127:pic1:25', 'R127:pic1:26', 'R127:pic1:27', 'R127:pic1:28', 'R127:pic1:29', 'R127:pic1:30', 'R127:pic1:31', 'R127:pic1:32', 'R127:pic1:33', 'R127:pic1:34', 'R127:pic1:35', 'R127:pic1:36', 'R127:pic1:37', 'R127:pic1:38', 'R127:pic1:39', 'R127:pic1:40', 'R127:pic1:41', 'R127:pic1:42', 'R127:pic1:43', 'R127:pic1:44', 'R127:pic1:45', 'R127:pic1:46', 'R127:pic1:47', 'R127:pic1:48', 'R127:pic1:49', 'R127:pic1:50', 'R127:pic1:51', 'R127:pic1:52', 'R127:pic1:53', 'R127:pic1:54', 'R127:pic1:55', 'R127:pic1:56', 'R127:pic1:57', 'R127:pic1:58', 'R127:pic1:59', 'R127:pic1:60', 'R127:pic1:61', 'R127:pic1:62', 'R127:pic1:63', 'R41_22:pic0:01', 'R41_22:pic0:02', 'R41_22:pic0:03', 'R41_22:pic0:04', 'R41_22:pic0:05', 'R41_22:pic0:06', 'R41_22:pic0:07', 'R41_22:pic0:08', 'R41_22:pic0:09', 'R41_22:pic0:10', 'R41_22:pic0:11', 'R41_22:pic0:12', 'R41_22:pic0:13', 'R41_22:pic0:14', 'R41_22:pic0:15', 'R41_22:pic0:32', 'R41_22:pic0:33', 'R41_22:pic0:34', 'R41_22:pic0:35', 'R41_22:pic0:36', 'R41_22:pic0:37', 'R41_22:pic0:38', 'R41_22:pic0:39', 'R41_22:pic0:40', 'R41_22:pic0:41', 'R41_22:pic0:42', 'R41_22:pic0:43', 'R41_22:pic0:44', 'R41_22:pic0:45', 'R41_22:pic0:46', 'R41_22:pic0:47', 'R43_20:pic0:01', 'R43_20:pic0:02', 'R43_20:pic0:03', 'R43_20:pic0:04', 'R43_20:pic0:05', 'R43_20:pic0:06', 'R43_20:pic0:07', 'R43_20:pic0:08', 'R43_20:pic0:09', 'R43_20:pic0:10', 'R43_20:pic0:11', 'R43_20:pic0:12', 'R43_20:pic0:13', 'R43_20:pic0:14', 'R43_20:pic0:15', 'R43_20:pic0:32', 'R43_20:pic0:33', 'R43_20:pic0:34', 'R43_20:pic0:35', 'R43_20:pic0:36', 'R43_20:pic0:37', 'R43_20:pic0:38', 'R43_20:pic0:39', 'R43_20:pic0:40', 'R43_20:pic0:41', 'R43_20:pic0:42', 'R43_20:pic0:43', 'R43_20:pic0:44', 'R43_20:pic0:45', 'R43_20:pic0:46', 'R43_20:pic0:47', 'R43_31:pic0:01', 'R43_31:pic0:02', 'R43_31:pic0:03', 'R43_31:pic0:04', 'R43_31:pic0:05', 'R43_31:pic0:06', 'R43_31:pic0:07', 'R43_31:pic0:08', 'R43_31:pic0:09', 'R43_31:pic0:10', 'R43_31:pic0:11', 'R43_31:pic0:12', 'R43_31:pic0:13', 'R43_31:pic0:14', 'R43_31:pic0:15', 'R43_31:pic0:32', 'R43_31:pic0:33', 'R43_31:pic0:34', 'R43_31:pic0:35', 'R43_31:pic0:36', 'R43_31:pic0:37', 'R43_31:pic0:38', 'R43_31:pic0:39', 'R43_31:pic0:40', 'R43_31:pic0:41', 'R43_31:pic0:42', 'R43_31:pic0:43', 'R43_31:pic0:44', 'R43_31:pic0:45', 'R43_31:pic0:46', 'R43_31:pic0:47', 'R7:pic0:01', 'R7:pic0:02', 'R7:pic0:03', 'R7:pic0:04', 'R7:pic0:05', 'R7:pic0:06', 'R7:pic0:07', 'R7:pic0:08', 'R7:pic0:09', 'R7:pic0:10', 'R7:pic0:11', 'R7:pic0:12', 'R7:pic0:13', 'R7:pic0:14', 'R7:pic0:15', 'R7:pic0:32', 'R7:pic0:33', 'R7:pic0:34', 'R7:pic0:35', 'R7:pic0:36', 'R7:pic0:37', 'R7:pic0:38', 'R7:pic0:39', 'R7:pic0:40', 'R7:pic0:41', 'R7:pic0:42', 'R7:pic0:43', 'R7:pic0:44', 'R7:pic0:45', 'R7:pic0:46', 'R7:pic0:47', 'R7sq:pic0:01', 'R7sq:pic0:02', 'R7sq:pic0:03', 'R7sq:pic0:04', 'R7sq:pic0:05', 'R7sq:pic0:06', 'R7sq:pic0:07', 'R7sq:pic0:08', 'R7sq:pic0:09', 'R7sq:pic0:10', 'R7sq:pic0:11', 'R7sq:pic0:12', 'R7sq:pic0:13', 'R7sq:pic0:14', 'R7sq:pic0:15', 'R7sq:pic0:32', 'R7sq:pic0:33', 'R7sq:pic0:34', 'R7sq:pic0:35', 'R7sq:pic0:36', 'R7sq:pic0:37', 'R7sq:pic0:38', 'R7sq:pic0:39', 'R7sq:pic0:40', 'R7sq:pic0:41', 'R7sq:pic0:42', 'R7sq:pic0:43', 'R7sq:pic0:44', 'R7sq:pic0:45', 'R7sq:pic0:46', 'R7sq:pic0:47')
+V82_FRONTENDS = ("certificates/continuous_primary_v82.py",
+                 "independent/continuous_sturm_v82.py")
+assert len(tasks) == 159 or failed
+assert len(V82_CONTROLS) == len(set(V82_CONTROLS)) == 3
+assert len(V82_POINTS) == len(set(V82_POINTS)) == 249
+assert not set(V82_CONTROLS) & set(V82_POINTS)
+v82_phases = []
+for phase, points in (("v82-controls", V82_CONTROLS),
+                      ("v82-selected", V82_POINTS)):
+    phase_tasks = []
+    for point in points:
+        for rel in V82_FRONTENDS:
+            p = ROOT / rel
+            if not p.is_file():
+                failed.append("missing expected V82 frontend: " + rel)
+            label = f"{rel} --point {point}"
+            phase_tasks.append((label, [sys.executable, str(p), "--point", point]))
+    v82_phases.append((phase, phase_tasks))
+# Final reviewed V83 union: six positive target/label cases plus365 reflected
+# nonhits. Current OM13 and the17 reviewed representative labels are subsets.
+import json
+V83_FRONTENDS = ("certificates/reflected_primary_v83.py", "independent/reflected_sturm_v83.py")
+V83_POSITIVE_CASES = (('ORIGINAL_Q_V1', 'OM:pic0:00'), ('ORIGINAL_Q_V1', 'OM:pic0:07'), ('ORIGINAL_Q_V1', 'OM:pic0:15'), ('REFLECTED_AB_V1', 'OM:pic0:00'), ('REFLECTED_AB_V1', 'OM:pic0:07'), ('REFLECTED_AB_V1', 'OM:pic0:15'))
+V83_NONHITS = ('OM:pic0:01', 'OM:pic0:02', 'OM:pic0:03', 'OM:pic0:04', 'OM:pic0:05', 'OM:pic0:06', 'OM:pic0:08', 'OM:pic0:09', 'OM:pic0:10', 'OM:pic0:11', 'OM:pic0:12', 'OM:pic0:13', 'OM:pic0:14', 'R127:pic0:00', 'R127:pic0:01', 'R127:pic0:02', 'R127:pic0:03', 'R127:pic0:04', 'R127:pic0:05', 'R127:pic0:06', 'R127:pic0:07', 'R127:pic0:08', 'R127:pic0:09', 'R127:pic0:10', 'R127:pic0:11', 'R127:pic0:12', 'R127:pic0:13', 'R127:pic0:14', 'R127:pic0:15', 'R127:pic0:32', 'R127:pic0:33', 'R127:pic0:34', 'R127:pic0:35', 'R127:pic0:36', 'R127:pic0:37', 'R127:pic0:38', 'R127:pic0:39', 'R127:pic0:40', 'R127:pic0:41', 'R127:pic0:42', 'R127:pic0:43', 'R127:pic0:44', 'R127:pic0:45', 'R127:pic0:46', 'R127:pic0:47', 'R127:pic1:00', 'R127:pic1:01', 'R127:pic1:02', 'R127:pic1:03', 'R127:pic1:04', 'R127:pic1:05', 'R127:pic1:06', 'R127:pic1:07', 'R127:pic1:08', 'R127:pic1:09', 'R127:pic1:10', 'R127:pic1:11', 'R127:pic1:12', 'R127:pic1:13', 'R127:pic1:14', 'R127:pic1:15', 'R127:pic1:16', 'R127:pic1:17', 'R127:pic1:18', 'R127:pic1:19', 'R127:pic1:20', 'R127:pic1:21', 'R127:pic1:22', 'R127:pic1:23', 'R127:pic1:24', 'R127:pic1:25', 'R127:pic1:26', 'R127:pic1:27', 'R127:pic1:28', 'R127:pic1:29', 'R127:pic1:30', 'R127:pic1:31', 'R127:pic1:32', 'R127:pic1:33', 'R127:pic1:34', 'R127:pic1:35', 'R127:pic1:36', 'R127:pic1:37', 'R127:pic1:38', 'R127:pic1:39', 'R127:pic1:40', 'R127:pic1:41', 'R127:pic1:42', 'R127:pic1:43', 'R127:pic1:44', 'R127:pic1:45', 'R127:pic1:46', 'R127:pic1:47', 'R127:pic1:48', 'R127:pic1:49', 'R127:pic1:50', 'R127:pic1:51', 'R127:pic1:52', 'R127:pic1:53', 'R127:pic1:54', 'R127:pic1:55', 'R127:pic1:56', 'R127:pic1:57', 'R127:pic1:58', 'R127:pic1:59', 'R127:pic1:60', 'R127:pic1:61', 'R127:pic1:62', 'R127:pic1:63', 'R41_12:pic0:00', 'R41_12:pic0:01', 'R41_12:pic0:02', 'R41_12:pic0:03', 'R41_12:pic0:04', 'R41_12:pic0:05', 'R41_12:pic0:06', 'R41_12:pic0:07', 'R41_12:pic0:08', 'R41_12:pic0:09', 'R41_12:pic0:10', 'R41_12:pic0:11', 'R41_12:pic0:12', 'R41_12:pic0:13', 'R41_12:pic0:14', 'R41_12:pic0:15', 'R41_12:pic0:32', 'R41_12:pic0:33', 'R41_12:pic0:34', 'R41_12:pic0:35', 'R41_12:pic0:36', 'R41_12:pic0:37', 'R41_12:pic0:38', 'R41_12:pic0:39', 'R41_12:pic0:40', 'R41_12:pic0:41', 'R41_12:pic0:42', 'R41_12:pic0:43', 'R41_12:pic0:44', 'R41_12:pic0:45', 'R41_12:pic0:46', 'R41_12:pic0:47', 'R41_22:pic0:00', 'R41_22:pic0:01', 'R41_22:pic0:02', 'R41_22:pic0:03', 'R41_22:pic0:04', 'R41_22:pic0:05', 'R41_22:pic0:06', 'R41_22:pic0:07', 'R41_22:pic0:08', 'R41_22:pic0:09', 'R41_22:pic0:10', 'R41_22:pic0:11', 'R41_22:pic0:12', 'R41_22:pic0:13', 'R41_22:pic0:14', 'R41_22:pic0:15', 'R41_22:pic0:32', 'R41_22:pic0:33', 'R41_22:pic0:34', 'R41_22:pic0:35', 'R41_22:pic0:36', 'R41_22:pic0:37', 'R41_22:pic0:38', 'R41_22:pic0:39', 'R41_22:pic0:40', 'R41_22:pic0:41', 'R41_22:pic0:42', 'R41_22:pic0:43', 'R41_22:pic0:44', 'R41_22:pic0:45', 'R41_22:pic0:46', 'R41_22:pic0:47', 'R43_20:pic0:00', 'R43_20:pic0:01', 'R43_20:pic0:02', 'R43_20:pic0:03', 'R43_20:pic0:04', 'R43_20:pic0:05', 'R43_20:pic0:06', 'R43_20:pic0:07', 'R43_20:pic0:08', 'R43_20:pic0:09', 'R43_20:pic0:10', 'R43_20:pic0:11', 'R43_20:pic0:12', 'R43_20:pic0:13', 'R43_20:pic0:14', 'R43_20:pic0:15', 'R43_20:pic0:32', 'R43_20:pic0:33', 'R43_20:pic0:34', 'R43_20:pic0:35', 'R43_20:pic0:36', 'R43_20:pic0:37', 'R43_20:pic0:38', 'R43_20:pic0:39', 'R43_20:pic0:40', 'R43_20:pic0:41', 'R43_20:pic0:42', 'R43_20:pic0:43', 'R43_20:pic0:44', 'R43_20:pic0:45', 'R43_20:pic0:46', 'R43_20:pic0:47', 'R43_31:pic0:00', 'R43_31:pic0:01', 'R43_31:pic0:02', 'R43_31:pic0:03', 'R43_31:pic0:04', 'R43_31:pic0:05', 'R43_31:pic0:06', 'R43_31:pic0:07', 'R43_31:pic0:08', 'R43_31:pic0:09', 'R43_31:pic0:10', 'R43_31:pic0:11', 'R43_31:pic0:12', 'R43_31:pic0:13', 'R43_31:pic0:14', 'R43_31:pic0:15', 'R43_31:pic0:32', 'R43_31:pic0:33', 'R43_31:pic0:34', 'R43_31:pic0:35', 'R43_31:pic0:36', 'R43_31:pic0:37', 'R43_31:pic0:38', 'R43_31:pic0:39', 'R43_31:pic0:40', 'R43_31:pic0:41', 'R43_31:pic0:42', 'R43_31:pic0:43', 'R43_31:pic0:44', 'R43_31:pic0:45', 'R43_31:pic0:46', 'R43_31:pic0:47', 'R7:pic0:00', 'R7:pic0:01', 'R7:pic0:02', 'R7:pic0:03', 'R7:pic0:04', 'R7:pic0:05', 'R7:pic0:06', 'R7:pic0:07', 'R7:pic0:08', 'R7:pic0:09', 'R7:pic0:10', 'R7:pic0:11', 'R7:pic0:12', 'R7:pic0:13', 'R7:pic0:14', 'R7:pic0:15', 'R7:pic0:32', 'R7:pic0:33', 'R7:pic0:34', 'R7:pic0:35', 'R7:pic0:36', 'R7:pic0:37', 'R7:pic0:38', 'R7:pic0:39', 'R7:pic0:40', 'R7:pic0:41', 'R7:pic0:42', 'R7:pic0:43', 'R7:pic0:44', 'R7:pic0:45', 'R7:pic0:46', 'R7:pic0:47', 'R7sq:pic0:00', 'R7sq:pic0:01', 'R7sq:pic0:02', 'R7sq:pic0:03', 'R7sq:pic0:04', 'R7sq:pic0:05', 'R7sq:pic0:06', 'R7sq:pic0:07', 'R7sq:pic0:08', 'R7sq:pic0:09', 'R7sq:pic0:10', 'R7sq:pic0:11', 'R7sq:pic0:12', 'R7sq:pic0:13', 'R7sq:pic0:14', 'R7sq:pic0:15', 'R7sq:pic0:32', 'R7sq:pic0:33', 'R7sq:pic0:34', 'R7sq:pic0:35', 'R7sq:pic0:36', 'R7sq:pic0:37', 'R7sq:pic0:38', 'R7sq:pic0:39', 'R7sq:pic0:40', 'R7sq:pic0:41', 'R7sq:pic0:42', 'R7sq:pic0:43', 'R7sq:pic0:44', 'R7sq:pic0:45', 'R7sq:pic0:46', 'R7sq:pic0:47', 'R83:pic0:00', 'R83:pic0:01', 'R83:pic0:02', 'R83:pic0:03', 'R83:pic0:04', 'R83:pic0:05', 'R83:pic0:06', 'R83:pic0:07', 'R83:pic0:08', 'R83:pic0:09', 'R83:pic0:10', 'R83:pic0:11', 'R83:pic0:12', 'R83:pic0:13', 'R83:pic0:14', 'R83:pic0:15', 'R83:pic0:32', 'R83:pic0:33', 'R83:pic0:34', 'R83:pic0:35', 'R83:pic0:36', 'R83:pic0:37', 'R83:pic0:38', 'R83:pic0:39', 'R83:pic0:40', 'R83:pic0:41', 'R83:pic0:42', 'R83:pic0:43', 'R83:pic0:44', 'R83:pic0:45', 'R83:pic0:46', 'R83:pic0:47', 'R83:pic1:00', 'R83:pic1:01', 'R83:pic1:02', 'R83:pic1:03', 'R83:pic1:04', 'R83:pic1:05', 'R83:pic1:06', 'R83:pic1:07', 'R83:pic1:08', 'R83:pic1:09', 'R83:pic1:10', 'R83:pic1:11', 'R83:pic1:12', 'R83:pic1:13', 'R83:pic1:14', 'R83:pic1:15', 'R83:pic1:16', 'R83:pic1:17', 'R83:pic1:18', 'R83:pic1:19', 'R83:pic1:20', 'R83:pic1:21', 'R83:pic1:22', 'R83:pic1:23', 'R83:pic1:24', 'R83:pic1:25', 'R83:pic1:26', 'R83:pic1:27', 'R83:pic1:28', 'R83:pic1:29', 'R83:pic1:30', 'R83:pic1:31')
+V83_REPRESENTATIVES = ('OM:pic0:01', 'R127:pic0:00', 'R127:pic1:00', 'R127:pic1:03', 'R127:pic1:16', 'R127:pic1:32', 'R127:pic1:63', 'R41_12:pic0:00', 'R41_22:pic0:00', 'R43_20:pic0:00', 'R43_31:pic0:00', 'R7:pic0:00', 'R7:pic0:32', 'R7sq:pic0:00', 'R83:pic0:00', 'R83:pic1:00', 'R83:pic1:16')
+assert len(V83_NONHITS) == len(set(V83_NONHITS)) == 365
+assert len(V83_REPRESENTATIVES) == len(set(V83_REPRESENTATIVES)) == 17
+assert set(V83_REPRESENTATIVES) <= set(V83_NONHITS)
+assert {f"OM:pic0:{m:02d}" for m in (1,2,3,4,5,6,8,9,10,11,12,13,14)} <= set(V83_NONHITS)
+assert len(V83_POSITIVE_CASES) == len(set(V83_POSITIVE_CASES)) == 6
+negative_cases = {("REFLECTED_AB_V1", p) for p in V83_NONHITS}
+assert not set(V83_POSITIVE_CASES) & negative_cases
+# The strict frontends independently hash their complete SOURCE_PINS before and
+# after full enumeration. This preflight rejects a still-scoped/partial package.
+selection_path = ROOT / "certificates/reflected_packet_v83/selection.json"
+expected_path = ROOT / "certificates/reflected_packet_v83/expected.json"
+try:
+    selection = json.loads(selection_path.read_text())["jobs"]
+    expected_points = json.loads(expected_path.read_text())["points"]
+    wanted = {target + "/" + point for target, point in (*V83_POSITIVE_CASES, *negative_cases)}
+    if set(selection) != wanted or set(expected_points) != wanted or len(wanted) != 371:
+        raise ValueError("Exact final371 target/label package is required")
+    for target, point in (*V83_POSITIVE_CASES, *negative_cases):
+        row = selection[target + "/" + point]
+        positive = (target, point) in V83_POSITIVE_CASES
+        if (row["target_id"] != target or row["point_label"] != point or
+            row["kind"] != ("KNOWN_POSITIVE_CONTROL" if positive else "NEGATIVE_REPLAY") or
+            type(row["cpu_seconds"]) is not int or row["cpu_seconds"] != (1800 if positive else 7200)):
+            raise ValueError("V83 target/kind/whole-job cap mismatch")
+except (OSError, ValueError, KeyError, TypeError) as error:
+    failed.append("V83 final371 package preflight: " + str(error))
+v83_phases = []
+for phase, cases in (
+    ("v83-positive-controls", V83_POSITIVE_CASES),
+    ("v83-representatives", tuple(("REFLECTED_AB_V1", p) for p in V83_REPRESENTATIVES)),
+    ("v83-remaining", tuple(("REFLECTED_AB_V1", p) for p in V83_NONHITS if p not in V83_REPRESENTATIVES)),
+):
+    phase_tasks = []
+    for target, point in cases:
+        for rel in V83_FRONTENDS:
+            p = ROOT / rel
+            if not p.is_file():
+                failed.append("missing expected V83 frontend: " + rel)
+            label = f"{rel} --target-id {target} --point {point}"
+            phase_tasks.append((label, [sys.executable, "-I", "-B", str(p),
+                                      "--target-id", target, "--point", point]))
+    v83_phases.append((phase, phase_tasks))
+assert [len(rows) for _, rows in v82_phases + v83_phases] == [6,498,12,34,696]
+all_registered = tasks + [job for _, rows in v82_phases + v83_phases for job in rows]
+assert len(all_registered) == 1405 or failed
+assert len({label for label, _ in all_registered}) == len(all_registered)
+assert len({tuple(command) for _, command in all_registered}) == len(all_registered)
+
+if failed:
+    print("FAILED CERTIFICATE PREFLIGHT:", ", ".join(failed))
+    sys.exit(1)
+
+try:
+    workers = int(os.environ.get('CERT_WORKERS', '4'))
+except ValueError:
+    print('FAIL CERT_WORKERS must be a positive integer')
+    sys.exit(1)
+if workers < 1:
+    print('FAIL CERT_WORKERS must be a positive integer')
+    sys.exit(1)
+workers = min(workers, 4, len(tasks)) if tasks else 1
+print(f'CERTIFICATE WORKERS: {workers}', flush=True)
+output_dir = Path(os.environ.get(
+    "CERT_RUN_DIR", str(ROOT / "build/certificate_runs" / str(time.time_ns()))))
+output_dir.mkdir(parents=True, exist_ok=False)
+print(f'COMPLETE JOB LOGS: {output_dir}', flush=True)
+# Distinct calls enforce the barrier even when workers > 1. A failed or
+# incomplete phase never dispatches the following phase.
+for phase, phase_tasks in [("legacy159", tasks), *v82_phases, *v83_phases]:
+    print(f'CERTIFICATE PHASE: {phase}', flush=True)
+    results = execute_tasks(phase_tasks, workers, ROOT, output_dir / phase)
+    expected = [(label, tuple(command)) for label, command in phase_tasks]
+    observed = [(result.label, tuple(result.command)) for result in results]
+    if observed != expected:
+        print("FAIL incomplete, reordered or substituted phase results:", phase)
+        sys.exit(1)
+    phase_failed = []
+    for result in results:
+        print('\n===', result.label, '===')
+        print(result.stdout[-5000:])
+        print(f'EXIT: {result.returncode}; STATUS: {result.status}', flush=True)
+        if result.status != "passed" or type(result.returncode) is not int or result.returncode != 0:
+            phase_failed.append(result.label)
+    if phase_failed:
+        print('FAILED CERTIFICATES:', ', '.join(phase_failed))
+        sys.exit(1)
+print('\nCERTIFICATE SUITE: PASS')

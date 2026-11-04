@@ -1,0 +1,16 @@
+{
+  "url": "https://www.jmilne.org/math/CourseNotes/AVc.pdf",
+  "observed_utc": "2026-11-03T06:25:29.923434+00:00",
+  "version": "2.0 March2008",
+  "locator": "ChapterIV Lemma2.1, printedp135, PDFzero-index140",
+  "hypotheses": "Galois-stable finite subgroup, order prime to characteristic. E has characteristic0 and H order27.",
+  "scope": "Quotient construction only, not CM arithmetic or field-of-moduli obstruction.",
+  "status": "PRIMARY_BYTES_RETAINED",
+  "path": "experiments/all_underlying_galois_v165/definition_field_source/Milne_AVc_v200.pdf",
+  "sha256": "c090d3dbde13d069d8c5f8cfb0bb85612fd56bca2f98d74ed8ced230e9a8cd8b",
+  "bytes": 1312456,
+  "extracted_page": {
+    "path": "experiments/all_underlying_galois_v165/definition_field_source/Milne_IV_2_1_page135.txt",
+    "sha256": "a5e86cd3f7b78030809ba70992c117dec1ba70a9956dd5bbf86ff3ae8c7b88ca"
+  }
+}

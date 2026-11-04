@@ -1,0 +1,13 @@
+{
+  "status": "PASS",
+  "command": [
+    "python3",
+    "tests/test_s_order_galois_v163.py"
+  ],
+  "returncode": 0,
+  "stdout": "",
+  "stderr": ".\n----------------------------------------------------------------------\nRan 1 test in 0.048s\n\nOK\n",
+  "wall_seconds": 0.09788237500470132,
+  "scope": "Focused finite regression only; producer subprocess enforces20CPU/30wall; no full suite",
+  "test_sha256": "0b955757d1692275c5926d4b414c331bca5da2ce5e08abeb4ba31e60a8cd1051"
+}

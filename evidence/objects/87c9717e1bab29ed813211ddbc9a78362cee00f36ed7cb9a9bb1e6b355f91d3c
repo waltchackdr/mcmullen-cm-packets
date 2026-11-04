@@ -1,0 +1,56 @@
+{
+  "convention": "zeta21=zeta42 squared; reduce embedding exponents modulo21",
+  "external_type_mod21": [
+    1,
+    2,
+    4,
+    5,
+    8,
+    10
+  ],
+  "matches": {
+    "B": {
+      "multipliers": [
+        1
+      ],
+      "type_mod21": [
+        1,
+        2,
+        4,
+        5,
+        8,
+        10
+      ]
+    },
+    "C": {
+      "multipliers": [
+        19
+      ],
+      "type_mod21": [
+        1,
+        5,
+        11,
+        13,
+        17,
+        19
+      ]
+    }
+  },
+  "project_input_sha256": "b9792b7ebe38ab8235d8b7b603a2596768d182b7863c6ca975eac56f9cb0437f",
+  "repository_commit": "UNRESOLVED_COMMIT_ENDPOINT_FAILED_BLOBS_VERIFIED",
+  "sources": [
+    {
+      "git_blob_sha1": "f627ceb6e5ab55a6011bf5ad37c45af8c1c19ed7",
+      "path": "experiments/polarization_literature_v144/saller_source/enumeration/README.txt",
+      "sha256": "46cdfa1b19d355c328b49d721d6a58babc2eab244aad51900658f534b2a040bd",
+      "source_url": "https://github.com/sallerk/HC-cm-sixfolds/blob/main/enumeration/README.txt"
+    },
+    {
+      "git_blob_sha1": "c9570777557c90bed2f0a298dff8e95c19315c5a",
+      "path": "experiments/polarization_literature_v144/saller_source/split_lemma/README.txt",
+      "sha256": "e6d0fa3bc9c8e2812411d9c2a3bccfd45e8f6c53231cb95d61a9c0c8d3bd9119",
+      "source_url": "https://github.com/sallerk/HC-cm-sixfolds/blob/main/split_lemma/README.txt"
+    }
+  ],
+  "status": "EXACT_EXPLORATORY_SOURCE_COMPARISON_NOT_PRIORITY_VERDICT"
+}

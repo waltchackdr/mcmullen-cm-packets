@@ -1,0 +1,7 @@
+{
+  "status": "PASS",
+  "tests": 1,
+  "failures": 0,
+  "errors": 0,
+  "scope": "Focused producer finite-arithmetic regression only; independent referee arithmetic is recorded separately."
+}

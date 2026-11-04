@@ -1,0 +1,77 @@
+import email.message
+import importlib.util
+import io
+from pathlib import Path
+import resource
+import signal
+import sys
+import time
+import types
+import unittest
+import tempfile
+from unittest.mock import patch
+
+resource.setrlimit(resource.RLIMIT_CPU,(20,20)); signal.alarm(30)
+ROOT=Path(__file__).resolve().parents[1]
+BASE=ROOT/'experiments/bc_jacobian_v147/runtime'
+def load(name,path):
+    spec=importlib.util.spec_from_file_location(name,path)
+    module=importlib.util.module_from_spec(spec);sys.modules[name]=module
+    spec.loader.exec_module(module)
+    return module
+load('service_core_candidate',BASE/'service_core_candidate.py')
+load('artifact_selection',BASE/'artifact_selection.py')
+load('artifact_store_candidate',ROOT/'experiments/final_binding_v124/artifact_store_candidate.py')
+load('guard_candidate',BASE/'guard_candidate.py')
+server=load('theta_http_server',BASE/'http_server_candidate.py')
+
+
+class BodyTests(unittest.TestCase):
+    def handler(self, lengths, raw=b'abc', transfer=None):
+        headers=email.message.Message()
+        for value in lengths:headers['Content-Length']=value
+        if transfer is not None:headers['Transfer-Encoding']=transfer
+        return types.SimpleNamespace(headers=headers,rfile=io.BytesIO(raw),
+            connection=types.SimpleNamespace(settimeout=lambda seconds:None))
+
+    def test_exact_body(self):
+        self.assertEqual(server.read_body(self.handler(['3']),3,time.monotonic()+2),b'abc')
+
+    def test_ambiguous_lengths(self):
+        for values in ([],['3','3'],['-1'],['three']):
+            with self.subTest(values=values),self.assertRaises(ValueError):
+                server.read_body(self.handler(values),3,time.monotonic()+2)
+
+    def test_all_transfer_encoding_rejected(self):
+        for value in ('chunked',''):
+            with self.subTest(value=value),self.assertRaises(ValueError):
+                server.read_body(self.handler(['3'],transfer=value),3,time.monotonic()+2)
+
+    def test_truncated_and_oversized(self):
+        for length,maximum in (('4',4),('4',3)):
+            with self.subTest(length=length,maximum=maximum),self.assertRaises(ValueError):
+                server.read_body(self.handler([length]),maximum,time.monotonic()+2)
+
+    def test_expired_body_deadline(self):
+        with self.assertRaises(TimeoutError):
+            server.read_body(self.handler(['3']),3,time.monotonic()-1)
+
+    def test_delayed_bootstrap_arms_deletion_before_refusing_compute(self):
+        for remote_offset in (100,-1):
+            with self.subTest(remote_offset=remote_offset),tempfile.TemporaryDirectory() as tmp:
+                base=Path(tmp);(base/'job_manifest.json').write_text('{}')
+                env={'RUNPOD_POD_ID':'fake-pod','RESEARCH_GUARD_KEY':'fake',
+                     'RESEARCH_DEADLINE':str(time.time()+remote_offset),
+                     'RESEARCH_LOCAL_DELETE':str(time.time()-10)}
+                with patch.object(server,'BASE',base),patch.object(server.sys,'platform','linux'),\
+                     patch.dict(server.os.environ,env),\
+                     patch.object(server.subprocess,'Popen') as spawn,\
+                     patch.object(server,'Job') as job:
+                    with self.assertRaises(ValueError):server.serve()
+                    spawn.assert_called_once()
+                    self.assertIn('--guard',spawn.call_args.args[0])
+                    self.assertTrue(spawn.call_args.kwargs['start_new_session'])
+                    job.assert_not_called()
+
+
+if __name__ == '__main__':unittest.main()

@@ -1,0 +1,39 @@
+"""Normalize only independently verified positive attempts; never search."""
+import hashlib,json
+from pathlib import Path
+HERE=Path(__file__).resolve().parent;ROOT=HERE.parents[1]
+PINS={
+'build/resume-v109/witness_validation.json':'af9c09108e00a1709ae2c63db7afdd57e189448cec218a981695f7cded296079',
+'build/resume-v109/cloud_retry02/task-00.json':'52787b915f0845fce5da634a48bca26e0db13aedde5cc43b0ecb4c12778ec47a',
+'build/resume-v109/cloud_retry02/task-01.json':'d549af2ffab1056d4b16378e33a92ac3ab0e2329c46b31693364df77faa07249'}
+
+def check():
+    records={}
+    for p,h in PINS.items():
+        raw=(ROOT/p).read_bytes();assert hashlib.sha256(raw).hexdigest()==h;records[p]=json.loads(raw)
+    validation=records['build/resume-v109/witness_validation.json'];assert validation['positive_tasks']==2
+    out=[]
+    for i in range(2):
+        raw=records['build/resume-v109/cloud_retry02/task-%02d.json'%i]
+        assert raw['status']=='FOUND' and raw['terminal'] is True
+        found=[a for a in raw['attempts'] if a['status']=='FOUND'];assert len(found)==1
+        a=found[0];v=validation['tasks'][i]
+        assert v['status']=='POSITIVE_WITNESS_EXACTLY_VERIFIED'
+        assert v['witness']['case_id']==a['case_id']
+        assert all(a[k]==x for k,x in v['witness']['source_case'].items())
+        assert [b['entries'] for b in a['blocks']]==[b['entries'] for b in v['witness']['blocks']]
+        fields={k:raw[k] for k in ['task_index','tensor_degree','copies','case_count','manifest_sha256','worker_sha256','partition_search_sha256']}
+        fields['positive_attempt']={k:a[k] for k in ['case_id','sources','concatenated_residues','blocks']}
+        out.append(fields)
+    return {'schema_version':1,'status':'RETAINED_EXACT_POSITIVE_WITNESSES_NOT_FULL_SEARCH_TRANSCRIPT',
+        'provenance_file_sha256':PINS,'validated_input_sha256':validation['input_sha256'],
+        'tasks':out,'normalization':'Copied only the two verified positive attempts and exact task/code/manifest identities. Earlier negative attempts, timing and candidate counters omitted; no negative search claim.',
+        'mathematical_scope':'Positive Shioda block witnesses; source-transfer human proof remains separate.'}
+
+if __name__=='__main__':
+    import resource,signal
+    if not __debug__:raise RuntimeError('Assertions required')
+    resource.setrlimit(resource.RLIMIT_CPU,(20,20));signal.alarm(30)
+    x=check();x['producer_sha256']=hashlib.sha256(Path(__file__).read_bytes()).hexdigest()
+    with (HERE/'positive_witnesses.json').open('x') as f:json.dump(x,f,sort_keys=True,indent=2);f.write('\n')
+    print(hashlib.sha256((HERE/'positive_witnesses.json').read_bytes()).hexdigest())

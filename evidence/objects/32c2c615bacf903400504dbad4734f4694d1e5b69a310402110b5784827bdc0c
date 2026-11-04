@@ -1,0 +1,25 @@
+#!/usr/bin/env python3
+"""Hash the manuscript and every nested certificate input, excluding bytecode."""
+from hashlib import sha256
+from pathlib import Path
+
+
+def checksum_lines(root):
+    paths = [root / "paper/main.tex"]
+    for directory in ("certificates", "independent"):
+        paths.extend(path for path in (root / directory).rglob("*")
+                     if path.is_file() and "__pycache__" not in path.parts
+                     and path.suffix not in (".pyc", ".pyo")
+                     and path.name != ".DS_Store")
+    for path in sorted(paths):
+        if path.is_symlink():
+            raise RuntimeError(f"Certificate input must be a regular file: {path}")
+        rel = path.relative_to(root).as_posix()
+        if any(char in rel for char in "\n\r\\"):
+            raise RuntimeError(f"Unsupported checksum filename: {rel!r}")
+        yield f"{sha256(path.read_bytes()).hexdigest()}  {rel}\n"
+
+
+if __name__ == "__main__":
+    root = Path(__file__).resolve().parents[1]
+    (root / "build/SHA256SUMS.txt").write_text("".join(checksum_lines(root)))

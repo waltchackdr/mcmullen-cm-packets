@@ -1,0 +1,606 @@
+#!/usr/bin/env python3
+"""Conditional metadata join, never a certificate or automatic promotion.
+
+Actual producer reports are consumed as sealed evidence. Separate outcome and
+retention reviews remain mandatory. No mathematical module is imported.
+"""
+from __future__ import annotations
+import argparse
+from collections import Counter
+import hashlib
+import json
+import importlib.util
+from pathlib import Path
+import re
+
+HITS = {"OM:pic0:00": "C", "OM:pic0:07": "A", "OM:pic0:15": "B"}
+BACKENDS = ("primary", "sturm")
+TARGETS = ("ORIGINAL_Q_V1", "REFLECTED_AB_V1")
+CANONICAL = ("preparation.json", "A-entries.json", "C-entries.json", "bottom-rows.json",
+             "candidates-nonzero.json", "candidates-zero.json", "classification.json", "survivors.json")
+COUNTS = ("a_count", "c_count", "bottom_rows", "nonzero_candidates", "zero_candidates",
+          "candidate_count", "survivor_count", "classification_digest", "c_zero_audit")
+PRODUCERS = {
+    "legacy_audit": "a9dc18cb3b774deb28cb0cc23c6d2bd25daf75ecb174b18039d7fc47dcb53d6e",
+    "legacy_recovery_audit": "1e699a5be7010527bf482da25faa8fb44d15462e9445fde120e3a0ff2cbfa0d2",
+    "v82_aggregate": "e7c362135c68fc41612f8aec32455866cf68f7401075c81af67779ee2411ce97",
+    "v83_audit": "b785ac6745741b8af511cf488aa4e348c0da4bd790cc327345471042f13e53c3",
+}
+STATIC_PINS = {
+    "legacy_audit": "fe6a4a7266d3e8b40b0e6edd858da9d5b1f48a3c62d60a056316fd32c505d2ce",
+    "legacy_150_review": "69c0955f2d7ddc9191019c8c9bf0e042d5e7413633f8cd1cc88c756f0ccf348b",
+    "legacy_conjunction_policy": "f90c022957b4e33d60b56d29c9132b5cdc48b474861dc9a34ff900c8c4ff1dba",
+    "legacy_eight_review": "1a6ade13b3fb3f58797144f9ff4b7f78b366183756cfe8f7ff7245b68edc7b69",
+    "ambient": "c0e84da6c266c087cbce65a6e8aca8e3f30350ce56b5a1089c4ae4978a381f36",
+    "coverage": "cac499e1d40ed498e0d8e2c3f08d34a52ef726856bac4606332d483c72d024b6",
+    "coverage_review": "3879881003484d43773e8112935a85baf2849486c3f801f27e4e660d57b2b386",
+    "two_chamber_data": "56b4674ee90cb1838ad161fe72ee4b1443c2228b4b17f2c929810af681406ca3",
+    "two_chamber_review": "942ecc5125e5eccea6b9faf3d815ccbc8d9e531613d346cb150b6f829869a4a4",
+}
+REVIEW_DEPENDENCIES = {
+    "legacy_outcome_review": ("legacy_audit", "legacy_state", "legacy_source_manifest", "legacy_snapshot",
+                              "legacy_150_review", "legacy_conjunction_policy", "legacy_eight_review",
+                              "legacy_recovery_audit", "legacy_recovery_state", "legacy_recovery_runtime"),
+    "v82_outcome_review": ("v82_aggregate", "v82_package", "v82_manifest", "v82_supervisor_result", "v82_runtime"),
+    "v83_outcome_review": ("v83_audit", "v83_inventory", "v83_state", "v83_runtime"),
+    "positive_control_review": ("positive_control_audit",),
+    "representative_control_review": ("representative_control_audit", "v83_audit"),
+    "portable_adoption_review": ("portable_adoption_record", "v83_audit", "positive_control_audit",
+                                 "representative_control_audit", "source_isomorphism_review", "coverage", "coverage_review", "two_chamber_review"),
+}
+REQUIRED = tuple(dict.fromkeys((*STATIC_PINS,
+    *(name for values in REVIEW_DEPENDENCIES.values() for name in values), *REVIEW_DEPENDENCIES)))
+
+
+# Whole previous revision is retained for exact historical producer dependencies.
+HERE = Path(__file__).resolve().parent
+ROOT = HERE.parents[3]
+HELPER_PINS = {
+    'experiments/continuous_v83/final_join/revision03-source/join.py': 'fdc1e81775454f4e1bf9d1e09905b30b4f43b98f6732c600a01355d0dd577349',
+    'experiments/continuous_v83/legacy_recovery_two/conjunction/join.py': '8f8b3ebb051518b8aa9ded690b2c7ea251a925572be8330787a35358eef31f43',
+    'experiments/continuous_v83/legacy_recovery_two/conjunction/common.py': '521d5756438ba1b8faa569777fd90376eadd323b27c4e7314b7aa76a54adff13',
+    'experiments/continuous_v83/legacy_recovery/recover.py': '87197a98259240701d8f8cb63181dfd99941baaf66f17f0aa22b56d5c74cba22',
+    'experiments/continuous_v83/continuation/fanout/v89_audit/audit.py': '48913399f00e9c22d99364fa5f16a7acbb040a234be0e10e154b75ca988e37bf',
+}
+def load_helper(relative, name):
+    path=ROOT/relative
+    if any(p.is_symlink()for p in(path,*path.parents)) or hashlib.sha256(path.read_bytes()).hexdigest()!=HELPER_PINS[relative]:
+        raise ValueError('Unreviewed administrative source: '+relative)
+    spec=importlib.util.spec_from_file_location(name,path);module=importlib.util.module_from_spec(spec);spec.loader.exec_module(module);return module
+OLD=load_helper('experiments/continuous_v83/final_join/revision03-source/join.py','final_join_previous')
+LEGACY=load_helper('experiments/continuous_v83/legacy_recovery_two/conjunction/join.py','final_join_legacy215')
+RECOVER=load_helper('experiments/continuous_v83/legacy_recovery/recover.py','final_join_partition')
+AUTHORITY=load_helper('experiments/continuous_v83/continuation/fanout/v89_audit/audit.py','final_join_selection_chain')
+CHAIN_NAMES=('v89','v90','v91')
+AUTHORITY_NAMES=('origin_index','origin_review','existing_configuration','fanout_configuration','allocation','allocation_execution_binding')
+STATIC_PINS.update(LEGACY.PINS)
+STATIC_PINS.update({
+ 'legacy_conjunction_source_review':'a8d5c1fcbdbcc7107607910b2ecc8274fdca6935b0bbe9e99877882d201c0f05',
+ 'v83_source_review':'3d95746107aeed40f14e6497f172b5f8daeaf94feca977df9c35000d67f3bb8e',
+ 'origin_index':'0eba23ec9c6e4b0389fffc4da7345396e27425cc4b0fe7b76c4c51f6f3090bb3',
+ 'origin_review':'509796279d7bd9e359e731456f7fb536982d7e88e6be48dace09ae716bea4dbd',
+ 'existing_configuration':'76bd4acafec50390afba073fb542ab1ebe611ad4f69f4724d141b9dce4210ae1',
+ 'fanout_configuration':'36f7c248b52843470867ff1aeb2847bcc83aba20bd85371af9336c5e944ac8ca',
+ 'allocation':'27fd48603c124ca8cfc31dd94cf6eeb66e95ce3df00816331183051151aa8b52',
+ 'allocation_execution_binding':'99cce75f9fc022bf0ae6fa54b8bbe7502a6d30446773d22e583d988670ea641b',
+})
+for prefix,pin in zip(CHAIN_NAMES,AUTHORITY.CHAIN_PINS,strict=True):
+    for name in ('configuration','amendment','review','failed_review'):
+        STATIC_PINS[prefix+'_'+name]=pin[name+'_sha256']
+STATIC_PINS['amended_controller_source_review']=AUTHORITY.SOURCE_REVIEW
+PRODUCERS['legacy_conjunction']=HELPER_PINS['experiments/continuous_v83/legacy_recovery_two/conjunction/join.py']
+PRODUCERS['v83_audit']=HELPER_PINS['experiments/continuous_v83/continuation/fanout/v89_audit/audit.py']
+# The legacy producer requires its own actual outcome review with a distinct
+# status. It must never be relabeled as the old completed65/common review.
+REVIEW_DEPENDENCIES.pop('legacy_outcome_review')
+REVIEW_DEPENDENCIES['v83_outcome_review']=('v83_audit','origin_index','origin_review','v83_source_review',
+ 'existing_configuration','fanout_configuration','allocation','allocation_execution_binding',
+ 'amended_controller_source_review',*(prefix+'_'+name for prefix in CHAIN_NAMES for name in ('configuration','amendment','review','failed_review')))
+REQUIRED=tuple(dict.fromkeys((*STATIC_PINS,*LEGACY.REQUIRED,'legacy_conjunction_report',
+ *(n for deps in REVIEW_DEPENDENCIES.values()for n in deps),*REVIEW_DEPENDENCIES)))
+
+
+
+def require(condition, message):
+    if not condition:
+        raise ValueError(message)
+
+
+def valid_hash(value):
+    return type(value) is str and re.fullmatch("[0-9a-f]{64}", value) is not None
+
+
+def canonical(value):
+    return (json.dumps(value, sort_keys=True, separators=(",", ":"), allow_nan=False) + "\n").encode()
+
+
+def sha(path):
+    h = hashlib.sha256()
+    with path.open("rb") as stream:
+        for chunk in iter(lambda: stream.read(1024 * 1024), b""):
+            h.update(chunk)
+    return h.hexdigest()
+
+
+def decode(raw):
+    def pairs(items):
+        result = {}
+        for key, value in items:
+            require(key not in result, "Duplicate JSON key")
+            result[key] = value
+        return result
+    return json.loads(raw, object_pairs_hook=pairs,
+                      parse_constant=lambda value: (_ for _ in ()).throw(ValueError(value)))
+
+
+class Evidence:
+    def __init__(self, root, references):
+        self.root, self.references = root.resolve(), references
+        self.objects, self.paths, self.hashes, self.signatures = {}, {}, {}, {}
+        seen = {}
+        for name, reference in references.items():
+            if reference is None:
+                continue
+            require(type(reference) is dict and set(reference) == {"path", "sha256"}, "Reference schema: " + name)
+            relative = reference["path"]
+            require(type(relative) is str and relative and not relative.startswith("/") and
+                    all(part not in ("", ".", "..") for part in relative.split("/")), "Unsafe evidence path")
+            path = self.root / relative
+            require(not any(p.is_symlink() for p in (path, *path.parents)), "Symlink evidence")
+            require(path.is_file() and path.stat().st_nlink == 1, "Regular single-link evidence required")
+            require(path.resolve().is_relative_to(self.root), "Evidence outside root")
+            identity = (path.stat().st_dev, path.stat().st_ino)
+            if identity in seen:
+                prior=seen[identity]
+                require({prior,name}=={'legacy_runtime','v82_runtime'} and reference['sha256']==self.hashes[prior],
+                        'Unapproved aliased evidence references')
+            else:seen[identity]=name
+            raw = path.read_bytes()
+            require(valid_hash(reference["sha256"]) and hashlib.sha256(raw).hexdigest() == reference["sha256"], "Evidence SHA mismatch: " + name)
+            self.paths[name], self.hashes[name] = path, reference["sha256"]
+            info=path.stat();self.signatures[name]=(info.st_dev,info.st_ino,info.st_size,info.st_mtime_ns,info.st_ctime_ns)
+            self.objects[name] = decode(raw)
+
+    def recheck(self):
+        for name,path in self.paths.items():
+            require(not any(p.is_symlink()for p in(path,*path.parents)) and path.is_file() and path.stat().st_nlink==1,
+                    'Evidence became a link/nonregular file')
+            info=path.stat()
+            require((info.st_dev,info.st_ino,info.st_size,info.st_mtime_ns,info.st_ctime_ns)==self.signatures[name] and
+                    sha(path)==self.hashes[name], 'Evidence changed during join')
+
+
+def hashes(value, keys):
+    require(type(value) is dict and set(value) == set(keys) and all(valid_hash(x) for x in value.values()), "Exact hash inventory")
+
+
+def counts(value):
+    require(type(value) is dict and set(value) == set(COUNTS), "Nine complete fields required")
+    require(all(type(value[k]) is int and value[k] >= 0 for k in COUNTS[:7]), "Invalid geometry count")
+    require(value["candidate_count"] == value["nonzero_candidates"] + value["zero_candidates"], "Candidate total")
+    require(value["survivor_count"] <= value["candidate_count"], "Survivor total")
+    require(valid_hash(value["classification_digest"]), "Classification digest")
+    audit = value["c_zero_audit"]
+    require(type(audit) is list and len(audit) == 5 and all(type(x) is int and x >= 0 for x in audit), "c=0 audit")
+    require(audit[1] == 1 and audit[1] + audit[2] <= audit[0] and audit[3] <= audit[2] and
+            audit[4] == value["zero_candidates"], "c=0 audit arithmetic")
+
+
+def interface_list(value):
+    require(type(value) is list and value and all(type(item) is str and item for item in value) and
+            value == sorted(set(value)), "Nonempty sorted unique execution-interface list")
+    return set(value)
+
+
+def coverage_partition(ambient, coverage, review):
+    domain = {row["point_label"]: row for row in ambient}
+    require(len(ambient) == len(domain) == 368, "C39 exact368 domain")
+    require(coverage["status"] == "SOURCE_AND_SET_AUDIT_PASS_WITH_EXPLICIT_COLLECTIVE_MAPPING", "Coverage status")
+    require(review["status"] == "PASS_HUMAN_FIRST_TARGET_POPULATION_BRIDGE_AND_SET_MAP", "Human first-target bridge")
+    require(review["individual_r83_pic1_mask_permutation_proved"] is False and review["collective_r83_pic1_bindings"] == 32, "Collective Pic1 bridge")
+    historical = {row["point_label"]: row for row in coverage["historical_116"]}
+    complement = {row["point_label"]: row for row in coverage["v82_complement_249"]}
+    require(len(coverage["historical_116"]) == len(historical) == 116, "Historical116 identity")
+    require(len(coverage["v82_complement_249"]) == len(complement) == 249, "Complement249 identity")
+    require(not set(historical) & set(complement) and set(historical) | set(complement) | set(HITS) == set(domain), "368 partition")
+    require(not (set(historical) | set(complement)) & set(HITS), "Known hits excluded from negative domain")
+    require(coverage["positive_controls"] == HITS, "Known positive identity")
+    require(all(row["target_id"] == TARGETS[0] for row in list(historical.values()) + list(complement.values())), "First target only")
+    require(all(row["c39_row"] == domain[label] for label, row in historical.items()), "Historical C39 input identity")
+    families = coverage["legacy_pic1_full_stratum_families"]
+    require(len(families) == 7 and sorted(m for family in families for m in family["legacy_masks"]) == list(range(32)), "Exact old Pic1 mask families")
+    collective = {command["index"] for family in families for command in family["commands"]}
+    require(len(collective) == 14, "Exact14 collective commands")
+    pic1 = {f"R83:pic1:{mask:02d}" for mask in range(32)}
+    for label, row in historical.items():
+        if label in pic1:
+            require(row["transfer"] == "R83_PIC1_COLLECTIVE_POPULATION" and
+                    {c["index"] for c in row["commands"]} == collective and
+                    row.get("legacy_identifier", {}).get("mask") is None and
+                    row["individual_legacy_command_unknown"] is True, "Do not invent old/new Pic1 permutation")
+        else:
+            require(row["transfer"] != "R83_PIC1_COLLECTIVE_POPULATION", "Unexpected collective row")
+    require(len(coverage["legacy_geometry_commands"]) == 128 and
+            len({c["index"] for c in coverage["legacy_geometry_commands"]}) == 128, "128 distinct mapped geometry commands")
+    return domain, historical, complement
+
+
+def legacy_conjunction_join(objects, seals, historical, coverage):
+    # Re-execute only the frozen pure metadata conjunction on its exact inputs.
+    local={k:objects[k]for k in LEGACY.REQUIRED};hashes={k:seals[k]for k in LEGACY.REQUIRED}
+    expected=LEGACY.evaluate(local,hashes,RECOVER,OLD)
+    report=objects['legacy_conjunction_report']
+    require(report==decode(canonical({**expected,'auditor_sha256':PRODUCERS['legacy_conjunction'],'common_sha256':LEGACY.COMMON_SHA})),
+            'Actual215 report differs from independently re-evaluated frozen metadata producer')
+    require(report['status']=='REVIEWED_LEGACY_150_PLUS_63_PLUS_2_EQUIVALENT_COVER_NOT_PROMOTION' and
+            report['original150']==150 and report['retained_recovery63']==63 and report['fresh_whole_jobs']==2 and
+            report['completed_executions']==215 and report['original_registered_obligations']==159,
+            'Exact150+63+2 equivalent cover')
+    require(all(report[k]is False for k in ('original159_pass','old65_pass','old_endguards_reconstructed',
+                                          'theorem_promotion','full_release','representative_policy_reduced_or_satisfied_by_legacy')),
+            'Do not infer historical pool PASS or control completion')
+    require(report['fixed_representative_required_jobs']==32,'Unchanged32 representative requirement')
+    mapping=report['first_target_historical_116'];require(set(mapping)==set(historical),'Exact116 first-target bindings')
+    return mapping
+
+
+def v82_join(report, package, seals, complement, coverage):
+    require(report["status"] == "PORTABLE_REPLAY_AGGREGATE_PASS_PENDING_FINAL_REVIEW_AND_REGISTRATION" and
+            report["all_full_jobs_pass"] is True, "V82 actual504 aggregate")
+    for key, name in (("package_sha256", "v82_package"), ("replay_manifest_sha256", "v82_manifest"),
+                      ("supervisor_result_sha256", "v82_supervisor_result"), ("runtime_manifest_sha256", "v82_runtime")):
+        require(report[key] == seals[name], "V82 bound artifact: " + name)
+    require(report["aggregate_sha256"] == PRODUCERS["v82_aggregate"], "V82 actual auditor source")
+    require(report["package_sha256"] == coverage["v82_frozen_deployment"]["package_sha256"] and
+            report["replay_manifest_sha256"] == coverage["v82_frozen_deployment"]["manifest_sha256"], "V82 repaired cohort identity")
+    require(set(report["labels"]) == set(package["labels"]) == set(complement) and len(report["labels"]) == 249, "V82 exact249 labels")
+    controls = ("R127:pic0:00", "R127:pic1:00", "R43_31:pic0:00")
+    require(sorted(report["controls"]) == sorted(package["controls"]) == sorted(controls), "V82 historical controls")
+    require(set(report["jobs"]) == {label + "/" + backend for label in (*controls, *complement) for backend in BACKENDS}, "V82 exact504 full jobs")
+    for label in (*controls, *complement):
+        pair = [report["jobs"][label + "/" + backend] for backend in BACKENDS]
+        for row in pair:
+            counts(row["counts"]); hashes(row["canonical_artifact_sha256"], CANONICAL)
+            require(row["counts"]["survivor_count"] == 0, "V82 survivor unresolved")
+            require(valid_hash(row["result_sha256"]) and valid_hash(row["certificate_result_sha256"]), "V82 full result seals")
+        require(pair[0]["counts"] == pair[1]["counts"] and pair[0]["canonical_artifact_sha256"] == pair[1]["canonical_artifact_sha256"], "V82 paired disagreement")
+
+
+def selection_authority(objects,seals):
+    f,x,a,c,h,new=AUTHORITY.helpers(ROOT)
+    chain=[]
+    for prefix in CHAIN_NAMES:
+        step={name:objects[prefix+'_'+name]for name in ('configuration','amendment','review','failed_review')}
+        step.update({name+'_sha256':seals[prefix+'_'+name]for name in step.copy()})
+        step.update(source_review=objects['amended_controller_source_review'],source_review_sha256=seals['amended_controller_source_review']);chain.append(step)
+    authority=AUTHORITY.replay_selection_chain(f,x,c,a.declared_domain(),objects['origin_index'],objects['allocation'],
+        objects['allocation_execution_binding'],objects['existing_configuration'],objects['fanout_configuration'],chain)
+    c.validate_origin_acceptance(objects['origin_index'],objects['origin_review'],seals['origin_index'])
+    authority['executed_source_sha256']=a.PINS
+    HELPER_PINS.update({**x.PINS,AUTHORITY.BASE:AUTHORITY.BASE_SHA,AUTHORITY.FANOUT:AUTHORITY.FANOUT_SHA,AUTHORITY.CONTROLLER:AUTHORITY.CONTROLLER_SHA})
+    return authority
+
+
+def v83_join(report,index,authority,seals,nonhits):
+    require(type(report['schema_version'])is int and report['schema_version']==1 and
+            report['status']=='COMPLETE_730_AMENDED_FANOUT_DISCOVERY_AUDIT_NO_PROMOTION' and
+            report['auditor_sha256']==PRODUCERS['v83_audit'] and report['scope']==AUTHORITY.SCOPE,
+            'Actual amended730 report required, not original partial state or source review')
+    require(report['target_id']==TARGETS[1] and set(report['points'])==nonhits and len(nonhits)==365,
+            'Exact365 nonhit domain')
+    require(report['original_completed_paths']==557 and report['continuation_completed_paths']==173 and
+            report['obligation_count']==report['complete_backend_count']==730 and report['missing_backend_keys']==[],
+            'Exact557+selected173 complete obligations')
+    require(report['origin_index_sha256']==seals['origin_index'] and report['origin_review_sha256']==seals['origin_review'] and
+            report['origin_state_sha256']==index['origin']['state_sha256'] and
+            report['original_runtime_sha256']==index['origin']['runtime_sha256'],'Original scheduling/runtime anchors')
+    require(report['selected_source_executions']==authority['selected173'] and
+            report['final_selection_sha256']==authority['final_selection_sha256'] and
+            report['selection_chain_sha256']==[{k:v for k,v in p.items()if k.endswith('_sha256')}for p in AUTHORITY.CHAIN_PINS],
+            'Exact reviewed selected-source amendment chain')
+    require(report['source_sha256']==authority['executed_source_sha256'],'Exact original19 mathematical closure')
+    executions=authority['executions'];parts={p['execution_id']:p for p in report['continuation_partitions']}
+    require(len(parts)==len(report['continuation_partitions'])==11 and set(parts)==set(executions),'All eleven actual captures required')
+    failed={k for k,v in executions.items()if v['failed_record']is not None}
+    require(set(report['explicit_failed_predecessors'])==failed and len(failed)==4 and
+            report['normal_success_required_executions']==sorted(set(executions)-failed),'Four explicit failed predecessors only')
+    for eid,spec in executions.items():
+        part=parts[eid]
+        require(part['configuration_sha256']==spec['configuration_sha256'] and part['controller_sha256']==spec['controller_sha256'] and
+                part['partition_id']==spec['partition_id'],'Capture execution/config/controller identity')
+        for field in ('inventory_sha256','receipt_sha256','review_sha256','state_sha256','manifest_sha256'):
+            require(valid_hash(part[field]),'Actual captured '+field)
+        if eid in failed:
+            history=spec['failed_record']
+            require(part['status']=='COHORT_HALTED_NO_ADOPTION' and part['retained_failure_only']is True and
+                    part['source_runtime_postguards']is False and part['complete_results']==0 and
+                    part['review_sha256']==spec['failed_review_sha256'] and
+                    all(part[k]==history[k]for k in ('state_sha256','receipt_sha256','inventory_sha256')),
+                    'Failed history remains failed; later guards cannot be borrowed')
+        else:
+            require(part['status']=='SUBSET_COMPUTATIONS_CLOSED_PENDING_CROSSCOHORT_AUDIT' and
+                    part['retained_failure_only']is False and part['source_runtime_postguards']is True,
+                    'Actual normal replacement/continuation closure')
+    require(report['old_failed_producer_end_guards_reconstructed']is False and report['failed_attempts_are_exclusions']is False and
+            report['original_cohort_complete']is False and report['theorem_promotion']is False,
+            'No retroactive cohort success or promotion')
+    duplicates=report['complete_duplicate_comparison']
+    require(sum(p['complete_results']for p in parts.values())==duplicates['complete_path_count'],'Every complete captured path counted')
+    require(duplicates['status']=='ALL_RETAINED_COMPLETE_DUPLICATES_AGREE' and duplicates['selected_complete_count']==173 and
+            duplicates['missing_selected_keys']==[] and duplicates['substitution_performed']is False and
+            duplicates['failure_or_partial_is_exclusion']is False and
+            duplicates['complete_path_count']==len(duplicates['paths']) and
+            duplicates['additional_complete_path_count']==len(duplicates['paths'])-173,
+            'All completed duplicate paths checked; no fallback')
+    seen=set();selected_details={}
+    for row in duplicates['paths']:
+        key=row['task_key'];eid=row['host'];item=row['completed_result'];identity=(key,eid)
+        require(identity not in seen and eid in executions and key in authority['selected173'],'Duplicate/foreign complete path identity');seen.add(identity)
+        require(row['selected']is(eid==authority['selected173'][key]) and valid_hash(row['row_evidence']['sha256']), 'Duplicate selected flag or rows')
+        if row['selected']:selected_details[key]=item
+    require(set(selected_details)==set(authority['selected173']),'All selected173 evidence details')
+    unresolved=[];full={};runtime_bindings={'ORIGINAL_V83':index['origin']['runtime_sha256']}
+    runtime_bindings.update({eid:spec['configuration']['hosts'][spec['partition_id']]['runtime']['sha256']for eid,spec in executions.items()})
+    for label,point in report['points'].items():
+        require(point['point_label']==label and point['target_id']==TARGETS[1],'Reflected identity')
+        counts(point['counts']);hashes(point['canonical_artifact_sha256'],CANONICAL)
+        expected='PAIRED_EMPTY_DISCOVERY'if point['counts']['survivor_count']==0 else'PAIRED_SURVIVORS_REQUIRE_GEOMETRY'
+        require(point['outcome']==expected,'Survivor/outcome disagreement')
+        if point['counts']['survivor_count']:unresolved.append(label)
+        prep=index['preparations'][label]
+        require(all(point[k]==prep[k]for k in ('plan_sha256','preparation_sha256','target_geometry_sha256')) and
+                point['preparation_sha256']==point['canonical_artifact_sha256']['preparation.json'] and
+                valid_hash(point['row_evidence']['sha256']),'Accepted original paired preparation/plan/target/rows')
+        pair={v['backend']:v for v in point['accepted_backends']}
+        require(len(point['accepted_backends'])==len(pair)==2 and set(pair)==set(BACKENDS),'Actual paired full backends')
+        for backend,row in pair.items():
+            key=TARGETS[1]+'/'+label+'/full/'+backend
+            require(row['point_label']==label and row['counts']==point['counts'] and
+                    row['canonical_artifact_sha256']==point['canonical_artifact_sha256'] and
+                    all(row[k]==point[k]for k in ('plan_sha256','preparation_sha256','target_geometry_sha256')),
+                    'Full selected point equality')
+            for field in ('result_sha256','log_sha256','attempt_record_sha256'):require(valid_hash(row[field]),'Complete execution seal')
+            require(row['output_sha256']['result.json']==row['result_sha256'] and
+                    all(row['output_sha256'][n]==point['canonical_artifact_sha256'][n]for n in CANONICAL), 'Actual full8 output seals')
+            if key in index['accepted']:
+                require(row['cohort']=='ORIGINAL_V83' and row['result_sha256']==index['accepted'][key]['result_sha256'],'Original557 exact selected execution')
+            else:
+                eid=authority['selected173'][key]
+                require(row==selected_details[key] and row['cohort']==executions[eid]['configuration']['cohort_id'],'Selected continuation identity, no fallback')
+            full[label+'/'+backend]=row['result_sha256']
+    require(len(full)==730 and report['summary']==dict(Counter(p['outcome']for p in report['points'].values())),'Complete paired outcome totals')
+    return sorted(unresolved),runtime_bindings,full
+
+
+def positive_join(report):
+    require(type(report["schema_version"]) is int and report["schema_version"] == 1, "Positive audit schema")
+    expected_keys = {target + "/" + label for target in TARGETS for label in HITS}
+    require(set(report["points"]) == expected_keys and report["required_jobs"] == 12, "All six positive target/label cases")
+    if report["status"] == "POSITIVE_CONTROLS_INCOMPLETE_NO_PASS":
+        return sorted(key for key, row in report["points"].items() if row["status"] != "PAIRED_KNOWN_POSITIVE_DISCOVERY_COMPLETE") or ["COHORT_NOT_COMPLETE"]
+    require(report["status"] == "TWELVE_KNOWN_POSITIVE_CONTROL_DISCOVERY_COMPLETE" and report["completed_jobs"] == 12 and
+            not report["failed_or_limited_attempts"] and report["strict_expected_replay"] is False and
+            report["theorem_promotion"] is False, "Twelve actual full positive controls")
+    for key, point in report["points"].items():
+        require(point["status"] == "PAIRED_KNOWN_POSITIVE_DISCOVERY_COMPLETE" and set(point["accepted"]) == set(BACKENDS), "Paired full positive status")
+        counts(point["counts"]); hashes(point["canonical_artifact_sha256"], CANONICAL)
+        require(point["counts"]["survivor_count"] >= 2, "Signed positive witnesses required")
+        for backend, row in point["accepted"].items():
+            require(row["both_signed_witnesses_present"] is True and valid_hash(row["kernel_result_sha256"]), "Actual signed witness/full-result evidence")
+            for field in ("counts", "canonical_artifact_sha256", "target_geometry_sha256", "plan_sha256", "witness_record_sha256", "row_coverage"):
+                require(row[field] == point[field], "Positive pair data mismatch")
+            inventory = row["output_inventory"]
+            require(all(inventory[name]["sha256"] == point["canonical_artifact_sha256"][name] for name in CANONICAL) and
+                    inventory["result.json"]["sha256"] == row["kernel_result_sha256"] and
+                    inventory["target-geometry.json"]["sha256"] == point["target_geometry_sha256"] and
+                    inventory["witness-plan.json"]["sha256"] == point["plan_sha256"], "Positive complete output inventory")
+    return []
+
+
+def representative_join(report, terminal, seals):
+    """Future report interface; no current source/design review has this status."""
+    require(type(report["schema_version"]) is int and report["schema_version"] == 1 and
+            report["status"] == "PORTABLE_SAME_PLAN_REPRESENTATIVE_AUDIT_PASS", "Actual representative outcome audit")
+    require(report["terminal_audit_sha256"] == seals["v83_audit"] and report["target_id"] == TARGETS[1], "Representative terminal/target binding")
+    required = {"OM:pic0:01", "R127:pic0:00", "R127:pic1:00", "R127:pic1:16", "R127:pic1:32", "R127:pic1:63",
+                "R41_12:pic0:00", "R41_22:pic0:00", "R43_20:pic0:00", "R43_31:pic0:00", "R7:pic0:00",
+                "R7:pic0:32", "R7sq:pic0:00", "R83:pic0:00", "R83:pic1:00", "R83:pic1:16"}
+    require(report['required_jobs']==report['completed_jobs']==32 and report['all_32_complete']is True and
+            report['prior_completed_jobs']==20 and report['remaining_completed_jobs']==12,
+            'Actual disjoint20+12 full representative conjunction required')
+    require(report['prior20_audit_sha256']=='55b18aee3c4a0e688b4efdeb4adf68afb571b9be1eb36edcdd548ae9e7520ed3' and
+            report['prior20_retention_review_sha256']=='2952c46754cff5fba53e297ba4247101bab68296e31bffa967a36c2626cbfa4c' and
+            valid_hash(report['remaining12_audit_sha256']) and valid_hash(report['remaining12_outcome_retention_review_sha256']),
+            'Actual old20 and new12 retained audit/review identities')
+    expected_remaining={'R127:pic1:00','R127:pic1:16','R127:pic1:32','R127:pic1:63','R83:pic1:00','R83:pic1:16'}
+    prior=set(report['prior20_labels']);remaining=set(report['remaining12_labels'])
+    require(len(report['prior20_labels'])==len(prior)==10 and len(report['remaining12_labels'])==len(remaining)==6 and
+            not prior&remaining and remaining==expected_remaining and prior==required-expected_remaining,
+            'Actual prior20 and fixed remaining12 labels; arbitrary ten/six repartition forbidden')
+    labels = report["labels"]
+    require(len(labels) == len(set(labels)) == 16 and set(labels) == required <= set(terminal["points"]), "Representative source-family controls")
+    require(len(report["jobs"]) == 32 and set(report["jobs"]) == {label + "/" + backend for label in labels for backend in BACKENDS}, "Representative exact paired jobs")
+    for label in labels:
+        expected = terminal["points"][label]
+        for backend in BACKENDS:
+            row = report["jobs"][label + "/" + backend]
+            require(row["status"] == "FULL_PORTABLE_REPLAY_VERIFIED" and row["target_id"] == TARGETS[1] and
+                    row["plan_sha256"] == expected["plan_sha256"], "Same executed plan required")
+            require(row["counts"] == expected["counts"] and row["canonical_artifact_sha256"] == expected["canonical_artifact_sha256"] and
+                    row["target_geometry_sha256"] == expected["target_geometry_sha256"] and
+                    row["normalized_row_evidence_sha256"] == expected["row_evidence"]["sha256"], "Representative replay equality")
+            require(valid_hash(row["result_sha256"]) and row["source_runtime_unchanged"] is True, "Representative complete provenance")
+    inventory = report["branch_interface_inventory"]
+    require(inventory["terminal_audit_sha256"] == seals["v83_audit"] and inventory["actual_executed_plans_and_rows_used"] is True and
+            interface_list(inventory["terminal_interfaces"]) <= interface_list(inventory["control_interfaces"]), "Terminal plan/branch interface coverage")
+    profiles=report['approved_runtime_sha256s']
+    require(type(profiles)is list and profiles and profiles==sorted(set(profiles)) and all(valid_hash(v)for v in profiles),
+            'Explicit representative approved runtime profiles')
+    require({r['approved_runtime_sha256']for r in report['jobs'].values()}==set(profiles), 'Per-job runtime inventory')
+
+
+def adoption_join(record, source_review, terminal, seals):
+    """Future actual adoption record, distinct from accepted design policy."""
+    require(type(record["schema_version"]) is int and record["schema_version"] == 1 and
+            record["status"] == "ACCEPTED_EXECUTED_EVIDENCE_UNDER_SOURCE_ISOMORPHISM", "Actual evidence adoption record")
+    require(record["labels"] == sorted(terminal["points"]) and len(record["labels"]) == 365, "Adopted exact365 labels")
+    dependencies = ("v83_audit", "positive_control_audit", "representative_control_audit", "source_isomorphism_review")
+    require(record["binds"] == {key: seals[key] for key in dependencies}, "Adoption exact evidence anchors")
+    require(type(source_review["schema_version"]) is int and source_review["schema_version"] == 1 and
+            source_review["status"] == "PASS_COMPLETE_PORTABLE_SOURCE_SEMANTICS_AND_RUNTIME" and
+            source_review["whole_executable_closure_reviewed"] is True and source_review["actual_dynamic_import_controls_pass"] is True and
+            source_review["historical_expected_module_inert_for_active_geometry_verified"] is True,
+            "Complete source semantics/runtime review, not static design only")
+    require(source_review["executed_runtime_bindings"] == terminal["executed_runtime_bindings"] and
+            source_review["runtime_semantics_equivalence_reviewed"] is True, "Executed-to-portable runtime semantics review")
+    approved = source_review["approved_portable_runtime_sha256"]
+    require(type(approved) is list and approved and all(valid_hash(value) for value in approved) and approved == sorted(set(approved)),
+            "Explicit approved portable runtime profiles")
+    require(set(source_review["runtime_acceptance_review_sha256"]) == set(approved) and
+            all(valid_hash(value) for value in source_review["runtime_acceptance_review_sha256"].values()), "Actual portable runtime approval seals")
+    require(record["executed_source_sha256"] == source_review["executed_source_sha256"] == terminal["source_sha256"] and
+            len(record["executed_source_sha256"]) == 19, "Original executed19 closure")
+    portable = source_review["portable_source_sha256"]
+    require(record["portable_source_sha256"] == portable and len(portable) == 16 and all(valid_hash(h) for h in portable.values()), "Portable16 closure")
+    expected = terminal["selected_full_result_sha256"]
+    require(record["adopted_full_result_sha256"] == expected and len(expected) == 730, "All730 actual full executions adopted")
+    require(record["adopted_jobs_claimed_as_fresh_portable_executions"] is False and
+            record["regression_command_count"] == 730 and record["all730_full_replay_commands_supplied"] is True,
+            "Adoption must retain provenance and all runnable regressions")
+
+
+def final_review(name, record, seals):
+    require(type(record["schema_version"]) is int and record["schema_version"] == 1, "Final review schema")
+    require(record["status"] == "PASS_REVIEWED_CLOSED_EVIDENCE_FOR_CONDITIONAL_JOIN" and record["gate"] == name, "Actual outcome review required: " + name)
+    require(record["binds"] == {key: seals[key] for key in REVIEW_DEPENDENCIES[name]}, "Exact final review dependencies: " + name)
+    require(record["actual_execution_or_proof_reviewed"] is True and record["source_runtime_identity_reviewed"] is True and
+            record["archive_retention_and_retrieval_verified"] is True and record["promotion_authorized"] is False, "Unfilled final review obligations")
+    if name in ("legacy_outcome_review", "v82_outcome_review", "v83_outcome_review"):
+        producer = {"legacy_outcome_review": "legacy_audit", "v82_outcome_review": "v82_aggregate", "v83_outcome_review": "v83_audit"}[name]
+        require(record["producer_sha256"] == PRODUCERS[producer], "Unreviewed actual producer")
+    if name == 'v83_outcome_review':
+        require(record['ordinary_immutable_source_runtime_assumption_acknowledged']is True and
+                record['old_failed_producer_end_guards_reconstructed']is False and
+                record['all_eleven_captures_and_all_completed_duplicates_reviewed']is True,
+                'Actual cross-cohort histories/duplicate/ordinary-source outcome review')
+    require(type(record["retention_evidence_sha256"]) is dict and record["retention_evidence_sha256"] and
+            all(valid_hash(v) for v in record["retention_evidence_sha256"].values()), "No archival evidence bindings")
+
+
+def evaluate(objects, seals):
+    missing = sorted(set(REQUIRED) - set(objects))
+    checks, unresolved, bindings = {}, [], {}
+    def available(*names):
+        return all(name in objects for name in names)
+    if available("ambient", "coverage", "coverage_review"):
+        domain, historical, complement = coverage_partition(objects["ambient"], objects["coverage"], objects["coverage_review"])
+        require(objects["coverage_review"]["coverage_sha256"] == seals["coverage"], "Reviewed coverage bytes")
+        checks["368_partition"] = True
+    else:
+        domain, historical, complement = {}, {}, {}
+    if available("two_chamber_review", "two_chamber_data"):
+        record = objects["two_chamber_review"]
+        require(record["status"] == "HUMAN_TWO_CHAMBER_IMPLICATION_ACCEPTED_CONDITIONAL_ON_BOTH_TARGET_OUTCOMES" and
+                record["bridge_sha256"] == seals["two_chamber_data"] and record["required_second_target_nonhit_count"] == 365, "Two-chamber human implication")
+        checks["human_two_chamber_implication"] = True
+    if historical and available(*LEGACY.REQUIRED,'legacy_conjunction_report'):
+        bindings = legacy_conjunction_join(objects, seals, historical, objects['coverage'])
+        checks['actual_legacy150_plus_recovery63_plus_v87two'] = True
+    if complement and available("v82_aggregate", "v82_package", "v82_manifest", "v82_supervisor_result", "v82_runtime"):
+        v82_join(objects["v82_aggregate"], objects["v82_package"], seals, complement, objects["coverage"])
+        checks["actual_v82_504"] = True
+        for label in complement:
+            bindings[label] = {"kind": "PAIRED_POINTWISE_V82", "v82_aggregate_sha256": seals["v82_aggregate"],
+                               "full_result_sha256": {backend: objects["v82_aggregate"]["jobs"][label + "/" + backend]["result_sha256"] for backend in BACKENDS}}
+    terminal=None
+    authority_inputs=(*AUTHORITY_NAMES,'amended_controller_source_review',*(prefix+'_'+name for prefix in CHAIN_NAMES for name in ('configuration','amendment','review','failed_review')))
+    if historical and available('v83_audit',*authority_inputs):
+        authority=selection_authority(objects,seals)
+        unresolved,runtimes,full=v83_join(objects['v83_audit'],objects['origin_index'],authority,seals,set(historical)|set(complement))
+        terminal={**objects['v83_audit'],'executed_runtime_bindings':runtimes,'selected_full_result_sha256':full}
+        checks['actual_v83_365_paired']=True
+    for name, dependencies in REVIEW_DEPENDENCIES.items():
+        if available(name, *dependencies):
+            final_review(name, objects[name], seals); checks[name] = True
+    incomplete_positive = []
+    if available("positive_control_audit"):
+        incomplete_positive = positive_join(objects["positive_control_audit"])
+        checks["actual_twelve_positive_controls"] = not incomplete_positive
+    if terminal is not None and available("representative_control_audit"):
+        representative_join(objects["representative_control_audit"], terminal, seals)
+        checks["actual_same_plan_representative_controls"] = True
+    if terminal is not None and available("portable_adoption_record", "source_isomorphism_review", "positive_control_audit", "representative_control_audit"):
+        adoption_join(objects["portable_adoption_record"], objects["source_isomorphism_review"], terminal, seals)
+        portable = objects["portable_adoption_record"]["portable_source_sha256"]
+        require(objects["positive_control_audit"]["source_state"]["portable_math_sha256"] ==
+                objects["representative_control_audit"]["portable_source_sha256"] == portable, "Both control cohorts use the adopted portable source")
+        require(set(objects["source_isomorphism_review"]["approved_portable_runtime_sha256"]) ==
+                {objects["positive_control_audit"]["approved_runtime_sha256"], *objects["representative_control_audit"]["approved_runtime_sha256s"]},
+                "Actual positive/representative runtime profiles covered by final source-semantics review")
+        checks["actual_portable_evidence_adoption"] = True
+    rows = [{"point_label": label, "first_target_family": "LEGACY116" if label in historical else "V82_249",
+             "first_target_binding": bindings.get(label, {"status": "UNBOUND"}),
+             "reflected_status": (objects["v83_audit"]["points"][label]["outcome"] if checks.get("actual_v83_365_paired") else "NOT_AUDITED"),
+             "reflected_full_result_sha256": ({backend: terminal["selected_full_result_sha256"][label+"/"+backend] for backend in BACKENDS}
+                                               if checks.get("actual_v83_365_paired") else None),
+             "new_curve_hit_claimed": False} for label in sorted(set(historical) | set(complement))]
+    ready = not missing and not unresolved and not incomplete_positive
+    return {"schema_version": 1, "status": ("CONDITIONAL_EVIDENCE_JOIN_READY_FOR_FINAL_THEOREM_REVIEW" if ready
+            else "CONDITIONAL_JOIN_BLOCKED_MISSING_EVIDENCE_OR_UNRESOLVED_OUTCOME"),
+            "scope": "FIXED_MARKED_NORM_PI_C39_PACKET_NORMALIZED_TRACE_POLARIZED_SL2_QUOTIENT",
+            "checks_passed": checks, "missing_evidence": missing, "incomplete_positive_controls": incomplete_positive,
+            "survivor_labels_unresolved": unresolved, "known_positive_labels": HITS,
+            "nonhit_rows": rows, "nonhit_count": len(rows), "ambient_count": len(domain),
+            "reference_counts": {"historical_labels": len(historical), "v82_labels": len(complement),
+                                 "distinct_legacy_geometry_commands": 128 if historical else None,
+                                 "v82_full_jobs": 504 if checks.get("actual_v82_504") else None,
+                                 "v83_original_selected_full_records": 557 if checks.get("actual_v83_365_paired") else None,
+                                 "v83_continuation_selected_full_records": 173 if checks.get("actual_v83_365_paired") else None,
+                                 "fixed_portable_negative_controls_required": 32,
+                                 "v83_adopted_full_jobs": 730 if checks.get("actual_portable_evidence_adoption") else None},
+            "collective_r83_pic1_is_not_individual_mask_permutation": True,
+            "certified_coverage_changed": False, "C44_complete": False, "theorem_promotion": False,
+            "registration_applied": False, "full_release": False,
+            "original159_pass": False, "old65_pass": False, "historical_endguards_reconstructed": False,
+            "historical_immutable_source_runtime_assumption_required": True,
+            "input_sha256": seals,
+            "intentional_shared_evidence_roles": {"legacy_runtime": "v82_runtime"},
+            "limits": ["Hashes identify supplied evidence, not independent approval authority.",
+                       "Source/design gates never replace actual outcome and archival review.",
+                       "Necessary-polygon survivors remain unresolved and are not new curve points.",
+                       "First-target collective Pic1 coverage transfers a universal statement, not per-mask digests."]}
+
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--evidence-root", type=Path, required=True)
+    parser.add_argument("--manifest", type=Path, required=True)
+    parser.add_argument("--manifest-sha256", required=True)
+    parser.add_argument("--output", type=Path, required=True)
+    args = parser.parse_args()
+    own_hash = sha(Path(__file__))
+    require(__debug__ and not args.output.exists(), "Assertions enabled and fresh output required")
+    require(sha(args.manifest) == args.manifest_sha256, "External input manifest binding")
+    manifest = decode(args.manifest.read_bytes())
+    require(type(manifest["schema_version"]) is int and manifest["schema_version"] == 1 and
+            manifest["status"] == "CONDITIONAL_JOIN_INPUTS_NO_PROMOTION", "Join manifest schema")
+    require(set(manifest["references"]) == set(REQUIRED), "Exact named gate inventory")
+    evidence = Evidence(args.evidence_root, manifest["references"])
+    for name, checksum in STATIC_PINS.items():
+        if name in evidence.hashes:
+            require(evidence.hashes[name] == checksum, "Unreviewed static anchor: " + name)
+    report = evaluate(evidence.objects, evidence.hashes)
+    evidence.recheck()
+    require(all(sha(ROOT/p)==h for p,h in HELPER_PINS.items()),'Administrative helper changed during join')
+    require(sha(args.manifest) == args.manifest_sha256, "Input manifest changed")
+    require(sha(Path(__file__)) == own_hash, "Join source changed")
+    report.update(join_source_sha256=own_hash, administrative_source_sha256=HELPER_PINS, input_manifest_sha256=args.manifest_sha256)
+    with args.output.open("xb") as stream:
+        stream.write(canonical(report))
+    print(json.dumps({"status": report["status"], "missing_evidence": report["missing_evidence"],
+                      "survivor_labels_unresolved": report["survivor_labels_unresolved"],
+                      "output_sha256": sha(args.output)}, sort_keys=True))
+
+
+if __name__ == "__main__":
+    main()

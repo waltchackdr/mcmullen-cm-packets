@@ -1,0 +1,188 @@
+#!/usr/bin/env python3
+"""Batch reflected-target exponent nominations; no finite-set enumeration.
+
+One primary import amortizes arithmetic startup. Each run_point call resets the
+active plan, reinstalls the exact target, reconstructs the labelled source and
+derives fresh bounds before scoring transport and entry-unit proposals. Only
+field units and their field-only proposal table are reused between points.
+
+The emitted schema-2 plans contain exponents, never trusted bounds or expected
+answers. Independent replay is required before any discovery search. A caller
+must supply finite CPU limits and an external wall-clock supervisor. Interrupted
+batches retain their completed point artifacts and an incomplete index.
+"""
+from __future__ import annotations
+
+import argparse
+from hashlib import sha256
+import importlib.util
+import json
+from pathlib import Path
+import resource
+import sys
+import time
+
+sys.dont_write_bytecode = True
+HERE = Path(__file__).resolve().parent
+TARGET_ID = "REFLECTED_AB_V1"
+
+
+def digest(path):
+    return sha256(path.read_bytes()).hexdigest()
+
+
+def finite_inherited_cpu_limits():
+    limits = resource.getrlimit(resource.RLIMIT_CPU)
+    if any(value in (-1, resource.RLIM_INFINITY) or value <= 0 for value in limits):
+        raise RuntimeError("Nomination requires finite positive inherited CPU limits")
+    if limits[0] > limits[1]:
+        raise RuntimeError("Invalid inherited CPU limits")
+    return limits
+
+
+def load_kernel():
+    spec = importlib.util.spec_from_file_location("v83_primary_nomination", HERE / "primary.py")
+    kernel = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(kernel)
+    return kernel
+
+
+def run_batch(kernel, points, output, target_id, cpu_limits, points_sha256=None):
+    if target_id != TARGET_ID:
+        raise ValueError("This nomination helper requires the reflected AB target")
+    if type(points) is not list or not points or any(type(point) is not str for point in points):
+        raise ValueError("Provide a nonempty list of canonical C39 labels")
+    if len(points) != len(set(points)) or not set(points) <= set(kernel.declared_domain()[0]):
+        raise ValueError("Labels must be distinct members of the complete C39 domain")
+    kernel.check_sources()
+    output = output.resolve()
+    output.mkdir(parents=True, exist_ok=False)
+    source_before = digest(HERE / "primary.py")
+    nominee_before = digest(Path(__file__))
+    source_pins = dict(kernel.SOURCE_PINS)
+    executable = Path(sys.executable).resolve()
+    executable_before = digest(executable)
+    started_cpu, started_wall = time.process_time(), time.monotonic()
+    index = {
+        "schema_version": 1,
+        "status": "INCOMPLETE_PREPARATION_BATCH",
+        "scope": "REFLECTED_TARGET_NOMINATION_DATA_ONLY_NO_GEOMETRY",
+        "target_id": target_id,
+        "point_labels": points,
+        "input_points_sha256": points_sha256,
+        "completed": [],
+        "failed": [],
+        "active_point": None,
+        "primary_sha256": source_before,
+        "nominate_sha256": nominee_before,
+        "source_sha256": source_pins,
+        "python_invoking_path": sys.executable,
+        "python_executable": str(executable),
+        "python_executable_sha256": executable_before,
+        "python_version": sys.version,
+        "cpu_limits": list(cpu_limits),
+        "assertions_enabled": __debug__,
+    }
+
+    def check_bindings():
+        kernel.check_sources()
+        assert kernel.SOURCE_PINS == source_pins
+        assert digest(HERE / "primary.py") == source_before
+        assert digest(Path(__file__)) == nominee_before
+        assert digest(executable) == executable_before
+
+    def save_index():
+        index["cpu_seconds"] = time.process_time() - started_cpu
+        index["wall_seconds"] = time.monotonic() - started_wall
+        kernel.atomic_json(output / "index.json", index)
+
+    save_index()
+    for position, label in enumerate(points):
+        relative = f"{position:03d}-" + label.lower().replace(":", "-")
+        point_output = output / relative
+        index["active_point"] = {"point_label": label, "directory": relative}
+        save_index()
+        try:
+            # run_point installs this target BEFORE reconstruct/derive_bounds
+            # and nominates a new complete plan: no V81 plan is supplied.
+            result = kernel.run_point(label, point_output, True, target_id=target_id)
+            assert json.loads((point_output / "result.json").read_text()) == result
+            assert result["status"] == "PREPARATION_ONLY"
+            assert result["scope"] == "C39_TARGET_CHAMBER_DISCOVERY"
+            assert result["backend"] == "primary"
+            assert result["point_label"] == label and result["target_id"] == target_id
+            assert result["driver_sha256"] == source_before
+            assert result["source_sha256"] == source_pins
+            assert result["runtime"]["python_executable"] == str(executable)
+            assert result["runtime"]["python_sha256"] == executable_before
+            assert result["runtime"]["python_version"] == sys.version
+            assert result["runtime"]["cpu_limits_seconds"] == list(cpu_limits)
+            assert result["input_witness_plan_sha256"] is None
+            assert all(result[name] is True for name in (
+                "sources_unchanged", "executable_unchanged", "witness_plan_unchanged",
+                "assertions_enabled"))
+            for name, expected in result["artifact_sha256"].items():
+                assert type(name) is str and Path(name).name == name
+                assert name not in (".", "..", "result.json")
+                assert digest(point_output / name) == expected
+            plan_path = point_output / "witness-plan.json"
+            plan = json.loads(plan_path.read_text())
+            kernel.validate_plan(plan, label)
+            assert plan["schema_version"] == 2 and plan["target_id"] == target_id
+            plan_hash = digest(plan_path)
+            assert plan_hash == result["witness_plan_sha256"]
+            assert plan_hash == result["artifact_sha256"]["witness-plan.json"]
+            target_hash = digest(point_output / "target-geometry.json")
+            assert target_hash == result["target_geometry_sha256"]
+            target = json.loads((point_output / "target-geometry.json").read_text())
+            assert type(target["schema_version"]) is int and target["schema_version"] == 1
+            assert target["target_id"] == target_id
+            preparation_hash = digest(point_output / "preparation.json")
+            assert preparation_hash == result["artifact_sha256"]["preparation.json"]
+            assert json.loads((point_output / "preparation.json").read_text())["point_label"] == label
+            index["completed"].append({
+                "point_label": label,
+                "target_id": target_id,
+                "directory": relative,
+                "witness_plan_sha256": plan_hash,
+                "target_geometry_sha256": target_hash,
+                "preparation_sha256": preparation_hash,
+                "result_sha256": digest(point_output / "result.json"),
+            })
+        except Exception as error:
+            index["failed"].append({"point_label": label, "directory": relative,
+                                    "error": repr(error)})
+        # An integrity failure aborts the whole batch; it must not be hidden
+        # among independent per-point nomination failures.
+        check_bindings()
+        index["active_point"] = None
+        save_index()
+    check_bindings()
+    index["status"] = ("PREPARATION_BATCH_COMPLETE" if not index["failed"]
+                       else "PREPARATION_BATCH_WITH_FAILURES")
+    index["sources_unchanged"] = True
+    index["executable_unchanged"] = True
+    save_index()
+    print(json.dumps(index, sort_keys=True), flush=True)
+    return int(bool(index["failed"]))
+
+
+def main():
+    if not __debug__:
+        raise RuntimeError("Assertions must be enabled")
+    parser = argparse.ArgumentParser(description=__doc__)
+    labels = parser.add_mutually_exclusive_group(required=True)
+    labels.add_argument("--point", action="append")
+    labels.add_argument("--points", type=Path, help="JSON list of canonical point labels")
+    parser.add_argument("--target-id", required=True, choices=(TARGET_ID,))
+    parser.add_argument("--output", required=True, type=Path)
+    args = parser.parse_args()
+    limits = finite_inherited_cpu_limits()
+    raw_points = args.points.read_bytes() if args.points else None
+    points = json.loads(raw_points) if raw_points is not None else args.point
+    return run_batch(load_kernel(), points, args.output, args.target_id, limits,
+                     sha256(raw_points).hexdigest() if raw_points is not None else None)
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

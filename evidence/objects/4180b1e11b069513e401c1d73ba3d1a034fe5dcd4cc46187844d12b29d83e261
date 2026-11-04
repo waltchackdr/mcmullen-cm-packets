@@ -1,0 +1,6 @@
+{
+  "url": "https://raw.githubusercontent.com/flintlib/flint/v3.6.0/doc/source/acb_theta.rst",
+  "file": "experiments/bc_jacobian_v147/flint_v3_6_theta_documentation.rst",
+  "sha256": "d374a22a8d153127c4ccf32e8f305bd1d2dc758927de2ac907470d997a0a09a4",
+  "scope": "Documentation contract for FLINT3.6.0; not an independent proof of implementation, binary equality, or actual B/C evaluation"
+}

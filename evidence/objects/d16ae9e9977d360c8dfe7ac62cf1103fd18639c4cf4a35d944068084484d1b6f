@@ -1,0 +1,119 @@
+"""Short negative checks for new theta admission; no FLINT or theta calls."""
+import copy,hashlib,importlib.util,json,tempfile,unittest
+from pathlib import Path
+
+ROOT=Path(__file__).resolve().parents[1]
+def module(name,path):
+    spec=importlib.util.spec_from_file_location(name,ROOT/path)
+    result=importlib.util.module_from_spec(spec);spec.loader.exec_module(result);return result
+worker=module('theta_worker164','experiments/s_order_theta_v164/worker_candidate.py')
+loader=module('theta_loader164','experiments/s_order_theta_v164/period_loader_candidate.py')
+
+class ThetaAdmission(unittest.TestCase):
+    def setUp(self):
+        self.tmp=tempfile.TemporaryDirectory();self.addCleanup(self.tmp.cleanup)
+        self.root=Path(self.tmp.name)
+        packet=json.loads((ROOT/'build/s-order-v164/preparation04/job0/execution_packet.json').read_text())
+        for virtual,real in packet['source_mapping'].items():
+            p=self.root/virtual;p.parent.mkdir(parents=True,exist_ok=True);p.write_bytes((ROOT/real).read_bytes())
+        raw=(ROOT/'build/s-order-v164/preparation04/job0/certificate_plan_candidate.json').read_bytes()
+        self.plan=json.loads(raw);self.plan_sha=hashlib.sha256(raw).hexdigest()
+
+    def test_actual_plan_and_changed_binding_rejected(self):
+        self.assertEqual(len(worker.validate_plan(self.plan,self.root)),8)
+        self.assertEqual([t['catalog_index'] for t in self.plan['tasks']],[0,0,1,1,2,2,3,6])
+        pairs=[(t['catalog_index'],i) for t in self.plan['tasks'] for i in t['pair_indices']]
+        self.assertEqual(len(pairs),40);self.assertEqual(len(set(pairs)),40)
+        changed=copy.deepcopy(self.plan);changed['tasks'][0]['catalog_index']=1
+        with self.assertRaises(RuntimeError):worker.validate_plan(changed,self.root)
+        changed=copy.deepcopy(self.plan);changed['tasks'][0]['numerators_mod3'][0]=[0]*12
+        with self.assertRaises(RuntimeError):worker.validate_plan(changed,self.root)
+        # Rehashing a changed period record in the plan cannot bypass its adoption.
+        changed=copy.deepcopy(self.plan);path=changed['tasks'][0]['record_path']
+        data=json.loads((self.root/path).read_text());data['interval_period']['precision_bits']=96
+        (self.root/path).write_text(json.dumps(data))
+        changed['pins'][path]=hashlib.sha256((self.root/path).read_bytes()).hexdigest()
+        with self.assertRaises(RuntimeError):worker.validate_plan(changed,self.root)
+
+    def test_loader_coordinate_and_rectangle_rejections(self):
+        data=json.loads((ROOT/'build/s-order-v162/postprocessed01/model000.json').read_text())
+        loader.validate_record(data,0)
+        for change in ('type','characteristic','pair','radius','symmetry'):
+            bad=copy.deepcopy(data)
+            if change=='type':bad['transport']['actual_tangent_type'][0]=41
+            if change=='characteristic':bad['transport']['flint_characteristic_index']^=1
+            if change=='pair':bad['transport']['eligible_nonzero_pairs'][0]=[0]*12
+            if change=='radius':bad['interval_period']['period_rectangles'][0][0]['real']['rad'][0]=-1
+            if change=='symmetry':bad['interval_period']['period_rectangles'][0][1]['real']['mid'][0]+=1
+            with self.assertRaises(ValueError,msg=change):loader.validate_record(bad,0)
+
+    def test_eight_task_retention_inventory(self):
+        selector=module('theta_selector164','experiments/bc_jacobian_v147/runtime/artifact_selection.py')
+        retainer=module('theta_retainer164','experiments/bc_jacobian_v147/runtime/retain_candidate.py')
+        directory=(self.root/'artifacts').resolve();directory.mkdir()
+        names=set(selector.allowed_names())
+        expected={f'benchmark/task{i:02}/{suffix}' for i in range(len(self.plan['tasks']))
+                  for suffix in ['stdout.jsonl','stderr.txt','result.json']}
+        self.assertEqual(expected,{n for n in names if n.startswith('benchmark/task')})
+        for name in names-{'guard_delete.json'}:
+            p=directory/name;p.parent.mkdir(parents=True,exist_ok=True);p.write_bytes(b'SYNTHETIC_RETENTION_FIXTURE')
+        selected=selector.select(directory)
+        snapshot={'artifacts':{str(p.relative_to(directory)):{'sha256':hashlib.sha256(p.read_bytes()).hexdigest(),
+                 'bytes':p.stat().st_size} for p in selected['paths']},
+                  'missing':selected['missing'],'rejected':selected['rejected']}
+        retainer.validate(snapshot,names)
+        self.assertEqual(snapshot['missing'],['guard_delete.json']);self.assertFalse(snapshot['rejected'])
+        (directory/'benchmark/task07/result.json').unlink()
+        self.assertFalse(set(selector.select(directory)['missing'])<={'guard_delete.json'})
+
+    def test_missing_or_wrong_observation_rejected(self):
+        results=[{'status':'EXITED','returncode':0} for _ in range(8)]
+        output=self.root/'out';output.mkdir()
+        for i,task in enumerate(self.plan['tasks']):
+            record=json.loads((self.root/task['record_path']).read_text());t=record['transport']
+            first={'stage':'EXACT_PERIOD_INPUT','catalog_index':task['catalog_index'],'task_index':i,
+                'plan_sha256':self.plan_sha,'period_record_sha256':self.plan['pins'][task['record_path']],
+                'precision_bits':96,'input_precision_bits':512,'chi':t['invariant_refinement_chi'],
+                'characteristic_index':t['flint_characteristic_index'],'python':'SYNTHETIC_SCHEMA_FIXTURE',
+                'flint':'0.9.0','FLINT_RELEASE':30600,'source_pins':self.plan['pins'],
+                'tau':record['interval_period']['period_rectangles'],
+                'positive_ldl_pivots':record['interval_period']['positive_ldl_pivots'],
+                'mathematical_conclusion':None}
+            h=hashlib.sha256(json.dumps(first,sort_keys=True).encode()).hexdigest()
+            # Deliberately wide exact argument intervals are valid enclosures.
+            # Fake theta values test schema admission only, never mathematics.
+            wide={'real':{'mid':[0,0],'rad':[1,12]},'imag':{'mid':[0,0],'rad':[1,12]}}
+            one={'real':{'mid':[1,0],'rad':[0,0]},'imag':{'mid':[0,0],'rad':[0,0]}}
+            values=[first]+[{'stage':'EXACT_THETA_OBSERVATION','catalog_index':task['catalog_index'],
+                'task_index':i,'pair_index':j,'numerator_mod3':v,'input_sha256':h,'mathematical_conclusion':None,
+                'centered_lift':[x if x<=1 else x-3 for x in v],'argument':[wide]*6,
+                'characteristic_index':t['flint_characteristic_index'],'precision_bits':96,
+                'quantity':'theta_characteristic_squared','finite':True,'enclosure':one,'excludes_zero':True}
+                for j,v in zip(task['pair_indices'],task['numerators_mod3'])]
+            values.append({'stage':'BATCH_COMPLETE','catalog_index':task['catalog_index'],'task_index':i,
+                'pair_indices':task['pair_indices'],'total_seconds':1,'mathematical_conclusion':None})
+            folder=output/f'task{i:02d}';folder.mkdir();(folder/'stdout.jsonl').write_text('\n'.join(json.dumps(v) for v in values)+'\n')
+        def success():return worker.successful_results(results,output,self.plan['tasks'],self.plan,self.plan_sha,self.root)
+        self.assertTrue(success())
+        target=output/'task00/stdout.jsonl';values=[json.loads(x) for x in target.read_text().splitlines()]
+        for change in ('missing_tau','missing_enclosure','wrong_pair','wrong_plan','wrong_characteristic',
+                       'wrong_precision','wrong_record','nonfinite_mismatch','wrong_zero_flag','bad_argument'):
+            bad=copy.deepcopy(values)
+            if change=='missing_tau':del bad[0]['tau']
+            if change=='missing_enclosure':del bad[1]['enclosure']
+            if change=='wrong_pair':bad[1]['pair_index']=99
+            if change=='wrong_plan':bad[0]['plan_sha256']='0'*64
+            if change=='wrong_characteristic':bad[1]['characteristic_index']^=1
+            if change=='wrong_precision':bad[1]['precision_bits']=512
+            if change=='wrong_record':bad[0]['period_record_sha256']='0'*64
+            if change=='nonfinite_mismatch':bad[1]['finite']=False
+            if change=='wrong_zero_flag':bad[1]['excludes_zero']=False
+            if change=='bad_argument':bad[1]['argument'][0]={'real':{'mid':[1,100],'rad':[0,0]},'imag':{'mid':[0,0],'rad':[0,0]}}
+            target.write_text('\n'.join(json.dumps(v) for v in bad)+'\n')
+            self.assertFalse(success(),change)
+        inconclusive=copy.deepcopy(values)
+        inconclusive[1].update(finite=False,enclosure=None,excludes_zero=False)
+        target.write_text('\n'.join(json.dumps(v) for v in inconclusive)+'\n')
+        self.assertTrue(success())
+
+if __name__=='__main__':unittest.main()

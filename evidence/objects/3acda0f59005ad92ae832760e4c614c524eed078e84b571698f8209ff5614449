@@ -1,0 +1,904 @@
+#!/usr/bin/env python3
+"""Frozen, resumable paired discovery queue. No result is a theorem promotion.
+
+One coordinator owns an exclusive lock. Preparation is an automatic prerequisite;
+one reviewed reflected-target full pilot gates the 365-label cohort. Interrupted attempts are
+preserved and restarted whole. Only hash-verified terminal outputs are reused.
+The wall deadline is durable across restarts. Provider billing shutdown is a
+separate required cloud deployment control, not supplied by this process.
+"""
+from __future__ import annotations
+import argparse
+import ast
+from collections import Counter
+from datetime import datetime, timezone
+import fcntl
+import hashlib
+import importlib
+import json
+import math
+import os
+from pathlib import Path
+import platform
+import shutil
+import signal
+import subprocess
+import sys
+import time
+
+ROOT = Path(__file__).resolve().parents[2]
+HERE = 'experiments/continuous_v83'
+TARGET_ID = 'REFLECTED_AB_V1'
+QUEUE_CUTOFF = 1791849919
+STOP_DEADLINE = 1791850219
+HITS = ('OM:pic0:00', 'OM:pic0:07', 'OM:pic0:15')
+BACKENDS = ('primary', 'sturm')
+CANONICAL = ('preparation.json', 'A-entries.json', 'C-entries.json',
+             'bottom-rows.json', 'candidates-nonzero.json', 'candidates-zero.json',
+             'classification.json', 'survivors.json')
+COUNTS = ('a_count', 'c_count', 'bottom_rows', 'nonzero_candidates',
+          'zero_candidates', 'candidate_count', 'survivor_count',
+          'classification_digest', 'c_zero_audit')
+STOP = False
+
+
+def digest(path):
+    h = hashlib.sha256()
+    with Path(path).open('rb') as stream:
+        for block in iter(lambda: stream.read(1024**2), b''):
+            h.update(block)
+    return h.hexdigest()
+
+
+def write(path, value):
+    path = Path(path)
+    temporary = path.with_suffix(path.suffix + '.tmp')
+    with temporary.open('w') as stream:
+        json.dump(value, stream, sort_keys=True, indent=2)
+        stream.write('\n')
+        stream.flush()
+        os.fsync(stream.fileno())
+    temporary.replace(path)
+
+
+def read(path):
+    return json.loads(Path(path).read_text())
+
+
+def stamp():
+    return datetime.now(timezone.utc).isoformat()
+
+
+def slug(label):
+    return label.lower().replace(':', '-')
+
+
+def contained(root, relative):
+    path = root / relative
+    if Path(relative).is_absolute() or not path.resolve().is_relative_to(root.resolve()):
+        raise ValueError(f'Path outside root: {relative}')
+    return path
+
+
+def domain(root):
+    rows = read(root / 'certificates/full_packet_v62/ambient_points.json')
+    labels = {row['point_label'] for row in rows}
+    if len(rows) != 368 or len(labels) != 368 or not set(HITS) <= labels:
+        raise ValueError('Unexpected C39 census')
+    nonhits = labels - set(HITS)
+    if len(nonhits) != 365:
+        raise ValueError('Expected all 365 C39 non-hit labels')
+    return sorted(nonhits), list(HITS)
+
+
+def sources(root):
+    paths = {f'{HERE}/{name}.py' for name in ('runner', 'child', 'primary', 'sturm', 'nominate')}
+    paths.add('certificates/full_packet_v62/ambient_points.json')
+    for backend in BACKENDS:
+        driver = root / HERE / (backend + '.py')
+        nodes = [node.value for node in ast.parse(driver.read_text()).body
+                 if isinstance(node, ast.Assign) and any(isinstance(t, ast.Name)
+                    and t.id == 'SOURCE_PINS' for t in node.targets)]
+        if len(nodes) != 1:
+            raise ValueError('Missing literal source closure')
+        for relative, expected in ast.literal_eval(nodes[0]).items():
+            if digest(contained(root, relative)) != expected:
+                raise ValueError(f'Changed source: {relative}')
+            paths.add(relative)
+    return {name: digest(contained(root, name)) for name in sorted(paths)}
+
+
+def runtime():
+    result = {'invocation_path':sys.executable,'resolved_binary':str(Path(sys.executable).resolve()),
+              'prefix':sys.prefix,'base_prefix':sys.base_prefix,
+              'python_version': sys.version, 'python_sha256': digest(Path(sys.executable).resolve()),
+              'platform': platform.platform(), 'machine': platform.machine(), 'packages': {}}
+    for name, version in (('sympy', '1.14.0'), ('mpmath', '1.3.0')):
+        module = importlib.import_module(name)
+        if module.__version__ != version:
+            raise ValueError(f'Require {name}=={version}')
+        directory = Path(module.__file__).resolve().parent
+        result['packages'][name] = {'version': version, 'files': {
+            str(p.relative_to(directory)): digest(p) for p in sorted(directory.rglob('*'))
+            if p.is_file() and p.suffix in ('.py', '.so', '.pyd', '.dylib')}}
+    result['memory_limit_enforced'] = sys.platform.startswith('linux')
+    return result
+
+
+def verify_tree(root, expected):
+    for relative, checksum in expected.items():
+        if digest(contained(root, relative)) != checksum:
+            raise ValueError(f'Sealed content changed: {relative}')
+
+
+def object_digest(value):
+    return hashlib.sha256((json.dumps(value,sort_keys=True,separators=(',',':'))+'\n').encode()).hexdigest()
+
+
+def driver_pins(path):
+    nodes=[n.value for n in ast.parse(path.read_text()).body if isinstance(n,ast.Assign)
+           and any(isinstance(t,ast.Name) and t.id=='SOURCE_PINS' for t in n.targets)]
+    if len(nodes)!=1:raise ValueError('Missing literal kernel closure')
+    return ast.literal_eval(nodes[0])
+
+
+def validate_plan(plan,label):
+    if (type(plan) is not dict or set(plan)!={'schema_version','target_id','point_label','transport','entry_units'}
+            or type(plan['schema_version']) is not int or plan['schema_version']!=2
+            or plan['target_id']!=TARGET_ID or plan['point_label']!=label):
+        raise ValueError('Wrong reflected-target plan identity')
+    route=plan['transport'];units=plan['entry_units']
+    if (type(route) is not dict or set(route)!={'inversion_first','unit_exponents'}
+            or type(route['inversion_first']) is not bool or type(units) is not dict
+            or set(units)!={'A','C','DEN','NUM'}):
+        raise ValueError('Malformed coordinate nomination')
+    if any(type(v) is not list or len(v)!=5 or any(type(x) is not int or not -2<=x<=2 for x in v)
+           for v in [route['unit_exponents'],*units.values()]):
+        raise ValueError('Nomination outside exact bounded exponent domain')
+
+
+def validate_boundary(record,pins):
+    if (type(record.get('schema_version')) is not int or record['schema_version']!=1
+            or record.get('status')!='PASS_V83_BOUNDARY_AND_SOURCE_REVIEW'
+            or record.get('target_id')!=TARGET_ID or record.get('source_sha256')!=pins
+            or any(record.get(k) is not True for k in ('primary_and_independent_verified',
+                 'positive_boundary_verified','original_control_verified','target_reset_verified','discovery_only'))
+            or not record.get('evidence_sha256')):
+        raise ValueError('Missing exact reviewed source/boundary gate')
+    if any(type(v) is not str or len(v)!=64 or any(c not in '0123456789abcdef' for c in v)
+           for v in record['evidence_sha256'].values()):
+        raise ValueError('Malformed boundary evidence pins')
+
+
+def validate_resource(record,workers,memory,tiers,prep):
+    if (type(record.get('schema_version')) is not int or record['schema_version']!=1
+            or record.get('status')!='APPROVED_V83_RESOURCE_ALLOCATION'
+            or record.get('target_id')!=TARGET_ID or record.get('queue_cutoff_epoch')!=QUEUE_CUTOFF
+            or record.get('stop_deadline_epoch')!=STOP_DEADLINE
+            or record.get('exclusive_approved_slot') is not True
+            or not record.get('deployment_id') or not record.get('guard_evidence_sha256')):
+        raise ValueError('No explicit original-deadline resource approval')
+    if any(type(record.get(k)) is not int for k in ('workers_max','memory_mib_max','cpu_seconds_max','total_memory_mib_max')):
+        raise ValueError('Resource approval requires exact integer limits')
+    if not (1<=workers<=record['workers_max']<=28 and 0<memory<=record['memory_mib_max']
+            and workers*memory<=record['total_memory_mib_max']<=56*1024
+            and max(tiers+[2*prep])<=record['cpu_seconds_max']<=21600):
+        raise ValueError('Resource request exceeds the external allocation')
+    for k in ('runtime_sha256','guard_evidence_sha256'):
+        value=record[k]
+        if type(value) is not str or len(value)!=64 or any(c not in '0123456789abcdef' for c in value):
+            raise ValueError('Invalid runtime/guard evidence binding')
+
+
+def load_nominations(path,pins):
+    path=path.resolve();index=read(path)
+    if (type(index.get('schema_version')) is not int or index['schema_version']!=1
+            or index.get('target_id')!=TARGET_ID
+            or index.get('status') not in ('PREPARATION_BATCH_COMPLETE','PREPARATION_BATCH_WITH_FAILURES')
+            or index.get('primary_sha256')!=pins[f'{HERE}/primary.py']
+            or index.get('nominate_sha256')!=pins[f'{HERE}/nominate.py']
+            or index.get('source_sha256')!=driver_pins(ROOT/HERE/'primary.py')
+            or index.get('sources_unchanged') is not True or index.get('executable_unchanged') is not True
+            or index.get('assertions_enabled') is not True):
+        raise ValueError('Unsealed nomination index')
+    nonhits=set(domain(ROOT)[0]);plans={}
+    for item in index['completed']:
+        label=item['point_label'];directory=contained(path.parent,item['directory'])
+        if label in plans or label not in nonhits or item.get('target_id')!=TARGET_ID:
+            raise ValueError('Nomination label/target mismatch')
+        result=read(directory/'result.json')
+        expected={'witness-plan.json':item['witness_plan_sha256'],
+                  'target-geometry.json':item['target_geometry_sha256'],
+                  'preparation.json':item['preparation_sha256'],'result.json':item['result_sha256']}
+        verify_tree(directory,expected)
+        validate_plan(read(directory/'witness-plan.json'),label)
+        if (result.get('status')!='PREPARATION_ONLY' or result.get('target_id')!=TARGET_ID
+                or result.get('point_label')!=label or result.get('backend')!='primary'
+                or result.get('driver_sha256')!=pins[f'{HERE}/primary.py']
+                or result.get('source_sha256')!=index['source_sha256']
+                or result.get('target_geometry_sha256')!=item['target_geometry_sha256']
+                or result.get('witness_plan_sha256')!=item['witness_plan_sha256']
+                or any(result.get(k) is not True for k in ('sources_unchanged','executable_unchanged','witness_plan_unchanged','assertions_enabled'))):
+            raise ValueError('Invalid nomination producer result')
+        verify_tree(directory,result['artifact_sha256'])
+        if read(directory/'target-geometry.json').get('target_id')!=TARGET_ID:
+            raise ValueError('Nomination descriptor target mismatch')
+        plans[label]=directory/'witness-plan.json'
+    return plans
+
+
+def validate_campaign(campaign,manifest,state):
+    if (type(manifest.get('schema_version')) is not int or manifest['schema_version']!=2
+            or manifest.get('target_id')!=TARGET_ID or state.get('target_id')!=TARGET_ID
+            or type(state.get('schema_version')) is not int or state['schema_version']!=2
+            or manifest.get('remaining')!=domain(campaign/'source')[0]
+            or manifest.get('known_positive_hits')!=list(HITS)
+            or manifest.get('pilot_label') not in manifest['remaining']
+            or state.get('deadline_epoch')!=QUEUE_CUTOFF
+            or manifest.get('queue_cutoff_epoch')!=QUEUE_CUTOFF
+            or state.get('stop_deadline_epoch')!=STOP_DEADLINE
+            or manifest.get('stop_deadline_epoch')!=STOP_DEADLINE):
+        raise ValueError('Campaign target/domain/fixed deadline mismatch')
+    for name in ('boundary','resource'):
+        if digest(campaign/'approvals'/(name+'.json'))!=manifest[name+'_approval_sha256']:
+            raise ValueError('Changed approval')
+    validate_boundary(read(campaign/'approvals/boundary.json'),manifest['source_sha256'])
+    limits=manifest['limits']
+    validate_resource(read(campaign/'approvals/resource.json'),limits['workers'],limits['memory_mib'],
+                      limits['cpu_tiers'],limits['preparation_cpu'])
+    if manifest['nomination_index_sha256'] is not None:
+        if digest(campaign/'approvals/nomination-index.json')!=manifest['nomination_index_sha256']:
+            raise ValueError('Changed nomination index')
+    for key,job in state['jobs'].items():
+        for attempt in job['attempts']:
+            if attempt.get('target_id')!=TARGET_ID or attempt.get('task_key')!=key or job_key(*attempt['task'])!=key:
+                raise ValueError('State job target identity mismatch')
+            contained(campaign,attempt['directory'])
+
+
+def integral_vector(value):
+    if type(value) is not list or len(value)!=6:raise ValueError('Bad field vector')
+    result=tuple(int(x) for x in value)
+    if list(map(str,result))!=value:raise ValueError('Noncanonical integral vector')
+    return result
+
+
+def integral_row(value):
+    if type(value) is not list or len(value)!=2:raise ValueError('Bad bottom row')
+    return tuple(integral_vector(v) for v in value)
+
+
+def row_coverage(output,backend):
+    """Normalize mathematical row records; CPU/journal cadence are not compared."""
+    bottoms=[integral_row(row) for row in read(output/'bottom-rows.json')]
+    zero=(0,)*6
+    if bottoms!=sorted(set(bottoms)):raise ValueError('Bottom domain not canonical')
+    negate=lambda row:tuple(tuple(-x for x in v) for v in row)
+    if {negate(row) for row in bottoms}!=set(bottoms):raise ValueError('Bottom sign closure failed')
+    representatives=sorted({min(row,negate(row)) for row in bottoms if row[0]!=zero})
+    zero_rows=[row for row in bottoms if row[0]==zero]
+    by_c={}
+    for c,d in bottoms:by_c.setdefault(c,[]).append(d)
+    if backend=='primary':
+        records=read(output/'geometry-row-audit.json')['rows']
+        journal=[json.loads(line) for line in (output/'geometry-rows-partial.jsonl').read_text().splitlines()]
+        for stage,wanted in (('nonzero_c',representatives),('zero_c',zero_rows)):
+            for event in ('ROW_START','ROW_COMPLETE'):
+                actual=[integral_row(row['bottom_row']) for row in journal if row.get('stage')==stage and row['event']==event]
+                if actual!=wanted:raise ValueError('Incomplete primary row journal')
+        normalized=[{'bottom_row':row['bottom_row'],'ideal_index':row['ideal_index'],'unit_c':row['unit_c'],
+                     'integral_matches':row['integral_matches'],'numerator_rejections':row['numerator_rejections'],
+                     'half_candidates':row['bounded_sign_candidates']} for row in records]
+        c_values=[integral_vector(v) for v in read(output/'C-entries.json')]
+        journal=[json.loads(line) for line in (output/'partial-bottom-rows.jsonl').read_text().splitlines()]
+        for event in ('C_START','C_COMPLETE'):
+            selected=[row for row in journal if row['event']==event]
+            if [integral_vector(row['c']) for row in selected]!=c_values:
+                raise ValueError('Incomplete primary C journal')
+            if event=='C_COMPLETE':
+                for row in selected:
+                    c=integral_vector(row['c'])
+                    actual=[integral_vector(d) for d in row['retained_d']]
+                    if actual!=by_c.get(c,[]) or len(actual)!=row['retained_d_count']:
+                        raise ValueError('C journal differs from canonical bottoms')
+    else:
+        records=read(output/'nonzero-row-audit.json')
+        journal=[json.loads(line) for line in (output/'partial-nonzero-rows.jsonl').read_text().splitlines()]
+        for event in ('START_ROW','COMPLETE_ROW'):
+            actual=[integral_row(row['bottom_row']) for row in journal if row['event']==event]
+            if actual!=representatives:raise ValueError('Incomplete independent row journal')
+        normalized=[{k:row[k] for k in ('bottom_row','ideal_index','unit_c','integral_matches',
+                                      'numerator_rejections','half_candidates')} for row in records]
+        journal=[json.loads(line) for line in (output/'partial-zero-rows.jsonl').read_text().splitlines()]
+        starts=[row for row in journal if row['event']=='START_ZERO_ROW']
+        ends=[row for row in journal if row['event']=='COMPLETE_ZERO_ROW']
+        if ([integral_row(row['bottom_row']) for row in starts]!=zero_rows
+                or [row['ordinal'] for row in ends]!=list(range(1,len(zero_rows)+1))):
+            raise ValueError('Incomplete independent zero journal')
+        c_values=[integral_vector(v) for v in read(output/'C-entries.json')]
+        records=read(output/'den-unit-radius-audit.json')
+        if [integral_vector(row['c']) for row in records]!=c_values:
+            raise ValueError('Incomplete independent C audit')
+        if any(row['retained_d']!=len(by_c.get(integral_vector(row['c']),[])) for row in records):
+            raise ValueError('Independent C audit differs from canonical bottoms')
+    if [integral_row(row['bottom_row']) for row in normalized]!=representatives:
+        raise ValueError('Nonzero row audit domain mismatch')
+    for row in normalized:
+        if type(row['unit_c']) is not bool or int(row['ideal_index'])<1:
+            raise ValueError('Bad primitive row audit')
+        if any(type(row[k]) is not int or row[k]<0 for k in ('integral_matches','numerator_rejections','half_candidates')):
+            raise ValueError('Bad row count')
+        if row['integral_matches']!=row['numerator_rejections']+row['half_candidates']:
+            raise ValueError('Row count partition failed')
+    candidate_counts=Counter();bottom_set=set(bottoms)
+    for value in read(output/'candidates-nonzero.json'):
+        if type(value) is not list or len(value)!=4:raise ValueError('Bad candidate matrix')
+        row=integral_row(value[2:])
+        if row not in bottom_set:raise ValueError('Candidate outside bottom domain')
+        candidate_counts[row]+=1
+    for item,row in zip(normalized,representatives):
+        if candidate_counts[row]!=item['half_candidates'] or candidate_counts[negate(row)]!=item['half_candidates']:
+            raise ValueError('Row journal differs from canonical candidate counts')
+    return {'target_id':TARGET_ID,'nonzero_rows':normalized,
+            'zero_rows':[[list(map(str,c)),list(map(str,d))] for c,d in zero_rows]}
+
+
+def compare_rows(campaign,pair):
+    records=[row_coverage(campaign/attempt['directory']/'output',backend) for attempt,backend in zip(pair,BACKENDS)]
+    if records[0]!=records[1]:raise ValueError('PAIRED_MATHEMATICAL_ROW_JOURNAL_MISMATCH')
+    return object_digest(records[0])
+
+
+def pilot_evidence(campaign,manifest,state):
+    label=manifest['pilot_label'];outcomes={}
+    for stage in ('prep','full'):
+        for backend in BACKENDS:
+            attempt=accepted(campaign,state,label,stage,backend,verify=True)
+            if attempt is None:raise ValueError('Pilot lacks complete paired stages')
+            result,_=validate_result(campaign,manifest,label,stage,backend,attempt)
+            folder=campaign/attempt['directory']
+            outcomes[stage+'/'+backend]={'directory':attempt['directory'],'result_sha256':digest(folder/'output/result.json'),
+                'output_sha256':attempt['output_sha256'],'cpu_limit':attempt['cpu_limit'],
+                'wall_limit':attempt['wall_limit'],'cpu_seconds':result['cpu_seconds'],
+                'wall_seconds':attempt['wall_seconds'],'log_sha256':digest(folder/'child.log'),
+                'command':attempt['command'],'plan_sha256':attempt['plan_sha256']}
+    compare(campaign,manifest,state,label,'prep');compare(campaign,manifest,state,label,'full')
+    return {'schema_version':1,'status':'PAIRED_PILOT_DISCOVERY_EVIDENCE_NOT_THEOREM',
+            'target_id':TARGET_ID,'pilot_label':label,'manifest_sha256':digest(campaign/'manifest.json'),
+            'source_sha256':manifest['source_sha256'],'runtime_sha256':object_digest(state['runtime']),
+            'boundary_approval_sha256':manifest['boundary_approval_sha256'],
+            'resource_approval_sha256':manifest['resource_approval_sha256'],
+            'point_outcome':state['points'][label],'measured_stages':outcomes}
+
+
+def verify_pilot_review(campaign,manifest,state):
+    if not state.get('pilot_review_sha256'):return
+    path=campaign/'approvals/pilot-review.json'
+    if digest(path)!=state['pilot_review_sha256']:raise ValueError('Changed pilot review')
+    validate_pilot_review(campaign,manifest,state,read(path))
+
+
+def validate_pilot_review(campaign,manifest,state,record):
+    evidence=pilot_evidence(campaign,manifest,state)
+    path=campaign/'pilot-evidence.json'
+    if not path.exists() or read(path)!=evidence:raise ValueError('Pilot evidence changed')
+    if (type(record.get('schema_version')) is not int or record['schema_version']!=1
+            or record.get('status')!='PASS_V83_PAIRED_PILOT_REVIEW'
+            or record.get('target_id')!=TARGET_ID or record.get('pilot_label')!=manifest['pilot_label']
+            or record.get('pilot_evidence_sha256')!=digest(path)
+            or record.get('source_sha256')!=manifest['source_sha256']
+            or record.get('runtime_sha256')!=object_digest(state['runtime'])
+            or record.get('manifest_sha256')!=digest(campaign/'manifest.json')
+            or record.get('resource_approval_sha256')!=manifest['resource_approval_sha256']
+            or record.get('discovery_only') is not True or record.get('retain_survivors_for_research') is not True):
+        raise ValueError('Pilot review does not bind the actual paired reflected computation')
+
+
+def accept_pilot_review(campaign,manifest,state,path):
+    record=read(path);validate_pilot_review(campaign,manifest,state,record)
+    destination=campaign/'approvals/pilot-review.json'
+    if destination.exists() and digest(destination)!=digest(path):raise ValueError('Existing pilot review differs')
+    if not destination.exists():shutil.copyfile(path,destination)
+    state['pilot_review_sha256']=digest(destination)
+
+
+def audit_pilot(args):
+    campaign=args.output.resolve()
+    with (campaign/'coordinator.lock').open('a+') as lock:
+        fcntl.flock(lock,fcntl.LOCK_EX|fcntl.LOCK_NB)
+        manifest,state=read(campaign/'manifest.json'),read(campaign/'state.json')
+        if state['manifest_sha256']!=digest(campaign/'manifest.json'):raise ValueError('Changed manifest')
+        validate_campaign(campaign,manifest,state);verify_tree(campaign/'source',manifest['source_sha256'])
+        if digest(Path(__file__))!=manifest['source_sha256'][f'{HERE}/runner.py']:
+            raise ValueError('Pilot auditor differs from frozen coordinator')
+        if state['runtime']!=runtime():raise ValueError('Pilot audit runtime differs')
+        recover_attempts(campaign,state)
+        evidence=pilot_evidence(campaign,manifest,state)
+        path=campaign/'pilot-evidence.json'
+        if path.exists() and read(path)!=evidence:raise ValueError('Existing pilot evidence differs')
+        if not path.exists():write(path,evidence)
+        print(json.dumps({'status':evidence['status'],'pilot_evidence_sha256':digest(path),
+                          'point_outcome':evidence['point_outcome']},sort_keys=True))
+
+
+def initialize(args):
+    output = args.output.resolve()
+    remaining, hits = domain(ROOT)
+    if args.target_id != TARGET_ID or args.pilot_label not in remaining:
+        raise ValueError('Reflected target and a declared non-hit pilot are required')
+    pins = sources(ROOT)
+    boundary = read(args.boundary_approval)
+    resource_approval = read(args.resource_approval)
+    validate_boundary(boundary,pins)
+    validate_resource(resource_approval,args.workers,args.memory_mib,args.cpu_tiers,args.preparation_cpu)
+    proposals = load_nominations(args.nomination_index,pins) if args.nomination_index else {}
+    output.mkdir(parents=True, exist_ok=False)
+    for relative in pins:
+        target = output / 'source' / relative
+        target.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copyfile(ROOT / relative, target)
+    (output/'plans').mkdir()
+    for label,path in proposals.items():
+        shutil.copyfile(path,output/'plans'/(slug(label)+'.json'))
+    (output/'approvals').mkdir()
+    for name,path in (('boundary',args.boundary_approval),('resource',args.resource_approval)):
+        shutil.copyfile(path,output/'approvals'/(name+'.json'))
+    if args.nomination_index:
+        shutil.copyfile(args.nomination_index,output/'approvals/nomination-index.json')
+    manifest = {'schema_version':2,'target_id':TARGET_ID,'created_utc':stamp(),'source_sha256':pins,
+        'remaining':remaining,'known_positive_hits':hits,'pilot_label':args.pilot_label,
+        'boundary_approval_sha256':digest(output/'approvals/boundary.json'),
+        'resource_approval_sha256':digest(output/'approvals/resource.json'),
+        'nomination_index_sha256':digest(args.nomination_index) if args.nomination_index else None,
+        'imported_plan_sha256':{label:digest(path) for label,path in proposals.items()},
+        'scope':'REFLECTED_TARGET_DISCOVERY_ONLY_NO_THEOREM_PROMOTION',
+        'queue_cutoff_epoch':QUEUE_CUTOFF,'stop_deadline_epoch':STOP_DEADLINE,
+        'limits':{'workers':args.workers,'cpu_tiers':args.cpu_tiers,'preparation_cpu':args.preparation_cpu,
+                  'wall_multiplier':2,'memory_mib':args.memory_mib,'file_mib':args.file_mib,
+                  'minimum_free_mib':args.minimum_free_mib}}
+    verify_tree(output/'source',pins)
+    write(output/'manifest.json',manifest)
+    write(output/'state.json',{'schema_version':2,'target_id':TARGET_ID,
+        'manifest_sha256':digest(output/'manifest.json'),'status':'READY_PILOT_FIRST',
+        'created_utc':stamp(),'jobs':{},'points':{},'preparations':{},'runtime':None,
+        'deadline_epoch':QUEUE_CUTOFF,'stop_deadline_epoch':STOP_DEADLINE,
+        'pilot_review_sha256':None,'scope':manifest['scope']})
+    print(json.dumps({'status':'READY_PILOT_FIRST','target_id':TARGET_ID,'nonhit_labels':365,
+                      'pilot_label':args.pilot_label,'manifest_sha256':digest(output/'manifest.json')}))
+
+
+def job_key(label, stage, backend):
+    return f'{TARGET_ID}/{label}/{stage}/{backend}'
+
+
+def seal_outputs(output):
+    return {str(path.relative_to(output)): digest(path)
+            for path in sorted(output.rglob('*')) if path.is_file() and path.name != 'progress.json'}
+
+
+def attempt_command(campaign,task,directory,cpu,limits,parent_pid,invocation,has_plan):
+    campaign=campaign.resolve()
+    label,stage,backend=task;folder=campaign/directory;source=campaign/'source'
+    command=[invocation,'-I','-B',str(source/HERE/'child.py'),'--cpu',str(cpu),
+             '--memory-mib',str(limits['memory_mib']),'--file-mib',str(limits['file_mib']),
+             '--lease',str(folder/'lease.json'),'--parent-pid',str(parent_pid),
+             '--target-id',TARGET_ID,'--task-key',job_key(*task),'--',invocation,
+             '-I','-B','-u',str(source/HERE/(backend+'.py')),'--point',label,
+             '--target-id',TARGET_ID,'--output',str(folder/'output')]
+    if stage=='prep':command.append('--prepare-only')
+    if has_plan:command.extend(['--witness-plan',str(campaign/'plans'/(slug(label)+'.json'))])
+    return command
+
+
+def validate_attempt(campaign,manifest,label,stage,backend,attempt,reviewed_runtime):
+    number=attempt.get('attempt_number')
+    if type(number) is not int or number<1:raise ValueError('Invalid attempt ordinal')
+    limits=manifest['limits']
+    if (stage=='prep' and number>2) or (stage=='full' and number>len(limits['cpu_tiers'])):
+        raise ValueError('Attempt exceeds frozen retries')
+    cpu=limits['preparation_cpu']*number if stage=='prep' else limits['cpu_tiers'][number-1]
+    directory=f'attempts/{TARGET_ID}/{slug(label)}/{stage}-{backend}-{number:02d}'
+    if (attempt.get('directory')!=directory or attempt.get('cpu_limit')!=cpu
+            or attempt.get('wall_limit')!=cpu*limits['wall_multiplier']
+            or attempt.get('task')!=[label,stage,backend]
+            or type(attempt.get('parent_pid')) is not int or attempt['parent_pid']<=1):
+        raise ValueError('Attempt identity/caps differ from frozen command contract')
+    expected=attempt_command(campaign,(label,stage,backend),directory,cpu,limits,attempt['parent_pid'],
+                             reviewed_runtime['invocation_path'],attempt.get('plan_sha256') is not None)
+    if attempt.get('command')!=expected:raise ValueError('Attempt command mismatch')
+    lease=read(campaign/directory/'lease.json')
+    if (lease.get('target_id')!=TARGET_ID or lease.get('task_key')!=job_key(label,stage,backend)
+            or lease.get('parent_pid')!=attempt['parent_pid'] or lease.get('pid')!=attempt.get('pid')):
+        raise ValueError('Attempt lease identity mismatch')
+
+
+def validate_result(campaign, manifest, label, stage, backend, attempt):
+    output = contained(campaign,attempt['directory']) / 'output'
+    result = read(output / 'result.json')
+    expected = 'FULL_GEOMETRY_DISCOVERY_COMPLETE' if stage == 'full' else 'PREPARATION_ONLY'
+    if result['status'] != expected or result['point_label'] != label or result['backend'] != backend or result.get('target_id') != TARGET_ID or attempt.get('target_id') != TARGET_ID:
+        raise ValueError('Incomplete or mislabeled result')
+    if not all(result.get(k) is True for k in ('assertions_enabled', 'sources_unchanged',
+                                               'executable_unchanged', 'witness_plan_unchanged')):
+        raise ValueError('Missing post-run guards')
+    if result['driver_sha256'] != manifest['source_sha256'][f'{HERE}/{backend}.py']:
+        raise ValueError('Wrong driver')
+    if result['source_sha256'] != driver_pins(campaign/'source'/HERE/(backend+'.py')):
+        raise ValueError('Incomplete driver source bindings')
+    verify_tree(campaign / 'source', result['source_sha256'])
+    reviewed_runtime=read(campaign/'state.json').get('runtime')
+    if reviewed_runtime is not None:
+        validate_attempt(campaign,manifest,label,stage,backend,attempt,reviewed_runtime)
+    raw_runtime=result.get('runtime',{})
+    if (reviewed_runtime is None
+            or raw_runtime.get('python_executable')!=reviewed_runtime.get('resolved_binary')
+            or raw_runtime.get('python_sha256')!=reviewed_runtime.get('python_sha256')
+            or raw_runtime.get('cpu_limits_seconds')!=[attempt['cpu_limit'],attempt['cpu_limit']+1]):
+        raise ValueError('Raw result violates reviewed interpreter/CPU contract')
+    geometry = read(output/'target-geometry.json')
+    if geometry.get('target_id') != TARGET_ID or result.get('target_geometry_sha256') != digest(output/'target-geometry.json'):
+        raise ValueError('Wrong target geometry')
+    if result['artifact_sha256'].get('target-geometry.json') != result['target_geometry_sha256']:
+        raise ValueError('Unbound target descriptor')
+    validate_plan(read(output/'witness-plan.json'),label)
+    if label in manifest['imported_plan_sha256']:
+        entries=read(campaign/'approvals/nomination-index.json')['completed']
+        item=next(row for row in entries if row['point_label']==label)
+        if (result['target_geometry_sha256']!=item['target_geometry_sha256']
+                or result['artifact_sha256'].get('preparation.json')!=item['preparation_sha256']
+                or result['witness_plan_sha256']!=item['witness_plan_sha256']):
+            raise ValueError('Fresh preparation differs from sealed nomination data')
+    verify_tree(output, result['artifact_sha256'])
+    if stage == 'full':
+        if set(result['canonical_artifact_sha256']) != set(CANONICAL):
+            raise ValueError('Incomplete canonical set')
+        verify_tree(output, result['canonical_artifact_sha256'])
+        if any(k not in result for k in COUNTS):
+            raise ValueError('Missing complete-stage counts')
+    if attempt.get('plan_sha256'):
+        plan=campaign/'plans'/(slug(label)+'.json')
+        if (result['input_witness_plan_sha256']!=attempt['plan_sha256']
+                or result['witness_plan_sha256']!=attempt['plan_sha256']
+                or digest(plan)!=attempt['plan_sha256']
+                or read(plan)!=read(output/'witness-plan.json')):
+            raise ValueError('Wrong frozen witness plan')
+    elif result['witness_plan_sha256']!=digest(output/'witness-plan.json'):
+        raise ValueError('Unbound nominated plan')
+    for key in ('cpu_seconds','wall_seconds'):
+        value=result.get(key)
+        if type(value) not in (int,float) or not math.isfinite(value) or value<0:
+            raise ValueError('Nonfinite measured stage time')
+    return result, seal_outputs(output)
+
+
+def accepted(campaign, state, label, stage, backend, verify=False):
+    job = state['jobs'].get(job_key(label, stage, backend), {})
+    for attempt in reversed(job.get('attempts', [])):
+        if attempt['status'] == 'COMPLETE':
+            if verify:
+                verify_tree(campaign / attempt['directory'] / 'output', attempt['output_sha256'])
+            return attempt
+    return None
+
+
+def result_for(campaign, attempt):
+    return read(campaign / attempt['directory'] / 'output/result.json')
+
+
+def bind_plan(campaign, state, label):
+    """Recover a closed nomination after coordinator death; never resume its loop."""
+    attempt = accepted(campaign, state, label, 'prep', 'primary')
+    if attempt is None:
+        return
+    original = campaign / attempt['directory'] / 'output/witness-plan.json'
+    target = campaign / 'plans' / (slug(label) + '.json')
+    validate_plan(read(original),label)
+    expected = result_for(campaign, attempt).get('input_witness_plan_sha256') or digest(original)
+    if target.exists() and digest(target) != expected:
+        raise ValueError('Nomination changed after preparation')
+    if not target.exists():
+        if digest(original) != expected:
+            raise ValueError('Original plan bytes are required to recover this attempt')
+        temporary = target.with_suffix('.tmp')
+        shutil.copyfile(original, temporary)
+        temporary.replace(target)
+
+
+def compare(campaign, manifest, state, label, stage):
+    pair = [accepted(campaign, state, label, stage, b, verify=True) for b in BACKENDS]
+    if not all(pair):
+        return False
+    a, b = [result_for(campaign, attempt) for attempt in pair]
+    fields = ('target-geometry.json','preparation.json') if stage == 'prep' else ('target-geometry.json',)+CANONICAL
+    for field in fields:
+        if a['artifact_sha256'][field] != b['artifact_sha256'][field]:
+            raise ValueError(f'PAIRED_MISMATCH {label} {stage} {field}')
+    if stage == 'prep':
+        state.setdefault('preparations', {})[label] = {'target_id':TARGET_ID,
+            'preparation_sha256':a['artifact_sha256']['preparation.json'],
+            'target_geometry_sha256':a['target_geometry_sha256']}
+    if stage == 'full':
+        prepared=state.get('preparations',{}).get(label)
+        if (not prepared or prepared.get('target_id')!=TARGET_ID
+                or prepared['preparation_sha256']!=a['artifact_sha256']['preparation.json']
+                or prepared['target_geometry_sha256']!=a['target_geometry_sha256']):
+            raise ValueError('Full output changed the accepted paired preparation/target')
+        if any(a[k] != b[k] for k in COUNTS):
+            raise ValueError(f'PAIRED_COUNT_MISMATCH {label}')
+        journals = compare_rows(campaign,pair)
+        state['points'][label] = {'status': 'PAIRED_EMPTY_DISCOVERY' if a['survivor_count'] == 0
+                                 else 'PAIRED_SURVIVORS_REQUIRE_GEOMETRY',
+                                 'survivor_count': a['survivor_count'],
+                                 'candidate_count': a['candidate_count'],'target_id':TARGET_ID,
+                                 'pilot':label==manifest['pilot_label'],'row_evidence_sha256':journals,
+                                 'target_geometry_sha256':a['target_geometry_sha256'],
+                                 'canonical_artifact_sha256': a['canonical_artifact_sha256']}
+    return True
+
+
+def make_tasks(manifest):
+    return [(label, stage, backend) for label in [manifest['pilot_label']] + [p for p in manifest['remaining'] if p != manifest['pilot_label']]
+            for stage in ('prep', 'full') for backend in BACKENDS]
+
+
+def eligible(campaign, manifest, state, task):
+    label, stage, backend = task
+    key = job_key(*task)
+    job = state['jobs'].get(key, {'attempts': []})
+    if any(a['status'] in ('RUNNING', 'COMPLETE') for a in job['attempts']):
+        return False
+    if any(a['status'] == 'FAILED' for a in job['attempts']):
+        return False
+    maximum = 2 if stage == 'prep' else len(manifest['limits']['cpu_tiers'])
+    if len(job['attempts']) >= maximum:
+        return False
+    if label != manifest['pilot_label'] and not state.get('pilot_review_sha256'):
+        return False
+    if stage == 'prep':
+        return backend == 'primary' or accepted(campaign, state, label, 'prep', 'primary') is not None
+    return label in state.get('preparations', {})
+
+
+def launch(campaign, manifest, state, task):
+    label, stage, backend = task
+    key = job_key(*task)
+    job = state['jobs'].setdefault(key, {'attempts': []})
+    number = len(job['attempts'])
+    limits = manifest['limits']
+    cpu = limits['preparation_cpu'] * (number + 1) if stage == 'prep' else limits['cpu_tiers'][number]
+    directory = f'attempts/{TARGET_ID}/{slug(label)}/{stage}-{backend}-{number+1:02d}'
+    folder = campaign / directory
+    folder.mkdir(parents=True, exist_ok=False)
+    source = campaign / 'source'
+    plan = campaign / 'plans' / (slug(label) + '.json')
+    bind_plan(campaign, state, label)
+    if not plan.exists() and (stage!='prep' or backend!='primary'):
+        raise ValueError('Missing exact nomination prerequisite')
+    command=attempt_command(campaign,task,directory,cpu,limits,os.getpid(),sys.executable,plan.exists())
+    row = {'status': 'RUNNING', 'target_id':TARGET_ID,'task_key':key,'directory': directory, 'command': command,
+           'attempt_number':number+1,'parent_pid':os.getpid(),
+           'task': list(task),
+           'started_utc': stamp(), 'started_epoch': time.time(), 'cpu_limit': cpu,
+           'wall_limit': cpu * limits['wall_multiplier'],
+           'plan_sha256': digest(plan) if plan.exists() else None}
+    env = dict(os.environ)
+    for key_env in ('PYTHONPATH', 'PYTHONOPTIMIZE', 'PYTHONSTARTUP'):
+        env.pop(key_env, None)
+    env.update(PYTHONDONTWRITEBYTECODE='1', PYTHONUNBUFFERED='1', OMP_NUM_THREADS='1',
+               OPENBLAS_NUM_THREADS='1')
+    # Persist intent before creating a process. The child writes its own PID
+    # before entering arithmetic, closing the coordinator's Popen crash gap.
+    write(folder / 'attempt.json', row)
+    log = (folder / 'child.log').open('xb')
+    process = None
+    try:
+        process = subprocess.Popen(command, cwd=source, env=env, stdout=log,
+                                   stderr=subprocess.STDOUT, start_new_session=True)
+        row['pid'] = process.pid
+        job['attempts'].append(row)
+        return process,row
+    except BaseException:
+        if process is not None:
+            kill(process)
+        raise
+    finally:
+        log.close()
+
+
+def recover_attempts(campaign, state):
+    recorded = {a['directory'] for job in state['jobs'].values() for a in job['attempts']}
+    for path in sorted((campaign / 'attempts').glob('*/*/*/attempt.json')):
+        row = read(path)
+        if row.get('target_id') != TARGET_ID or row.get('task_key') != job_key(*row['task']):
+            raise ValueError('Unbound recovered target/task identity')
+        if row['directory'] not in recorded:
+            state['jobs'].setdefault(job_key(*row['task']), {'attempts': []})['attempts'].append(row)
+    for job in state['jobs'].values():
+        for attempt in job['attempts']:
+            if attempt['status'] != 'RUNNING':
+                continue
+            lease = campaign / attempt['directory'] / 'lease.json'
+            if lease.exists():
+                data=read(lease)
+                if data.get('target_id')!=TARGET_ID or data.get('task_key')!=attempt['task_key']:
+                    raise ValueError('Recovered lease target/task mismatch')
+                pid=data['pid']
+            else:
+                pid=attempt.get('pid')
+            if pid is not None:
+                try:
+                    os.kill(pid, 0)
+                except ProcessLookupError:
+                    pass
+                else:
+                    raise RuntimeError(f'Prior worker {pid} may still be alive; refusing duplicate work')
+            attempt.update(status='INTERRUPTED', finished_utc=stamp())
+
+
+def kill(process):
+    if process.poll() is None:
+        try:
+            os.killpg(process.pid, signal.SIGKILL)
+        except ProcessLookupError:
+            pass
+    process.wait()
+
+
+def stop_signal(signum, frame):
+    global STOP
+    STOP = True
+
+
+def run(args):
+    global STOP
+    STOP = False
+    with (args.output.resolve() / 'coordinator.lock').open('a+') as lock:
+        fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
+        return run_locked(args)
+
+
+def run_locked(args):
+    global STOP
+    campaign = args.output.resolve()
+    manifest, state = read(campaign / 'manifest.json'), read(campaign / 'state.json')
+    if state['status'] == 'COHORT_HALTED':
+        raise ValueError('This cohort requires reviewed repair and a new campaign')
+    if state['manifest_sha256'] != digest(campaign / 'manifest.json'):
+        raise ValueError('Campaign manifest changed')
+    verify_tree(campaign / 'source', manifest['source_sha256'])
+    if digest(Path(__file__)) != manifest['source_sha256'][f'{HERE}/runner.py']:
+        raise ValueError('Coordinator differs from frozen source; run the snapshot copy')
+    validate_campaign(campaign,manifest,state)
+    for label, checksum in manifest['imported_plan_sha256'].items():
+        if digest(campaign / 'plans' / (slug(label) + '.json')) != checksum:
+            raise ValueError('Changed imported nomination plan')
+    current_runtime = runtime()
+    if state['runtime'] is not None and state['runtime'] != current_runtime:
+        raise ValueError('Runtime changed: use a new campaign and repeat controls')
+    approval=read(campaign/'approvals/resource.json')
+    if object_digest(current_runtime) != approval['runtime_sha256']:
+        raise ValueError('Runtime lacks this explicit resource approval')
+    state['runtime'] = current_runtime
+    recover_attempts(campaign, state)
+    state['points'], state['preparations'] = {}, {}
+    for task in make_tasks(manifest):
+        attempt = accepted(campaign, state, *task, verify=True)
+        if attempt is not None:
+            validate_result(campaign, manifest, *task, attempt)
+    for label in [manifest['pilot_label']] + [p for p in manifest['remaining'] if p != manifest['pilot_label']]:
+        bind_plan(campaign, state, label)
+        compare(campaign, manifest, state, label, 'prep')
+        compare(campaign, manifest, state, label, 'full')
+    verify_pilot_review(campaign,manifest,state)
+    if any(label!=manifest['pilot_label'] for label in state['points']) and not state.get('pilot_review_sha256'):
+        raise ValueError('Non-pilot work exists without the reviewed pilot gate')
+    if getattr(args,'pilot_review',None):
+        accept_pilot_review(campaign,manifest,state,args.pilot_review)
+    state.update(status='RUNNING', coordinator_pid=os.getpid(), updated_utc=stamp())
+    write(campaign / 'state.json', state)
+    for sig in (signal.SIGTERM, signal.SIGINT):
+        signal.signal(sig, stop_signal)
+    live = {}
+    try:
+        while not STOP and time.time() < state['deadline_epoch']:
+            verify_tree(campaign / 'source', manifest['source_sha256'])
+            if shutil.disk_usage(campaign).free < manifest['limits']['minimum_free_mib'] * 1024**2:
+                state['status'] = 'DISK_LIMIT'
+                break
+            for task, (process, row) in list(live.items()):
+                if process.poll() is None and time.time() - row['started_epoch'] > row['wall_limit']:
+                    kill(process)
+                    row['status'] = 'WALL_LIMIT'
+                if process.poll() is None:
+                    continue
+                row.update(returncode=process.returncode, finished_utc=stamp(),
+                           wall_seconds=time.time() - row['started_epoch'],
+                           log_sha256=digest(campaign / row['directory'] / 'child.log'))
+                if row['status'] == 'RUNNING' and process.returncode != 0:
+                    row['status'] = 'CPU_OR_RESOURCE_LIMIT' if process.returncode in (
+                        -signal.SIGXCPU, -signal.SIGKILL, -signal.SIGXFSZ) else 'FAILED'
+                if row['status'] == 'FAILED':
+                    raise RuntimeError(f'Unexpected worker failure: {task}; see {row["directory"]}/child.log')
+                if process.returncode == 0:
+                    result, hashes = validate_result(campaign, manifest, *task, row)
+                    row.update(status='COMPLETE', output_sha256=hashes, cpu_seconds=result['cpu_seconds'])
+                    label, stage, backend = task
+                    if stage == 'prep' and backend == 'primary':
+                        bind_plan(campaign, state, label)
+                    compare(campaign, manifest, state, label, stage)
+                del live[task]
+            available = manifest['limits']['workers'] - len(live)
+            if available:
+                choices = [t for t in make_tasks(manifest) if eligible(campaign, manifest, state, t)]
+                # First attempts precede retries so one difficult point cannot starve the queue.
+                choices.sort(key=lambda t: len(state['jobs'].get(job_key(*t), {}).get('attempts', [])))
+                for task in choices[:available]:
+                    live[task] = launch(campaign, manifest, state, task)
+            state['updated_utc'] = stamp()
+            state['summary'] = dict(Counter(p['status'] for label, p in state['points'].items()
+                                           if label in manifest['remaining']))
+            state['active_workers'] = len(live)
+            write(campaign / 'state.json', state)
+            if not live:
+                if manifest['pilot_label'] in state['points'] and not state.get('pilot_review_sha256'):
+                    state['status']='PILOT_REVIEW_REQUIRED'
+                elif len(state['points'])==365:
+                    state['status']='ALL_TARGET_DISCOVERIES_COMPLETE_REQUIRES_REVIEW'
+                else:
+                    state['status']='QUEUE_EXHAUSTED_WITH_INCOMPLETE_POINTS'
+                break
+            time.sleep(1)
+        else:
+            state['status'] = 'INTERRUPTED' if STOP else 'CAMPAIGN_DEADLINE'
+    except BaseException as error:
+        state.update(status='COHORT_HALTED', error=repr(error))
+        raise
+    finally:
+        for process, row in live.values():
+            kill(process)
+            if row['status'] == 'RUNNING':
+                row.update(status='INTERRUPTED', returncode=process.returncode, finished_utc=stamp())
+        if runtime() != current_runtime:
+            state.update(status='COHORT_HALTED', error='Runtime changed during campaign')
+        state.update(updated_utc=stamp(), active_workers=0)
+        write(campaign / 'state.json', state)
+    print(json.dumps({'status': state['status'], 'summary': state.get('summary', {})}))
+
+
+def main():
+    if not __debug__:
+        raise RuntimeError('Assertions required')
+    parser=argparse.ArgumentParser(description=__doc__)
+    sub=parser.add_subparsers(dest='action',required=True)
+    init=sub.add_parser('init')
+    init.add_argument('--output',required=True,type=Path)
+    init.add_argument('--target-id',required=True,choices=(TARGET_ID,))
+    init.add_argument('--pilot-label',required=True)
+    init.add_argument('--boundary-approval',required=True,type=Path)
+    init.add_argument('--resource-approval',required=True,type=Path)
+    init.add_argument('--nomination-index',type=Path)
+    init.add_argument('--workers',type=int,required=True)
+    init.add_argument('--cpu-tiers',type=int,nargs='+',default=[600,1800,7200])
+    init.add_argument('--preparation-cpu',type=int,default=120)
+    init.add_argument('--memory-mib',type=int,default=2048)
+    init.add_argument('--file-mib',type=int,default=128)
+    init.add_argument('--minimum-free-mib',type=int,default=2048)
+    go=sub.add_parser('run');go.add_argument('--output',required=True,type=Path)
+    go.add_argument('--pilot-review',type=Path)
+    audit=sub.add_parser('audit-pilot');audit.add_argument('--output',required=True,type=Path)
+    args=parser.parse_args()
+    if args.action=='init':
+        if not (1<=args.workers<=28 and 1<=args.preparation_cpu<=1800 and 1<=len(args.cpu_tiers)<=3
+                and all(type(v) is int and 1<=v<=21600 for v in args.cpu_tiers)
+                and args.cpu_tiers==sorted(set(args.cpu_tiers)) and 256<=args.memory_mib<=4096
+                and args.workers*args.memory_mib<=56*1024 and 1<=args.file_mib<=1024
+                and args.minimum_free_mib>=256):
+            parser.error('Invalid bounded resource request')
+        initialize(args)
+    elif args.action=='audit-pilot':
+        audit_pilot(args)
+    else:
+        run(args)
+
+
+if __name__=='__main__':main()

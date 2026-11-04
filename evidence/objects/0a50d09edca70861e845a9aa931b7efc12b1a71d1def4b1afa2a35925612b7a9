@@ -1,0 +1,4 @@
+{
+  "source_sha256": "dfca2c9319361a39887b1de19c9206c407737a82ad7f73f41fc5ff9f0755c834",
+  "failure": "Smoke asserted literal lattice equality between catalog0 canonical root-orbit representative and the retained witness in that orbit. The representatives can differ by a seventh root; replace equality with an exact polarized scalar isomorphism and torsion transport check. No mathematical census/model claim promoted."
+}

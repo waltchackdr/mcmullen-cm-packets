@@ -1,0 +1,101 @@
+"""Bounded input-only sparse12 archive/admission gate; immutable sparse11 code reused; no numerical/provider calls."""
+import ast,copy,hashlib,importlib.util,json,resource,signal,tarfile,tempfile,time
+from pathlib import Path
+ROOT=Path(__file__).resolve().parents[2];D=ROOT/'experiments/s_order_theta_v164'
+def sha(b):return hashlib.sha256(b).hexdigest()
+def load(p):return json.loads((ROOT/p).read_bytes())
+def pinned(r):
+ raw=(ROOT/r['path']).read_bytes();assert sha(raw)==r['sha256'];assert 'bytes' not in r or len(raw)==r['bytes'];return raw
+def require(ok,msg):
+ if not ok:raise RuntimeError(msg)
+def archive(path):
+ with tarfile.open(ROOT/path) as t:
+  members=t.getmembers();assert len(members)==13 and all(m.isfile() for m in members) and len({m.name for m in members})==13
+  assert all(not Path(m.name).is_absolute() and '..' not in Path(m.name).parts for m in members)
+  return {m.name:t.extractfile(m).read() for m in members}
+def main():
+ started=time.monotonic();packet=load('experiments/s_order_theta_v164/review_inputs12.json')
+ assert sha((D/'review_inputs12.json').read_bytes())=='bd2cfb9e00efc80a5e70588484f53c3766700964639fba85cb729133d2a76976'
+ for p,h in packet['pins'].items():assert sha((ROOT/p).read_bytes())==h,p
+ c=load('build/s-order-v164/preparation12/execution_candidate.json');old=load('experiments/s_order_theta_v164/execution_authority11.json')
+ assert sha((ROOT/'build/s-order-v164/preparation12/execution_candidate.json').read_bytes())=='ca340431c7233d51b3d131de44a626bfa7a4b228bc860386f038e312697f4fbc'
+ for p,h in c['pins'].items():assert sha((ROOT/p).read_bytes())==h,p
+ priorad=load('experiments/s_order_theta_v164/data_adoption03.json');assert sha((D/'data_adoption03.json').read_bytes())=='a6ee4ca8a9ec4fe1681e3b582703ef242f883af4bc668961b0ec1309a139439e'
+ for p,h in priorad['pins'].items():assert sha((ROOT/p).read_bytes())==h,p
+ previous=set()
+ for n in (1,2,3,4):
+  d=load(f'experiments/s_order_theta_v164/referee_actual_data0{n}.json')
+  keys={(r['catalog_index'],r['pair_index']) for r in d['observations']};assert not previous&keys;previous|=keys
+ assert len(previous)==432
+ review04=load('experiments/s_order_theta_v164/actual_data_review04.json')
+ for p,h in review04['pins'].items():assert sha((ROOT/p).read_bytes())==h,p
+ assert c['local_entrypoint']==old['local_entrypoint']
+ assert {k:v for k,v in c['bootstrap_code'].items() if k!='job_manifest.json'}=={k:v for k,v in old['bootstrap_code'].items() if k!='job_manifest.json'}
+ assert c['bootstrap_code']['job_manifest.json']==c['session_manifest']
+ session=json.loads(pinned(c['session_manifest']));assert pinned(c['session_manifest'])==(json.dumps(session,sort_keys=True)+'\n').encode()
+ controller=ast.parse((ROOT/c['local_entrypoint']).read_text());fn=next(n for n in controller.body if isinstance(n,ast.FunctionDef) and n.name=='load_packet');ns={'json':json,'pinned':pinned,'sha':sha,'require':require};exec(compile(ast.Module(body=[fn],type_ignores=[]),'<actual load_packet>','exec'),ns)
+ spec=importlib.util.spec_from_file_location('ref_sparse_worker',D/'worker_sparse11_candidate.py');w=importlib.util.module_from_spec(spec);spec.loader.exec_module(w)
+ grid=load('experiments/s_order_theta_v164/sparse12_grid_candidate.json');selected=set();rejected=[];rows=[]
+ planname='experiments/bc_jacobian_v147/certificate_plan_candidate.json';workername='experiments/bc_jacobian_v147/certificate_worker_candidate.py'
+ for j in range(2):
+  p,m,uploads,code=ns['load_packet'](c['jobs'][j]);assert m==session['jobs'][j]
+  op=json.loads(pinned(old['jobs'][j]));oldcontents=archive(op['uploads']['source_tar']['path'])
+  data=archive(p['uploads']['source_tar']['path']);plan=json.loads(data[planname]);ph=sha(data[planname]);source=json.loads(uploads['source_manifest'])
+  assert ph==m['transport']['plan_sha256']==source['plan_sha256'];assert sha(uploads['source_tar'])==source['archive_sha256']
+  assert (ROOT/Path(c['jobs'][j]['path']).parent/'certificate_plan_candidate.json').read_bytes()==data[planname]
+  assert set(data)==set(source['files'])==set(oldcontents)
+  changed_members=[k for k in data if data[k]!=oldcontents[k]];assert changed_members==[planname]
+  assert plan['scope']==grid['scope']
+  prior=json.loads(oldcontents[planname]);assert plan['pins']==prior['pins']
+  assert {k:v for k,v in plan.items() if k not in ('tasks','scope')}=={k:v for k,v in prior.items() if k not in ('tasks','scope')}
+  for nt,ot in zip(plan['tasks'],prior['tasks']):
+   assert {k:v for k,v in nt.items() if k not in ('pair_indices','numerators_mod3')}=={k:v for k,v in ot.items() if k not in ('pair_indices','numerators_mod3')}
+  for name,b in data.items():
+   assert source['files'][name]=={'sha256':sha(b),'bytes':len(b)}
+   if name!=planname:assert b==oldcontents[name],name
+  assert data[workername]==(D/'worker_sparse11_candidate.py').read_bytes()
+  for name,local in p['source_mapping'].items():assert data[name]==(ROOT/local).read_bytes()
+  for name,h in plan['pins'].items():assert sha(data[name])==h
+  assert (plan['task_grid_version'],plan['max_pairs_per_task'],plan['observation_count'],plan['concurrency'],plan['max_tasks'],plan['job_index'])==(2,8,64,2,8,j)
+  assert 'pair_count' not in plan and 'pair_start' not in plan
+  assert [{'catalog_index':t['catalog_index'],'pair_indices':t['pair_indices']} for t in plan['tasks']]==grid['jobs'][j]
+  op=json.loads(pinned(old['jobs'][j]))
+  for name in ('pipeline','selector','setup'):assert p['uploads'][name]==op['uploads'][name]
+  for t in plan['tasks']:
+   assert len(t['pair_indices'])==8 and (t['max_cpu_seconds'],t['child_wall_seconds'],t['parent_kill_seconds'])==(120,150,160)
+   model=json.loads(data[t['record_path']]);assert t['numerators_mod3']==[model['transport']['eligible_nonzero_pairs'][k] for k in t['pair_indices']]
+   for k in t['pair_indices']:
+    key=t['catalog_index'],k;assert key not in selected and key not in previous;selected.add(key)
+  with tempfile.TemporaryDirectory() as td:
+   root=Path(td)
+   for name,b in data.items():q=root/name;q.parent.mkdir(parents=True,exist_ok=True);q.write_bytes(b)
+   assert w.validate_plan(plan,root)==plan['tasks']
+   for label in ['nine_pairs','duplicate_pair','duplicate_task','missing_task','wrong_total','wrong_numerator','changed_source']:
+    bad=copy.deepcopy(plan)
+    if label=='nine_pairs':bad['tasks'][0]['pair_indices'].append(99);bad['tasks'][0]['numerators_mod3'].append([0]*12)
+    if label=='empty_pairs':bad['tasks'][0]['pair_indices']=[];bad['tasks'][0]['numerators_mod3']=[]
+    if label=='duplicate_pair':bad['tasks'][0]['pair_indices'][1]=bad['tasks'][0]['pair_indices'][0]
+    if label=='unsorted_pair':bad['tasks'][0]['pair_indices'].reverse()
+    if label=='duplicate_task':bad['tasks'][1]=bad['tasks'][0]
+    if label=='missing_task':bad['tasks'].pop()
+    if label=='wrong_total':bad['observation_count']=63
+    if label=='boolean_total':bad['observation_count']=True
+    if label=='boolean_pair':bad['tasks'][0]['pair_indices'][0]=True
+    if label=='unadopted_model':bad['tasks'][0]['catalog_index']=4
+    if label=='wrong_record':bad['tasks'][0]['record_path']=bad['tasks'][2]['record_path']
+    if label=='wrong_numerator':bad['tasks'][0]['numerators_mod3'][0][0]=(bad['tasks'][0]['numerators_mod3'][0][0]+1)%3
+    if label=='raised_cpu':bad['tasks'][0]['max_cpu_seconds']=121
+    if label=='raised_wall':bad['tasks'][0]['child_wall_seconds']=151
+    if label=='raised_parent':bad['tasks'][0]['parent_kill_seconds']=161
+    if label=='changed_source':bad['pins'][workername]='0'*64
+    try:w.validate_plan(bad,root)
+    except RuntimeError:rejected.append([j,label])
+    else:raise AssertionError(label)
+  rows.append({'job':j,'archive_bytes':len(uploads['source_tar']),'members':len(data),'observations':64,'task_pairs':[8]*8,'changed_archive_members':changed_members})
+ expected={(i,k) for i in (6,12,15,17,40,91) for k in range(40,56)}|{(i,k) for i in (0,1,2,3) for k in range(48,56)}
+ assert selected==expected and len(selected)==128
+ result={'status':'PASS_SPARSE_INPUT_EXECUTION_BOUNDARY','packet_pins':len(packet['pins']),'candidate_pins':len(c['pins']),'source_functions_changed':[],'only_plan_bytes_changed_in_archives':True,'jobs':rows,'observations':128,'reviewed_prior432_disjoint':True,'data03_adoption_verified':True,'data04_adoption_required_before_dispatch':True,'unchanged_numerical_payload_and_tls':True,'actual_load_packet_pass':True,'actual_worker_admission_pass':True,'negative_rejections':rejected,'numerical_calls':0,'provider_calls':0,'wall_seconds':time.monotonic()-started}
+ Path(__file__).with_suffix('.json').write_text(json.dumps(result,indent=2,sort_keys=True)+'\n');print(json.dumps(result,sort_keys=True))
+if __name__=='__main__':
+ if not __debug__:raise RuntimeError('Nonoptimized audit required')
+ resource.setrlimit(resource.RLIMIT_CPU,(20,20));signal.alarm(30);main()

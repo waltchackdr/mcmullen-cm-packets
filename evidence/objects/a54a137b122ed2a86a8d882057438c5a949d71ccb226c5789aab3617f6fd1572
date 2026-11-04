@@ -1,0 +1,23 @@
+"""Uniform-formula regressions. Universal geometry is a separate human proof."""
+import importlib.util
+from pathlib import Path
+import unittest
+
+spec = importlib.util.spec_from_file_location('fermat_two_primes',
+    Path(__file__).resolve().parents[1]/'experiments/fermat_two_primes_v152/arithmetic_candidate.py')
+arithmetic = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(arithmetic)
+
+
+class TwoPrimeArithmetic(unittest.TestCase):
+    def test_uniform_formulas_and_group_ring_negative_control(self):
+        result = arithmetic.check()
+        self.assertEqual(len(result['samples']),4)
+        special = result['samples'][1]
+        self.assertEqual(special['type'],[1,1,1,3,3,21])
+        self.assertEqual(special['degree'],35721)
+        self.assertEqual(special['full_group_ring_residual_coefficient'],42)
+
+
+if __name__ == '__main__':
+    unittest.main()

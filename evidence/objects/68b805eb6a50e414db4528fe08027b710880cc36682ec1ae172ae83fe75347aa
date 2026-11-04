@@ -1,0 +1,1673 @@
+{
+  "circuit_counts_by_degree": {
+    "2": 0,
+    "3": 0,
+    "4": 9,
+    "5": 0,
+    "6": 6
+  },
+  "circuits_up_to_sign": [
+    [
+      1,
+      -1,
+      -1,
+      0,
+      0,
+      0,
+      0,
+      0,
+      1
+    ],
+    [
+      1,
+      0,
+      -1,
+      0,
+      0,
+      1,
+      -1,
+      0,
+      0
+    ],
+    [
+      1,
+      0,
+      0,
+      -1,
+      0,
+      0,
+      0,
+      -1,
+      1
+    ],
+    [
+      1,
+      0,
+      0,
+      0,
+      -1,
+      1,
+      0,
+      -1,
+      0
+    ],
+    [
+      0,
+      1,
+      1,
+      -1,
+      0,
+      0,
+      0,
+      -1,
+      0
+    ],
+    [
+      0,
+      1,
+      0,
+      -1,
+      1,
+      0,
+      -1,
+      0,
+      0
+    ],
+    [
+      0,
+      1,
+      0,
+      0,
+      0,
+      1,
+      -1,
+      0,
+      -1
+    ],
+    [
+      0,
+      0,
+      1,
+      0,
+      -1,
+      0,
+      1,
+      -1,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      1,
+      -1,
+      1,
+      0,
+      0,
+      -1
+    ],
+    [
+      1,
+      -1,
+      -1,
+      1,
+      -1,
+      1,
+      0,
+      0,
+      0
+    ],
+    [
+      1,
+      1,
+      0,
+      -1,
+      0,
+      1,
+      -1,
+      -1,
+      0
+    ],
+    [
+      1,
+      -1,
+      0,
+      0,
+      -1,
+      0,
+      1,
+      -1,
+      1
+    ],
+    [
+      1,
+      0,
+      -1,
+      -1,
+      1,
+      0,
+      -1,
+      0,
+      1
+    ],
+    [
+      0,
+      1,
+      1,
+      0,
+      -1,
+      1,
+      0,
+      -1,
+      -1
+    ],
+    [
+      0,
+      0,
+      1,
+      -1,
+      0,
+      -1,
+      1,
+      -1,
+      1
+    ]
+  ],
+  "columns": [
+    {
+      "embedding_representative": 1,
+      "factor": "B",
+      "weights": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1
+      ]
+    },
+    {
+      "embedding_representative": 5,
+      "factor": "B",
+      "weights": [
+        1,
+        -1,
+        1,
+        -1,
+        1,
+        1,
+        -1,
+        -1,
+        1,
+        -1,
+        1,
+        -1
+      ]
+    },
+    {
+      "embedding_representative": 11,
+      "factor": "B",
+      "weights": [
+        1,
+        1,
+        -1,
+        1,
+        1,
+        -1,
+        1,
+        -1,
+        -1,
+        1,
+        -1,
+        -1
+      ]
+    },
+    {
+      "embedding_representative": 13,
+      "factor": "B",
+      "weights": [
+        1,
+        -1,
+        1,
+        1,
+        1,
+        -1,
+        1,
+        -1,
+        -1,
+        -1,
+        1,
+        -1
+      ]
+    },
+    {
+      "embedding_representative": 17,
+      "factor": "B",
+      "weights": [
+        1,
+        1,
+        1,
+        1,
+        -1,
+        -1,
+        1,
+        1,
+        -1,
+        -1,
+        -1,
+        -1
+      ]
+    },
+    {
+      "embedding_representative": 19,
+      "factor": "B",
+      "weights": [
+        1,
+        1,
+        -1,
+        -1,
+        -1,
+        -1,
+        1,
+        1,
+        1,
+        1,
+        -1,
+        -1
+      ]
+    },
+    {
+      "embedding_representative": 1,
+      "factor": "J7",
+      "weights": [
+        1,
+        1,
+        1,
+        -1,
+        -1,
+        1,
+        -1,
+        1,
+        1,
+        -1,
+        -1,
+        -1
+      ]
+    },
+    {
+      "embedding_representative": 5,
+      "factor": "J7",
+      "weights": [
+        1,
+        1,
+        -1,
+        -1,
+        1,
+        1,
+        -1,
+        -1,
+        1,
+        1,
+        -1,
+        -1
+      ]
+    },
+    {
+      "embedding_representative": 11,
+      "factor": "J7",
+      "weights": [
+        1,
+        -1,
+        -1,
+        -1,
+        1,
+        -1,
+        1,
+        -1,
+        1,
+        1,
+        1,
+        -1
+      ]
+    }
+  ],
+  "conditional_use": "Conformal circuit decomposition with unit coefficients reduces any integral zero-weight relation; opposite-weight pairs are divisor generators. All circuits fit one copy B x J7. Algebraicity still requires verified algebraic-cycle source and pullback/descent proof.",
+  "finite_completeness": "All126 maximal minors. All column subsets of sizes2 through rank+1=6; a minimal dependent set has nullity1 with full-support kernel. Distinct opposite directions exclude singleton or two-column circuits.",
+  "independent_row_indices": [
+    0,
+    1,
+    2,
+    3,
+    4
+  ],
+  "input_sha256": {
+    "experiments/fixed_field_cm_census_v98/primary.json": "2135edfe6a09b1a2c51a254f80e4570a761674e5be3208c15c549087f225917e"
+  },
+  "maximal_minors": [
+    {
+      "columns": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "determinant": -16
+    },
+    {
+      "columns": [
+        0,
+        1,
+        2,
+        3,
+        5
+      ],
+      "determinant": -16
+    },
+    {
+      "columns": [
+        0,
+        1,
+        2,
+        3,
+        6
+      ],
+      "determinant": -16
+    },
+    {
+      "columns": [
+        0,
+        1,
+        2,
+        3,
+        7
+      ],
+      "determinant": 0
+    },
+    {
+      "columns": [
+        0,
+        1,
+        2,
+        3,
+        8
+      ],
+      "determinant": 0
+    },
+    {
+      "columns": [
+        0,
+        1,
+        2,
+        4,
+        5
+      ],
+      "determinant": -16
+    },
+    {
+      "columns": [
+        0,
+        1,
+        2,
+        4,
+        6
+      ],
+      "determinant": -16
+    },
+    {
+      "columns": [
+        0,
+        1,
+        2,
+        4,
+        7
+      ],
+      "determinant": -16
+    },
+    {
+      "columns": [
+        0,
+        1,
+        2,
+        4,
+        8
+      ],
+      "determinant": 0
+    },
+    {
+      "columns": [
+        0,
+        1,
+        2,
+        5,
+        6
+      ],
+      "determinant": 0
+    },
+    {
+      "columns": [
+        0,
+        1,
+        2,
+        5,
+        7
+      ],
+      "determinant": -16
+    },
+    {
+      "columns": [
+        0,
+        1,
+        2,
+        5,
+        8
+      ],
+      "determinant": 0
+    },
+    {
+      "columns": [
+        0,
+        1,
+        2,
+        6,
+        7
+      ],
+      "determinant": -16
+    },
+    {
+      "columns": [
+        0,
+        1,
+        2,
+        6,
+        8
+      ],
+      "determinant": 0
+    },
+    {
+      "columns": [
+        0,
+        1,
+        2,
+        7,
+        8
+      ],
+      "determinant": 0
+    },
+    {
+      "columns": [
+        0,
+        1,
+        3,
+        4,
+        5
+      ],
+      "determinant": -16
+    },
+    {
+      "columns": [
+        0,
+        1,
+        3,
+        4,
+        6
+      ],
+      "determinant": 0
+    },
+    {
+      "columns": [
+        0,
+        1,
+        3,
+        4,
+        7
+      ],
+      "determinant": -16
+    },
+    {
+      "columns": [
+        0,
+        1,
+        3,
+        4,
+        8
+      ],
+      "determinant": -16
+    },
+    {
+      "columns": [
+        0,
+        1,
+        3,
+        5,
+        6
+      ],
+      "determinant": 16
+    },
+    {
+      "columns": [
+        0,
+        1,
+        3,
+        5,
+        7
+      ],
+      "determinant": -16
+    },
+    {
+      "columns": [
+        0,
+        1,
+        3,
+        5,
+        8
+      ],
+      "determinant": -16
+    },
+    {
+      "columns": [
+        0,
+        1,
+        3,
+        6,
+        7
+      ],
+      "determinant": -16
+    },
+    {
+      "columns": [
+        0,
+        1,
+        3,
+        6,
+        8
+      ],
+      "determinant": -16
+    },
+    {
+      "columns": [
+        0,
+        1,
+        3,
+        7,
+        8
+      ],
+      "determinant": 0
+    },
+    {
+      "columns": [
+        0,
+        1,
+        4,
+        5,
+        6
+      ],
+      "determinant": 16
+    },
+    {
+      "columns": [
+        0,
+        1,
+        4,
+        5,
+        7
+      ],
+      "determinant": 0
+    },
+    {
+      "columns": [
+        0,
+        1,
+        4,
+        5,
+        8
+      ],
+      "determinant": -16
+    },
+    {
+      "columns": [
+        0,
+        1,
+        4,
+        6,
+        7
+      ],
+      "determinant": -16
+    },
+    {
+      "columns": [
+        0,
+        1,
+        4,
+        6,
+        8
+      ],
+      "determinant": -16
+    },
+    {
+      "columns": [
+        0,
+        1,
+        4,
+        7,
+        8
+      ],
+      "determinant": -16
+    },
+    {
+      "columns": [
+        0,
+        1,
+        5,
+        6,
+        7
+      ],
+      "determinant": -16
+    },
+    {
+      "columns": [
+        0,
+        1,
+        5,
+        6,
+        8
+      ],
+      "determinant": 0
+    },
+    {
+      "columns": [
+        0,
+        1,
+        5,
+        7,
+        8
+      ],
+      "determinant": -16
+    },
+    {
+      "columns": [
+        0,
+        1,
+        6,
+        7,
+        8
+      ],
+      "determinant": -16
+    },
+    {
+      "columns": [
+        0,
+        2,
+        3,
+        4,
+        5
+      ],
+      "determinant": 16
+    },
+    {
+      "columns": [
+        0,
+        2,
+        3,
+        4,
+        6
+      ],
+      "determinant": 16
+    },
+    {
+      "columns": [
+        0,
+        2,
+        3,
+        4,
+        7
+      ],
+      "determinant": 16
+    },
+    {
+      "columns": [
+        0,
+        2,
+        3,
+        4,
+        8
+      ],
+      "determinant": 16
+    },
+    {
+      "columns": [
+        0,
+        2,
+        3,
+        5,
+        6
+      ],
+      "determinant": 0
+    },
+    {
+      "columns": [
+        0,
+        2,
+        3,
+        5,
+        7
+      ],
+      "determinant": 16
+    },
+    {
+      "columns": [
+        0,
+        2,
+        3,
+        5,
+        8
+      ],
+      "determinant": 16
+    },
+    {
+      "columns": [
+        0,
+        2,
+        3,
+        6,
+        7
+      ],
+      "determinant": 16
+    },
+    {
+      "columns": [
+        0,
+        2,
+        3,
+        6,
+        8
+      ],
+      "determinant": 16
+    },
+    {
+      "columns": [
+        0,
+        2,
+        3,
+        7,
+        8
+      ],
+      "determinant": 0
+    },
+    {
+      "columns": [
+        0,
+        2,
+        4,
+        5,
+        6
+      ],
+      "determinant": 0
+    },
+    {
+      "columns": [
+        0,
+        2,
+        4,
+        5,
+        7
+      ],
+      "determinant": 0
+    },
+    {
+      "columns": [
+        0,
+        2,
+        4,
+        5,
+        8
+      ],
+      "determinant": 16
+    },
+    {
+      "columns": [
+        0,
+        2,
+        4,
+        6,
+        7
+      ],
+      "determinant": 0
+    },
+    {
+      "columns": [
+        0,
+        2,
+        4,
+        6,
+        8
+      ],
+      "determinant": 16
+    },
+    {
+      "columns": [
+        0,
+        2,
+        4,
+        7,
+        8
+      ],
+      "determinant": 16
+    },
+    {
+      "columns": [
+        0,
+        2,
+        5,
+        6,
+        7
+      ],
+      "determinant": 0
+    },
+    {
+      "columns": [
+        0,
+        2,
+        5,
+        6,
+        8
+      ],
+      "determinant": 0
+    },
+    {
+      "columns": [
+        0,
+        2,
+        5,
+        7,
+        8
+      ],
+      "determinant": 16
+    },
+    {
+      "columns": [
+        0,
+        2,
+        6,
+        7,
+        8
+      ],
+      "determinant": 16
+    },
+    {
+      "columns": [
+        0,
+        3,
+        4,
+        5,
+        6
+      ],
+      "determinant": 16
+    },
+    {
+      "columns": [
+        0,
+        3,
+        4,
+        5,
+        7
+      ],
+      "determinant": 0
+    },
+    {
+      "columns": [
+        0,
+        3,
+        4,
+        5,
+        8
+      ],
+      "determinant": 0
+    },
+    {
+      "columns": [
+        0,
+        3,
+        4,
+        6,
+        7
+      ],
+      "determinant": -16
+    },
+    {
+      "columns": [
+        0,
+        3,
+        4,
+        6,
+        8
+      ],
+      "determinant": -16
+    },
+    {
+      "columns": [
+        0,
+        3,
+        4,
+        7,
+        8
+      ],
+      "determinant": 0
+    },
+    {
+      "columns": [
+        0,
+        3,
+        5,
+        6,
+        7
+      ],
+      "determinant": -16
+    },
+    {
+      "columns": [
+        0,
+        3,
+        5,
+        6,
+        8
+      ],
+      "determinant": -16
+    },
+    {
+      "columns": [
+        0,
+        3,
+        5,
+        7,
+        8
+      ],
+      "determinant": 0
+    },
+    {
+      "columns": [
+        0,
+        3,
+        6,
+        7,
+        8
+      ],
+      "determinant": 0
+    },
+    {
+      "columns": [
+        0,
+        4,
+        5,
+        6,
+        7
+      ],
+      "determinant": 0
+    },
+    {
+      "columns": [
+        0,
+        4,
+        5,
+        6,
+        8
+      ],
+      "determinant": -16
+    },
+    {
+      "columns": [
+        0,
+        4,
+        5,
+        7,
+        8
+      ],
+      "determinant": 0
+    },
+    {
+      "columns": [
+        0,
+        4,
+        6,
+        7,
+        8
+      ],
+      "determinant": 16
+    },
+    {
+      "columns": [
+        0,
+        5,
+        6,
+        7,
+        8
+      ],
+      "determinant": 16
+    },
+    {
+      "columns": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "determinant": 16
+    },
+    {
+      "columns": [
+        1,
+        2,
+        3,
+        4,
+        6
+      ],
+      "determinant": 0
+    },
+    {
+      "columns": [
+        1,
+        2,
+        3,
+        4,
+        7
+      ],
+      "determinant": 0
+    },
+    {
+      "columns": [
+        1,
+        2,
+        3,
+        4,
+        8
+      ],
+      "determinant": 16
+    },
+    {
+      "columns": [
+        1,
+        2,
+        3,
+        5,
+        6
+      ],
+      "determinant": -16
+    },
+    {
+      "columns": [
+        1,
+        2,
+        3,
+        5,
+        7
+      ],
+      "determinant": 0
+    },
+    {
+      "columns": [
+        1,
+        2,
+        3,
+        5,
+        8
+      ],
+      "determinant": 16
+    },
+    {
+      "columns": [
+        1,
+        2,
+        3,
+        6,
+        7
+      ],
+      "determinant": 0
+    },
+    {
+      "columns": [
+        1,
+        2,
+        3,
+        6,
+        8
+      ],
+      "determinant": 16
+    },
+    {
+      "columns": [
+        1,
+        2,
+        3,
+        7,
+        8
+      ],
+      "determinant": 0
+    },
+    {
+      "columns": [
+        1,
+        2,
+        4,
+        5,
+        6
+      ],
+      "determinant": -16
+    },
+    {
+      "columns": [
+        1,
+        2,
+        4,
+        5,
+        7
+      ],
+      "determinant": -16
+    },
+    {
+      "columns": [
+        1,
+        2,
+        4,
+        5,
+        8
+      ],
+      "determinant": 16
+    },
+    {
+      "columns": [
+        1,
+        2,
+        4,
+        6,
+        7
+      ],
+      "determinant": 0
+    },
+    {
+      "columns": [
+        1,
+        2,
+        4,
+        6,
+        8
+      ],
+      "determinant": 16
+    },
+    {
+      "columns": [
+        1,
+        2,
+        4,
+        7,
+        8
+      ],
+      "determinant": 16
+    },
+    {
+      "columns": [
+        1,
+        2,
+        5,
+        6,
+        7
+      ],
+      "determinant": 16
+    },
+    {
+      "columns": [
+        1,
+        2,
+        5,
+        6,
+        8
+      ],
+      "determinant": 0
+    },
+    {
+      "columns": [
+        1,
+        2,
+        5,
+        7,
+        8
+      ],
+      "determinant": 16
+    },
+    {
+      "columns": [
+        1,
+        2,
+        6,
+        7,
+        8
+      ],
+      "determinant": 16
+    },
+    {
+      "columns": [
+        1,
+        3,
+        4,
+        5,
+        6
+      ],
+      "determinant": 0
+    },
+    {
+      "columns": [
+        1,
+        3,
+        4,
+        5,
+        7
+      ],
+      "determinant": -16
+    },
+    {
+      "columns": [
+        1,
+        3,
+        4,
+        5,
+        8
+      ],
+      "determinant": 0
+    },
+    {
+      "columns": [
+        1,
+        3,
+        4,
+        6,
+        7
+      ],
+      "determinant": 0
+    },
+    {
+      "columns": [
+        1,
+        3,
+        4,
+        6,
+        8
+      ],
+      "determinant": 0
+    },
+    {
+      "columns": [
+        1,
+        3,
+        4,
+        7,
+        8
+      ],
+      "determinant": 16
+    },
+    {
+      "columns": [
+        1,
+        3,
+        5,
+        6,
+        7
+      ],
+      "determinant": 16
+    },
+    {
+      "columns": [
+        1,
+        3,
+        5,
+        6,
+        8
+      ],
+      "determinant": 0
+    },
+    {
+      "columns": [
+        1,
+        3,
+        5,
+        7,
+        8
+      ],
+      "determinant": 16
+    },
+    {
+      "columns": [
+        1,
+        3,
+        6,
+        7,
+        8
+      ],
+      "determinant": 16
+    },
+    {
+      "columns": [
+        1,
+        4,
+        5,
+        6,
+        7
+      ],
+      "determinant": 16
+    },
+    {
+      "columns": [
+        1,
+        4,
+        5,
+        6,
+        8
+      ],
+      "determinant": 0
+    },
+    {
+      "columns": [
+        1,
+        4,
+        5,
+        7,
+        8
+      ],
+      "determinant": 16
+    },
+    {
+      "columns": [
+        1,
+        4,
+        6,
+        7,
+        8
+      ],
+      "determinant": 16
+    },
+    {
+      "columns": [
+        1,
+        5,
+        6,
+        7,
+        8
+      ],
+      "determinant": 0
+    },
+    {
+      "columns": [
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "determinant": 16
+    },
+    {
+      "columns": [
+        2,
+        3,
+        4,
+        5,
+        7
+      ],
+      "determinant": 16
+    },
+    {
+      "columns": [
+        2,
+        3,
+        4,
+        5,
+        8
+      ],
+      "determinant": 0
+    },
+    {
+      "columns": [
+        2,
+        3,
+        4,
+        6,
+        7
+      ],
+      "determinant": 0
+    },
+    {
+      "columns": [
+        2,
+        3,
+        4,
+        6,
+        8
+      ],
+      "determinant": -16
+    },
+    {
+      "columns": [
+        2,
+        3,
+        4,
+        7,
+        8
+      ],
+      "determinant": -16
+    },
+    {
+      "columns": [
+        2,
+        3,
+        5,
+        6,
+        7
+      ],
+      "determinant": -16
+    },
+    {
+      "columns": [
+        2,
+        3,
+        5,
+        6,
+        8
+      ],
+      "determinant": -16
+    },
+    {
+      "columns": [
+        2,
+        3,
+        5,
+        7,
+        8
+      ],
+      "determinant": -16
+    },
+    {
+      "columns": [
+        2,
+        3,
+        6,
+        7,
+        8
+      ],
+      "determinant": -16
+    },
+    {
+      "columns": [
+        2,
+        4,
+        5,
+        6,
+        7
+      ],
+      "determinant": 0
+    },
+    {
+      "columns": [
+        2,
+        4,
+        5,
+        6,
+        8
+      ],
+      "determinant": -16
+    },
+    {
+      "columns": [
+        2,
+        4,
+        5,
+        7,
+        8
+      ],
+      "determinant": -16
+    },
+    {
+      "columns": [
+        2,
+        4,
+        6,
+        7,
+        8
+      ],
+      "determinant": 0
+    },
+    {
+      "columns": [
+        2,
+        5,
+        6,
+        7,
+        8
+      ],
+      "determinant": 16
+    },
+    {
+      "columns": [
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "determinant": 16
+    },
+    {
+      "columns": [
+        3,
+        4,
+        5,
+        6,
+        8
+      ],
+      "determinant": 0
+    },
+    {
+      "columns": [
+        3,
+        4,
+        5,
+        7,
+        8
+      ],
+      "determinant": 0
+    },
+    {
+      "columns": [
+        3,
+        4,
+        6,
+        7,
+        8
+      ],
+      "determinant": 16
+    },
+    {
+      "columns": [
+        3,
+        5,
+        6,
+        7,
+        8
+      ],
+      "determinant": 16
+    },
+    {
+      "columns": [
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "determinant": 16
+    }
+  ],
+  "mixed_algebraicity_claim": false,
+  "reduced_matrix": [
+    [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1
+    ],
+    [
+      1,
+      -1,
+      1,
+      -1,
+      1,
+      1,
+      1,
+      1,
+      -1
+    ],
+    [
+      1,
+      1,
+      -1,
+      1,
+      1,
+      -1,
+      1,
+      -1,
+      -1
+    ],
+    [
+      1,
+      -1,
+      1,
+      1,
+      1,
+      -1,
+      -1,
+      -1,
+      -1
+    ],
+    [
+      1,
+      1,
+      1,
+      1,
+      -1,
+      -1,
+      -1,
+      1,
+      1
+    ]
+  ],
+  "status": "EXACT_UNIMODULAR_CONFIGURATION_PREPARATION"
+}

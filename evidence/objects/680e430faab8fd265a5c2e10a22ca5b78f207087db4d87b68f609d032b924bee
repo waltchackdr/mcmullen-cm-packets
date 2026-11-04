@@ -1,0 +1,24 @@
+import importlib.util
+import json
+from pathlib import Path
+import unittest
+
+ROOT=Path(__file__).resolve().parents[1]
+spec=importlib.util.spec_from_file_location('period_recon',ROOT/'experiments/s_order_census_v162/period_recon_candidate.py')
+recon=importlib.util.module_from_spec(spec);spec.loader.exec_module(recon)
+
+class PeriodTransportTests(unittest.TestCase):
+    def setUp(self):
+        self.model=json.loads((ROOT/'build/s-order-v162/models01/model000.json').read_text())
+        self.seed=json.loads((ROOT/'experiments/s_order_models_v161/model.json').read_text())
+    def test_wrong_characteristic_rejected(self):
+        self.model['invariant_refinement_chi'][0]^=1
+        with self.assertRaises(AssertionError):recon.run(self.model,self.seed)
+    def test_wrong_actual_type_rejected(self):
+        self.model['actual_tangent_type'][0]=41
+        with self.assertRaises(AssertionError):recon.run(self.model,self.seed)
+    def test_duplicate_torsion_pair_rejected(self):
+        self.model['eligible_nonzero_pairs'][0]=self.model['eligible_nonzero_pairs'][1]
+        with self.assertRaises(AssertionError):recon.run(self.model,self.seed)
+
+if __name__=='__main__':unittest.main()

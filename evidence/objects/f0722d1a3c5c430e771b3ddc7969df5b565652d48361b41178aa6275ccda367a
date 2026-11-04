@@ -1,0 +1,24 @@
+"""Regression of the reviewed polynomial identities, not a geometric proof."""
+import json
+from pathlib import Path
+import subprocess
+import sys
+import unittest
+
+
+class FermatProjectorArithmetic(unittest.TestCase):
+    def test_actual_character_quotient(self):
+        root = Path(__file__).resolve().parents[1]
+        output = subprocess.check_output(
+            [sys.executable, str(root / 'experiments/fermat_polarization_v151/projector_arithmetic_candidate.py')],
+            text=True, timeout=10)
+        result = json.loads(output)
+        self.assertEqual(result['eigenvalues_by_order'], {'3': 0, '7': 0, '21': 21})
+        self.assertTrue(result['inverse_rotation_invariant'])
+        # The relation must not be strengthened to the entire group ring.
+        n_at_one = sum(result['norm_coefficients_ascending'])
+        self.assertEqual(n_at_one*n_at_one - 21*n_at_one, 882)
+
+
+if __name__ == '__main__':
+    unittest.main()

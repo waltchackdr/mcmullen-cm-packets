@@ -1,0 +1,336 @@
+% !TeX root = ../../arithmetic-and-computation.tex
+\section{Comparison with the proposed Hecke reduction}
+The comparison is subsidiary to the positive results. The following
+summary is proved by the detailed arguments in this section and the
+polarization computation in Paper I. It does not identify the constructed
+principal family with a different moduli normalization.
+
+\begin{theoremB}\label{thm:B}
+For the Hecke construction of \cite[Sec.~5]{Mostaed2026}, the following corrections hold.
+\begin{enumerate}[label=(\roman*)]
+\item A degree-$\ell$ Hecke isogeny on an abelian sixfold cannot satisfy $\alpha^\dagger\alpha=[\ell]$; in the rank-two Hilbert modular model one has instead $\alpha^\dagger\alpha=(\det_L\alpha)I=\pi I$ and characteristic polynomial $X^2-cX+\pi$.
+\item For a prime $\mathfrak P$ of $M$ above $\mathfrak l=(\pi)$, the relative norm is $N_{M/L}(\mathfrak P)=\mathfrak l$, while its absolute norm is $43$; these are not interchangeable.
+\item The published count $44\cdot64=2816$ does not by itself eliminate the unrestricted variable $\delta\in\mathrm{SL}_2(\OL)$ appearing in a Hecke lift.
+\item The six Galois components of McMullen's modular embedding have distinct Schwarz exponent data and are not obtained from one common hypergeometric equation merely by changing monodromy.
+\item For this field the quotient $\mathbb H^6/\mathrm{SL}_2(\mathcal O_L)$ with its standard $\mathcal O_L^2$ lattice carries the explicit polarization of type $(1,7,7,21,21,21)$, not a principal one.  A principal Hilbert--Blumenthal moduli interpretation requires a different polarization module/arithmetic group; Proposition~\externalref{packet}{prop:ppisogenous} constructs a principally polarized model only after an isogeny/lattice change.
+\item The ``CM isolation'' and ``origin of the Hodge--Weil classes'' obstructions asserted in \cite[Obs.~4.6]{Mostaed2026} are not hypotheses of Markman's algebraicity theorem.  Markman's Theorem~1.5.1 applies to every polarized abelian sixfold of Weil type with discriminant $-1$, including CM fibers.  Thus, once the polarized Weil structure and discriminant $-1$ are verified, neither CM endomorphisms nor the absence of a separately exhibited secant presentation obstruct application of the theorem.
+\end{enumerate}
+Items (i)--(iv) concern the explicit Hecke-search mechanism.  Item (v) reaches the moduli-theoretic setup used earlier in \cite{Mostaed2026}: the quotient by $\mathrm{SL}_2(\mathcal O_L)$ with the standard $\mathcal O_L^2$ lattice is not itself the asserted principally polarized family.  The lattice modification in Theorem~\externalref{packet}{thm:principalfamily} gives a principally polarized family after passage to a connected finite cover and an isogeny. It changes the integral moduli data.  The present paper therefore does not treat Mostaed's earlier finiteness argument as literally unaffected by the normalization.  Item (vi) concerns only the stated obstruction to using Markman's theorem; it does not supply the missing discriminant for an arbitrary point of the intersection.
+\end{theoremB}
+
+
+The results in this part are logically secondary to Theorem~\externalref{packet}{thm:A}.  They explain why the local determinant $\pi$ and the corrected cyclotomic norm equation are the appropriate arithmetic inputs, and they delimit exactly which claims of \cite{Mostaed2026} are affected.  The earlier finiteness theorem for an intersection point already lying in the relevant locus is not challenged here.
+
+\subsection{Applicability of Markman's sixfold theorem}
+\cite[Observation~4.6]{Mostaed2026} states that Markman's theorem does not apply to a CM fiber in the Weil locus for three independent reasons: CM isolation, the origin of the Weil classes, and uncontrolled discriminant.  Only the last of these is an actual hypothesis issue for Theorem~1.5.1.
+
+First, a CM point is special, but it is not deformation-rigid as a polarized abelian variety of Weil type: it is a point on the positive-dimensional Weil moduli component determined by $(n,K,\det H)$, and nearby deformations simply cease to have the extra CM endomorphisms.  The fact that Markman's proof propagates algebraicity through a deformation family therefore does not impose a non-CM hypothesis on the theorem's final statement.
+
+Second, the Hodge--Weil space is intrinsic to the $K$-action:
+\[
+ W_K(A)=\bigwedge_K^{6}H^1(A,\Ql)\subset H^6(A,\Ql).
+\]
+A secant-sheaf construction is a method used in the proof of algebraicity; it is not additional structure required in the statement of the theorem.  Markman's Theorem~1.5.1 states that the Hodge--Weil classes of \emph{polarized abelian sixfolds of Weil type} with discriminant $-1$ are algebraic, with no exclusion of CM points and no hypothesis that the given fiber itself be presented by a chosen secant sheaf.
+
+Consequently, for an arbitrary point of the proposed intersection the uncontrolled discriminant remains a genuine obstacle to invoking Markman.  For the explicit vertex constructed in Part~I, however, Proposition~\externalref{packet}{prop:discminusone} computes the discriminant to be $-1$, so Theorem~1.5.1 applies directly.  This distinction is important: the proof of Theorem~\externalref{packet}{thm:A} does not need to deform the explicit CM point while preserving its full CM endomorphism algebra.
+
+\subsection{The degree obstruction in Proposition 5.2}
+We first isolate a contradiction that does not depend on any subtle theory of CM types.
+
+\begin{lemma}\label{lem:degree}
+Let $A$ be an abelian variety of dimension $g$ and let $[n]:A\to A$ denote multiplication by $n$. Then
+\[
+ \deg[n]=n^{2g}.
+\]
+\end{lemma}
+\begin{proof}
+This is the standard degree formula for multiplication on an abelian variety; see Milne \cite[Thm.~7.2]{MilneAV}.
+\end{proof}
+
+\begin{proposition}[Degree obstruction]\label{prop:degree-obstruction}
+Let $A$ be an abelian sixfold and $\phi:A\to B$ an isogeny of degree $\ell>1$. If $\phi^\dagger$ denotes the Rosati adjoint with respect to principal polarizations on $A$ and $B$, then
+\[
+ \phi^\dagger\phi\ne[\ell].
+\]
+In particular, the identity used in the proof of \cite[Prop.~5.2]{Mostaed2026} cannot hold in dimension six.
+\end{proposition}
+\begin{proof}
+Duality preserves the degree of an isogeny, and conjugating the dual by principal polarizations does not change degree. Hence
+\[
+ \deg(\phi^\dagger\phi)=\deg(\phi^\dagger)\deg(\phi)=\ell^2.
+\]
+If $\phi^\dagger\phi=[\ell]$, Lemma \ref{lem:degree} with $g=6$ would give
+\[
+ \ell^2=\deg(\phi^\dagger\phi)=\deg[\ell]=\ell^{12},
+\]
+impossible for $\ell>1$.
+\end{proof}
+
+\begin{remark}
+The familiar formula ``dual isogeny composed with the isogeny equals multiplication by the degree'' is an elliptic-curve formula. In higher dimension, an isogeny of degree $d$ does admit a complementary isogeny whose composition is $[d]$, but that complementary map has degree $d^{2g-1}$ in general; it is not the polarization adjoint of degree $d$.
+\end{remark}
+
+The contradiction matters because Proposition 5.2 immediately uses the asserted identity to derive a quadratic equation $X^2-cX+\ell=0$. That constant term is incompatible both with Proposition \ref{prop:degree-obstruction} and with the determinant-$\pi$ matrix model used later in the same section.
+
+\subsubsection{The exact polarization-adjoint identity in the Hilbert modular model}
+There is a direct replacement for the erroneous identity.  Let $V=L^2$ and equip it with the standard alternating $L$-bilinear form
+\[
+  \langle x,y\rangle_L=x^{\mathsf T}Jy,\qquad
+  J=\begin{pmatrix}0&1\\-1&0\end{pmatrix}.
+\]
+The rational Riemann form of a Hilbert--Blumenthal abelian variety is obtained from such an $L$-valued form by composing with a trace $\operatorname{Tr}_{L/\mathbb Q}(\xi\,\cdot)$ for a suitable totally positive polarization parameter $\xi$; because every matrix considered below is $L$-linear, the scalar $\xi$ does not change the adjoint formula.
+
+\begin{lemma}[Adjoint equals adjugate]\label{lem:adjugate}
+For
+\[
+ A=\begin{pmatrix}a&b\\c&d\end{pmatrix}\in M_2(L),
+\]
+the adjoint with respect to $\langle\cdot,\cdot\rangle_L$ is
+\[
+ A^{\dagger}=J^{-1}A^{\mathsf T}J=\begin{pmatrix}d&-b\\-c&a\end{pmatrix}=\operatorname{adj}(A).
+\]
+Consequently
+\begin{equation}\label{eq:adjdet}
+ A^{\dagger}A=(\det_L A)I_2.
+\end{equation}
+\end{lemma}
+\begin{proof}
+This is a direct multiplication.  The defining identity $\langle Ax,y\rangle_L=\langle x,A^{\dagger}y\rangle_L$ gives $A^{\dagger}=J^{-1}A^{\mathsf T}J$, and for a $2\times2$ matrix this is its classical adjugate.  Multiplying the adjugate by $A$ gives $(\det A)I_2$.
+\end{proof}
+
+\begin{corollary}[Correct Hecke similitude factor]\label{cor:rosatipi}
+In the standard Hilbert modular realization, if a Hecke lift $\alpha$ has $\det_L(\alpha)=\pi$, then on rational homology, and hence in $\operatorname{End}^0(A)$,
+\[
+  \boxed{\alpha^{\dagger}\alpha=\pi}.
+\]
+Moreover $\deg(\pi)=|N_{L/\mathbb Q}(\pi)|^2=\ell^2$, exactly matching $\deg(\alpha^{\dagger}\alpha)=\ell^2$.
+\end{corollary}
+\begin{proof}
+Equation \eqref{eq:adjdet} gives the first assertion.  Since $H_1(A,\mathbb Q)$ has rank two as an $L$-vector space, multiplication by $r\in L$ has rational determinant $N_{L/\mathbb Q}(r)^2$, which is its isogeny degree for integral totally positive $r$.  Taking $r=\pi$ and $N(\pi)=\ell$ gives $\ell^2$.
+\end{proof}
+
+Corollary \ref{cor:rosatipi} is stronger than a degree objection: it identifies the precise element that replaces the rational scalar $\ell$.  It also agrees identically with the determinant convention written in Section~5.3 of \cite{Mostaed2026}.
+
+
+\subsection{Repair from the Hilbert-modular determinant}
+The statement that Hecke fixed points are CM can be repaired without the erroneous dual-isogeny identity.  Corollary \ref{cor:rosatipi} supplies the correct Rosati relation, while Cayley--Hamilton supplies the same constant term independently.
+
+\begin{proposition}[Correct local characteristic polynomial]\label{prop:charpoly}
+Let $\mathfrak l=(\pi)$ be a prime of $\OL$ with a totally positive generator $\pi$. Suppose a Hecke fixed point admits a lift represented on the rank-two $L$-module $H_1(A,\Ql)$ by
+\[
+ \alpha=\delta\gamma_j\in M_2(L),\qquad \det_L(\alpha)=\pi.
+\]
+Put $c=\Tr_L(\alpha)$, the $2\times2$ matrix trace. Then
+\begin{equation}\label{eq:correct-charpoly}
+ \alpha^2-c\alpha+\pi=0.
+\end{equation}
+If $\alpha$ is non-scalar, $L[\alpha]$ is a quadratic $L$-algebra with norm $\pi$.
+\end{proposition}
+\begin{proof}
+Cayley--Hamilton on the two-dimensional $L$-vector space gives
+\[
+ X^2-(\operatorname{tr}_L\alpha)X+\det_L(\alpha).
+\]
+The determinant is $\pi$ by construction, yielding \eqref{eq:correct-charpoly}. If $\alpha$ is non-scalar, its minimal polynomial has degree two and coincides with this polynomial.
+\end{proof}
+
+\begin{proposition}[CM repair]\label{prop:cmrepair}
+Assume in addition that, for all six real embeddings $\sigma_i:L\hookrightarrow\R$, the matrix $\sigma_i(\alpha)$ fixes a point of $\HH$. Then the discriminant
+\[
+ \Delta=c^2-4\pi
+\]
+is totally negative. Consequently $L(\alpha)$ is a totally imaginary quadratic extension of the totally real field $L$, hence a CM field of degree $12$ over $\Ql$.
+\end{proposition}
+\begin{proof}
+A real $2\times2$ matrix of positive determinant that fixes a point of the upper half-plane is elliptic (or scalar). In the non-scalar case its characteristic polynomial has nonreal conjugate roots, so its discriminant is negative. Applying this at every real embedding gives
+\[
+ \sigma_i(c)^2-4\sigma_i(\pi)<0
+\]
+for every $i$. Thus $\Delta$ is totally negative and adjoining a root of $X^2-cX+\pi$ gives a totally imaginary quadratic extension of $L$.
+\end{proof}
+
+\begin{remark}
+A scalar lift cannot have determinant ideal equal to a prime ideal with odd valuation: if $\alpha=rI_2$, then $(\det\alpha)=(r)^2$. Hence the prime-determinant situation excludes the scalar case.
+\end{remark}
+
+Thus the conclusion of Mostaed's Proposition 5.2 is repairable, but the proof and the arithmetic invariant must be changed. In particular, if the repaired quadratic field is the prescribed
+\[
+ M=L(\sqrt{-d}),
+\]
+and $\alpha=a+b\sqrt{-d}$, then
+\begin{equation}\label{eq:normpi}
+ N_{M/L}(\alpha)=a^2+db^2=\pi,
+\end{equation}
+not the diagonal rational integer $\ell$.
+
+
+\subsection{Relative norm, absolute norm, and integrality}
+There is a second independent issue in Section 5.6 of \cite{Mostaed2026}. Let $\mathfrak P$ be a prime of $\OM$ lying over $\mathfrak l\subset\OL$. If $\mathfrak l$ splits in $M/L$, then
+\[
+ N_{M/L}(\mathfrak P)=\mathfrak l,
+\]
+whereas the absolute ideal norm is
+\[
+ N_{M/\Ql}(\mathfrak P)=\ell.
+\]
+These have different codomains. If $\mathfrak P=(\varpi)$ and $\mathfrak l=(\pi)$, then
+\[
+ (\varpi\bar\varpi)=\mathfrak l=(\pi),
+\]
+so
+\begin{equation}\label{eq:unitpi}
+ \varpi\bar\varpi=u\pi
+\end{equation}
+for a unit $u\in\OL^\times$. A normalization can absorb suitable norm units, but the result is an element of $L$ generating $\mathfrak l$, not automatically the rational integer $\ell$.
+
+There is also an integrality subtlety. Even when $\alpha\in\OM$ and $\alpha=a+b\sqrt{-d}$ with $a,b\in L$, it need not follow that $a,b\in\OL$. The order $\OL[\sqrt{-d}]$ need not equal $\OM$. Therefore conditions such as
+\[
+ c^2-4\pi\in -4d\,(\OL)^2
+\]
+are generally stronger than the field-theoretic condition
+\[
+ c^2-4\pi\in -d\,(L^\times)^2.
+\]
+The integral structure should be imposed in $\OM$ itself rather than by assuming a power-basis decomposition with integral coefficients.
+
+
+\subsection{A separate gap in the claimed $2816$-system reduction}
+The determinant correction does not address another logical problem in the claimed finite enumeration.
+
+Section 5.3 writes a fixed-point lift as
+\begin{equation}\label{eq:deltagamma}
+ \alpha=\delta\gamma_j,
+ \qquad \delta\in\mathrm{SL}_2(\OL),
+\end{equation}
+with $j$ running through $\ell+1=44$ Hecke cosets. The component fixed-point quadratics depend on the four entries of $\alpha$, and hence on the unrestricted matrix $\delta$. Immediately afterwards, Step 5 counts only the $44$ cosets and the $2^6$ choices of roots of the six quadratics, producing $44\cdot64=2816$ systems \cite[Sec.~5.3]{Mostaed2026}.
+
+\begin{proposition}[The stated count does not follow from the stated parametrization]\label{prop:2816}
+Equations \eqref{eq:deltagamma} and the $44$ Hecke cosets do not by themselves produce $44$ concrete fixed-point systems. The coefficients of each component quadratic still vary with the infinite set $\mathrm{SL}_2(\OL)$. Therefore an additional elimination argument, a modular-polynomial equation, or an independent effective bound on $\delta$ is required before a finite count such as $2816$ is justified.
+\end{proposition}
+\begin{proof}
+For fixed $j$, the matrix $\gamma_j$ is fixed but $\delta$ is not. The coefficients $a,b,c,d$ in the fixed-point equation are the entries of $\delta\gamma_j$, so changing $\delta$ changes the equation itself. Choosing one of the two roots of each of six already-specified quadratics is a finite operation, but the quadratics are not specified until $\delta$ has been fixed or eliminated. No such elimination or finite enumeration of $\delta$ is supplied in the stated Step 5. Thus the product $44\cdot2^6$ counts root choices conditional on a matrix, not all matrices that may realize a fixed point.
+\end{proof}
+
+This proposition should be read narrowly: it says that the \emph{published derivation} of the number $2816$ is incomplete. It does not prove that no alternative finite algorithm exists. Indeed, Hecke correspondences are algebraic correspondences of finite degree, so one expects a finite algebraic formulation after passing to appropriate modular equations; that formulation must still be supplied.
+
+
+\subsection{Correction of the hypergeometric stage}\label{sec:hypergeom}
+The preprint's Section 5.4 contains an additional, logically independent problem. McMullen's modular embedding satisfies
+\begin{equation}\label{eq:correct-equiv}
+ f_i(g_1 z)=g_i f_i(z),
+\end{equation}
+where $g_j$ denotes the image of $g$ under the $j$-th real embedding \cite[Sec.~6, Eq.~(6.1)]{McMullen2026}. By contrast, equation (4) of \cite[Sec.~5.4]{Mostaed2026} places $g_i$ on both the source and target. The later displayed functional equation for the generator $B$ in the same section uses $g_1$ on the source and is therefore consistent with McMullen rather than with the stated equation (4).
+
+More importantly, the assertion that all six component maps are governed by the same hypergeometric equation with parameters
+\[
+ (a,b;c)=\left(\frac{19}{42},\frac37;\frac{13}{14}\right)
+\]
+cannot describe the six Galois-conjugate projective monodromy representations. The reason is already visible from local monodromy. The parent triangle group has projective local exponent differences
+\[
+ \lambda=\frac1{14},\qquad \mu=\frac1{21},\qquad \nu=\frac1{42}.
+\]
+Under the real embedding indexed by $k\in\{1,5,11,13,17,19\}$, the relevant roots of unity are sent to their $k$-th powers. Hence the projective exponent differences become
+\begin{equation}\label{eq:galois-exponents}
+ \lambda_k=\left\|\frac{k}{14}\right\|,
+ \qquad
+ \mu_k=\left\|\frac{k}{21}\right\|,
+ \qquad
+ \nu_k=\left\|\frac{k}{42}\right\|,
+\end{equation}
+where $\|x\|$ denotes distance to the nearest integer. The Schwarz parameters satisfying
+\[
+ 1-c_k=\lambda_k,\qquad c_k-a_k-b_k=\mu_k,
+ \qquad a_k-b_k=\nu_k
+\]
+are therefore
+\begin{equation}\label{eq:hgparamformula}
+ c_k=1-\lambda_k,\qquad
+ a_k=\frac{1-\lambda_k-\mu_k+\nu_k}{2},\qquad
+ b_k=\frac{1-\lambda_k-\mu_k-\nu_k}{2}.
+\end{equation}
+
+\begin{proposition}[Six distinct Schwarz equations]\label{prop:sixHG}
+The six Schwarz parameter triples, in the standard embedding order, are
+\[
+\begin{array}{c|c}
+ k&(a_k,b_k;c_k)\\ \hline
+ 1&(19/42,\ 3/7;\ 13/14)\\
+ 5&(11/42,\ 1/7;\ 9/14)\\
+ 11&(2/7,\ 1/42;\ 11/14)\\
+ 13&(3/7,\ 5/42;\ 13/14)\\
+ 17&(1/2,\ 2/21;\ 11/14)\\
+ 19&(1/2,\ 1/21;\ 9/14).
+\end{array}
+\]
+In particular, only the identity embedding has the parameter triple displayed in Section 5.4 of \cite{Mostaed2026}.
+\end{proposition}
+\begin{proof}
+The eigenvalue ratio of an elliptic element of projective order $n$ is an $n$-th root of unity. A cyclotomic embedding indexed by $k$ raises this ratio to its $k$-th power. Projectively, the corresponding exponent difference is defined modulo $1$ and up to sign, so a priori each local difference may be represented by either $r$ or $1-r$. The representative in $(0,1/2]$ used in \eqref{eq:galois-exponents} is forced here by hyperbolicity, not merely chosen by convention.
+
+Indeed, for each $k\in\{1,5,11,13,17,19\}$, enumerate the $2^3$ sign representatives at the vertices of orders $14,21,42$. A hyperbolic Schwarz triangle must have total normalized angle strictly less than $1$. Exactly one of the eight triples has sum $<1$, namely
+\[
+ \left(\left\|\frac{k}{14}\right\|,
+       \left\|\frac{k}{21}\right\|,
+       \left\|\frac{k}{42}\right\|\right).
+\]
+Moreover, in every one of the six cases the smallest rejected alternative has sum exactly $1$, hence is Euclidean. Concretely, the surviving sums are
+\[
+ \frac17,\ \frac57,\ \frac{20}{21},\ \frac{16}{21},\ \frac{17}{21},\ \frac{19}{21}
+\]
+for $k=1,5,11,13,17,19$, respectively, while the nearest alternative in each case has sum $1$. Thus the hyperbolic Galois triangle uniquely selects the nearest-integer representatives in \eqref{eq:galois-exponents}. Substitution into \eqref{eq:hgparamformula} gives the stated table.
+\end{proof}
+
+There is also a conceptual obstruction to the ``one common equation'' formulation. For a fixed second-order linear ODE, the ratio attached to any two choices of basis of its two-dimensional solution space differs by a constant Möbius transformation. Thus if all six Schwarz maps were ratios of bases of one and the same hypergeometric equation on the same base coordinate, their projective monodromy representations would be conjugate in $\mathrm{PGL}_2(\C)$. McMullen's construction of the curve uses a subgroup whose diagonal Galois image is Zariski dense in $\mathrm{SL}_2(\R)^6$ \cite[Sec.~5 and proof of Thm.~1.9]{McMullen2026}; such pairwise conjugacy would force the image into a proper graph subgroup. The six distinct triples in Proposition \ref{prop:sixHG} are the local-monodromy manifestation of this non-Shimura phenomenon.
+
+Accordingly, the appropriate analytic construction is, up to the vertex-normalizing Möbius transformations,
+\begin{equation}\label{eq:correctschwarzcomposition}
+ f_i=S_i\circ S_1^{-1},
+\end{equation}
+where $S_i$ is the Schwarz map for the $i$-th parameter triple in Proposition \ref{prop:sixHG}. This turns the distinguished-lift test \eqref{eq:42test} into a numerically implementable problem: reduce $w_1(c)$ to the first fundamental triangle, evaluate its hypergeometric coordinate via $S_1^{-1}$, and then evaluate the five distinct Schwarz maps $S_i$ with the corresponding target-vertex normalizations.
+
+
+\subsection{Dependency audit of the preprint}
+Table \ref{tab:audit} records what the present corrections do and do not affect.
+
+\begin{longtable}{p{0.24\textwidth}p{0.31\textwidth}p{0.37\textwidth}}
+\caption{Dependency audit of the relevant claims in \cite{Mostaed2026}.}\label{tab:audit}\\
+\toprule
+Item & Status after audit & Reason \\
+\midrule
+\endfirsthead
+\toprule
+Item & Status after audit & Reason \\
+\midrule
+\endhead
+Sections 1--4; finiteness of $V\cap\mathcal W_K$ & Requires a specified principal-moduli normalization & The Section 5 determinant correction alone does not refute the abstract finiteness argument. Its application to the named principally polarized locus still requires the integral moduli comparison discussed in Remark~\externalref{packet}{rem:WKnormalization}. \\
+\addlinespace
+Proposition 5.2, conclusion ``Hecke fixed point is CM'' & Repairable & The published proof uses an impossible degree identity, but the standard polarization adjoint gives $\alpha^{\dagger}\alpha=\pi$, and the determinant-$\pi$ matrix model plus ellipticity gives a replacement proof (Corollary \ref{cor:rosatipi} and Propositions \ref{prop:charpoly}--\ref{prop:cmrepair}). \\
+\addlinespace
+Proposition 5.2, equation $X^2-cX+\ell$ & Incorrect for the stated prime-ideal Hecke lift & The same section later has $\det(\delta\gamma_j)=\pi$; Cayley--Hamilton gives constant term $\pi$. \\
+\addlinespace
+Section 5.3 generator $\pi_1$ & Unsuitable if total positivity is required & $\pi_1$ has two negative real embeddings. Equation \eqref{eq:pi} supplies a totally positive generator of the same prime. \\
+\addlinespace
+Section 5.3 fixed-point equations & Structurally usable after normalization & The Möbius fixed-point equation itself is standard, but its determinant and lift must be normalized consistently. \\
+\addlinespace
+Theorem J / $2816$ systems & Not established as written & The infinite variable $\delta\in\mathrm{SL}_2(\OL)$ remains in the coefficients; $44\cdot64$ does not eliminate it. \\
+\addlinespace
+Section 5.6 norm equation $a^2+db^2=\ell$ & Incorrect for a fixed prime ideal $\mathfrak l$ & The corrected relative norm is a generator $\pi$ of $\mathfrak l$, up to the appropriate norm-unit normalization. \\
+\addlinespace
+Claim $N_{M/L}(\varpi)=N(\mathfrak P)=\ell$ & Incorrect identification of norms & Relative ideal norm is $\mathfrak l$; absolute ideal norm is $\ell$. \\
+\addlinespace
+Requirement $a,b\in\OL$ for every integral $\alpha\in\OM$ & Not generally valid & $\OM$ need not equal $\OL[\sqrt{-d}]$; integrality must be checked in $\OM$. \\
+\addlinespace
+Examples 5.7--5.8 & Correct identities for the diagonal norm $43$, but not the corrected local Hecke norm equation & $4+3\sqrt{-3}$ and $6+\sqrt{-7}$ have relative norm $43$, whereas a fixed $\mathfrak l$-Hecke lift has norm $\pi$ with $N_{L/\Ql}(\pi)=43$. \\
+\addlinespace
+Section 5.4 hypergeometric stage & Incorrect as stated & The source/target equivariance is misstated, and the six Galois components have distinct local exponent data; Proposition \ref{prop:sixHG} gives the corrected parameter triples. \\
+\addlinespace
+Passage from $Y_L$ to $X_L$ & Published shortcut is incomplete; explicit repair available & McMullen first constructs the curve in $(\pm\mathbb H)^6/\mathrm{SL}_2(\OL)$.  The replacement $f_i\mapsto-\overline{f_i}$ does not preserve the original target representation in general.  Proposition \ref{prop:orientationt} computes the actual sign vector and shows that $h_t=\operatorname{diag}(t,1)\in\mathrm{GL}_2(\OL)$ transfers the curve integrally to $X_L$. \\
+\addlinespace
+Geometric nonemptiness for $K=\Ql(\sqrt{-3})$ & Resolved for the normalized trace-polarized fibers; literal principal-locus comparison open & Theorem~\externalref{packet}{thm:Bvertex} and Proposition~\externalref{packet}{prop:actualcmtype} identify the normalized $B$-vertex and its actual $(3,3)$ CM type. The isogenous principal models do not establish membership in Mostaed's named principal image. \\
+\bottomrule
+\end{longtable}
+
+The most important consequence of the audit is therefore not that the earlier finiteness theorem is false. Rather, the explicit Hecke \emph{search mechanism} in Section 5 needs to be rebuilt around the local determinant $\pi$. Proposition \ref{prop:canonical-fixed}, generalized Latimer--MacDuffee theory, and Theorem \ref{thm:maxorder} provide a concrete route to replacing the unrestricted lift variable by finitely many integral conjugacy classes.
+
+
+

@@ -1,0 +1,35 @@
+{
+  "CM_type_re_marking_mod42": {
+    "B_to_C": 19,
+    "C_to_B": 31
+  },
+  "actual_adopted_residue_model": "F3[t]/(t^6-t^5+t^4-t^3+t^2-t+1)",
+  "degree_in_either_direction_from_indices": 27,
+  "distinct_k_lines": 28,
+  "frobenius_fixed_field_size": 27,
+  "line_size": 27,
+  "negative_control": {
+    "all_F3_dimension3_subspaces": 33880,
+    "non_k_stable_order27_subspace_rejected": true,
+    "witness_u_x_product_encoded": [
+      261,
+      1,
+      261
+    ]
+  },
+  "nonzero_partition_size": 728,
+  "packet_pins_verified": 15,
+  "premises_not_reproved": [
+    "C63 actual residue-ring identification and full global-unit-image upper bound",
+    "Pic(O)=1",
+    "C66 actual J/R lattices",
+    "C77 actual factor and full End=M"
+  ],
+  "producer_implementation_imported": false,
+  "scope": "Finite arithmetic only; human proof supplies all-map completeness and minimum degrees.",
+  "status": "PASS_INDEPENDENT_FINITE_KERNEL_CHECK",
+  "unit_witness_orbits": {
+    "J_target_B": 14,
+    "R_target_C": 14
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "additional_small_bytes": 179468127,
+  "additional_small_file_count": 958,
+  "candidate_fixed_hashes": 901,
+  "candidate_paths": 925,
+  "candidate_sha256": "77721596c489894a44d8e617aa910933117c205936c719fad6540bd21b5df792",
+  "citation_candidates_are_not_yet_accepted": true,
+  "dynamic_components_inspected": 8,
+  "git_or_install_mutations": false,
+  "json_path_scanning_proves_completeness": false,
+  "limitations": [
+    "Static path/pin discovery supplements manually inspected call chains; it is not a proof of complete dynamic reads.",
+    "925 candidate membership is matched by exact bytes, with original source coordinates retained; byte equality does not authorize relabeling a historical execution.",
+    "Final reviewer must discharge each dynamic/semantic obligation and exact runtime/environment boundary.",
+    "External raw bytes remain separately retained with inventory/receipt/review anchors; no public retrieval endpoint is fabricated.",
+    "Governance/manuscript final bytes and newly produced audit/adoption/release records must be added in an explicit later amendment."
+  ],
+  "manifest_sha256": {
+    "dynamic-dependencies.json": "ad0a7457d5ae9e21c6a6df5c84fbdf034616c4d86e1069bfbdb48ab351e1a6c5",
+    "evidence-families.json": "a795acaf433144d6ad2b75ac3474251225617f2a01fa9da9ff5b8873f39908bf",
+    "external-evidence.json": "e1b938250661e9f033c04494db8c747a9292cabb7299590cde92d312f04d0e8c",
+    "pending.json": "2ed1d915b7b6134034b07d4abc6224267268fc98f7c9cfa6366e5b46754a4372",
+    "small-files.json": "90d165be4789d3b22934c1d7978549c1378b29edb01d5058773eeb28b25527f2",
+    "static-pin-edges.json": "f04a75b52ebaf20af2c1b528523b3dd451c5e0d67a032e3803eecc5326a797da"
+  },
+  "math_or_auditor_imports_executed": false,
+  "raw_bytes_from_sealed_inventories": 42061817760,
+  "raw_cohort_roots": 12,
+  "raw_families_are_separate_not_a_single42GB_claim": true,
+  "raw_payload_rehashed": false,
+  "schema_version": 1,
+  "small_bytes": 182019612,
+  "small_file_count": 1736,
+  "static_pin_edges": 58,
+  "status": "REVIEWABLE_REPRODUCIBILITY_DEPENDENCY_MAP_NOT_COMPLETENESS_OR_RELEASE_ACCEPTANCE",
+  "unresolved_discovery": []
+}

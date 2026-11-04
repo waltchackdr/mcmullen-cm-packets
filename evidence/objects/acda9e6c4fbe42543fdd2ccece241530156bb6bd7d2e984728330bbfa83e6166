@@ -1,0 +1,17 @@
+{
+  "status": "C61_PROPOSED_NOT_ADOPTED_ACTIVE_PAPER_UNCHANGED",
+  "base_sha256": "e18a5e22f48a3bf30aa23f2d8435aeb82ef303e0372350222ca0aca1c51965db",
+  "candidate_sha256": "dcc696bc155767aa85ca2bdf506e2ff4841e9d32d1cb30dc56c5b27db9821fcf",
+  "insertion_sha256": "45cb698ac10db1453ba8bca14159dd8b01a42f1f055f8e55807be510ed905084",
+  "replacements": [
+    {
+      "old": "is $2$, and the six resulting degree-$64$ isogenies share one kernel.",
+      "new": "is $2$, and the six resulting degree-$64$ isogenies share one kernel.\nWithout polarization compatibility, the least isogeny degree is $7$,\nrealized explicitly with cyclic kernel."
+    },
+    {
+      "old": "The degree-$64$ isogenies remain valid; this argument does not determine\nthe least degree among all unpolarized isogenies.",
+      "new": "The degree-$64$ isogenies remain valid. The next proposition determines\nthe least degree among all unpolarized isogenies."
+    }
+  ],
+  "insertion_anchor": "\\begin{corollary}[Weil points on the specified principal image]"
+}

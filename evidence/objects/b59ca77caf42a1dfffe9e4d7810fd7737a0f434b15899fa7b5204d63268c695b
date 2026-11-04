@@ -1,0 +1,190 @@
+"""Exact-model pipeline derived from the retained certificate pipeline.
+
+Only new completion gate: nonzero worker exit is a pipeline failure, so the
+unchanged session controller stops before admitting its next job.
+Requires the same external live guard.
+
+No provisioning, credentials, HTTP endpoint or deletion authority here. The
+server/controller must monitor the independent guard and retain evidence.
+"""
+import argparse
+import hashlib
+import io
+import json
+import os
+from pathlib import Path, PurePosixPath
+import platform
+import signal
+import subprocess
+import sys
+import tarfile
+import time
+
+PREFIX = 'experiments/bc_jacobian_v147/'
+
+
+def require(ok, message):
+    if not ok:
+        raise RuntimeError(message)
+
+
+def sha(raw):
+    return hashlib.sha256(raw).hexdigest()
+
+
+def bounded(path, maximum):
+    require(path.is_file() and not path.is_symlink(), 'Not a regular input')
+    require(path.stat().st_size <= maximum, 'Input too large')
+    with path.open('rb') as stream:
+        raw = stream.read(maximum+1)
+    require(len(raw) <= maximum, 'Input grew too large')
+    return raw
+
+
+def unpack(archive, manifest_path, expected_manifest, destination):
+    raw = bounded(manifest_path, 1024**2)
+    require(sha(raw) == expected_manifest, 'Wrong source manifest')
+    manifest = json.loads(raw)
+    files = manifest['files']
+    require(isinstance(files, dict) and 0 < len(files) <= 64, 'File count')
+    archive_raw = bounded(archive, 16*1024**2)
+    require(sha(archive_raw) == manifest['archive_sha256'], 'Wrong source archive')
+    destination.mkdir(exist_ok=False)
+    with tarfile.open(fileobj=io.BytesIO(archive_raw), mode='r:') as tar:
+        members = tar.getmembers()
+        require(len(members) == len(files), 'Archive member count')
+        seen, total = set(), 0
+        for member in members:
+            name = member.name
+            path = PurePosixPath(name)
+            require(not path.is_absolute() and '..' not in path.parts
+                    and str(path) == name and name not in seen
+                    and name in files and member.isfile(), 'Invalid archive member')
+            require(0 <= member.size <= 2*1024**2, 'Archive member size')
+            total += member.size
+            require(total <= 16*1024**2, 'Expanded archive bound')
+            raw = tar.extractfile(member).read(member.size+1)
+            require(len(raw) == member.size == files[name]['bytes']
+                    and sha(raw) == files[name]['sha256'], 'Archive member differs')
+            target = destination/name
+            target.parent.mkdir(parents=True, exist_ok=True)
+            with target.open('xb') as stream:
+                stream.write(raw)
+            seen.add(name)
+        require(seen == set(files), 'Incomplete archive')
+    return manifest
+
+
+def save(path, data):
+    temporary = path.with_suffix('.partial')
+    with temporary.open('w') as stream:
+        json.dump(data, stream, indent=2, sort_keys=True)
+        stream.write('\n'); stream.flush(); os.fsync(stream.fileno())
+    temporary.replace(path)
+
+
+def run(command, root, label, env, timeout):
+    require(timeout > 0, 'Stage deadline already expired')
+    proc = None
+    with (root/(label+'.stdout')).open('xb') as out, \
+         (root/(label+'.stderr')).open('xb') as err:
+        try:
+            proc = subprocess.Popen(command, stdout=out, stderr=err, env=env,
+                                    cwd=root, start_new_session=True)
+            return proc.wait(timeout=timeout)
+        finally:
+            if proc is not None:
+                # Let the benchmark worker cancel and clean its separate groups.
+                if proc.poll() is None:
+                    os.killpg(proc.pid, signal.SIGTERM)
+                    try:
+                        proc.wait(timeout=5)
+                    except subprocess.TimeoutExpired:
+                        pass
+                try:
+                    os.killpg(proc.pid, signal.SIGKILL)
+                except ProcessLookupError:
+                    pass
+                proc.wait()
+
+
+def main():
+    parser = argparse.ArgumentParser()
+    for name in ('source-tar', 'source-manifest', 'setup-source', 'root'):
+        parser.add_argument('--'+name, type=Path, required=True)
+    for name in ('manifest-sha256', 'setup-sha256', 'plan-sha256'):
+        parser.add_argument('--'+name, required=True)
+    parser.add_argument('--local-delete-epoch', type=float, required=True)
+    args = parser.parse_args()
+    require(platform.system() == 'Linux' and platform.machine() == 'x86_64'
+            and bool(os.environ.get('RUNPOD_POD_ID')), 'Remote only')
+    require(time.time() < args.local_delete_epoch <= time.time()+1200,
+            'Invalid local deletion deadline')
+    end = time.monotonic()+args.local_delete_epoch-time.time()
+    root = args.root.resolve()
+    root.mkdir(exist_ok=True)
+    def interrupted(*unused):
+        raise TimeoutError('Pipeline interrupted')
+    signal.signal(signal.SIGTERM, interrupted)
+    signal.signal(signal.SIGINT, interrupted)
+    signal.signal(signal.SIGALRM, interrupted)
+    signal.alarm(max(1, int(end-time.monotonic()-30)))
+    state = {'status': 'PREPARING', 'mathematical_conclusion': None}
+    save(root/'pipeline.json', state)
+    try:
+        manifest = unpack(args.source_tar, args.source_manifest,
+                          args.manifest_sha256, root/'source')
+        require(manifest['plan_sha256'] == args.plan_sha256, 'Plan authority differs')
+        plan = root/'source'/PREFIX/'certificate_plan_candidate.json'
+        require(sha(bounded(plan, 2*1024**2)) == args.plan_sha256, 'Plan bytes differ')
+        setup_raw = bounded(args.setup_source, 2*1024**2)
+        require(sha(setup_raw) == args.setup_sha256, 'Setup authority differs')
+        setup = root/'source'/PREFIX/'runtime/setup_candidate.py'
+        setup.parent.mkdir(exist_ok=True)
+        with setup.open('xb') as stream:
+            stream.write(setup_raw)
+        env = {k:os.environ[k] for k in ('PATH', 'LANG', 'RUNPOD_POD_ID')
+               if k in os.environ}
+        env.update(PYTHONNOUSERSITE='1', PYTHONDONTWRITEBYTECODE='1',
+                   OMP_NUM_THREADS='1', OPENBLAS_NUM_THREADS='1', MKL_NUM_THREADS='1')
+        state['status'] = 'SETUP_RUNNING'; save(root/'pipeline.json', state)
+        code = run([sys.executable, str(setup), '--output', str(root/'setup')],
+                   root, 'setup', env, min(160, end-time.monotonic()-120))
+        state['setup_returncode'] = code
+        require(code == 0, 'Setup failed')
+        complete = json.loads(bounded(root/'setup/setup_complete.json', 1024**2))
+        runtime = bounded(root/'setup/runtime.json', 8*1024**2)
+        require(sha(runtime) == complete['runtime_sha256'], 'Runtime receipt differs')
+        require(complete['status'] == 'SETUP_COMPLETE_NOT_AUTHORIZED_FOR_THETA',
+                'Setup completion missing')
+        require(json.loads(runtime)['status'] == 'ACTUAL_RUNTIME_OBSERVED_PENDING_REVIEW',
+                'Runtime observation missing')
+        # This automatic transition itself requires pre-dispatch review.
+        state['runtime_sha256'] = sha(runtime)
+        state['status'] = 'BENCHMARK_RUNNING'; save(root/'pipeline.json', state)
+        available = min(690, end-time.monotonic()-120)
+        require(available >= 30, 'Insufficient benchmark time')
+        code = run([str(root/'setup/venv/bin/python'),
+                    str(root/'source'/PREFIX/'certificate_worker_candidate.py'),
+                    '--output', str(root/'benchmark'),
+                    '--plan-sha256', args.plan_sha256,
+                    '--deadline-epoch', str(time.time()+available)],
+                   root, 'benchmark', env, available+10)
+        state.update(benchmark_returncode=code,
+                     status='ATTEMPT_ENDED_NO_THEOREM' if code == 0 else 'BENCHMARK_FAILED')
+        require(code == 0, 'Exact model census task group failed')
+    except BaseException as error:
+        state.update(status='PIPELINE_FAILED', exception_type=type(error).__name__)
+        raise
+    finally:
+        save(root/'pipeline.json', state)
+        signal.alarm(0)
+
+
+if __name__ == '__main__':
+    try:
+        main()
+    except BaseException as error:
+        print(json.dumps({'status':'PIPELINE_FAILED',
+                          'exception_type':type(error).__name__}), file=sys.stderr)
+        sys.exit(1)

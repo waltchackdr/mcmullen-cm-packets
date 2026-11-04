@@ -1,0 +1,509 @@
+#!/usr/bin/env python3
+"""Frozen, resumable paired discovery queue. No result is a theorem promotion.
+
+One coordinator owns an exclusive lock. Preparation is an automatic prerequisite;
+three retained full controls gate the new-point cohort. Interrupted attempts are
+preserved and restarted whole. Only hash-verified terminal outputs are reused.
+The wall deadline is durable across restarts. Provider billing shutdown is a
+separate required cloud deployment control, not supplied by this process.
+"""
+from __future__ import annotations
+import argparse
+import ast
+from collections import Counter
+from datetime import datetime, timezone
+import fcntl
+import hashlib
+import importlib
+import json
+import os
+from pathlib import Path
+import platform
+import shutil
+import signal
+import subprocess
+import sys
+import time
+
+ROOT = Path(__file__).resolve().parents[2]
+HERE = 'experiments/continuous_v81'
+BACKENDS = ('primary', 'sturm')
+CONTROLS = ('R127:pic0:00', 'R127:pic1:00', 'R43_31:pic0:00')
+CANONICAL = ('preparation.json', 'A-entries.json', 'C-entries.json',
+             'bottom-rows.json', 'candidates-nonzero.json', 'candidates-zero.json',
+             'classification.json', 'survivors.json')
+COUNTS = ('a_count', 'c_count', 'bottom_rows', 'nonzero_candidates',
+          'zero_candidates', 'candidate_count', 'survivor_count',
+          'classification_digest', 'c_zero_audit')
+STOP = False
+
+
+def digest(path):
+    h = hashlib.sha256()
+    with Path(path).open('rb') as stream:
+        for block in iter(lambda: stream.read(1024**2), b''):
+            h.update(block)
+    return h.hexdigest()
+
+
+def write(path, value):
+    path = Path(path)
+    temporary = path.with_suffix(path.suffix + '.tmp')
+    with temporary.open('w') as stream:
+        json.dump(value, stream, sort_keys=True, indent=2)
+        stream.write('\n')
+        stream.flush()
+        os.fsync(stream.fileno())
+    temporary.replace(path)
+
+
+def read(path):
+    return json.loads(Path(path).read_text())
+
+
+def stamp():
+    return datetime.now(timezone.utc).isoformat()
+
+
+def slug(label):
+    return label.lower().replace(':', '-')
+
+
+def contained(root, relative):
+    path = root / relative
+    if Path(relative).is_absolute() or not path.resolve().is_relative_to(root.resolve()):
+        raise ValueError(f'Path outside root: {relative}')
+    return path
+
+
+def domain(root):
+    rows = read(root / 'certificates/full_packet_v62/ambient_points.json')
+    labels = {row['point_label'] for row in rows}
+    d7 = {row['point_label'] for row in rows if row['stratum'] in ('OM', 'R41_12', 'R83')}
+    c42 = set(read(root / 'certificates/broader_principal_v75/expected.json')['points'])
+    c43 = {'R127:pic1:00'}
+    if len(rows) != 368 or len(labels) != 368 or len(d7) != 112 or len(c42) != 6:
+        raise ValueError('Unexpected certified census')
+    if d7 & c42 or d7 & c43 or c42 & c43 or not (d7 | c42 | c43) <= labels:
+        raise ValueError('Certified subset overlap/domain failure')
+    remaining = labels - d7 - c42 - c43
+    if len(remaining) != 249:
+        raise ValueError('Expected precisely 249 open points')
+    return sorted(remaining), sorted(d7 | c42 | c43)
+
+
+def sources(root):
+    paths = {f'{HERE}/{name}.py' for name in ('runner', 'child', 'primary', 'sturm', 'nominate')}
+    paths |= {'certificates/broader_principal_v75/expected.json',
+              'certificates/r127_pic1_v80/expected.json'}
+    for backend in BACKENDS:
+        driver = root / HERE / (backend + '.py')
+        nodes = [node.value for node in ast.parse(driver.read_text()).body
+                 if isinstance(node, ast.Assign) and any(isinstance(t, ast.Name)
+                    and t.id == 'SOURCE_PINS' for t in node.targets)]
+        if len(nodes) != 1:
+            raise ValueError('Missing literal source closure')
+        for relative, expected in ast.literal_eval(nodes[0]).items():
+            if digest(contained(root, relative)) != expected:
+                raise ValueError(f'Changed source: {relative}')
+            paths.add(relative)
+    return {name: digest(contained(root, name)) for name in sorted(paths)}
+
+
+def runtime():
+    result = {'python_version': sys.version, 'python_sha256': digest(Path(sys.executable).resolve()),
+              'platform': platform.platform(), 'machine': platform.machine(), 'packages': {}}
+    for name, version in (('sympy', '1.14.0'), ('mpmath', '1.3.0')):
+        module = importlib.import_module(name)
+        if module.__version__ != version:
+            raise ValueError(f'Require {name}=={version}')
+        directory = Path(module.__file__).resolve().parent
+        result['packages'][name] = {'version': version, 'files': {
+            str(p.relative_to(directory)): digest(p) for p in sorted(directory.rglob('*'))
+            if p.is_file() and p.suffix in ('.py', '.so', '.pyd', '.dylib')}}
+    result['memory_limit_enforced'] = sys.platform.startswith('linux')
+    return result
+
+
+def verify_tree(root, expected):
+    for relative, checksum in expected.items():
+        if digest(contained(root, relative)) != checksum:
+            raise ValueError(f'Sealed content changed: {relative}')
+
+
+def initialize(args):
+    output = args.output.resolve()
+    remaining, completed = domain(ROOT)
+    pins = sources(ROOT)
+    plans = {}
+    for label in CONTROLS:
+        path = args.control_plans / (slug(label) + '.json')
+        plan = read(path)
+        if plan['point_label'] != label:
+            raise ValueError('Wrong control plan label')
+        plans[label] = path
+    output.mkdir(parents=True, exist_ok=False)
+    for relative in pins:
+        target = output / 'source' / relative
+        target.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copyfile(ROOT / relative, target)
+    for label, path in plans.items():
+        target = output / 'plans' / (slug(label) + '.json')
+        target.parent.mkdir(exist_ok=True)
+        shutil.copyfile(path, target)
+    control_hashes = {label: digest(output / 'plans' / (slug(label) + '.json')) for label in CONTROLS}
+    manifest = {'schema_version': 1, 'created_utc': stamp(), 'source_sha256': pins,
+                'remaining': remaining, 'previously_certified': completed,
+                'controls': list(CONTROLS), 'control_plan_sha256': control_hashes,
+                'scope': 'DISCOVERY_ONLY_NO_THEOREM_PROMOTION',
+                'limits': {'workers': args.workers, 'cpu_tiers': args.cpu_tiers,
+                           'preparation_cpu': args.preparation_cpu,
+                           'wall_multiplier': 2, 'memory_mib': args.memory_mib,
+                           'file_mib': args.file_mib, 'campaign_seconds': args.campaign_seconds,
+                           'minimum_free_mib': args.minimum_free_mib}}
+    write(output / 'manifest.json', manifest)
+    write(output / 'state.json', {'manifest_sha256': digest(output / 'manifest.json'),
+        'status': 'READY', 'created_utc': stamp(), 'jobs': {}, 'points': {}, 'preparations': {}, 'runtime': None,
+        'deadline_epoch': None, 'scope': manifest['scope']})
+    print(json.dumps({'status': 'READY', 'remaining': len(remaining), 'controls': len(CONTROLS),
+                      'manifest_sha256': digest(output / 'manifest.json')}))
+
+
+def job_key(label, stage, backend):
+    return f'{label}/{stage}/{backend}'
+
+
+def seal_outputs(output):
+    return {str(path.relative_to(output)): digest(path)
+            for path in sorted(output.rglob('*')) if path.is_file() and path.name != 'progress.json'}
+
+
+def validate_result(campaign, manifest, label, stage, backend, attempt):
+    output = campaign / attempt['directory'] / 'output'
+    result = read(output / 'result.json')
+    expected = 'FULL_GEOMETRY_DISCOVERY_COMPLETE' if stage == 'full' else 'PREPARATION_ONLY'
+    if result['status'] != expected or result['point_label'] != label or result['backend'] != backend:
+        raise ValueError('Incomplete or mislabeled result')
+    if not all(result.get(k) is True for k in ('assertions_enabled', 'sources_unchanged',
+                                               'executable_unchanged', 'witness_plan_unchanged')):
+        raise ValueError('Missing post-run guards')
+    if result['driver_sha256'] != manifest['source_sha256'][f'{HERE}/{backend}.py']:
+        raise ValueError('Wrong driver')
+    verify_tree(campaign / 'source', result['source_sha256'])
+    verify_tree(output, result['artifact_sha256'])
+    if stage == 'full':
+        if set(result['canonical_artifact_sha256']) != set(CANONICAL):
+            raise ValueError('Incomplete canonical set')
+        verify_tree(output, result['canonical_artifact_sha256'])
+        if any(k not in result for k in COUNTS):
+            raise ValueError('Missing complete-stage counts')
+    if attempt.get('plan_sha256') and result['input_witness_plan_sha256'] != attempt['plan_sha256']:
+        raise ValueError('Wrong frozen witness plan')
+    return result, seal_outputs(output)
+
+
+def accepted(campaign, state, label, stage, backend, verify=False):
+    job = state['jobs'].get(job_key(label, stage, backend), {})
+    for attempt in reversed(job.get('attempts', [])):
+        if attempt['status'] == 'COMPLETE':
+            if verify:
+                verify_tree(campaign / attempt['directory'] / 'output', attempt['output_sha256'])
+            return attempt
+    return None
+
+
+def result_for(campaign, attempt):
+    return read(campaign / attempt['directory'] / 'output/result.json')
+
+
+def bind_plan(campaign, state, label):
+    """Recover a closed nomination after coordinator death; never resume its loop."""
+    attempt = accepted(campaign, state, label, 'prep', 'primary')
+    if attempt is None:
+        return
+    original = campaign / attempt['directory'] / 'output/witness-plan.json'
+    target = campaign / 'plans' / (slug(label) + '.json')
+    expected = result_for(campaign, attempt).get('input_witness_plan_sha256') or digest(original)
+    if target.exists() and digest(target) != expected:
+        raise ValueError('Nomination changed after preparation')
+    if not target.exists():
+        if digest(original) != expected:
+            raise ValueError('Original plan bytes are required to recover this attempt')
+        temporary = target.with_suffix('.tmp')
+        shutil.copyfile(original, temporary)
+        temporary.replace(target)
+
+
+def compare(campaign, manifest, state, label, stage):
+    pair = [accepted(campaign, state, label, stage, b, verify=True) for b in BACKENDS]
+    if not all(pair):
+        return False
+    a, b = [result_for(campaign, attempt) for attempt in pair]
+    fields = ('preparation.json',) if stage == 'prep' else CANONICAL
+    for field in fields:
+        if a['artifact_sha256'][field] != b['artifact_sha256'][field]:
+            raise ValueError(f'PAIRED_MISMATCH {label} {stage} {field}')
+    if stage == 'prep':
+        state.setdefault('preparations', {})[label] = a['artifact_sha256']['preparation.json']
+    if stage == 'full':
+        if any(a[k] != b[k] for k in COUNTS):
+            raise ValueError(f'PAIRED_COUNT_MISMATCH {label}')
+        if label in CONTROLS:
+            old = 'r127_pic1_v80' if label == 'R127:pic1:00' else 'broader_principal_v75'
+            expected = read(campaign / 'source/certificates' / old / 'expected.json')['points'][label]
+            if a['canonical_artifact_sha256'] != expected['canonical_artifact_sha256'] or any(
+                    a[k] != expected['counts'][k] for k in COUNTS):
+                raise ValueError(f'RETAINED_CONTROL_MISMATCH {label}')
+        state['points'][label] = {'status': 'PAIRED_EMPTY_DISCOVERY' if a['survivor_count'] == 0
+                                 else 'PAIRED_SURVIVORS_REQUIRE_GEOMETRY',
+                                 'survivor_count': a['survivor_count'],
+                                 'candidate_count': a['candidate_count'], 'control': label in CONTROLS,
+                                 'canonical_artifact_sha256': a['canonical_artifact_sha256']}
+    return True
+
+
+def make_tasks(manifest):
+    return [(label, stage, backend) for label in manifest['controls'] + manifest['remaining']
+            for stage in ('prep', 'full') for backend in BACKENDS]
+
+
+def eligible(campaign, manifest, state, task):
+    label, stage, backend = task
+    key = job_key(*task)
+    job = state['jobs'].get(key, {'attempts': []})
+    if any(a['status'] in ('RUNNING', 'COMPLETE') for a in job['attempts']):
+        return False
+    if any(a['status'] == 'FAILED' for a in job['attempts']):
+        return False
+    maximum = 2 if stage == 'prep' else len(manifest['limits']['cpu_tiers'])
+    if len(job['attempts']) >= maximum:
+        return False
+    if label not in CONTROLS and not all(p in state['points'] for p in CONTROLS):
+        return False
+    if stage == 'prep':
+        return backend == 'primary' or accepted(campaign, state, label, 'prep', 'primary') is not None
+    return label in state.get('preparations', {})
+
+
+def launch(campaign, manifest, state, task):
+    label, stage, backend = task
+    key = job_key(*task)
+    job = state['jobs'].setdefault(key, {'attempts': []})
+    number = len(job['attempts'])
+    limits = manifest['limits']
+    cpu = limits['preparation_cpu'] * (number + 1) if stage == 'prep' else limits['cpu_tiers'][number]
+    directory = f'attempts/{slug(label)}/{stage}-{backend}-{number+1:02d}'
+    folder = campaign / directory
+    folder.mkdir(parents=True, exist_ok=False)
+    source = campaign / 'source'
+    plan = campaign / 'plans' / (slug(label) + '.json')
+    bind_plan(campaign, state, label)
+    command = [sys.executable, '-I', '-B', str(source / HERE / 'child.py'),
+               '--cpu', str(cpu), '--memory-mib', str(limits['memory_mib']),
+               '--file-mib', str(limits['file_mib']), '--lease', str(folder / 'lease.json'),
+               '--parent-pid', str(os.getpid()), '--', sys.executable,
+               '-I', '-B', '-u', str(source / HERE / (backend + '.py')), '--point', label,
+               '--output', str(folder / 'output')]
+    if stage == 'prep':
+        command.append('--prepare-only')
+    if plan.exists():
+        command.extend(['--witness-plan', str(plan)])
+    elif stage != 'prep' or backend != 'primary':
+        raise ValueError('Missing exact nomination prerequisite')
+    row = {'status': 'RUNNING', 'directory': directory, 'command': command,
+           'task': list(task),
+           'started_utc': stamp(), 'started_epoch': time.time(), 'cpu_limit': cpu,
+           'wall_limit': cpu * limits['wall_multiplier'],
+           'plan_sha256': digest(plan) if plan.exists() else None}
+    env = dict(os.environ)
+    for key_env in ('PYTHONPATH', 'PYTHONOPTIMIZE', 'PYTHONSTARTUP'):
+        env.pop(key_env, None)
+    env.update(PYTHONDONTWRITEBYTECODE='1', PYTHONUNBUFFERED='1', OMP_NUM_THREADS='1',
+               OPENBLAS_NUM_THREADS='1')
+    # Persist intent before creating a process. The child writes its own PID
+    # before entering arithmetic, closing the coordinator's Popen crash gap.
+    write(folder / 'attempt.json', row)
+    log = (folder / 'child.log').open('xb')
+    try:
+        process = subprocess.Popen(command, cwd=source, env=env, stdout=log,
+                                   stderr=subprocess.STDOUT, start_new_session=True)
+    finally:
+        log.close()
+    row['pid'] = process.pid
+    job['attempts'].append(row)
+    return process, row
+
+
+def recover_attempts(campaign, state):
+    recorded = {a['directory'] for job in state['jobs'].values() for a in job['attempts']}
+    for path in sorted((campaign / 'attempts').glob('*/*/attempt.json')):
+        row = read(path)
+        if row['directory'] not in recorded:
+            state['jobs'].setdefault(job_key(*row['task']), {'attempts': []})['attempts'].append(row)
+    for job in state['jobs'].values():
+        for attempt in job['attempts']:
+            if attempt['status'] != 'RUNNING':
+                continue
+            lease = campaign / attempt['directory'] / 'lease.json'
+            pid = read(lease)['pid'] if lease.exists() else attempt.get('pid')
+            if pid is not None:
+                try:
+                    os.kill(pid, 0)
+                except ProcessLookupError:
+                    pass
+                else:
+                    raise RuntimeError(f'Prior worker {pid} may still be alive; refusing duplicate work')
+            attempt.update(status='INTERRUPTED', finished_utc=stamp())
+
+
+def kill(process):
+    if process.poll() is None:
+        try:
+            os.killpg(process.pid, signal.SIGKILL)
+        except ProcessLookupError:
+            pass
+    process.wait()
+
+
+def stop_signal(signum, frame):
+    global STOP
+    STOP = True
+
+
+def run(args):
+    global STOP
+    STOP = False
+    with (args.output.resolve() / 'coordinator.lock').open('a+') as lock:
+        fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
+        return run_locked(args)
+
+
+def run_locked(args):
+    global STOP
+    campaign = args.output.resolve()
+    manifest, state = read(campaign / 'manifest.json'), read(campaign / 'state.json')
+    if state['status'] == 'COHORT_HALTED':
+        raise ValueError('This cohort requires reviewed repair and a new campaign')
+    if state['manifest_sha256'] != digest(campaign / 'manifest.json'):
+        raise ValueError('Campaign manifest changed')
+    verify_tree(campaign / 'source', manifest['source_sha256'])
+    if digest(Path(__file__)) != manifest['source_sha256'][f'{HERE}/runner.py']:
+        raise ValueError('Coordinator differs from frozen source; run the snapshot copy')
+    for label, checksum in manifest['control_plan_sha256'].items():
+        if digest(campaign / 'plans' / (slug(label) + '.json')) != checksum:
+            raise ValueError('Changed control plan')
+    current_runtime = runtime()
+    if state['runtime'] is not None and state['runtime'] != current_runtime:
+        raise ValueError('Runtime changed: use a new campaign and repeat controls')
+    state['runtime'] = current_runtime
+    recover_attempts(campaign, state)
+    state['points'], state['preparations'] = {}, {}
+    for task in make_tasks(manifest):
+        attempt = accepted(campaign, state, *task, verify=True)
+        if attempt is not None:
+            validate_result(campaign, manifest, *task, attempt)
+    for label in manifest['controls'] + manifest['remaining']:
+        bind_plan(campaign, state, label)
+        compare(campaign, manifest, state, label, 'prep')
+        compare(campaign, manifest, state, label, 'full')
+    if state['deadline_epoch'] is None:
+        state['deadline_epoch'] = time.time() + manifest['limits']['campaign_seconds']
+    state.update(status='RUNNING', coordinator_pid=os.getpid(), updated_utc=stamp())
+    write(campaign / 'state.json', state)
+    for sig in (signal.SIGTERM, signal.SIGINT):
+        signal.signal(sig, stop_signal)
+    live = {}
+    try:
+        while not STOP and time.time() < state['deadline_epoch']:
+            verify_tree(campaign / 'source', manifest['source_sha256'])
+            if shutil.disk_usage(campaign).free < manifest['limits']['minimum_free_mib'] * 1024**2:
+                state['status'] = 'DISK_LIMIT'
+                break
+            for task, (process, row) in list(live.items()):
+                if process.poll() is None and time.time() - row['started_epoch'] > row['wall_limit']:
+                    kill(process)
+                    row['status'] = 'WALL_LIMIT'
+                if process.poll() is None:
+                    continue
+                row.update(returncode=process.returncode, finished_utc=stamp(),
+                           wall_seconds=time.time() - row['started_epoch'],
+                           log_sha256=digest(campaign / row['directory'] / 'child.log'))
+                if row['status'] == 'RUNNING' and process.returncode != 0:
+                    row['status'] = 'CPU_OR_RESOURCE_LIMIT' if process.returncode in (
+                        -signal.SIGXCPU, -signal.SIGKILL, -signal.SIGXFSZ) else 'FAILED'
+                if row['status'] == 'FAILED':
+                    raise RuntimeError(f'Unexpected worker failure: {task}; see {row["directory"]}/child.log')
+                if process.returncode == 0:
+                    result, hashes = validate_result(campaign, manifest, *task, row)
+                    row.update(status='COMPLETE', output_sha256=hashes, cpu_seconds=result['cpu_seconds'])
+                    label, stage, backend = task
+                    if stage == 'prep' and backend == 'primary':
+                        bind_plan(campaign, state, label)
+                    compare(campaign, manifest, state, label, stage)
+                del live[task]
+            available = manifest['limits']['workers'] - len(live)
+            if available:
+                choices = [t for t in make_tasks(manifest) if eligible(campaign, manifest, state, t)]
+                # First attempts precede retries so one difficult point cannot starve the queue.
+                choices.sort(key=lambda t: len(state['jobs'].get(job_key(*t), {}).get('attempts', [])))
+                for task in choices[:available]:
+                    live[task] = launch(campaign, manifest, state, task)
+            state['updated_utc'] = stamp()
+            state['summary'] = dict(Counter(p['status'] for label, p in state['points'].items()
+                                           if label in manifest['remaining']))
+            state['active_workers'] = len(live)
+            write(campaign / 'state.json', state)
+            if not live:
+                state['status'] = 'QUEUE_EXHAUSTED_REQUIRES_RESEARCH_REVIEW'
+                break
+            time.sleep(1)
+        else:
+            state['status'] = 'INTERRUPTED' if STOP else 'CAMPAIGN_DEADLINE'
+    except BaseException as error:
+        state.update(status='COHORT_HALTED', error=repr(error))
+        raise
+    finally:
+        for process, row in live.values():
+            kill(process)
+            if row['status'] == 'RUNNING':
+                row.update(status='INTERRUPTED', returncode=process.returncode, finished_utc=stamp())
+        if runtime() != current_runtime:
+            state.update(status='COHORT_HALTED', error='Runtime changed during campaign')
+        state.update(updated_utc=stamp(), active_workers=0)
+        write(campaign / 'state.json', state)
+    print(json.dumps({'status': state['status'], 'summary': state.get('summary', {})}))
+
+
+def main():
+    if not __debug__:
+        raise RuntimeError('Assertions required')
+    parser = argparse.ArgumentParser(description=__doc__)
+    sub = parser.add_subparsers(dest='action', required=True)
+    init = sub.add_parser('init')
+    init.add_argument('--output', required=True, type=Path)
+    init.add_argument('--control-plans', required=True, type=Path)
+    init.add_argument('--workers', type=int, default=4)
+    init.add_argument('--cpu-tiers', type=int, nargs='+', default=[600, 1800, 7200])
+    init.add_argument('--preparation-cpu', type=int, default=120)
+    init.add_argument('--memory-mib', type=int, default=4096)
+    init.add_argument('--file-mib', type=int, default=128)
+    init.add_argument('--campaign-seconds', type=int, default=8*3600)
+    init.add_argument('--minimum-free-mib', type=int, default=2048)
+    go = sub.add_parser('run')
+    go.add_argument('--output', required=True, type=Path)
+    args = parser.parse_args()
+    if args.action == 'init':
+        if not (1 <= args.workers <= 128 and 1 <= args.campaign_seconds <= 24*3600
+                and 1 <= args.preparation_cpu <= 1800 and 1 <= len(args.cpu_tiers) <= 3
+                and all(1 <= value <= 21600 for value in args.cpu_tiers)
+                and args.cpu_tiers == sorted(set(args.cpu_tiers))
+                and 256 <= args.memory_mib <= 65536 and 1 <= args.file_mib <= 1024
+                and args.minimum_free_mib >= 256):
+            parser.error('Invalid bounded campaign limits')
+        initialize(args)
+    else:
+        run(args)
+
+
+if __name__ == '__main__':
+    main()

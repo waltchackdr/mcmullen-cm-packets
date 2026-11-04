@@ -1,0 +1,339 @@
+"""Theta worker derived from reviewed V162 postprocess worker.
+
+Transport/child cleanup code is reused; plan admission and completion semantics
+are changed and require separate execution review. No provisioning or deletion authority.
+
+An independently armed provider-deletion guard is still required by dispatch.
+This worker's deadline kills computations only; it cannot stop cloud billing.
+"""
+import argparse
+from concurrent.futures import ThreadPoolExecutor
+import hashlib
+import json
+import math
+import os
+from pathlib import Path
+import platform
+import signal
+import stat
+import subprocess
+import sys
+import threading
+import time
+
+BASE = Path(__file__).resolve().parent
+ROOT = BASE.parents[1]
+
+
+class SkipBeforeLaunch(Exception):
+    pass
+
+
+def require(ok, message):
+    if not ok:
+        raise RuntimeError(message)
+
+
+def read_regular(path, maximum=2*1024**2):
+    fd = os.open(path,os.O_RDONLY|os.O_NONBLOCK|os.O_NOFOLLOW)
+    with os.fdopen(fd,'rb') as stream:
+        info = os.fstat(stream.fileno())
+        require(stat.S_ISREG(info.st_mode) and info.st_size <= maximum, 'Invalid input file')
+        raw = stream.read(maximum+1)
+        require(len(raw) <= maximum, 'Input size bound')
+        return raw
+
+
+def digest(path):
+    return hashlib.sha256(read_regular(path)).hexdigest()
+
+
+def save(path, data):
+    temporary = path.with_suffix('.partial')
+    with temporary.open('w') as stream:
+        json.dump(data, stream, indent=2, sort_keys=True)
+        stream.write('\n')
+        stream.flush()
+        os.fsync(stream.fileno())
+    temporary.replace(path)
+
+
+def verify_pins(plan, root=ROOT):
+    root = root.resolve()
+    require(isinstance(plan['pins'],dict) and len(plan['pins']) <= 64, 'Input count bound')
+    total = 0
+    for name, pin in plan['pins'].items():
+        path = (root/name).resolve()
+        require(path.is_relative_to(root), 'Input path escape')
+        raw = read_regular(path)
+        total += len(raw)
+        require(total <= 16*1024**2 and hashlib.sha256(raw).hexdigest() == pin, 'Changed input')
+
+
+def validate_plan(plan, root=ROOT):
+    root = root.resolve()
+    require(plan['concurrency'] == 2 and plan['max_tasks'] == 8, 'Wrong task bounds')
+    require(type(plan['job_index']) is int and plan['job_index'] in (0,1), 'Wrong job index')
+    require(type(plan['pair_start']) is int and type(plan['pair_count']) is int, 'Pair grid types')
+    require(0 <= plan['pair_start'] < 130 and 2 <= plan['pair_count'] <= 16
+            and plan['pair_start']+plan['pair_count'] <= 130, 'Pair grid bounds')
+    tasks = plan['tasks']
+    require(len(tasks) == 8, 'Wrong task count')
+    representatives = [0,1,2,3,6,12,15,17,40,91]
+    expected=[]
+    start,count=plan['pair_start'],plan['pair_count'];cut=start+count//2
+    for position,index in enumerate(representatives[5*plan['job_index']:5*plan['job_index']+5]):
+        chunks=[range(start,cut),range(cut,start+count)] if position<3 else [range(start,start+count)]
+        expected.extend((index,list(chunk)) for chunk in chunks)
+    for i,t in enumerate(tasks):
+        require(set(t) == {'catalog_index','record_path','pair_indices','numerators_mod3',
+                          'max_cpu_seconds','child_wall_seconds','parent_kill_seconds'}, 'Task fields')
+        index,pair_indices = expected[i]
+        require(type(t['catalog_index']) is int and t['catalog_index'] == index, 'Fixed representative grid')
+        require(t['record_path'] == f'build/s-order-v162/postprocessed01/model{index:03}.json', 'Exact adopted record path')
+        require(t['pair_indices'] == pair_indices, 'Exact disjoint eight-task pair grid')
+        require(all(type(x) is int for x in t['pair_indices']), 'Exact pair-index integers')
+        require((t['max_cpu_seconds'],t['child_wall_seconds'],t['parent_kill_seconds']) == (120,150,160), 'Wrong child limits')
+        require(len(t['numerators_mod3']) == len(pair_indices), 'Numerator count')
+    verify_pins(plan, root)
+    adoption_path = 'experiments/s_order_census_v162/adoption.json'
+    review_path = 'experiments/s_order_census_v162/final_data_review01.json'
+    require(plan['pins'][adoption_path] == '0914ff2b4b987f47a5a9dbcebca6c52286314e11ea888336ca00234ddd4a14af', 'Accepted period adoption')
+    adoption = json.loads(read_regular(root/adoption_path))
+    require(adoption['pins'][review_path] == plan['pins'][review_path], 'Accepted final review')
+    review = json.loads(read_regular(root/review_path))
+    require(review['verdict'] == 'ACCEPT_FOR_SEPARATE_ADOPTION_WITH_EXPLICIT_ARB_CONTRACT_FOR_PERIOD_ENCLOSURES', 'Final review verdict')
+    for t in tasks:
+        require(review['pins'][t['record_path']] == plan['pins'][t['record_path']], 'Reviewed period record')
+        record = json.loads(read_regular(root/t['record_path']))
+        pairs = record['transport']['eligible_nonzero_pairs']
+        require(t['numerators_mod3'] == [pairs[k] for k in t['pair_indices']], 'Reviewed coordinates')
+    return tasks
+
+
+def successful_results(results, output, tasks, plan, plan_sha256, root=ROOT):
+    # Completion requires the mathematical payload; it is still not adoption.
+    sys.path.insert(0,str(Path(root)/'experiments/bc_jacobian_v147'))
+    from exact_ball_candidate import component, excludes_zero
+    def ball(value):
+        require(isinstance(value,dict) and set(value)=={'real','imag'},'Complex ball schema')
+        return {key:component(value[key]) for key in ('real','imag')}
+    def common(value,index,task_index,keys):
+        require(isinstance(value,dict) and set(value)==keys,'Exact output schema')
+        require(type(value['catalog_index']) is int and value['catalog_index']==index,'Output target')
+        require(type(value['task_index']) is int and value['task_index']==task_index,'Output task')
+        require(value['mathematical_conclusion'] is None,'Completion cannot adopt mathematics')
+    if len(results) != 8 or len(tasks) != 8:
+        return False
+    for i,(result,task) in enumerate(zip(results,tasks)):
+        if result.get('status') != 'EXITED' or result.get('returncode') != 0:
+            return False
+        try:
+            values = [json.loads(line) for line in read_regular(Path(output)/f'task{i:02d}'/'stdout.jsonl').decode().splitlines()]
+            if len(values) != len(task['pair_indices'])+2:
+                return False
+            first,last = values[0],values[-1]
+            common(first,task['catalog_index'],i,{'stage','catalog_index','task_index','plan_sha256',
+                'period_record_sha256','precision_bits','input_precision_bits','chi','characteristic_index',
+                'python','flint','FLINT_RELEASE','source_pins','tau','positive_ldl_pivots','mathematical_conclusion'})
+            original=json.loads(read_regular(Path(root)/task['record_path']))
+            transport=original['transport'];chi=transport['invariant_refinement_chi'];characteristic=transport['flint_characteristic_index']
+            require(first['stage']=='EXACT_PERIOD_INPUT' and first['plan_sha256']==plan_sha256,'Input plan binding')
+            require(first['period_record_sha256']==plan['pins'][task['record_path']] and first['source_pins']==plan['pins'],'Input source binding')
+            require(first['chi']==chi and first['characteristic_index']==characteristic,'Input characteristic binding')
+            require(type(first['characteristic_index']) is int and all(type(x) is int for x in first['chi']),'Exact characteristic integers')
+            require(type(first['precision_bits']) is int and first['precision_bits']==96
+                    and type(first['input_precision_bits']) is int and first['input_precision_bits']==512,'Input precision')
+            require(first['flint']=='0.9.0' and type(first['FLINT_RELEASE']) is int and first['FLINT_RELEASE']==30600
+                    and isinstance(first['python'],str) and 0<len(first['python'])<1000,'Runtime fields')
+            require(first['tau']==original['interval_period']['period_rectangles'],'Exact loaded period binding')
+            tau=[[ball(v) for v in row] for row in first['tau']]
+            require(len(first['positive_ldl_pivots'])==6 and all(component(v)[0]>0 for v in first['positive_ldl_pivots']),'Positive pivots')
+            common(last,task['catalog_index'],i,{'stage','catalog_index','task_index','pair_indices','total_seconds','mathematical_conclusion'})
+            require(last['stage']=='BATCH_COMPLETE' and last['pair_indices']==task['pair_indices'],'Completion pair binding')
+            require(all(type(x) is int for x in last['pair_indices']),'Exact completion-index integers')
+            require(type(last['total_seconds']) in (int,float) and math.isfinite(last['total_seconds'])
+                    and 0<=last['total_seconds']<=160,'Completion duration')
+            input_hash = hashlib.sha256(json.dumps(first,sort_keys=True).encode()).hexdigest()
+            for observation,pair_index,numerator in zip(values[1:-1],task['pair_indices'],task['numerators_mod3']):
+                common(observation,task['catalog_index'],i,{'stage','catalog_index','task_index','pair_index',
+                    'input_sha256','numerator_mod3','centered_lift','argument','characteristic_index','precision_bits',
+                    'quantity','finite','mathematical_conclusion','enclosure','excludes_zero'})
+                require(observation['stage']=='EXACT_THETA_OBSERVATION' and type(observation['pair_index']) is int
+                        and observation['pair_index']==pair_index and observation['numerator_mod3']==numerator
+                        and observation['input_sha256']==input_hash,'Observation input binding')
+                centered=[x if x<=1 else x-3 for x in numerator]
+                require(observation['centered_lift']==centered and observation['characteristic_index']==characteristic
+                        and type(observation['precision_bits']) is int and observation['precision_bits']==96
+                        and observation['quantity']=='theta_characteristic_squared','Theta coordinate/interface binding')
+                require(type(observation['characteristic_index']) is int
+                        and all(type(x) is int for x in observation['numerator_mod3']+observation['centered_lift']),
+                        'Exact observation-coordinate integers')
+                require(len(observation['argument'])==6,'Argument shape')
+                for row,z in enumerate(observation['argument']):
+                    actual=ball(z)
+                    for part in ('real','imag'):
+                        lo=hi=centered[row] if part=='real' else 0
+                        for col in range(6):
+                            a,b=tau[row][col][part];m=centered[col+6]
+                            lo+=min(m*a,m*b);hi+=max(m*a,m*b)
+                        require(actual[part][0]<=lo/3 and actual[part][1]>=hi/3,'Argument must enclose exact linear interval')
+                require(type(observation['finite']) is bool and type(observation['excludes_zero']) is bool,'Observation booleans')
+                if observation['finite']:
+                    ball(observation['enclosure'])
+                    require(observation['excludes_zero']==excludes_zero(observation['enclosure']),'Exact zero flag')
+                else:
+                    require(observation['enclosure'] is None and observation['excludes_zero'] is False,'Nonfinite consistency')
+        except (ValueError,KeyError,TypeError,OSError,UnicodeError,RuntimeError):
+            return False
+    return True
+
+
+def snapshot(plan, plan_bytes, target, root=ROOT):
+    """Copy only hash-verified bytes, then remove ordinary write permissions."""
+    root, target = root.resolve(), target.resolve()
+    target.mkdir(mode=0o700)
+    require(len(plan['pins']) <= 64, 'Snapshot count bound')
+    total = 0
+    for name, expected in plan['pins'].items():
+        source = (root/name).resolve()
+        require(source.is_relative_to(root), 'Snapshot path escape')
+        raw = read_regular(source)
+        total += len(raw)
+        require(total <= 16*1024**2 and hashlib.sha256(raw).hexdigest() == expected, 'Snapshot input drift')
+        dest = target/name
+        dest.parent.mkdir(parents=True,exist_ok=True)
+        with dest.open('xb') as stream:
+            stream.write(raw); stream.flush(); os.fsync(stream.fileno())
+        dest.chmod(0o444)
+    dest = target/'experiments/bc_jacobian_v147/certificate_plan_candidate.json'
+    with dest.open('xb') as stream:
+        stream.write(plan_bytes); stream.flush(); os.fsync(stream.fileno())
+    dest.chmod(0o444)
+    validate_plan(plan,target)
+    for path in sorted(target.rglob('*'),key=lambda p:len(p.parts),reverse=True):
+        if path.is_dir(): path.chmod(0o555)
+    target.chmod(0o555)
+
+
+def run_one(command, directory, deadline, env, task=None, timeout_cap=160,
+            check=None, cancel=None, monotonic_deadline=None):
+    """Retain both streams and reap the process group, including on timeout."""
+    directory.mkdir()
+    started = time.time()
+    process = None
+    cancel = cancel if cancel is not None else threading.Event()
+    end = min(time.monotonic()+timeout_cap,
+              monotonic_deadline if monotonic_deadline is not None
+              else time.monotonic()+max(0,deadline-time.time()))
+    result = {'started_epoch':started, 'status':'NOT_STARTED', 'task':task}
+    with (directory/'stdout.jsonl').open('wb') as out, (directory/'stderr.txt').open('wb') as err:
+        try:
+            remaining = end-time.monotonic()
+            if cancel.is_set():
+                result['status'] = 'CANCELLED'
+            elif remaining <= 0:
+                result['status'] = 'SKIPPED_DEADLINE'
+            else:
+                if check is not None: check()
+                if cancel.is_set():
+                    result['status'] = 'CANCELLED'
+                    raise SkipBeforeLaunch()
+                if time.monotonic() >= end:
+                    result['status'] = 'SKIPPED_DEADLINE'
+                    raise SkipBeforeLaunch()
+                process = subprocess.Popen(command, stdout=out, stderr=err, env=env,
+                                           cwd=ROOT, start_new_session=True)
+                while True:
+                    if cancel.is_set():
+                        result['status'] = 'CANCELLED'; break
+                    remaining = end-time.monotonic()
+                    if remaining <= 0:
+                        result['status'] = 'TIMEOUT'; break
+                    try:
+                        result['returncode'] = process.wait(timeout=min(0.2,remaining))
+                        result['status'] = 'EXITED'; break
+                    except subprocess.TimeoutExpired:
+                        pass
+        except SkipBeforeLaunch:
+            pass
+        except BaseException as error:
+            result['status'] = 'WORKER_EXCEPTION'
+            result['exception_type'] = type(error).__name__
+        finally:
+            if process is not None:
+                # Always kill the group: a reaped leader may have left descendants.
+                try:
+                    os.killpg(process.pid, signal.SIGKILL)
+                except ProcessLookupError:
+                    pass
+                result['returncode'] = process.wait()
+                if check is not None:
+                    try:
+                        check()
+                    except BaseException as error:
+                        result['status'] = 'WORKER_EXCEPTION'
+                        result['exception_type'] = type(error).__name__
+            out.flush(); os.fsync(out.fileno())
+            err.flush(); os.fsync(err.fileno())
+    result['ended_epoch'] = time.time()
+    result['artifacts'] = {n:{'sha256':digest(directory/n),'bytes':(directory/n).stat().st_size}
+                           for n in ('stdout.jsonl','stderr.txt')}
+    save(directory/'result.json', result)
+    return result
+
+
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--plan-sha256', required=True)
+    parser.add_argument('--deadline-epoch', type=float, required=True)
+    parser.add_argument('--output', type=Path, required=True)
+    args = parser.parse_args()
+    require(platform.system() == 'Linux' and bool(os.environ.get('RUNPOD_POD_ID')), 'Remote only')
+    require(time.time() < args.deadline_epoch <= time.time()+700, 'Invalid computation deadline')
+    end = time.monotonic()+max(0,args.deadline_epoch-time.time())
+    signal.alarm(30)  # Bound preflight before any children exist.
+    plan_path = BASE/'certificate_plan_candidate.json'
+    require(digest(plan_path) == args.plan_sha256, 'Wrong plan bytes')
+    plan_bytes = read_regular(plan_path)
+    require(hashlib.sha256(plan_bytes).hexdigest() == args.plan_sha256, 'Plan drift')
+    plan = json.loads(plan_bytes)
+    tasks = validate_plan(plan)
+    args.output.mkdir(parents=True, exist_ok=False)
+    execution = args.output.resolve()/'execution'
+    snapshot(plan,plan_bytes,execution)
+    frozen_base = execution/'experiments/bc_jacobian_v147'
+    def check():
+        require(digest(frozen_base/'certificate_plan_candidate.json') == args.plan_sha256, 'Plan drift')
+        verify_pins(plan,execution)
+    # No provider key or HTTP token is inherited by mathematical children.
+    env = {k:os.environ[k] for k in ('PATH','LANG','RUNPOD_POD_ID') if k in os.environ}
+    env.update(OMP_NUM_THREADS='1', OPENBLAS_NUM_THREADS='1', MKL_NUM_THREADS='1',
+               PYTHONUNBUFFERED='1', PYTHONHASHSEED='0')
+    save(args.output/'started.json', {'plan_sha256':args.plan_sha256,
+         'deadline_epoch':args.deadline_epoch, 'worker_sha256':digest(Path(__file__)),
+         'scope':'Computation deadline only; independent resource deletion is external'})
+    cancel = threading.Event()
+    handlers = {sig:signal.getsignal(sig) for sig in (signal.SIGTERM,signal.SIGINT)}
+    for sig in handlers: signal.signal(sig,lambda *_:cancel.set())
+    signal.alarm(0)
+    try:
+        with ThreadPoolExecutor(max_workers=2) as pool:
+            futures = [pool.submit(run_one,
+                [sys.executable,str(execution/'experiments/s_order_theta_v164/remote_theta_candidate.py'),
+                 '--plan-sha256',args.plan_sha256,'--task-index',str(i)],
+                args.output/f'task{i:02d}', args.deadline_epoch, env, t,
+                check=check,cancel=cancel,monotonic_deadline=end) for i,t in enumerate(tasks)]
+            results = [f.result() for f in futures]
+    finally:
+        for sig,handler in handlers.items():signal.signal(sig,handler)
+    success = successful_results(results,args.output,tasks,plan,args.plan_sha256,root=execution)
+    save(args.output/'summary.json', {'status':'THETA_BATCH_REVIEW_REQUIRED' if success else 'THETA_BATCH_FAILED',
+                                    'results':results, 'plan_sha256':args.plan_sha256,
+                                    'complete_observation_count':5*plan['pair_count'] if success else None, 'mathematical_adoption':False})
+    if not success:
+        raise SystemExit(1)
+
+
+if __name__ == '__main__':
+    main()

@@ -1,0 +1,91 @@
+{
+  "archives": [
+    {
+      "actual_unpack_snapshot_validation": "PASS",
+      "bytes": 1761280,
+      "files": 21,
+      "job": 0
+    },
+    {
+      "actual_unpack_snapshot_validation": "PASS",
+      "bytes": 1761280,
+      "files": 21,
+      "job": 1
+    }
+  ],
+  "baseline_bootstrap_pipeline_setup_selector": "IDENTICAL except canonical new manifests",
+  "candidate_pins": 165,
+  "changed_worker_functions": [
+    "successful_results",
+    "main"
+  ],
+  "composite_control_flow": {
+    "exact_main_body_stage_fixtures": [
+      "success10",
+      "audit",
+      "transport",
+      "interval",
+      "post_pin"
+    ],
+    "math_functions_mocked": true,
+    "optimized_guards_reject": 3
+  },
+  "exact_index_partition": [
+    0,
+    10,
+    20,
+    30,
+    40,
+    50,
+    60,
+    70,
+    80,
+    90,
+    100,
+    110,
+    120,
+    130,
+    140,
+    150
+  ],
+  "flint_execution": false,
+  "full_raw_model_provenance_hashes": 160,
+  "full_suite": false,
+  "model_mathematics_executed": 0,
+  "negative_completion_cases": [
+    "exact_audit/status",
+    "exact_audit/catalog_index",
+    "exact_audit/theta_evaluations",
+    "exact_audit/missing",
+    "exact_audit/null",
+    "transport/status",
+    "transport/catalog_index",
+    "transport/theta_evaluations",
+    "transport/missing",
+    "transport/null",
+    "interval_period/status",
+    "interval_period/catalog_index",
+    "interval_period/theta_evaluations",
+    "interval_period/missing",
+    "interval_period/null",
+    "short",
+    "extra",
+    "reversed",
+    "nonzero child"
+  ],
+  "negative_completion_count": 19,
+  "packet_pins": 15,
+  "provider_calls": 0,
+  "status": "PASS",
+  "unchanged_worker_functions": [
+    "digest",
+    "read_regular",
+    "require",
+    "run_one",
+    "save",
+    "snapshot",
+    "validate_plan",
+    "verify_pins"
+  ],
+  "wall_seconds": 0.10782370800734498
+}

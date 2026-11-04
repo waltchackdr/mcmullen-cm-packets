@@ -1,0 +1,41 @@
+{
+  "status": "PROVISIONAL_SMALL_GROUP_REGRESSION_PASS",
+  "subgroup_count": 20,
+  "free_center_stabilizer_orders": [
+    1,
+    2,
+    3,
+    6
+  ],
+  "reflection_coordinates": [
+    [
+      0,
+      3
+    ],
+    [
+      1,
+      3
+    ],
+    [
+      2,
+      3
+    ],
+    [
+      3,
+      3
+    ]
+  ],
+  "epsilon_minus_one_reflections": [
+    [
+      0,
+      3
+    ],
+    [
+      2,
+      3
+    ]
+  ],
+  "underlying_weighted_total": 189,
+  "polarized_weighted_total": 2969,
+  "scope": "Abstract24-element group and adopted orbit totals only; arithmetic projection, fixed fields and geometric impossibility use human proof."
+}

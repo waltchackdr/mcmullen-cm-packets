@@ -1,0 +1,177 @@
+#!/usr/bin/env python3
+"""Independent finite CM-type census via CRT signed functions and weight DP.
+
+No other census implementation or output is read/imported.  This computes abstract
+CM-type/Hodge representation data; it certifies neither marked curve realization
+nor algebraicity of exceptional Hodge classes.  Only Python's standard library.
+"""
+from collections import Counter, defaultdict
+from fractions import Fraction
+from hashlib import sha256
+from itertools import product
+from math import comb, gcd
+from pathlib import Path
+import argparse
+import json
+import resource
+import time
+
+G = tuple(product(range(2), range(6)))
+C = (1, 3)
+UNITS = tuple(a for a in range(1, 42) if gcd(a, 42) == 1)
+EXP = {g: next(a for a in UNITS if a % 3 == (-1)**g[0] % 3
+               and a % 7 == pow(3, g[1], 7)) for g in G}
+COORD = {a: g for g, a in EXP.items()}
+
+def add(a, b):
+    return ((a[0] + b[0]) % 2, (a[1] + b[1]) % 6)
+
+def minus(a, b):
+    return ((a[0] - b[0]) % 2, (a[1] - b[1]) % 6)
+
+def signed(bits, g):
+    # Representatives (0,j); complex conjugation adds (1,3).
+    j = g[1] if g[0] == 0 else (g[1] - 3) % 6
+    value = 1 if bits & (1 << j) else -1
+    return value if g[0] == 0 else -value
+
+def cm_type(bits):
+    return tuple(sorted(EXP[g] for g in G if signed(bits, g) == 1))
+
+def translated_type(bits, h):
+    return tuple(sorted(EXP[g] for g in G if signed(bits, minus(g, h)) == 1))
+
+def exact_rank(matrix):
+    a = [list(map(Fraction, row)) for row in matrix]
+    pivots = []
+    r = 0
+    for j in range(len(a[0])):
+        p = next((i for i in range(r, len(a)) if a[i][j]), None)
+        if p is None:
+            continue
+        a[r], a[p] = a[p], a[r]
+        q = a[r][j]
+        a[r] = [x/q for x in a[r]]
+        for i in range(len(a)):
+            if i != r and a[i][j]:
+                q = a[i][j]
+                a[i] = [x-q*y for x, y in zip(a[i], a[r])]
+        pivots.append(j)
+        r += 1
+    return r, pivots
+
+def poly_product(a, b):
+    c = [0] * (len(a) + len(b) - 1)
+    for i, x in enumerate(a):
+        for j, y in enumerate(b):
+            c[i+j] += x*y
+    return c
+
+def representation(bits):
+    # Rows are the full rational orbit of the signed Hodge-circle cocharacter.
+    rows = [[signed(bits, minus(g, h)) for g in G] for h in G]
+    rank, pivot_columns = exact_rank(rows)
+    weights = [tuple(row[j] for row in rows) for j in range(12)]
+    zero = (0,) * 12
+    assert all(w != zero for w in weights)
+    # Exterior-algebra character DP: including an embedding adds its weight.
+    dp = {(0, zero): 1}
+    for w in weights:
+        nxt = dict(dp)
+        for (degree, total), multiplicity in dp.items():
+            new = (degree + 1, tuple(a+b for a, b in zip(total, w)))
+            nxt[new] = nxt.get(new, 0) + multiplicity
+        dp = nxt
+    assert sum(dp.values()) == 2**12
+    hodge = [dp.get((2*p, zero), 0) for p in range(7)]
+    assert all(dp.get((2*p+1, zero), 0) == 0 for p in range(6))
+    # Each opposite-weight class gives a complete bipartite quadratic pairing
+    # graph.  Divisor products cover exactly its equally sized selections.
+    counts = Counter(weights)
+    classes = []
+    used = set()
+    divisor = [1]
+    for w in sorted(counts):
+        if w in used:
+            continue
+        negative = tuple(-x for x in w)
+        assert negative in counts
+        positive_count, negative_count = counts[w], counts[negative]
+        assert positive_count == negative_count
+        used.update((w, negative))
+        classes.append([positive_count, negative_count])
+        divisor = poly_product(divisor, [comb(positive_count, k)*comb(negative_count, k)
+                                        for k in range(min(positive_count, negative_count)+1)])
+    assert len(divisor) == 7 and hodge == hodge[::-1] and divisor == divisor[::-1]
+    assert all(a >= b for a, b in zip(hodge, divisor))
+    exceptional = [a-b for a, b in zip(hodge, divisor)]
+    return {'hodge_group_rank': rank, 'mumford_tate_rank': rank+1,
+            'signed_cocharacter_rows_C2xC6': rows, 'rref_pivot_columns': pivot_columns,
+            'opposite_weight_class_multiplicities': classes,
+            'hodge_dimensions_by_codimension_0_to_6': hodge,
+            'divisor_algebra_dimensions_by_codimension_0_to_6': divisor,
+            'exceptional_quotient_dimensions_by_codimension_0_to_6': exceptional,
+            'divisor_generated': not any(exceptional),
+            'first_exceptional_codimension': next((p for p, value in enumerate(exceptional) if value), None)}
+
+def census():
+    assert EXP[C] == 41 and len(EXP) == len(COORD) == 12
+    assert all(EXP[add(a,b)] == EXP[a]*EXP[b] % 42 for a in G for b in G)
+    types = {cm_type(bits): bits for bits in range(64)}
+    assert len(types) == 64
+    for phi in types:
+        assert len(phi) == 6 and set(phi).isdisjoint({-a % 42 for a in phi})
+        assert set(phi) | {-a % 42 for a in phi} == set(UNITS)
+    orbits = {}
+    for phi, bits in types.items():
+        orbit = tuple(sorted({translated_type(bits,h) for h in G}))
+        assert phi in orbit and all(t in types for t in orbit)
+        orbits.setdefault(orbit[0], orbit)
+        assert orbits[orbit[0]] == orbit
+    assert sum(map(len, orbits.values())) == 64
+    assert set().union(*(set(v) for v in orbits.values())) == set(types)
+    assert sum(len(v) for v in orbits.values()) == len(set().union(*(set(v) for v in orbits.values())))
+    records = []
+    for phi, orbit in sorted(orbits.items()):
+        bits = types[phi]
+        stabilizer = tuple(sorted(EXP[h] for h in G if translated_type(bits,h) == phi))
+        assert len(stabilizer) * len(orbit) == 12 and 41 not in stabilizer
+        for a in stabilizer:
+            assert {a*t % 42 for t in phi} == set(phi)
+        rep = representation(bits)
+        rep.update(representative=list(phi), orbit_size=len(orbit), orbit_members=[list(x) for x in orbit],
+                   stabilizer=list(stabilizer), primitive=len(stabilizer)==1,
+                   primitive_inducing_field_degree=12//len(stabilizer),
+                   primitive_abelian_factor_dimension=6//len(stabilizer),
+                   isotypic_power_multiplicity=len(stabilizer), crt_boolean_mask=bits)
+        records.append(rep)
+    return {'schema_version':1, 'status':'EXACT_ABSTRACT_CM_TYPE_CENSUS_NOT_GEOMETRIC_ADOPTION',
+            'field':'Q(zeta42)=Q(zeta21)', 'galois_group':'C2 x C6 via residues mod3 and powers of3 mod7',
+            'crt_coordinates':[{'coordinate':list(g),'exponent_mod42':EXP[g]} for g in G],
+            'complex_conjugation_coordinate':list(C),'raw_types':64,'orbit_count':len(records),
+            'orbits':records,
+            'finite_coverage_argument':[
+                'The12 embeddings have6 disjoint complex-conjugate pairs. A CM type chooses exactly one from each pair:2^6=64.',
+                'The CRT model lists all units modulo42 and verifies its multiplication table. Every Galois translate is included in each12-element action.',
+                'The disjoint orbit union is exactly the64 types; orbit_size times stabilizer_size equals12 for every orbit.'
+            ],
+            'rank_argument':'The signed Hodge-circle cocharacter and every Galois translate generate the Hodge torus rational cocharacter space. Exact rational row rank is its dimension; adding the scalar character raises the Mumford-Tate rank by1.',
+            'invariant_argument':'Each embedding occurs once in rank-one M homology. The DP multiplies factors1+u*X^weight, so the zero-weight coefficient of u^(2p) counts a basis of complexified rational codimension-p Hodge classes.',
+            'divisor_argument':'Degree2 invariants pair opposite nonzero weights. A monomial lies in their generated subalgebra exactly when it selects equal counts in each opposite-weight class. The product of sum_k binom(a,k)binom(b,k)t^k counts these monomials. Rational generation descends by field extension; individual complex eigenvectors need not be rational.',
+            'primitivity_argument':'For an abelian Galois CM field, the full type stabilizer H excludes conjugation. The type descends to the CM field M^H and has trivial stabilizer there, hence is primitive. Its abstract CM abelian factor has dimension6/|H|, and the rank-one-M variety is isogenous to its |H|-th power.',
+            'scope':{'marked_curve_realization_asserted':False,'polarized_model_identification_asserted':False,
+                     'exceptional_class_algebraicity_asserted':False,'theorem_promotion':False,
+                     'only_galois_equivalence_classified':True}}
+
+def main():
+    ap=argparse.ArgumentParser();ap.add_argument('--output',type=Path,default=Path(__file__).with_name('independent.json'));args=ap.parse_args()
+    assert __debug__
+    resource.setrlimit(resource.RLIMIT_CPU,(20,21))
+    t=time.process_time();raw=Path(__file__).read_bytes();pin=sha256(raw).hexdigest();result=census()
+    result['source_sha256']=pin;result['cpu_seconds']=time.process_time()-t
+    assert sha256(Path(__file__).read_bytes()).hexdigest()==pin
+    with args.output.open('x') as f:json.dump(result,f,sort_keys=True,indent=2);f.write('\n')
+    print(json.dumps({'orbits':result['orbit_count'],'source_sha256':pin,'output_sha256':sha256(args.output.read_bytes()).hexdigest(),'cpu_seconds':result['cpu_seconds']}))
+
+if __name__=='__main__':
+    main()

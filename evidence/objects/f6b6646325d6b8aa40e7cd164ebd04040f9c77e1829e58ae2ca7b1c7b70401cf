@@ -1,0 +1,70 @@
+{
+  "bezout_seven_point_residuals": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+  ],
+  "character_partition": {
+    "21": [
+      1,
+      2,
+      4,
+      5,
+      8,
+      10,
+      11,
+      13,
+      16,
+      17,
+      19,
+      20
+    ],
+    "3": [
+      7,
+      14
+    ],
+    "7": [
+      3,
+      6,
+      9,
+      12,
+      15,
+      18
+    ]
+  },
+  "excluded_inputs": [
+    "discovery chain-cycle homology model",
+    "producer arithmetic implementation",
+    "numerical libraries",
+    "theta/runtime evidence"
+  ],
+  "negative_controls_rejected": [
+    "wrong Bezout sign",
+    "wrong Bezout t^3 exponent",
+    "same-product type (1,1,1,1,1,189)",
+    "degree 189"
+  ],
+  "pins_checked": 12,
+  "polarization_degree": 35721,
+  "product_of_elementary_divisors": 189,
+  "scope": "Finite identities and evidence hashes only; geometric proof is human-reviewed.",
+  "status": "PASS_INDEPENDENT_FINITE_CHECKS_ONLY",
+  "unique_lower_type": [
+    1,
+    3,
+    3,
+    21
+  ],
+  "unique_primitive_type": [
+    1,
+    1,
+    1,
+    3,
+    3,
+    21
+  ]
+}

@@ -1,0 +1,22 @@
+"""Bounded exact discovery of CM saturation and prime2 relationship."""
+import hashlib,json,resource,signal,importlib.util,time
+from pathlib import Path
+import sympy as s
+from sympy.matrices.normalforms import hermite_normal_form
+resource.setrlimit(resource.RLIMIT_CPU,(20,20));signal.alarm(30);start=time.monotonic();root=Path(__file__).resolve().parents[2]
+p=root/'certificates/principal_unmarked_bc_v122.py';spec=importlib.util.spec_from_file_location('c58',p);b=importlib.util.module_from_spec(spec);spec.loader.exec_module(b);raw=b.DATA.read_bytes();assert hashlib.sha256(raw).hexdigest()==b.DATA_SHA;d=json.loads(raw)['data'];K=b.K;z=K([0,1]);N=12
+mat=lambda vs:s.Matrix.hstack(*(s.Matrix(v.c) for v in vs));basis=lambda I:[K(list(I[:,i])) for i in range(N)]
+zp=[z**i for i in range(N)];sigma=lambda v:sum((c*z**((31*i)%42) for i,c in enumerate(v.c)),K())
+def hnf(vs):
+ A=mat(vs);den=s.ilcm(*[q.q for q in A]);return hermite_normal_form((den*A).applyfunc(int))/den
+def sat(vs):return hnf([q*v for q in zp for v in vs])
+IB=[K(v) for v in d['I_B_basis']];IC=[K(v) for v in d['I_C_basis']];SB=sat(IB);SC=sat(IC);s7=sum((z**(6*i) for i in [1,2,4]),K())-sum((z**(6*i) for i in [3,5,6]),K());assert s7*s7==K([-7]);alpha=(1+s7)*K([s.Rational(1,2)]);bara=(1-s7)*K([s.Rational(1,2)]);assert alpha*bara==K([2])
+rec=json.loads((root/'certificates/principal_bc_isogeny_data.json').read_text());m0=K(rec['witness_m']);image=mat([m0*sigma(v) for v in basis(SB)]);branches=[]
+for name,a in [('alpha',alpha),('baralpha',bara)]:
+ target=mat([a*v for v in basis(SC)]);T=target.inv()*image
+ branches.append({'name':name,'equal_lattices':all(q.q==1 for q in T) and abs(T.det())==1,'det':str(T.det()),'integral':all(q.q==1 for q in T),'change':[[str(q) for q in row] for row in T.tolist()]})
+# order R after localizing at3 is scalar fixed-field residues: determine conductor as all x OM subset R.
+orders=json.loads((root/'experiments/principal_bc_unpolarized_v125/result02.json').read_text());R=s.Matrix(orders['orders']['C']['basis']);RI=R.inv();blocks=[RI*mat([q*v for v in zp]) for q in zp];A=s.Matrix.vstack(*blocks);den=s.ilcm(*[q.q for q in A]);H=hermite_normal_form((den*A).applyfunc(int).T);conductor=den*H.T.inv()
+# f candidate (1-zeta3) OM; norm729. index R27, conductorindex729 expected.
+p3=1-z**14;FP=mat([p3*v for v in zp]);change=FP.inv()*conductor
+out={'status':'PROVISIONAL_EXACT_SATURATION_AND_CONDUCTOR','sqrt_minus7':[str(q) for q in s7.c],'alpha':[str(q) for q in alpha.c],'alpha_baralpha_norm':2,'saturation_indices':{'B':str(abs((SB.inv()*mat(IB)).det())),'C':str(abs((SC.inv()*mat(IC)).det()))},'prime2_branches':branches,'conductor_index':str(abs(conductor.det())),'conductor_equals_one_minus_zeta3_OM':all(q.q==1 for q in change) and abs(change.det())==1,'conductor_basis':[[str(q) for q in row] for row in conductor.tolist()],'SB':[[str(q) for q in row] for row in SB.tolist()],'SC':[[str(q) for q in row] for row in SC.tolist()],'seconds':time.monotonic()-start};print(json.dumps(out,indent=2,sort_keys=True))

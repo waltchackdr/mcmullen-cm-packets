@@ -1,0 +1,12 @@
+{
+  "url": "https://www.numdam.org/item/CM_1976__33_2_179_0.pdf",
+  "path": "experiments/all_underlying_galois_v165/ray_source/Masley1976_small.pdf",
+  "sha256": "7322342597117e416b9351c1d79a57e5aa47ef5c827bcb60b93280665a6cb417",
+  "bytes": 709087,
+  "title": "Solution of small class number problems for cyclotomic fields",
+  "author": "John Myron Masley",
+  "bibliography": "Compositio Mathematica33(1976),179\u2013186",
+  "inspected": "Main Theorem and complete table on printedp179, PDFpage2",
+  "application": "m=21>2,21notcongruent2mod4,phi(21)=12<=24,and21absent from displayed classnumber2..10 list, so h(Q(zeta21))=1.",
+  "distinction": "Separate primary corroboration of adopted class-number premise; not a claim to have retrieved Masley\u2013Montgomery primary PDF, whose publisher route returned405."
+}

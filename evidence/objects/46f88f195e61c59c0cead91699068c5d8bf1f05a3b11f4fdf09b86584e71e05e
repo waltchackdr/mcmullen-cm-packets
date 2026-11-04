@@ -1,0 +1,36 @@
+"""Finite arithmetic only; the geometric statements require the human proof."""
+import json
+from math import gcd, prod
+
+
+def multiply(a, b):
+    out = [0] * (len(a) + len(b) - 1)
+    for i, x in enumerate(a):
+        for j, y in enumerate(b):
+            out[i + j] += x * y
+    return out
+
+
+def check():
+    phi3, phi7 = [1, 1, 1], [1] * 7
+    product = multiply([0, 1, 0, 0, 1], phi3)
+    bezout = [a - b for a, b in zip(phi7, product)]
+    assert bezout == [1, 0, 0, 0, 0, 0, 0]
+    lower = [1, 3, 3, 21]
+    primitive = [1, 1, 1, 3, 3, 21]
+    assert all(b % a == 0 for a, b in zip(primitive, primitive[1:]))
+    # These torsion sizes determine the elementary divisors at the only primes.
+    for k in [3, 7, 21]:
+        expected = gcd(k, 7)**2 * gcd(k, 3)**6
+        assert prod(gcd(k, x)**2 for x in lower) == expected
+        assert prod(gcd(k, x)**2 for x in primitive) == expected
+    assert prod(primitive)**2 == 35721 == 7**2 * 3**6
+    return {'status': 'FINITE_ARITHMETIC_ONLY_NOT_GEOMETRIC_ADOPTION',
+            'bezout_coefficients': bezout,
+            'lower_type': lower, 'primitive_type': primitive,
+            'polarization_degree': 35721,
+            'product_of_primitive_elementary_divisors': 189}
+
+
+if __name__ == '__main__':
+    print(json.dumps(check(), indent=2, sort_keys=True))

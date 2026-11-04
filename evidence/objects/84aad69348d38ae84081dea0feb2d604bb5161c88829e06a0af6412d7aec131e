@@ -1,0 +1,199 @@
+{
+  "candidate_identification_gate": {
+    "elementary_degree_conversion": "For a mod42 triple of odd order q dividing 21, divide by gcd(42,a,b,c), then multiply residues by 21/q. The resulting nonzero mod21 triple gives the same induced holomorphic residue-sum condition. The displayed examples are deterministic conversions of retained rows, not a fresh independent isogeny proof.",
+    "next_gate": "A human-readable six-orbit mixed-products deduction with independent review of the type/isogeny identifications, then explicit claim-ledger adoption if authorized.",
+    "required": "Review exact holomorphic character types and common Galois transporters; prove the rank-one-M CM variety is isogenous to the indicated power of the admissible factor, including imprimitive types and multiplicities. Then any finite mixed product of the six classes is degree-21 Fermat type."
+  },
+  "excluded_inferences": [
+    "No theorem adoption for the six-orbit consequence in this note.",
+    "No all-eight mixed-products Hodge claim.",
+    "No degree-42 Fermat-hypersurface Hodge theorem follows from da Silva Theorem 3.3.",
+    "Q(zeta_42)=Q(zeta_21) does not identify character order42 with a degree21 Fermat presentation. The saved scan gives no odd-order presentation for orbits2 and3.",
+    "Absence of an odd-order witness in this exact Fermat-character family is not an obstruction to algebraicity by other methods.",
+    "No new geometric McMullen point, polarization or principal-locus assertion."
+  ],
+  "finite_coverage_input": {
+    "examples": [
+      {
+        "census_orbit": 0,
+        "character_order": 21,
+        "mod21_triple": [
+          1,
+          1,
+          19
+        ],
+        "rank_one_M_copy_multiplicity": 1,
+        "retained_mod42_triple": [
+          2,
+          2,
+          38
+        ],
+        "retained_transporter": 19
+      },
+      {
+        "census_orbit": 1,
+        "character_order": 21,
+        "mod21_triple": [
+          1,
+          7,
+          13
+        ],
+        "rank_one_M_copy_multiplicity": 1,
+        "retained_mod42_triple": [
+          2,
+          14,
+          26
+        ],
+        "retained_transporter": 11
+      },
+      {
+        "census_orbit": 4,
+        "character_order": 7,
+        "mod21_triple": [
+          3,
+          3,
+          15
+        ],
+        "rank_one_M_copy_multiplicity": 2,
+        "retained_mod42_triple": [
+          6,
+          6,
+          30
+        ],
+        "retained_transporter": 11
+      },
+      {
+        "census_orbit": 5,
+        "character_order": 21,
+        "mod21_triple": [
+          1,
+          6,
+          14
+        ],
+        "rank_one_M_copy_multiplicity": 1,
+        "retained_mod42_triple": [
+          2,
+          12,
+          28
+        ],
+        "retained_transporter": 1
+      },
+      {
+        "census_orbit": 6,
+        "character_order": 21,
+        "mod21_triple": [
+          1,
+          4,
+          16
+        ],
+        "rank_one_M_copy_multiplicity": 1,
+        "retained_mod42_triple": [
+          2,
+          8,
+          32
+        ],
+        "retained_transporter": 1
+      },
+      {
+        "census_orbit": 7,
+        "character_order": 3,
+        "mod21_triple": [
+          7,
+          7,
+          7
+        ],
+        "rank_one_M_copy_multiplicity": 6,
+        "retained_mod42_triple": [
+          14,
+          14,
+          14
+        ],
+        "retained_transporter": 1
+      }
+    ],
+    "not_independently_recomputed_by_this_audit": true,
+    "odd_character_order_orbits": [
+      0,
+      1,
+      4,
+      5,
+      6,
+      7
+    ],
+    "only_order42_orbits": [
+      2,
+      3
+    ],
+    "pins": {
+      "comparison.json": "531fbe4058269d240719771d71601db836526945ee38f8a995096aa17cda2e06",
+      "coverage.json": "b1bc90a09126ae4e086e54f78c51944c8d45ade995baa3a4b23f369f3557a189",
+      "coverage.py": "f7f14df766d682b11a61c6cc1783c6681db8da30f100c47067000305c3745f6c"
+    }
+  },
+  "independent_review_pending": true,
+  "schema_version": 1,
+  "scope": "Literature hypotheses and transfer only; no new computation of Hodge classes, no theorem-ledger or manuscript change.",
+  "sources": [
+    {
+      "accessed": "2026-10-13",
+      "author": "Genival da Silva Jr.",
+      "doi": "10.1017/exp.2021.14",
+      "id": "daSilva2021-published",
+      "journal": "Experimental Results 2 (2021), e22",
+      "locations": [
+        "Section 3, sentence immediately preceding Theorem 3.3",
+        "Theorem 3.3",
+        "Section 2 semigroup condition P_m",
+        "Appendix"
+      ],
+      "proof_hypotheses": "P_m concerns quasi-decomposability of the indecomposable elements of the nonnegative integral residue-sum semigroup. The Appendix gives SAGE code for this sufficient criterion. The published computation has not been independently replayed here.",
+      "title": "Notes on the Hodge conjecture for Fermat varieties",
+      "url": "https://www.cambridge.org/core/journals/experimental-results/article/notes-on-the-hodge-conjecture-for-fermat-varieties/214625A5A650A760059F9C06D92A196D",
+      "verified_scope": "Theorem 3.3 proves the Hodge conjecture for degree-21 and degree-27 Fermat hypersurfaces in every dimension. The preceding sentence explicitly reports verification of the full condition P_m for m=21,27; its computational proof is assigned to the Appendix. Here n denotes hypersurface dimension, not Cartesian exponent.",
+      "version_caution": "Published Corollary 3.2 concerns products of Fermat fourfolds with degrees at most 100 coprime to 6. It supplies no degree-21 or degree-42 claim. The corresponding preprint numbering and scope differ; use the published Theorem 3.3, not preprint numbering."
+    },
+    {
+      "full_text": "https://arxiv.org/html/2101.04739v2",
+      "id": "daSilva2021-arxiv-v2",
+      "role": "Version comparison only; published statement is authoritative for this audit.",
+      "url": "https://arxiv.org/abs/2101.04739",
+      "version_date": "2021-05-08"
+    },
+    {
+      "author": "Tetsuji Shioda",
+      "doi": "10.1007/BF01450347",
+      "id": "Shioda1981",
+      "journal": "Mathematische Annalen 258 (1981), 65-80",
+      "local_scan": "/private/tmp/shioda1981-fermat-original.pdf",
+      "local_scan_bytes": 1638367,
+      "local_scan_sha256": "8ddf82f4ba396607b3d1e1b337bf2ebe50d14f5292f737584bccdae0e398c3b8",
+      "scan_url": "https://gdz.sub.uni-goettingen.de/download/pdf/PPN235181684_0258/LOG_0017.pdf",
+      "scope_caution": "Section 5 hyperelliptic C_m is distinct from the plane Fermat curve X_m^1. Theorem 4.4 is the general Fermat-type statement, without that restriction.",
+      "title": "Algebraic Cycles on Abelian Varieties of Fermat Type",
+      "url": "https://gdz.sub.uni-goettingen.de/dms/resolveppn/?PPN=GDZPPN002321351",
+      "verified_statements": {
+        "Definition 2.1, p.68": "Fermat-type abelian varieties are products, up to isogeny, of admissible character-orbit factors of the plane Fermat Jacobian.",
+        "Lemma 4.1, pp.70-71": "Algebraicity of a tensor of character lines is equivalent to algebraicity of its concatenated Fermat eigenspace.",
+        "Lemma 4.2, p.71": "Algebraicity of the curve-product tensor implies algebraicity of its corresponding abelian-variety summand.",
+        "Theorem 3.1 and equation (3.1), p.69": "S(A) is a disjoint union of character orbits; these orbits need not be distinct.",
+        "Theorem 4.4, p.72": "Condition (P_m^{6d-2}) implies the Hodge conjecture in codimension d for every abelian variety of Fermat type of degree m."
+      },
+      "visually_inspected_printed_pages": [
+        66,
+        68,
+        69,
+        70,
+        71,
+        72
+      ]
+    }
+  ],
+  "status": "PRIMARY_SOURCE_SCOPE_AUDIT; candidate six-orbit consequence, not adopted",
+  "transfer_deduction": {
+    "alternate_route": "Even the all-dimensions hypersurface conclusion suffices via Shioda Theorem 3.1 and Lemmas 4.1-4.2; the stronger explicitly verified P_21 makes Theorem 4.4 directly applicable.",
+    "dimension_and_twist_check": "For 2d H1 character triples, concatenation has 6d entries and Fermat dimension 6d-2. Curve-product type (d,d) corresponds to middle type (3d-1,3d-1): shift (2d-1,2d-1), equivalently twist -(2d-1) with Q(-1) of type (1,1). It is not a degree-preserving identification.",
+    "rationality": "Algebraicity is equality of the spans of cycle classes and rational Hodge classes after scalar extension. Faithful scalar extension gives the rational statement; no individual complex eigenline is asserted to be a rational cycle.",
+    "repeated_copies": "Distinct exterior positions are marked positions in the disjoint union; identical underlying triples from different copies are allowed. No assumption of disjoint character values, unimodularity, or contraction generation is needed for this literature route.",
+    "short_route": "Full P_21 supplies P_21^{6d-2} for every d. Applying Shioda Theorem 4.4 therefore supplies every codimension on every degree-21 Fermat-type abelian variety, including arbitrary finite products and repeated factors. This is a deduction combining the two primary sources, not a quoted Jacobian-powers theorem of da Silva."
+  }
+}

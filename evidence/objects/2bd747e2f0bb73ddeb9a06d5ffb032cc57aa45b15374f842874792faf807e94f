@@ -1,0 +1,24 @@
+{
+  "command": [
+    "python3",
+    "-m",
+    "unittest",
+    "discover",
+    "-s",
+    "tests",
+    "-p",
+    "test_fermat_minimum_polarization_v154.py",
+    "-v"
+  ],
+  "cpu_limit_seconds_per_process": 20,
+  "installed_certificate_byte_identity": "PASS",
+  "installed_certificate_replay_matches_retained_json": "PASS",
+  "installed_optimized_python_rejection": "PASS",
+  "referee_replay_matches_retained_json": "PASS",
+  "returncode": 0,
+  "status": "PASS",
+  "stderr": "test_small_norm_obstruction_and_attaining_generator (test_fermat_minimum_polarization_v154.MinimumPolarizationInput.test_small_norm_obstruction_and_attaining_generator) ... ok\n\n----------------------------------------------------------------------\nRan 1 test in 0.001s\n\nOK\n",
+  "stdout": "",
+  "wall_seconds_both_checks": 0.081932,
+  "wall_timeout_seconds_per_process": 30
+}

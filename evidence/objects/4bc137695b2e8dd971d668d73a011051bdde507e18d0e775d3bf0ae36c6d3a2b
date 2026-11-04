@@ -1,0 +1,49 @@
+{
+  "candidate_pins": 330,
+  "controller_only_module_name_and_pin_change_from14": true,
+  "deadline_cases": [
+    {
+      "initial_time": 119.0,
+      "local_delete": 1200,
+      "observer_delay": 2,
+      "provider_calls": 0
+    },
+    {
+      "initial_time": 9.0,
+      "local_delete": 310,
+      "observer_delay": 2,
+      "provider_calls": 0
+    },
+    {
+      "initial_time": 119.0,
+      "local_delete": 1200,
+      "observer_delay": 0.5,
+      "provider_calls": 1
+    }
+  ],
+  "fixed_enum_and_exact_exception_passthrough": [
+    {
+      "attempts": 1,
+      "base": "Exception",
+      "label": "ProviderReadError"
+    },
+    {
+      "attempts": 1,
+      "base": "TimeoutError",
+      "label": "TimeoutError"
+    },
+    {
+      "attempts": 1,
+      "base": "OSError",
+      "label": "ProviderReadError"
+    }
+  ],
+  "no_provider_retries": true,
+  "numerical_calls": 0,
+  "observer_failure_cleanup_pass": true,
+  "packet_pins": 10,
+  "provider_calls": 0,
+  "same_sparse13_jobs_bootstrap_session": true,
+  "status": "PASS_DIAGNOSTIC15_DELTA",
+  "wall_seconds": 0.041827999986708164
+}

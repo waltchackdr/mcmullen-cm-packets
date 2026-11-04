@@ -1,0 +1,35 @@
+"""Meaningful fast guards for the complete finite norm obstruction bridge."""
+from copy import deepcopy
+import importlib.util
+import json
+from pathlib import Path
+import unittest
+
+ROOT=Path(__file__).resolve().parents[1]
+SOURCE=ROOT/'certificates/principal_unmarked_bc_v122.py'
+spec=importlib.util.spec_from_file_location('principal_unmarked_bc_candidate',SOURCE)
+candidate=importlib.util.module_from_spec(spec);spec.loader.exec_module(candidate)
+
+class PrincipalUnmarkedBC(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):cls.data=json.loads(candidate.DATA.read_text())
+
+    def test_complete_finite_ball_and_minimum(self):
+        result=candidate.finite_ball(self.data)
+        self.assertEqual((result['norm12_vectors'],result['lattice_minimum'],result['ball_nodes']),(0,14,59))
+
+    def test_changed_form_and_nonunimodular_transform_rejected(self):
+        wrong=deepcopy(self.data)
+        wrong['lattice']['reduced_Gram_H'][0][0]='12'
+        with self.assertRaisesRegex(ValueError,'Gram congruence'):candidate.verify_lattice_bridge(wrong)
+        wrong=deepcopy(self.data)
+        for row in wrong['lattice']['U_columns_old_coordinates']:row[0]*=2
+        with self.assertRaisesRegex(ValueError,'non-unimodular'):candidate.verify_lattice_bridge(wrong)
+
+    def test_incomplete_bounds_and_corrupt_ldl_rejected(self):
+        wrong=deepcopy(self.data);wrong['lattice']['reduced_coordinate_bounds'][0]=0
+        with self.assertRaisesRegex(ValueError,'incomplete coordinate bounds'):candidate.verify_lattice_bridge(wrong)
+        wrong=deepcopy(self.data);wrong['lattice']['gram_schmidt_positive_diagonal'][0]='15'
+        with self.assertRaisesRegex(ValueError,'LDL identity'):candidate.verify_lattice_bridge(wrong)
+
+if __name__=='__main__':unittest.main()

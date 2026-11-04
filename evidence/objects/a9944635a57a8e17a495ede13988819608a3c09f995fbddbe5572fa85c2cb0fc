@@ -1,0 +1,42 @@
+{
+  "status": "PASS",
+  "submitted_pins_verified": 14,
+  "cpu_limit_seconds_per_child": 20,
+  "wall_limit_seconds_per_child": 30,
+  "runs": [
+    {
+      "command": [
+        "python3",
+        "experiments/s_order_jacobian_v160/referee_character01.py"
+      ],
+      "returncode": 0,
+      "wall_seconds": 0.023716,
+      "stderr": ""
+    },
+    {
+      "command": [
+        "python3",
+        "experiments/s_order_jacobian_v160/arithmetic_candidate.py"
+      ],
+      "returncode": 0,
+      "wall_seconds": 0.024672,
+      "stderr": ""
+    },
+    {
+      "command": [
+        "python3",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests",
+        "-p",
+        "test_s_order_jacobian_v160.py",
+        "-v"
+      ],
+      "returncode": 0,
+      "wall_seconds": 0.049437,
+      "stderr": "test_balanced_and_unbalanced (test_s_order_jacobian_v160.BalancedThetaRegression.test_balanced_and_unbalanced) ... ok\n\n----------------------------------------------------------------------\nRan 1 test in 0.004s\n\nOK\n"
+    }
+  ]
+}

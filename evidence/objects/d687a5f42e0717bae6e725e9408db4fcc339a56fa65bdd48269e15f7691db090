@@ -1,0 +1,89 @@
+{
+  "actual_loader_record_validation": 10,
+  "archives": [
+    {
+      "bytes": 327680,
+      "files": 13,
+      "job": 0,
+      "unpack_snapshot_admission": "PASS"
+    },
+    {
+      "bytes": 327680,
+      "files": 13,
+      "job": 1,
+      "unpack_snapshot_admission": "PASS"
+    }
+  ],
+  "candidate_pins": 205,
+  "changed_worker_functions": [
+    "validate_plan",
+    "successful_results",
+    "main"
+  ],
+  "flint_imported": false,
+  "full_suite": false,
+  "invalid_completions_accepted": [
+    "all_period_and_theta_payload_absent",
+    "wrong_plan_record_sources_characteristic_precision_and_input_conclusion",
+    "nonfinite_with_invalid_enclosure_and_true_exclusion_wrong_quantity_empty_argument"
+  ],
+  "negative_plan_rejections": [
+    "job0/wrong_job",
+    "job0/wrong_target",
+    "job0/wrong_coordinates",
+    "job0/over_limit",
+    "job1/wrong_job",
+    "job1/wrong_target",
+    "job1/wrong_coordinates",
+    "job1/over_limit"
+  ],
+  "packet_pins": 14,
+  "pair_indices_per_target": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+  ],
+  "provider_calls": 0,
+  "recovered_superseded_sources": {
+    "experiments/s_order_theta_v164/worker_candidate.py": {
+      "current_path_superseded": true,
+      "retained_path": "experiments/s_order_theta_v164/attempt01/worker_candidate.py",
+      "sha256": "9751cc3bb50b9d0cfe1d21663bfa81af39538007eebbef06164d16e9761a8e1c"
+    },
+    "tests/test_s_order_theta_v164.py": {
+      "current_path_superseded": true,
+      "retained_path": "experiments/s_order_theta_v164/attempt01/test_s_order_theta_v164.py",
+      "sha256": "bb50d069bae0567317919651580568c308e9b542ec0652874b796c56e2b37566"
+    }
+  },
+  "selected_pairs": 80,
+  "status": "BLOCKING_COMPLETION_GAP_REPRODUCED",
+  "targets": [
+    0,
+    1,
+    2,
+    3,
+    6,
+    12,
+    15,
+    17,
+    40,
+    91
+  ],
+  "theta_calls": 0,
+  "unchanged_worker_functions": [
+    "digest",
+    "read_regular",
+    "require",
+    "run_one",
+    "save",
+    "snapshot",
+    "verify_pins"
+  ],
+  "wall_seconds": 0.09100520799984224
+}

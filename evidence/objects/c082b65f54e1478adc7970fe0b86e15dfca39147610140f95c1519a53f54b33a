@@ -1,0 +1,76 @@
+"""Check replay domain and fail-closed inputs without starting geometry jobs."""
+import hashlib
+import importlib.util
+import json
+from pathlib import Path
+import sys
+import tempfile
+import unittest
+from unittest.mock import patch
+
+ROOT = Path(__file__).resolve().parents[1]
+with patch.object(sys, "path", [str(ROOT / "scripts"), *sys.path]):
+    spec = importlib.util.spec_from_file_location("r41_replay", ROOT / "scripts/run_r41_replay_v63.py")
+    replay = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(replay)
+
+
+class R41ReplayTests(unittest.TestCase):
+    def test_jobs_cover_every_mask_in_both_paths_once(self):
+        snapshot = Path("/snapshot")
+        tasks = replay.tasks_for(snapshot)
+        self.assertEqual(len(tasks), 64)
+        self.assertEqual(len({label for label, _ in tasks}), 64)
+        for relative in replay.DRIVERS:
+            selected = [command for _, command in tasks if str(snapshot / relative) in command]
+            self.assertEqual(len(selected), 32)
+            self.assertEqual({int(command[-1]) for command in selected}, set(replay.MASKS))
+            self.assertTrue(all(command[-2] == "--masks" for command in selected))
+
+    def test_incomplete_duplicate_or_nonempty_discovery_is_rejected(self):
+        data = dict(status="ALL_SCHEDULED_PAIRS_MATCH_DISCOVERY_ONLY", matched_points=43,
+                    pending_points=0, failed_points=0, full_43_point_domain=True,
+                    points=[dict(point_id=f"R41:principal:{mask:02d}", survivor_count=0)
+                            for mask in replay.MASKS])
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "comparison.json"
+            path.write_text(json.dumps(data))
+            replay.validate_discovery(path)
+            for key, value in (("matched_points", 42), ("pending_points", 1),
+                               ("failed_points", 1), ("full_43_point_domain", False)):
+                with self.subTest(key=key):
+                    path.write_text(json.dumps({**data, key: value}))
+                    with self.assertRaises(RuntimeError):
+                        replay.validate_discovery(path)
+            changed = json.loads(json.dumps(data))
+            changed["points"][0]["survivor_count"] = 1
+            path.write_text(json.dumps(changed))
+            with self.assertRaises(RuntimeError):
+                replay.validate_discovery(path)
+            changed["points"][0] = changed["points"][1]
+            path.write_text(json.dumps(changed))
+            with self.assertRaises(RuntimeError):
+                replay.validate_discovery(path)
+
+    def test_transitive_source_change_is_rejected(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            dependency = "certificates/foundation.py"
+            relative_paths = {*replay.DRIVERS, replay.PROOF, replay.REVIEW, dependency,
+                              "scripts/run_r41_replay_v63.py", "scripts/certificate_execution.py"}
+            for relative in relative_paths:
+                path = root / relative
+                path.parent.mkdir(parents=True, exist_ok=True)
+                path.write_text("# retained input\n")
+            pin = hashlib.sha256((root / dependency).read_bytes()).hexdigest()
+            (root / replay.EXPECTED).write_text(
+                f"MASKS = {replay.MASKS!r}\nFOUNDATION_SHA256 = {{'primary': {{{dependency!r}: {pin!r}}}}}\n")
+            manifest = replay.source_manifest(root)
+            self.assertEqual(manifest[dependency], pin)
+            (root / dependency).write_text("# changed input\n")
+            with self.assertRaisesRegex(RuntimeError, "Foundation source changed"):
+                replay.source_manifest(root)
+
+
+if __name__ == "__main__":
+    unittest.main()

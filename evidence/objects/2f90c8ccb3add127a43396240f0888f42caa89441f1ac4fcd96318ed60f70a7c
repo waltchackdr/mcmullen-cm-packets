@@ -1,0 +1,185 @@
+"""Synthetic subprocess tests; these never import or run math certificates."""
+
+from contextlib import redirect_stderr, redirect_stdout
+import io
+import json
+from pathlib import Path
+import sys
+import tempfile
+import threading
+import time
+import unittest
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
+from certificate_execution import execute_tasks
+
+
+class CertificateExecutionTests(unittest.TestCase):
+    def setUp(self):
+        self.temporary = tempfile.TemporaryDirectory()
+        self.addCleanup(self.temporary.cleanup)
+        self.root = Path(self.temporary.name)
+        self.output = self.root / "execution"
+
+    @staticmethod
+    def python(source, *arguments):
+        return [sys.executable, "-u", "-c", source, *map(str, arguments)]
+
+    def progress(self):
+        return json.loads((self.output / "progress.json").read_text())
+
+    def wait_for(self, predicate, timeout=8):
+        deadline = time.monotonic() + timeout
+        while time.monotonic() < deadline:
+            path = self.output / "progress.json"
+            if path.exists():
+                # An incomplete JSON snapshot is a test failure, not a retry.
+                snapshot = self.progress()
+                if predicate(snapshot):
+                    return snapshot
+            time.sleep(0.01)
+        self.fail("timed out waiting for live execution progress")
+
+    def test_success_nonzero_and_launch_error_are_all_retained(self):
+        tasks = [
+            ("success", self.python("import sys; print('stdout'); print('stderr', file=sys.stderr)")),
+            ("failure", self.python("print('failed output'); raise SystemExit(7)")),
+            ("launch error", [str(self.root / "missing-executable")]),
+        ]
+        notices, legacy_stdout = io.StringIO(), io.StringIO()
+        with redirect_stderr(notices), redirect_stdout(legacy_stdout):
+            results = execute_tasks(tasks, 3, self.root, self.output)
+        self.assertEqual(legacy_stdout.getvalue(), "")
+        self.assertEqual([r.label for r in results], [t[0] for t in tasks])
+        self.assertEqual([r.status for r in results], ["passed", "failed", "error"])
+        self.assertEqual([r.returncode for r in results], [0, 7, None])
+        self.assertEqual(results[0].stdout, "stdout\nstderr\n")
+        self.assertIn("failed output", results[1].stdout)
+        self.assertIn("FileNotFoundError", results[2].error)
+        self.assertIn("FileNotFoundError", results[2].stdout)
+        snapshot = self.progress()
+        self.assertEqual(snapshot["status"], "error")
+        self.assertIsNotNone(snapshot["finished_at"])
+        self.assertEqual([r["status"] for r in snapshot["tasks"]], ["passed", "failed", "error"])
+        for index, result in enumerate(results, 1):
+            self.assertTrue(Path(result.log_path).name.startswith(f"{index:04d}-"))
+            self.assertEqual(Path(result.log_path).read_text(), result.stdout)
+            self.assertIsNotNone(result.started_at)
+            self.assertIsNotNone(result.finished_at)
+            self.assertGreaterEqual(result.duration_seconds, 0)
+            if result.pid is not None:
+                # Popen.wait() must already have reaped every launched child.
+                with self.assertRaises(ChildProcessError):
+                    __import__("os").waitpid(result.pid, __import__("os").WNOHANG)
+        self.assertIsNone(results[2].pid)
+        self.assertEqual(notices.getvalue().count("START "), 3)
+        self.assertEqual(notices.getvalue().count("DONE "), 3)
+
+    def test_live_out_of_order_progress_and_ordered_results(self):
+        release = self.root / "release"
+        blocked = self.python(
+            "import pathlib,sys,time\n"
+            "release=pathlib.Path(sys.argv[1])\n"
+            "print('blocked process is live', flush=True)\n"
+            "deadline=time.monotonic()+12\n"
+            "while not release.exists() and time.monotonic()<deadline: time.sleep(.01)\n"
+            "print('released', flush=True)\n"
+            "sys.exit(0 if release.exists() else 99)\n", release,
+        )
+        tasks = [("first blocked", blocked), ("second quick", self.python("print('quick complete')"))]
+        returned, errors, notices = [], [], io.StringIO()
+
+        def run():
+            try:
+                returned.extend(execute_tasks(tasks, 2, self.root, self.output))
+            except BaseException as exc:
+                errors.append(exc)
+
+        with redirect_stderr(notices):
+            thread = threading.Thread(target=run)
+            thread.start()
+            try:
+                snapshot = self.wait_for(lambda s: s["tasks"][0]["status"] == "running"
+                                         and s["tasks"][0]["pid"] is not None
+                                         and s["tasks"][1]["status"] == "passed"
+                                         and "blocked process is live" in Path(s["tasks"][0]["log_path"]).read_text())
+                self.assertFalse(returned)
+                self.assertTrue(thread.is_alive())
+                self.assertIsNone(snapshot["finished_at"])
+                self.assertIn('DONE 0002/0002 "second quick"', notices.getvalue())
+                self.assertNotIn('DONE 0001/0002 "first blocked"', notices.getvalue())
+            finally:
+                release.write_text("release")
+                thread.join(timeout=15)
+        self.assertFalse(thread.is_alive())
+        self.assertEqual(errors, [])
+        self.assertEqual([r.label for r in returned], ["first blocked", "second quick"])
+        self.assertEqual([r.status for r in returned], ["passed", "passed"])
+        self.assertLess(notices.getvalue().index('DONE 0002/0002'),
+                        notices.getvalue().index('DONE 0001/0002'))
+
+    def test_complete_binary_log_and_returned_output_exceed_5000(self):
+        stdout = b"HEAD\n" + b"o" * 12000 + b"\n"
+        stderr = b"ERR\n" + b"e" * 9000 + b"\nTAIL\n\xff"
+        source = f"import os; os.write(1, {stdout!r}); os.write(2, {stderr!r})"
+        with redirect_stderr(io.StringIO()):
+            result, = execute_tasks([("long output", self.python(source))], 1, self.root, self.output)
+        self.assertEqual(result.status, "passed")
+        self.assertEqual(Path(result.log_path).read_bytes(), stdout + stderr)
+        self.assertEqual(result.stdout, (stdout + stderr).decode("utf-8", errors="replace"))
+        self.assertGreater(len(result.stdout), 21000)
+
+    def test_duplicate_labels_fail_before_any_execution(self):
+        sentinel = self.root / "must-not-exist"
+        command = self.python("import pathlib,sys; pathlib.Path(sys.argv[1]).touch()", sentinel)
+        with self.assertRaisesRegex(ValueError, "duplicate task label"):
+            execute_tasks([("same", command), ("same", command)], 2, self.root, self.output)
+        self.assertFalse(sentinel.exists())
+        self.assertFalse(self.output.exists())
+
+    def test_worker_request_is_capped_at_four_and_pending_jobs_remain_visible(self):
+        release = self.root / "release"
+        source = (
+            "import pathlib,sys,time\n"
+            "release=pathlib.Path(sys.argv[1]); deadline=time.monotonic()+12\n"
+            "while not release.exists() and time.monotonic()<deadline: time.sleep(.01)\n"
+            "sys.exit(0 if release.exists() else 99)\n"
+        )
+        tasks = [(f"task {i}", self.python(source, release)) for i in range(6)]
+        returned, errors = [], []
+
+        def run():
+            try:
+                returned.extend(execute_tasks(tasks, 99, self.root, self.output))
+            except BaseException as exc:
+                errors.append(exc)
+
+        with redirect_stderr(io.StringIO()):
+            thread = threading.Thread(target=run)
+            thread.start()
+            try:
+                snapshot = self.wait_for(lambda s: sum(t["status"] == "running" and t["pid"] is not None
+                                                        for t in s["tasks"]) == 4)
+                self.assertEqual(snapshot["workers"], 4)
+                self.assertEqual(sum(t["status"] == "pending" for t in snapshot["tasks"]), 2)
+            finally:
+                release.write_text("release")
+                thread.join(timeout=15)
+        self.assertFalse(thread.is_alive())
+        self.assertEqual(errors, [])
+        self.assertEqual(len(returned), 6)
+        self.assertTrue(all(r.status == "passed" for r in returned))
+
+    def test_existing_run_is_not_overwritten_and_empty_run_finishes(self):
+        with redirect_stderr(io.StringIO()):
+            self.assertEqual(execute_tasks([], 1, self.root, self.output), [])
+        original = (self.output / "progress.json").read_bytes()
+        self.assertEqual(self.progress()["status"], "passed")
+        self.assertEqual(self.progress()["tasks"], [])
+        with self.assertRaises(FileExistsError):
+            execute_tasks([], 1, self.root, self.output)
+        self.assertEqual((self.output / "progress.json").read_bytes(), original)
+
+
+if __name__ == "__main__":
+    unittest.main()

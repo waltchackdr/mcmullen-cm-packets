@@ -1,0 +1,638 @@
+#!/usr/bin/env python3
+"""Read-only terminal audit of the one reviewed V83 reflected-target campaign.
+
+No arithmetic kernels are imported. The hash-pinned coordinator's read-only
+validators are combined with independent domain, evidence and partition checks.
+Run on the ORIGINAL campaign path after all coordinators and workers exit;
+relocation changes recorded argv and is deliberately not silently normalized.
+The report is discovery evidence, never an exclusion theorem or release gate.
+"""
+from __future__ import annotations
+import argparse
+from collections import Counter
+import copy
+from datetime import datetime, timezone
+import fcntl
+import hashlib
+import importlib.util
+import json
+import math
+import os
+from pathlib import Path
+import re
+import resource
+import signal
+import stat
+import sys
+import time
+
+HERE = 'experiments/continuous_v83'
+TARGET = 'REFLECTED_AB_V1'
+TERMINAL = 'ALL_TARGET_DISCOVERIES_COMPLETE_REQUIRES_REVIEW'
+HITS = ['OM:pic0:00', 'OM:pic0:07', 'OM:pic0:15']
+MANIFEST = 'd3580f667072a713d7a55def90b448496a1baa905337ecc4b24cfe339da11a85'
+RUNTIME = '84c92d156089952ab338d627c848c7ad763a085087b842fee4634bc23fa61a6d'
+TARGET_HASH = '35b9103624b7457f945346d0248a9535279910172d91dd488c8e3747931b3fec'
+PILOT_REVIEW = '5d30916dd3eba1898390f7a004c0000dc8f5d8d9fcd83b9f8a2e041787147578'
+PILOT_EVIDENCE = '65e1db3aba62ae5d4971e729aa44aa4b90983e32ffa8d5f44795db092083bfa9'
+QUEUE_CUTOFF = 1791849919
+STOP_DEADLINE = 1791850219
+PINS = {'certificates/d7_ambient_points_v45.py': '34cb35db91b953162b595fb61e031f551e6df0a0d7b5192dc15a6c00c39274a2', 'certificates/d7_r83_mask14_v46.py': '70e9c7114adea2b319c3e430046ae3e917717142e7a78e4d43a043950f1147f3', 'certificates/d7_r83_masks14_30_v47.py': 'e78ba5e793134f28d8113d8129809421a5a7754c439afcd64ba0385543799941', 'certificates/d7_r83_principal_expected_v55.py': '0fd36a67b004e6a250188aa8731a207456b5e49faa955005d6b12cd36665bea7', 'certificates/d7_r83_principal_v55.py': 'a937b69037b5d53f40a600aefb177bf89766d3529b22f73529b2b861ec9238cc', 'certificates/full_packet_v62/ambient_points.json': 'c0e84da6c266c087cbce65a6e8aca8e3f30350ce56b5a1089c4ae4978a381f36', 'certificates/full_packet_v62/module_templates.json': '09ccff217511a67e946567135f9ffb74da020843621d0895ecce8746d25c245d', 'certificates/residual_orbit_k17_k38_v42.py': '5186066f21a2f840ffc71936a54372d7ad51eb6cc919bf7812bb1bec258cd59d', 'experiments/continuous_v83/child.py': 'e593f070efa845a05d9f7d4ab7d1efd2566ebc275bad8a9e02621a56f0548360', 'experiments/continuous_v83/nominate.py': '2b91049e3e37609d4c1a94edd230c8f2fb5730a9ab49ad4c9018b5aa87fe8f89', 'experiments/continuous_v83/primary.py': 'c167a51e6881923319576897ea07a8d05998f935bc0f6884eef529928c4d6313', 'experiments/continuous_v83/primary_target.py': 'b94aca2bc29fc612fbecaadf83430ebd0a9e09f462876c1dc41fe0aa51422bd3', 'experiments/continuous_v83/runner.py': '3acda0f59005ad92ae832760e4c614c524eed078e84b571698f8209ff5614449', 'experiments/continuous_v83/sturm.py': '9d83a1bcaa79ebbbd4fed557cd7845de57e3955e6f55516ee7119a425f45d2ca', 'experiments/continuous_v83/sturm_target.py': '6a0aae7a310a091719721b08654574da87f0c105e716988e932ceedacd5886e6', 'independent/d7_ambient_points_sturm_v45.py': '3eb68f57e6d0d88b2e548f605742d434c8714b25eb1404b3c27d32415b61f42a', 'independent/d7_r83_principal_sturm_v55.py': '894339e82389ff651bf25b04693821c4dfeedc427dec2fa4fd8993f195bb663f', 'independent/quadrilateral_k17_stdlib_v41.py': 'c5bd45f334a028820a071b5c758acfb8e48afc1e8454b18a3174dd04ca58a38c', 'independent/residual_orbit_k17_k38_sturm_v42.py': '12a0d875e2715fe2c2ae123d2dc5202f4d7ce4e024f114ad163126654219fc13'}
+CANONICAL = ('preparation.json', 'A-entries.json', 'C-entries.json', 'bottom-rows.json',
+             'candidates-nonzero.json', 'candidates-zero.json', 'classification.json', 'survivors.json')
+COUNTS = ('a_count', 'c_count', 'bottom_rows', 'nonzero_candidates', 'zero_candidates',
+          'candidate_count', 'survivor_count', 'classification_digest', 'c_zero_audit')
+BACKENDS = ('primary', 'sturm')
+STAGES = ('prep', 'full')
+ZERO = (0,) * 6
+FAILURES = {'CPU_OR_RESOURCE_LIMIT', 'WALL_LIMIT', 'FAILED', 'INTERRUPTED'}
+
+
+class Anomaly(ValueError):
+    pass
+
+
+def require(condition, message):
+    if not condition:
+        raise Anomaly(message)
+
+
+def canonical(value):
+    return (json.dumps(value, sort_keys=True, separators=(',', ':'), allow_nan=False) + '\n').encode()
+
+
+def object_hash(value):
+    return hashlib.sha256(canonical(value)).hexdigest()
+
+
+def duplicate_free(items):
+    result = {}
+    for key, value in items:
+        require(key not in result, 'Duplicate JSON key: ' + key)
+        result[key] = value
+    return result
+
+
+def read(path):
+    with Path(path).open() as stream:
+        return json.load(stream, object_pairs_hook=duplicate_free,
+                         parse_constant=lambda x: (_ for _ in ()).throw(Anomaly('Nonfinite JSON: ' + x)))
+
+
+def sha(path):
+    h = hashlib.sha256()
+    with Path(path).open('rb') as stream:
+        for block in iter(lambda: stream.read(1024 * 1024), b''):
+            h.update(block)
+    return h.hexdigest()
+
+
+def safe(path):
+    """Reject links in every component, including ancestors of the campaign."""
+    path = Path(os.path.abspath(path))
+    for component in (path, *path.parents):
+        require(not component.is_symlink(), 'Symlink evidence path: ' + str(component))
+    return path
+
+
+def below(root, relative):
+    require(type(relative) is str and relative and '\\' not in relative,
+            'Malformed evidence relative path')
+    require(not relative.startswith('/') and all(p not in ('', '.', '..') for p in relative.split('/')),
+            'Unsafe evidence relative path: ' + relative)
+    return safe(root / relative)
+
+
+def signature(path):
+    info = safe(path).stat()
+    require(stat.S_ISREG(info.st_mode), 'Nonregular evidence file: ' + str(path))
+    require(info.st_nlink == 1, 'Hard-linked evidence file: ' + str(path))
+    return (info.st_dev, info.st_ino, info.st_size, info.st_mtime_ns, info.st_ctime_ns)
+
+
+def inventory(root):
+    result = {}; inodes = set()
+    for current, directories, files in os.walk(safe(root), followlinks=False):
+        for name in directories:
+            path = safe(Path(current) / name)
+            require(path.is_dir(), 'Non-directory evidence component')
+        for name in files:
+            path = safe(Path(current) / name)
+            sig = signature(path)
+            require(sig[:2] not in inodes, 'Duplicate evidence inode alias')
+            inodes.add(sig[:2]); result[path.relative_to(root).as_posix()] = sig
+    return result
+
+
+class Hashes:
+    """Cache bytes only while the complete stat identity is unchanged.
+
+    The campaign is quiescent under its coordinator lock. This avoids repeated
+    multi-GB reads by overlapping frozen validators. It is not a defense against
+    a privileged adversary forging kernel stat metadata.
+    """
+    def __init__(self):
+        self.rows = {}
+        self.bytes_hashed = 0
+
+    def __call__(self, path):
+        path = safe(path)
+        before = signature(path)
+        if path in self.rows:
+            old, checksum = self.rows[path]
+            require(old == before, 'Evidence changed during audit: ' + str(path))
+            return checksum
+        checksum = sha(path)
+        require(signature(path) == before, 'Evidence changed while hashing: ' + str(path))
+        self.rows[path] = (before, checksum)
+        self.bytes_hashed += before[2]
+        return checksum
+
+    def unchanged(self):
+        for path, (old, _) in self.rows.items():
+            require(signature(path) == old, 'Evidence changed after validation: ' + str(path))
+
+
+def save(output, name, value):
+    path = below(output, name)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with path.open('xb') as stream:
+        stream.write(canonical(value)); stream.flush(); os.fsync(stream.fileno())
+    return sha(path)
+
+
+def declared_domain():
+    labels = set()
+    for stratum in ('OM', 'R7', 'R7sq', 'R41_12', 'R41_22', 'R43_20', 'R43_31', 'R83', 'R127'):
+        for picard in ((0, 1) if stratum in ('R83', 'R127') else (0,)):
+            masks = (range(16) if stratum == 'OM' else range(64) if (stratum, picard) == ('R127', 1)
+                     else range(32) if (stratum, picard) == ('R83', 1)
+                     else (*range(16), *range(32, 48)))
+            labels.update(f'{stratum}:pic{picard}:{mask:02d}' for mask in masks)
+    require(len(labels) == 368 and set(HITS) <= labels, 'Internal C39 declaration')
+    return sorted(labels - set(HITS))
+
+
+def terminal_state(state, labels):
+    require(type(state.get('schema_version')) is int and state['schema_version'] == 2,
+            'State schema')
+    require(state.get('status') == TERMINAL and state.get('target_id') == TARGET,
+            'Campaign is not the accepted complete terminal state')
+    require(type(state.get('active_workers')) is int and state['active_workers'] == 0 and not state.get('error'),
+            'Active workers or terminal error')
+    require(set(state.get('points', {})) == set(labels) == set(state.get('preparations', {})),
+            'Incomplete/foreign point or preparation domain')
+    wanted = {f'{TARGET}/{label}/{stage}/{backend}' for label in labels for stage in STAGES for backend in BACKENDS}
+    require(set(state.get('jobs', {})) == wanted, 'Incomplete/foreign task domain')
+    require(state.get('deadline_epoch') == QUEUE_CUTOFF and state.get('stop_deadline_epoch') == STOP_DEADLINE,
+            'Changed original deadline')
+    require(state.get('pilot_review_sha256') == PILOT_REVIEW, 'Missing accepted pilot review')
+
+
+def process_absence(campaign, state, proc=Path('/proc')):
+    """Reject live OR zombie recorded PIDs; PID reuse requires manual resolution."""
+    require(proc.is_dir(), 'Linux /proc is required; use a reviewed Linux smoke')
+    pids = {state.get('coordinator_pid')}
+    for job in state['jobs'].values():
+        for attempt in job['attempts']:
+            pids.update((attempt.get('parent_pid'), attempt.get('pid')))
+    require(all(type(pid) is int and pid > 1 for pid in pids), 'Missing process lease/PID')
+    for pid in sorted(pids):
+        require(not (proc / str(pid)).exists(), f'Recorded PID {pid} still exists (including zombie/reuse)')
+    scripts = {str(campaign / 'source' / HERE / (name + '.py'))
+               for name in ('runner', 'child', 'primary', 'sturm')}
+    for directory in proc.iterdir():
+        if not directory.name.isdecimal() or int(directory.name) == os.getpid():
+            continue
+        try:
+            arguments = (directory / 'cmdline').read_bytes().split(b'\0')
+        except FileNotFoundError:
+            continue
+        require(not any(os.fsdecode(arg) in scripts for arg in arguments),
+                'Unrecorded campaign process: ' + directory.name)
+    return {'recorded_pids_absent': sorted(pids), 'matching_math_script_processes': 0,
+            'zombies_and_reused_pids_rejected': True}
+
+
+def number(value):
+    return type(value) in (int, float) and math.isfinite(value) and value >= 0
+
+
+def timestamp(value):
+    require(type(value) is str, 'Missing timestamp')
+    parsed = datetime.fromisoformat(value.replace('Z', '+00:00'))
+    require(parsed.tzinfo is not None, 'Naive timestamp')
+    return parsed.timestamp()
+
+
+def attempt_metadata(campaign, runner, manifest, state, label, stage, backend, attempt, hashes):
+    runner.validate_attempt(campaign, manifest, label, stage, backend, attempt, state['runtime'])
+    folder = below(campaign, attempt['directory'])
+    intent = read(folder / 'attempt.json')
+    expected_keys = {'status', 'target_id', 'task_key', 'directory', 'command', 'attempt_number',
+                     'parent_pid', 'task', 'started_utc', 'started_epoch', 'cpu_limit', 'wall_limit', 'plan_sha256'}
+    require(set(intent) == expected_keys and intent['status'] == 'RUNNING', 'Malformed immutable launch intent')
+    require(all(attempt.get(k) == v for k, v in intent.items() if k != 'status'), 'State/intent disagreement')
+    require(type(attempt.get('pid')) is int and attempt['pid'] > 1, 'Missing actual worker PID')
+    lease = read(folder / 'lease.json')
+    require(set(lease) == {'pid', 'parent_pid', 'target_id', 'task_key'}, 'Lease schema')
+    status = attempt['status']; rc = attempt.get('returncode')
+    require(status == 'COMPLETE' or status in FAILURES, 'Unfinished or unknown attempt')
+    if status == 'COMPLETE':
+        require(type(rc) is int and rc == 0, 'Completed attempt has nonzero exit')
+        require(number(attempt.get('cpu_seconds')), 'Nonfinite completed CPU time')
+    elif status == 'CPU_OR_RESOURCE_LIMIT':
+        require(type(rc) is int and rc in {-signal.SIGXCPU, -signal.SIGKILL, -signal.SIGXFSZ}, 'Resource exit mismatch')
+    elif status == 'WALL_LIMIT':
+        require(type(rc) is int and rc < 0, 'Wall-limited attempt has no killed exit')
+    elif status == 'FAILED':
+        require(type(rc) is int and rc != 0, 'Failed attempt has no nonzero exit')
+    if status != 'INTERRUPTED':
+        require(attempt.get('log_sha256') == hashes(folder / 'child.log'), 'Attempt log seal mismatch')
+        require(number(attempt.get('wall_seconds')), 'Missing measured wall time')
+    for name in ('cpu_seconds', 'wall_seconds'):
+        if name in attempt:
+            require(number(attempt[name]), 'Invalid optional attempt timing: ' + name)
+    require(number(attempt.get('started_epoch')), 'Bad launch epoch')
+    require(abs(timestamp(attempt['started_utc']) - attempt['started_epoch']) < 1, 'Launch clocks disagree')
+    end = timestamp(attempt['finished_utc'])
+    require(end >= attempt['started_epoch'], 'Negative attempt interval')
+    if 'wall_seconds' in attempt:
+        require(abs(end - attempt['started_epoch'] - attempt['wall_seconds']) < 1, 'Wall timestamps disagree')
+    if attempt.get('plan_sha256') is None:
+        require(stage == 'prep' and backend == 'primary', 'Only primary preparation can nominate a plan')
+    else:
+        require(attempt['plan_sha256'] == hashes(campaign / 'plans' / (runner.slug(label) + '.json')),
+                'Attempt plan byte seal mismatch')
+    return {'task_key': attempt['task_key'], 'directory': attempt['directory'], 'status': status,
+            'attempt_number': attempt['attempt_number'], 'returncode': rc,
+            'started_epoch': attempt['started_epoch'], 'finished_epoch': end,
+            'cpu_limit': attempt['cpu_limit'], 'wall_limit': attempt['wall_limit'],
+            'cpu_seconds': attempt.get('cpu_seconds'), 'wall_seconds': attempt.get('wall_seconds'),
+            'plan_sha256': attempt.get('plan_sha256'), 'command': attempt['command'],
+            'intent_sha256': hashes(folder / 'attempt.json'), 'lease_sha256': hashes(folder / 'lease.json'),
+            'log_sha256': hashes(folder / 'child.log')}
+
+
+def observed_resources(records, workers):
+    events = []
+    for row in records:
+        require(row['started_epoch'] < QUEUE_CUTOFF, 'Observed launch at/after original queue cutoff')
+        events += [(row['started_epoch'], 1), (row['finished_epoch'], -1)]
+    active = peak = 0
+    for _, change in sorted(events):
+        active += change; peak = max(peak, active)
+        require(active >= 0, 'Invalid launch/finish timeline')
+    require(active == 0 and peak <= workers, 'Observed overlapping workers exceed approved capacity')
+    return {'maximum_observed_concurrent_attempts': peak, 'approved_workers': workers,
+            'all_launches_before_queue_cutoff': True, 'queue_cutoff_epoch': QUEUE_CUTOFF,
+            'stop_deadline_epoch': STOP_DEADLINE,
+            'provider_native_ttl_verified': False,
+            'reported_complete_cpu_seconds': sum(row['cpu_seconds'] for row in records if row['status'] == 'COMPLETE'),
+            'reported_wall_seconds_sum': sum(row['wall_seconds'] or 0 for row in records),
+            'observed_over_wall_limits': [dict(directory=row['directory'], status=row['status'],
+                reported_wall_seconds=row['wall_seconds'], wall_limit=row['wall_limit'],
+                excess_seconds=row['wall_seconds'] - row['wall_limit']) for row in records
+                if row.get('wall_seconds') is not None and row['wall_seconds'] > row['wall_limit']],
+            'timing_limitations': 'Parent-observed finish includes scheduler/polling/validation delay; it is not exact child lifetime. The child cap/argv is verified separately.'}
+
+
+def temporal_barriers(records, labels, pilot_label):
+    completed = {row['task_key']: row for row in records if row['status'] == 'COMPLETE'}
+    pilot_end = max(completed[f'{TARGET}/{pilot_label}/{stage}/{backend}']['finished_epoch']
+                    for stage in STAGES for backend in BACKENDS)
+    for row in records:
+        _, label, stage, backend = row['task_key'].split('/')
+        if label != pilot_label:
+            require(row['started_epoch'] >= pilot_end, 'Nonpilot launch precedes complete paired pilot')
+        if stage == 'full':
+            prep_end = max(completed[f'{TARGET}/{label}/prep/{b}']['finished_epoch'] for b in BACKENDS)
+            require(row['started_epoch'] >= prep_end, 'Full launch precedes paired preparation')
+        elif backend == 'sturm':
+            require(row['started_epoch'] >= completed[f'{TARGET}/{label}/prep/primary']['finished_epoch'],
+                    'Independent preparation precedes nominated plan')
+    return {'pilot_complete_epoch': pilot_end, 'all_nonpilot_launches_after_pilot': True,
+            'all_full_launches_after_paired_preparation': True,
+            'limitation': 'Pilot approval contents/hash are reviewed, but the approval file has no intrinsic trusted creation timestamp.'}
+
+
+def flat(value, width):
+    require(type(value) is list and len(value) == width, 'Bad matrix/row width')
+    answer = []
+    for vector in value:
+        require(type(vector) is list and len(vector) == 6 and
+                all(type(x) is str and re.fullmatch('0|-?[1-9][0-9]*', x) for x in vector),
+                'Noncanonical integral coefficient vector')
+        answer.extend(map(int, vector))
+    return tuple(answer)
+
+
+def ordered(values, width):
+    require(type(values) is list, 'Expected canonical list')
+    answer = set(); previous = None
+    for value in values:
+        item = flat([value] if width == 1 else value, width)
+        require(previous is None or previous < item, 'Duplicate or nonsorted canonical coordinates')
+        answer.add(item); previous = item
+    return answer
+
+
+def sign_closed(values):
+    require({tuple(-x for x in row) for row in values} == values, 'Incomplete simultaneous sign restoration')
+
+
+def inspect_geometry(folder, result):
+    """Structural integer/string audit; does not recompute field or polygon tests."""
+    a = ordered(read(folder / 'A-entries.json'), 1)
+    c = ordered(read(folder / 'C-entries.json'), 1)
+    bottoms = ordered(read(folder / 'bottom-rows.json'), 2)
+    for values in (a, c, bottoms):
+        sign_closed(values)
+    require(ZERO in a and ZERO in c and ZERO + ZERO in bottoms, 'Missing domain origins')
+    require(all(row[:6] in c for row in bottoms), 'Bottom row c outside C')
+    nz = ordered(read(folder / 'candidates-nonzero.json'), 4)
+    z = ordered(read(folder / 'candidates-zero.json'), 4)
+    sign_closed(nz); sign_closed(z)
+    require(all(g[12:18] != ZERO for g in nz) and all(g[12:18] == ZERO for g in z), 'Wrong c branch')
+    candidates = nz | z
+    require(nz.isdisjoint(z) and all(g[:6] in a and g[12:] in bottoms for g in candidates), 'Candidate domain/branch mismatch')
+    counts = dict(zip(COUNTS[:6], (len(a), len(c), len(bottoms), len(nz), len(z), len(candidates))))
+    audit = result['c_zero_audit']
+    require(type(audit) is list and len(audit) == 5 and all(type(n) is int and n >= 0 for n in audit), 'Malformed c=0 audit')
+    require(audit[0] == sum(row[:6] == ZERO for row in bottoms) and audit[1] == 1 and
+            audit[1] + audit[2] <= audit[0] and audit[3] <= audit[2] and audit[4] == len(z), 'c=0 audit inconsistent')
+    classification = read(folder / 'classification.json')
+    require(set(classification) == {'excluded', 'histogram', 'survivors'}, 'Classification schema')
+    survivors = ordered(classification['survivors'], 4); sign_closed(survivors)
+    require(survivors == ordered(read(folder / 'survivors.json'), 4), 'Survivor files disagree')
+    excluded = set(); previous = None; histogram = Counter(); digest = hashlib.sha256()
+    for row in classification['excluded']:
+        require(set(row) == {'gamma', 'failure'}, 'Exclusion row schema')
+        item = flat(row['gamma'], 4); failure = row['failure']
+        require(previous is None or previous < item, 'Exclusion order/duplicate')
+        require(type(failure) is list and len(failure) == 2 and
+                type(failure[0]) is int and 0 <= failure[0] < 4 and
+                type(failure[1]) is int and 0 <= failure[1] < 6, 'Invalid polygon failure coordinates')
+        excluded.add(item); previous = item; histogram[tuple(failure)] += 1
+        digest.update((','.join(map(str, item)) + ';' + ','.join(map(str, failure)) + '\n').encode())
+    require(excluded.isdisjoint(survivors) and excluded | survivors == candidates, 'Incomplete classification partition')
+    require(classification['histogram'] == [{'side_index': s, 'embedding_index': e, 'count': n}
+            for (s, e), n in sorted(histogram.items())], 'Classification histogram mismatch')
+    counts.update(survivor_count=len(survivors), classification_digest=digest.hexdigest(), c_zero_audit=audit)
+    require(all(result[k] == v and (type(result[k]) is int if type(v) is int else True)
+                for k, v in counts.items()), 'Canonical artifact/result count mismatch')
+    return counts
+
+
+def survivor_journal(folder):
+    expected = ordered(read(folder / 'survivors.json'), 4); actual = set()
+    with (folder / 'survivors-partial.jsonl').open() as stream:
+        for line in stream:
+            row = json.loads(line, object_pairs_hook=duplicate_free)
+            require(set(row) == {'status', 'gamma'} and row['status'] == 'INCOMPLETE_STAGE_SURVIVOR_CHECKPOINT',
+                    'Invalid survivor checkpoint')
+            item = flat(row['gamma'], 4)
+            require(item not in actual, 'Duplicate survivor checkpoint'); actual.add(item)
+    require(actual == expected, 'Survivor journal does not retain all final survivors')
+
+
+def paired_label(campaign, runner, state, label, accepted, results, hashes, output):
+    prep = [results[(label, 'prep', backend)] for backend in BACKENDS]
+    full = [results[(label, 'full', backend)] for backend in BACKENDS]
+    for result in full:
+        require(all(type(result[key]) is int and result[key] >= 0 for key in COUNTS[:7]),
+                'Nonintegral/nonfinite full count')
+        require(type(result['classification_digest']) is str and
+                re.fullmatch('[0-9a-f]{64}', result['classification_digest']), 'Bad classification digest')
+        require(type(result['c_zero_audit']) is list and len(result['c_zero_audit']) == 5 and
+                all(type(v) is int and v >= 0 for v in result['c_zero_audit']), 'Bad paired c=0 audit')
+    preparation = prep[0]['artifact_sha256']['preparation.json']
+    require(all(r['artifact_sha256']['preparation.json'] == preparation and
+                r['target_geometry_sha256'] == TARGET_HASH for r in prep + full), 'Preparation/full/target mismatch')
+    require(state['preparations'][label] == {'target_id': TARGET, 'preparation_sha256': preparation,
+            'target_geometry_sha256': TARGET_HASH}, 'State preparation disagrees with accepted paired preparation')
+    canonical_hashes = full[0]['canonical_artifact_sha256']
+    require(full[1]['canonical_artifact_sha256'] == canonical_hashes, 'Paired eight canonical artifacts disagree')
+    require(all(full[0][key] == full[1][key] for key in COUNTS), 'Paired nine result counts disagree')
+    folders = [campaign / accepted[(label, 'full', b)]['directory'] / 'output' for b in BACKENDS]
+    counts = inspect_geometry(folders[0], full[0])
+    for folder in folders:
+        survivor_journal(folder)
+    rows0 = runner.row_coverage(folders[0], BACKENDS[0])
+    rows1 = runner.row_coverage(folders[1], BACKENDS[1])
+    require(rows0 == rows1, 'Paired normalized complete row journals disagree')
+    row_hash = object_hash(rows0)
+    row_path = 'rows/' + runner.slug(label) + '.json'
+    require(save(output, row_path, rows0) == row_hash, 'Row evidence serialization')
+    outcome = 'PAIRED_EMPTY_DISCOVERY' if counts['survivor_count'] == 0 else 'PAIRED_SURVIVORS_REQUIRE_GEOMETRY'
+    expected_point = {'status': outcome, 'survivor_count': counts['survivor_count'],
+        'candidate_count': counts['candidate_count'], 'target_id': TARGET,
+        'pilot': label == 'R127:pic0:00', 'row_evidence_sha256': row_hash,
+        'target_geometry_sha256': TARGET_HASH, 'canonical_artifact_sha256': canonical_hashes}
+    require(state['points'][label] == expected_point, 'State paired outcome differs from complete artifacts')
+    plan_path = 'plans/' + runner.slug(label) + '.json'
+    plan = read(campaign / plan_path); runner.validate_plan(plan, label)
+    for stage in STAGES:
+        for backend in BACKENDS:
+            folder = campaign / accepted[(label, stage, backend)]['directory'] / 'output'
+            require(read(folder / 'witness-plan.json') == plan, 'Emitted/shared plan data mismatch')
+    details = {}
+    for stage in STAGES:
+        details[stage] = {}
+        for backend in BACKENDS:
+            attempt = accepted[(label, stage, backend)]
+            folder = campaign / attempt['directory']
+            details[stage][backend] = {
+                'attempt_directory': attempt['directory'], 'attempt_number': attempt['attempt_number'],
+                'result_sha256': hashes(folder / 'output/result.json'),
+                'output_sha256': attempt['output_sha256'], 'log_sha256': hashes(folder / 'child.log'),
+                'command': attempt['command'], 'input_plan_sha256': attempt.get('plan_sha256'),
+                'emitted_plan_sha256': hashes(folder / 'output/witness-plan.json'),
+                'cpu_seconds': results[(label, stage, backend)]['cpu_seconds'],
+                'wall_seconds': attempt['wall_seconds'], 'cpu_limit': attempt['cpu_limit'], 'wall_limit': attempt['wall_limit']}
+    return {'target_id': TARGET, 'point_label': label, 'outcome': outcome, 'counts': counts,
+            'witness_plan': {'path': plan_path, 'input_sha256': hashes(campaign / plan_path)},
+            'target_geometry_sha256': TARGET_HASH, 'preparation_sha256': preparation,
+            'canonical_artifact_sha256': canonical_hashes,
+            'row_evidence': {'path': row_path, 'sha256': row_hash, 'normalized_object_sha256': row_hash},
+            'accepted': details}
+
+
+def load_runner(campaign, hashes):
+    path = campaign / 'source' / HERE / 'runner.py'
+    require(hashes(path) == PINS[HERE + '/runner.py'], 'Unreviewed coordinator validator')
+    spec = importlib.util.spec_from_file_location('v83_frozen_terminal_validators', path)
+    module = importlib.util.module_from_spec(spec)
+    prior = sys.dont_write_bytecode
+    sys.dont_write_bytecode = True
+    try:
+        spec.loader.exec_module(module)
+    finally:
+        sys.dont_write_bytecode = prior
+    # Hash/read/path helpers only; all validation and row algorithms stay frozen.
+    module.digest = hashes; module.read = read; module.contained = below
+    return module
+
+
+def audit(campaign, output):
+    campaign = safe(campaign); output = safe(output)
+    require(not output.is_relative_to(campaign), 'Audit output must be outside campaign')
+    hashes = Hashes(); before_files = inventory(campaign)
+    manifest = read(campaign / 'manifest.json'); state = read(campaign / 'state.json')
+    require(hashes(campaign / 'manifest.json') == MANIFEST == state.get('manifest_sha256'), 'Unreviewed manifest')
+    require(manifest['source_sha256'] == PINS and len(PINS) == 19, 'Unreviewed source closure')
+    labels = declared_domain(); terminal_state(state, labels)
+    require(manifest['remaining'] == labels and manifest['known_positive_hits'] == HITS, 'C39 domain mismatch')
+    source_files = {name.removeprefix('source/') for name in before_files if name.startswith('source/')}
+    require(source_files == set(PINS), 'Unlisted/missing frozen source files')
+    for name, checksum in PINS.items():
+        require(hashes(campaign / 'source' / name) == checksum, 'Changed frozen source: ' + name)
+    require(hashes(campaign / 'approvals/pilot-review.json') == PILOT_REVIEW and
+            hashes(campaign / 'pilot-evidence.json') == PILOT_EVIDENCE, 'Unreviewed pilot anchor')
+    runner = load_runner(campaign, hashes)
+    runner.validate_campaign(campaign, manifest, state)
+    require(object_hash(state['runtime']) == RUNTIME, 'Unreviewed runtime record')
+    runtime_before = runner.runtime()
+    require(runtime_before == state['runtime'], 'Actual installed runtime differs before audit')
+    absent_before = process_absence(campaign, state)
+    saved = {}
+    for name in ('manifest.json', 'state.json', 'pilot-evidence.json', 'approvals/boundary.json',
+                 'approvals/resource.json', 'approvals/pilot-review.json'):
+        data = (campaign / name).read_bytes()
+        destination = below(output, 'anchors/' + name); destination.parent.mkdir(parents=True, exist_ok=True)
+        with destination.open('xb') as stream:
+            stream.write(data); stream.flush(); os.fsync(stream.fileno())
+        saved[name] = hashes(campaign / name)
+        require(sha(destination) == saved[name], 'Anchor copy changed')
+    saved['runtime.json'] = save(output, 'anchors/runtime.json', state['runtime'])
+    accepted = {}; results = {}; records = []; directories = set()
+    for label in labels:
+        for stage in STAGES:
+            for backend in BACKENDS:
+                key = f'{TARGET}/{label}/{stage}/{backend}'
+                attempts = state['jobs'][key]['attempts']
+                require(type(attempts) is list and attempts and
+                        [a['attempt_number'] for a in attempts] == list(range(1, len(attempts) + 1)), 'Attempt sequence')
+                require([a['status'] for a in attempts].count('COMPLETE') == 1 and attempts[-1]['status'] == 'COMPLETE',
+                        'Task lacks exactly one final completed attempt')
+                require(all(a['status'] in {'CPU_OR_RESOURCE_LIMIT', 'WALL_LIMIT', 'INTERRUPTED'}
+                            for a in attempts[:-1]), 'Retry after an unexpected failure was not authorized')
+                require(all(timestamp(previous['finished_utc']) <= following['started_epoch']
+                            for previous, following in zip(attempts, attempts[1:])), 'Overlapping retries for one task')
+                for attempt in attempts:
+                    require(attempt['directory'] not in directories, 'Reused attempt directory')
+                    directories.add(attempt['directory'])
+                    row = attempt_metadata(campaign, runner, manifest, state, label, stage, backend, attempt, hashes)
+                    folder = campaign / attempt['directory']
+                    # Every partial/failed file is sealed for preservation, never counted as an exclusion.
+                    row['retained_files_sha256'] = {name: hashes(folder / name) for name in inventory(folder)}
+                    if attempt['status'] == 'COMPLETE':
+                        result, seals = runner.validate_result(campaign, manifest, label, stage, backend, attempt)
+                        require(seals == attempt.get('output_sha256'), 'Complete output inventory/seal mismatch')
+                        require(result['cpu_seconds'] == attempt.get('cpu_seconds'), 'CPU result/state mismatch')
+                        for name in CANONICAL if stage == 'full' else ('preparation.json',):
+                            require(result['artifact_sha256'].get(name) == seals.get(name), 'Artifact closure missing canonical data')
+                        accepted[(label, stage, backend)] = attempt; results[(label, stage, backend)] = result
+                    records.append(row)
+        print(json.dumps({'stage': 'VALIDATED_ATTEMPTS', 'point_label': label}), flush=True)
+    intents = {name[:-len('/attempt.json')] for name in before_files if name.startswith('attempts/') and name.endswith('/attempt.json')}
+    leases = {name[:-len('/lease.json')] for name in before_files if name.startswith('attempts/') and name.endswith('/lease.json')}
+    require(intents == directories == leases, 'Unrecorded/missing attempt intent or lease')
+    for name in before_files:
+        if name.startswith('attempts/'):
+            require(any(name.startswith(directory + '/') for directory in directories), 'Orphan attempt evidence file')
+    resources = observed_resources(records, manifest['limits']['workers'])
+    resources['temporal_barriers'] = temporal_barriers(records, labels, manifest['pilot_label'])
+    runner.validate_pilot_review(campaign, manifest, copy.deepcopy(state), read(campaign / 'approvals/pilot-review.json'))
+    points = {}
+    for label in labels:
+        points[label] = paired_label(campaign, runner, state, label, accepted, results, hashes, output)
+        print(json.dumps({'stage': 'PAIRED_LABEL_AUDITED', 'point_label': label, 'outcome': points[label]['outcome']}), flush=True)
+    summary = dict(Counter(point['outcome'] for point in points.values()))
+    require(state.get('summary') == summary, 'Terminal summary mismatch')
+    plan_files = {name for name in before_files if name.startswith('plans/')}
+    require(plan_files == {'plans/' + runner.slug(label) + '.json' for label in labels}, 'Shared plan inventory mismatch')
+    full_inventory = {name: {'size_bytes': sig[2], 'sha256': hashes(campaign / name)}
+                      for name, sig in sorted(before_files.items())}
+    # Actual source/runtime/state rehashes, not merely cache assertions.
+    for name, checksum in PINS.items():
+        require(sha(campaign / 'source' / name) == checksum, 'Source changed after audit')
+    for name, checksum in saved.items():
+        if name != 'runtime.json':
+            require(sha(campaign / name) == checksum, 'Anchor changed after audit')
+    original_digest = runner.digest
+    runner.digest = sha
+    try:
+        runtime_after = runner.runtime()
+    finally:
+        runner.digest = original_digest
+    require(runtime_after == runtime_before, 'Installed runtime changed after audit')
+    absent_after = process_absence(campaign, state)
+    require(inventory(campaign) == before_files, 'Campaign inventory changed during terminal audit')
+    hashes.unchanged()
+    attempts_hash = save(output, 'attempts.json', records)
+    inventory_hash = save(output, 'campaign-files.json', full_inventory)
+    return {'schema_version': 1, 'status': 'TERMINAL_REFLECTED_DISCOVERY_AUDIT_PASS',
+            'scope': 'ONE_REFLECTED_TARGET_DISCOVERY_EVIDENCE_NO_THEOREM_PROMOTION',
+            'target_id': TARGET, 'campaign_path': str(campaign), 'domain_size': len(labels),
+            'known_positive_hits_outside_domain': HITS, 'manifest_sha256': MANIFEST,
+            'state_sha256': saved['state.json'], 'runtime_sha256': RUNTIME, 'source_sha256': PINS,
+            'pilot_review_sha256': PILOT_REVIEW, 'target_geometry_sha256': TARGET_HASH,
+            'anchors_sha256': saved, 'sources_unchanged': True, 'runtime_unchanged': True,
+            'campaign_unchanged': True, 'coordinator_lock_held': True,
+            'process_absence_before': absent_before, 'process_absence_after': absent_after,
+            'summary': summary, 'points': points, 'attempt_status_counts': dict(Counter(r['status'] for r in records)),
+            'failed_attempts_are_exclusions': False, 'incomplete_labels': [],
+            'attempts': {'path': 'attempts.json', 'sha256': attempts_hash},
+            'campaign_file_inventory': {'path': 'campaign-files.json', 'sha256': inventory_hash,
+                                       'files': len(full_inventory), 'bytes': sum(r['size_bytes'] for r in full_inventory.values())},
+            'resource_observations': resources, 'bytes_hashed_once': hashes.bytes_hashed,
+            'archive': {'status': 'NOT_CREATED_OR_VALIDATED', 'requirement': 'Separate archive must preserve and rehash this exact inventory and bind this report; no archival or retrieval claim here.'},
+            'limits_of_audit': ['No mathematical enumeration, determinant or polygon recomputation.',
+                                'Completeness relies on reviewed finite-domain proof and both frozen implementations.',
+                                'Survivors are research candidates, not claimed curve points.',
+                                'File-hash caching assumes a quiescent ordinary filesystem, not malicious privileged metadata forgery.']}
+
+
+def main(argv=None):
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--campaign', type=Path, required=True)
+    parser.add_argument('--output', type=Path, required=True)
+    args = parser.parse_args(argv)
+    campaign = safe(args.campaign); output = safe(args.output)
+    require(sys.platform.startswith('linux') and __debug__, 'Requires Linux with assertions enabled')
+    soft, hard = resource.getrlimit(resource.RLIMIT_CPU)
+    require(0 < soft <= 600 and soft <= hard <= 610, 'Require inherited CPU limits at most600/610')
+    memory, _ = resource.getrlimit(resource.RLIMIT_AS)
+    require(0 < memory <= 4 * 1024**3, 'Require inherited address-space cap at most4GiB')
+    require(time.time() < STOP_DEADLINE, 'Original absolute deadline already passed')
+    require(not output.is_relative_to(campaign), 'Output inside campaign')
+    output.mkdir(parents=True, exist_ok=False)
+    started = time.monotonic(); cpu = time.process_time(); self_hash = sha(Path(__file__))
+    # A hard external wall watchdog is still required; this catches normal SIGTERM.
+    def interrupted(signum, frame):
+        raise Anomaly('Administrative audit interrupted by signal ' + str(signum))
+    signal.signal(signal.SIGTERM, interrupted); signal.signal(signal.SIGINT, interrupted)
+    try:
+        with (campaign / 'coordinator.lock').open('rb') as lock:
+            fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
+            report = audit(campaign, output)
+            require(sha(Path(__file__)) == self_hash, 'Auditor source changed')
+            require(time.time() < STOP_DEADLINE, 'Original deadline crossed during audit')
+            report.update(auditor_sha256=self_hash, cpu_seconds=time.process_time() - cpu,
+                          wall_seconds=time.monotonic() - started, completed_utc=datetime.now(timezone.utc).isoformat(),
+                          cpu_limits_seconds=[soft, hard], memory_limit_bytes=memory)
+            report_hash = save(output, 'audit.json', report)
+        print(json.dumps({'status': report['status'], 'audit_sha256': report_hash, 'summary': report['summary']}))
+        return 0
+    except BaseException as error:
+        failure = {'schema_version': 1, 'status': 'AUDIT_FAILED_NO_MATHEMATICAL_CONCLUSION',
+                   'error_type': type(error).__name__, 'error': str(error), 'auditor_sha256': self_hash,
+                   'cpu_seconds': time.process_time() - cpu, 'wall_seconds': time.monotonic() - started}
+        save(output, 'failure.json', failure)
+        print(json.dumps(failure), file=sys.stderr)
+        return 1
+
+
+if __name__ == '__main__':
+    raise SystemExit(main())

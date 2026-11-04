@@ -1,0 +1,141 @@
+"""Independent C85 small residue check in the tower F27[s]/(s^2+1).
+
+No producer imports, no six-dimensional RREF or all-subspace loop.
+Global unit/signature inputs and principalizability remain human proofs.
+"""
+import json
+
+
+def digits(a):
+    return [a % 3, (a // 3) % 3, a // 9]
+
+
+def encode(a):
+    return sum((x % 3) * 3 ** i for i, x in enumerate(a))
+
+
+def add(a, b):
+    return encode([x + y for x, y in zip(digits(a), digits(b))])
+
+
+def neg(a):
+    return encode([-x for x in digits(a)])
+
+
+def mul(a, b):
+    c = [0] * 5
+    for i, x in enumerate(digits(a)):
+        for j, y in enumerate(digits(b)):
+            c[i + j] += x * y
+    # tau^3 = tau^2 - tau - 1.
+    for i in range(4, 2, -1):
+        c[i - 1] += c[i]
+        c[i - 2] -= c[i]
+        c[i - 3] -= c[i]
+    return encode(c[:3])
+
+
+def kadd(x, y):
+    return add(x[0], y[0]), add(x[1], y[1])
+
+
+def kneg(x):
+    return neg(x[0]), neg(x[1])
+
+
+def kmul(x, y):
+    return (add(mul(x[0], y[0]), neg(mul(x[1], y[1]))),
+            add(mul(x[0], y[1]), mul(x[1], y[0])))
+
+
+def power(x, n):
+    answer = (1, 0)
+    while n:
+        if n & 1:
+            answer = kmul(answer, x)
+        x = kmul(x, x)
+        n //= 2
+    return answer
+
+
+def order(x):
+    v = (1, 0)
+    for n in range(1, 729):
+        v = kmul(v, x)
+        if v == (1, 0):
+            return n
+    raise AssertionError('Not a nonzero field element')
+
+
+def check():
+    if not __debug__:
+        raise RuntimeError('Enabled assertions required')
+    # Cubic irreducibility, and -1 nonsquare in F27, justify this tower.
+    assert all((a ** 3 - a ** 2 + a + 1) % 3 for a in range(3))
+    assert 2 not in {mul(a, a) for a in range(27)}
+    tau = (3, 0)
+    assert order(tau) == 26 and power(tau, 13) == (2, 0)
+    elements = [(a, b) for a in range(27) for b in range(27)]
+    nonzero = [x for x in elements if x != (0, 0)]
+    r = next(power(x, 104) for x in nonzero if power(x, 104) != (1, 0))
+    assert order(r) == 7
+    inverse = power(r, 6)
+    gamma = kadd(r, kneg(inverse))
+    t = kneg(kadd(r, inverse))
+    assert t[1] == 0 and order(t) == 26 and power(t, 13) == (2, 0)
+    assert kadd(kadd(kadd(power(t, 3), kneg(power(t, 2))), t), (1, 0)) == (0, 0)
+    z = kneg(inverse)
+    assert order(z) == 14
+    assert gamma == kmul(power(z, 6), kadd((1, 0), kneg(power(z, 2))))
+    # The three actions are included explicitly. The actual global-unit
+    # upper bound is the adopted C63 theorem, not inferred from this list.
+    generated, pending = {(1, 0)}, [(1, 0)]
+    while pending:
+        x = pending.pop()
+        for g in (z, gamma, t):
+            y = kmul(x, g)
+            if y not in generated:
+                generated.add(y)
+                pending.append(y)
+    real_nonzero = {(a, 0) for a in range(1, 27)}
+    assert len(generated) == 364 and real_nonzero <= generated
+    assert generated == {kmul(x, x) for x in nonzero}
+    assert len(generated & real_nonzero) == 26
+    assert len(generated & {(1, 0), (2, 0)}) == 2
+    numerator = (729 - 1) * (729 - 3) * (729 - 9)
+    denominator = (27 - 1) * (27 - 3) * (27 - 9)
+    assert numerator % denominator == 0
+    total = numerator // denominator
+    assert total == 33880
+    r_orbit, s_orbit = 364 // 26, 364 // 2
+    r_classes, s_classes = 28 // r_orbit, (total - 28) // s_orbit
+    assert (r_orbit, s_orbit, r_classes, s_classes) == (14, 182, 2, 186)
+    # These conclusions use the separately reviewed all-polarization proof,
+    # not a finite-field test for geometric principalizability.
+    forms_per_admitting_target = 2 ** (5 + 1) // 32
+    principalizable = 160 // forms_per_admitting_target
+    principalizable_s = principalizable - r_classes
+    no_principal = s_classes - principalizable_s
+    unrestricted = r_classes * r_orbit + principalizable_s * s_orbit
+    excluded = no_principal * s_orbit
+    assert (forms_per_admitting_target, principalizable, principalizable_s,
+            no_principal, unrestricted, excluded) == (2, 80, 78, 108, 14224, 19656)
+    assert unrestricted + excluded == total and principalizable * 14 == 1120
+    return {'status': 'PASS', 'model': 'F27=F3[tau]/(tau^3-tau^2+tau+1); K=F27[s]/(s^2+1)',
+            'tau_order': 26, 'actual_t_residue_order': 26, 't_13': [2, 0],
+            'explicit_generators': {'z': z, 'gamma': gamma, 't': t},
+            'generated_residue_group_size': len(generated),
+            'generated_group_is_all_nonzero_squares': True,
+            'contains_all_real_residue_units': True,
+            'dimension3_subspaces_by_ordered_basis_formula': total,
+            'unpolarized_orbit_sizes': {'R': r_orbit, 'S': s_orbit},
+            'unpolarized_classes': {'R': r_classes, 'S': s_classes},
+            'conditional_class_arithmetic': {'principal_classes_per_admitting_target': 2,
+                'principalizable_underlying': 80, 'principalizable_S': 78,
+                'no_principal_S': 108, 'unrestricted_minimum_kernels': 14224,
+                'nonprincipalizable_quotient_subgroups': 19656, 'fixed_form_kernels': 1120},
+            'scope': 'Finite residue group and exact integer consequences only. Global-unit upper bound, unit signatures, two-form theorem and geometric exhaustion are separate human inputs.'}
+
+
+if __name__ == '__main__':
+    print(json.dumps(check(), indent=2, sort_keys=True))

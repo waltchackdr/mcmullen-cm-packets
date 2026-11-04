@@ -1,0 +1,32 @@
+"""Finite plan admission checks; no numerical evaluator or provider calls."""
+import copy
+import importlib.util
+import json
+from pathlib import Path
+import unittest
+R=Path(__file__).resolve().parents[1]/'experiments/bc_jacobian_v147'
+s=importlib.util.spec_from_file_location('certworker',R/'certificate_worker_candidate.py');w=importlib.util.module_from_spec(s);s.loader.exec_module(w)
+
+class Tests(unittest.TestCase):
+    def setUp(self):self.plan=json.loads((R/'certificate_plan_candidate.json').read_text())
+    def test_finite_grid_bound(self):
+        tasks=w.validate_plan(self.plan)
+        self.assertEqual(len(tasks),8)
+        self.assertEqual(sum(len(t['pair_indices']) for t in tasks),64)
+    def test_pair_identity_and_cross_task_duplicates_rejected(self):
+        for change in ('numerator','duplicate','characteristic','boolindex'):
+            p=copy.deepcopy(self.plan)
+            if change=='numerator':p['tasks'][0]['numerators_mod3'][0][0]=(p['tasks'][0]['numerators_mod3'][0][0]+1)%3
+            elif change=='duplicate':p['tasks'][1]=copy.deepcopy(p['tasks'][0])
+            elif change=='characteristic':p['tasks'][0]['characteristic_index']+=1
+            else:p['tasks'][0]['pair_indices'][0]=False
+            with self.subTest(change=change):
+                with self.assertRaises(RuntimeError):w.validate_plan(p)
+    def test_enclosure_dependency_drift_rejected(self):
+        self.plan['pins']['experiments/bc_jacobian_v147/exact_ball_candidate.py']='0'*64
+        with self.assertRaises(RuntimeError):w.validate_plan(self.plan)
+    def test_changed_resource_limits_rejected(self):
+        self.plan['tasks'][0]['max_cpu_seconds']=121
+        with self.assertRaises(RuntimeError):w.validate_plan(self.plan)
+
+if __name__=='__main__':unittest.main()

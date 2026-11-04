@@ -1,0 +1,4680 @@
+{
+  "common_OM_formula": {
+    "center": "-u*t/2",
+    "height_squared": "u^2*(4-t^2)/4",
+    "modulus_squared": "u^2"
+  },
+  "embedded_order_groups": [
+    {
+      "affine_unit_witnesses": [
+        {
+          "affine_shift": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "inverse_unit": [
+            1,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "trace_index": 1,
+          "unit_ratio": [
+            1,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "affine_shift": [
+            29,
+            184,
+            -29,
+            -125,
+            5,
+            20
+          ],
+          "inverse_unit": [
+            -4,
+            -16,
+            -7,
+            14,
+            3,
+            -3
+          ],
+          "trace_index": 7,
+          "unit_ratio": [
+            12,
+            83,
+            -15,
+            -56,
+            3,
+            9
+          ]
+        },
+        {
+          "affine_shift": [
+            -17,
+            -126,
+            20,
+            86,
+            -4,
+            -14
+          ],
+          "inverse_unit": [
+            -6,
+            -3,
+            9,
+            1,
+            -2,
+            0
+          ],
+          "trace_index": 11,
+          "unit_ratio": [
+            -10,
+            -65,
+            11,
+            44,
+            -2,
+            -7
+          ]
+        },
+        {
+          "affine_shift": [
+            31,
+            221,
+            -34,
+            -150,
+            6,
+            24
+          ],
+          "inverse_unit": [
+            -283,
+            -370,
+            215,
+            258,
+            -36,
+            -42
+          ],
+          "trace_index": 13,
+          "unit_ratio": [
+            17,
+            113,
+            -17,
+            -79,
+            3,
+            13
+          ]
+        },
+        {
+          "affine_shift": [
+            29,
+            184,
+            -29,
+            -125,
+            5,
+            20
+          ],
+          "inverse_unit": [
+            0,
+            -6,
+            -3,
+            9,
+            1,
+            -2
+          ],
+          "trace_index": 16,
+          "unit_ratio": [
+            15,
+            91,
+            -16,
+            -62,
+            3,
+            10
+          ]
+        },
+        {
+          "affine_shift": [
+            7,
+            65,
+            -7,
+            -44,
+            1,
+            7
+          ],
+          "inverse_unit": [
+            -3,
+            -2,
+            4,
+            1,
+            -1,
+            0
+          ],
+          "trace_index": 17,
+          "unit_ratio": [
+            4,
+            29,
+            -5,
+            -19,
+            1,
+            3
+          ]
+        },
+        {
+          "affine_shift": [
+            19,
+            107,
+            -18,
+            -74,
+            3,
+            12
+          ],
+          "inverse_unit": [
+            2,
+            1,
+            -3,
+            0,
+            1,
+            0
+          ],
+          "trace_index": 19,
+          "unit_ratio": [
+            8,
+            49,
+            -10,
+            -32,
+            2,
+            5
+          ]
+        },
+        {
+          "affine_shift": [
+            24,
+            156,
+            -27,
+            -106,
+            5,
+            17
+          ],
+          "inverse_unit": [
+            1,
+            0,
+            -5,
+            -4,
+            1,
+            1
+          ],
+          "trace_index": 20,
+          "unit_ratio": [
+            13,
+            79,
+            -12,
+            -55,
+            2,
+            9
+          ]
+        },
+        {
+          "affine_shift": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "inverse_unit": [
+            -1,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "trace_index": 22,
+          "unit_ratio": [
+            -1,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "affine_shift": [
+            -29,
+            -184,
+            29,
+            125,
+            -5,
+            -20
+          ],
+          "inverse_unit": [
+            4,
+            16,
+            7,
+            -14,
+            -3,
+            3
+          ],
+          "trace_index": 28,
+          "unit_ratio": [
+            -12,
+            -83,
+            15,
+            56,
+            -3,
+            -9
+          ]
+        },
+        {
+          "affine_shift": [
+            17,
+            126,
+            -20,
+            -86,
+            4,
+            14
+          ],
+          "inverse_unit": [
+            6,
+            3,
+            -9,
+            -1,
+            2,
+            0
+          ],
+          "trace_index": 32,
+          "unit_ratio": [
+            10,
+            65,
+            -11,
+            -44,
+            2,
+            7
+          ]
+        },
+        {
+          "affine_shift": [
+            -31,
+            -221,
+            34,
+            150,
+            -6,
+            -24
+          ],
+          "inverse_unit": [
+            283,
+            370,
+            -215,
+            -258,
+            36,
+            42
+          ],
+          "trace_index": 34,
+          "unit_ratio": [
+            -17,
+            -113,
+            17,
+            79,
+            -3,
+            -13
+          ]
+        },
+        {
+          "affine_shift": [
+            -29,
+            -184,
+            29,
+            125,
+            -5,
+            -20
+          ],
+          "inverse_unit": [
+            0,
+            6,
+            3,
+            -9,
+            -1,
+            2
+          ],
+          "trace_index": 37,
+          "unit_ratio": [
+            -15,
+            -91,
+            16,
+            62,
+            -3,
+            -10
+          ]
+        },
+        {
+          "affine_shift": [
+            -7,
+            -65,
+            7,
+            44,
+            -1,
+            -7
+          ],
+          "inverse_unit": [
+            3,
+            2,
+            -4,
+            -1,
+            1,
+            0
+          ],
+          "trace_index": 38,
+          "unit_ratio": [
+            -4,
+            -29,
+            5,
+            19,
+            -1,
+            -3
+          ]
+        },
+        {
+          "affine_shift": [
+            -19,
+            -107,
+            18,
+            74,
+            -3,
+            -12
+          ],
+          "inverse_unit": [
+            -2,
+            -1,
+            3,
+            0,
+            -1,
+            0
+          ],
+          "trace_index": 40,
+          "unit_ratio": [
+            -8,
+            -49,
+            10,
+            32,
+            -2,
+            -5
+          ]
+        },
+        {
+          "affine_shift": [
+            -24,
+            -156,
+            27,
+            106,
+            -5,
+            -17
+          ],
+          "inverse_unit": [
+            -1,
+            0,
+            5,
+            4,
+            -1,
+            -1
+          ],
+          "trace_index": 41,
+          "unit_ratio": [
+            -13,
+            -79,
+            12,
+            55,
+            -2,
+            -9
+          ]
+        }
+      ],
+      "conductor_key": [
+        1,
+        0,
+        0
+      ],
+      "representative": 1,
+      "scope": "Same embedded order and full action populations; companion orientation mask labels may change",
+      "trace_indices": [
+        1,
+        7,
+        11,
+        13,
+        16,
+        17,
+        19,
+        20,
+        22,
+        28,
+        32,
+        34,
+        37,
+        38,
+        40,
+        41
+      ]
+    },
+    {
+      "affine_unit_witnesses": [
+        {
+          "affine_shift": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "inverse_unit": [
+            1,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "trace_index": 0,
+          "unit_ratio": [
+            1,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "affine_shift": [
+            5,
+            7,
+            -2,
+            -6,
+            0,
+            1
+          ],
+          "inverse_unit": [
+            -1,
+            0,
+            8,
+            4,
+            -2,
+            -1
+          ],
+          "trace_index": 3,
+          "unit_ratio": [
+            -1,
+            2,
+            4,
+            -4,
+            -1,
+            1
+          ]
+        },
+        {
+          "affine_shift": [
+            2,
+            2,
+            2,
+            -1,
+            -1,
+            0
+          ],
+          "inverse_unit": [
+            -2,
+            -9,
+            1,
+            6,
+            0,
+            -1
+          ],
+          "trace_index": 6,
+          "unit_ratio": [
+            -2,
+            -3,
+            1,
+            1,
+            0,
+            0
+          ]
+        },
+        {
+          "affine_shift": [
+            -5,
+            -12,
+            4,
+            10,
+            -1,
+            -2
+          ],
+          "inverse_unit": [
+            5,
+            20,
+            -5,
+            -13,
+            1,
+            2
+          ],
+          "trace_index": 9,
+          "unit_ratio": [
+            0,
+            -4,
+            -3,
+            5,
+            1,
+            -1
+          ]
+        },
+        {
+          "affine_shift": [
+            2,
+            2,
+            2,
+            -1,
+            -1,
+            0
+          ],
+          "inverse_unit": [
+            5,
+            8,
+            -5,
+            -6,
+            1,
+            1
+          ],
+          "trace_index": 15,
+          "unit_ratio": [
+            1,
+            5,
+            0,
+            -5,
+            0,
+            1
+          ]
+        },
+        {
+          "affine_shift": [
+            5,
+            7,
+            -2,
+            -6,
+            0,
+            1
+          ],
+          "inverse_unit": [
+            -1,
+            -3,
+            -2,
+            4,
+            1,
+            -1
+          ],
+          "trace_index": 18,
+          "unit_ratio": [
+            -1,
+            5,
+            4,
+            -5,
+            -1,
+            1
+          ]
+        },
+        {
+          "affine_shift": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "inverse_unit": [
+            -1,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "trace_index": 21,
+          "unit_ratio": [
+            -1,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "affine_shift": [
+            -5,
+            -7,
+            2,
+            6,
+            0,
+            -1
+          ],
+          "inverse_unit": [
+            1,
+            0,
+            -8,
+            -4,
+            2,
+            1
+          ],
+          "trace_index": 24,
+          "unit_ratio": [
+            1,
+            -2,
+            -4,
+            4,
+            1,
+            -1
+          ]
+        },
+        {
+          "affine_shift": [
+            -2,
+            -2,
+            -2,
+            1,
+            1,
+            0
+          ],
+          "inverse_unit": [
+            2,
+            9,
+            -1,
+            -6,
+            0,
+            1
+          ],
+          "trace_index": 27,
+          "unit_ratio": [
+            2,
+            3,
+            -1,
+            -1,
+            0,
+            0
+          ]
+        },
+        {
+          "affine_shift": [
+            5,
+            12,
+            -4,
+            -10,
+            1,
+            2
+          ],
+          "inverse_unit": [
+            -5,
+            -20,
+            5,
+            13,
+            -1,
+            -2
+          ],
+          "trace_index": 30,
+          "unit_ratio": [
+            0,
+            4,
+            3,
+            -5,
+            -1,
+            1
+          ]
+        },
+        {
+          "affine_shift": [
+            -2,
+            -2,
+            -2,
+            1,
+            1,
+            0
+          ],
+          "inverse_unit": [
+            -5,
+            -8,
+            5,
+            6,
+            -1,
+            -1
+          ],
+          "trace_index": 36,
+          "unit_ratio": [
+            -1,
+            -5,
+            0,
+            5,
+            0,
+            -1
+          ]
+        },
+        {
+          "affine_shift": [
+            -5,
+            -7,
+            2,
+            6,
+            0,
+            -1
+          ],
+          "inverse_unit": [
+            1,
+            3,
+            2,
+            -4,
+            -1,
+            1
+          ],
+          "trace_index": 39,
+          "unit_ratio": [
+            1,
+            -5,
+            -4,
+            5,
+            1,
+            -1
+          ]
+        }
+      ],
+      "conductor_key": [
+        7,
+        1,
+        1
+      ],
+      "representative": 0,
+      "scope": "Same embedded order and full action populations; companion orientation mask labels may change",
+      "trace_indices": [
+        0,
+        3,
+        6,
+        9,
+        15,
+        18,
+        21,
+        24,
+        27,
+        30,
+        36,
+        39
+      ]
+    },
+    {
+      "affine_unit_witnesses": [
+        {
+          "affine_shift": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "inverse_unit": [
+            1,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "trace_index": 12,
+          "unit_ratio": [
+            1,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "affine_shift": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "inverse_unit": [
+            -1,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "trace_index": 33,
+          "unit_ratio": [
+            -1,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "conductor_key": [
+        7,
+        1,
+        2
+      ],
+      "representative": 12,
+      "scope": "Same embedded order and full action populations; companion orientation mask labels may change",
+      "trace_indices": [
+        12,
+        33
+      ]
+    },
+    {
+      "affine_unit_witnesses": [
+        {
+          "affine_shift": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "inverse_unit": [
+            1,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "trace_index": 14,
+          "unit_ratio": [
+            1,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "affine_shift": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "inverse_unit": [
+            -1,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "trace_index": 35,
+          "unit_ratio": [
+            -1,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "conductor_key": [
+        41,
+        12,
+        1
+      ],
+      "representative": 14,
+      "scope": "Same embedded order and full action populations; companion orientation mask labels may change",
+      "trace_indices": [
+        14,
+        35
+      ]
+    },
+    {
+      "affine_unit_witnesses": [
+        {
+          "affine_shift": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "inverse_unit": [
+            1,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "trace_index": 5,
+          "unit_ratio": [
+            1,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "affine_shift": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "inverse_unit": [
+            -1,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "trace_index": 26,
+          "unit_ratio": [
+            -1,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "conductor_key": [
+        41,
+        22,
+        1
+      ],
+      "representative": 5,
+      "scope": "Same embedded order and full action populations; companion orientation mask labels may change",
+      "trace_indices": [
+        5,
+        26
+      ]
+    },
+    {
+      "affine_unit_witnesses": [
+        {
+          "affine_shift": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "inverse_unit": [
+            1,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "trace_index": 4,
+          "unit_ratio": [
+            1,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "affine_shift": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "inverse_unit": [
+            -1,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "trace_index": 25,
+          "unit_ratio": [
+            -1,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "conductor_key": [
+        43,
+        20,
+        1
+      ],
+      "representative": 4,
+      "scope": "Same embedded order and full action populations; companion orientation mask labels may change",
+      "trace_indices": [
+        4,
+        25
+      ]
+    },
+    {
+      "affine_unit_witnesses": [
+        {
+          "affine_shift": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "inverse_unit": [
+            1,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "trace_index": 8,
+          "unit_ratio": [
+            1,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "affine_shift": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "inverse_unit": [
+            -1,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "trace_index": 29,
+          "unit_ratio": [
+            -1,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "conductor_key": [
+        43,
+        31,
+        1
+      ],
+      "representative": 8,
+      "scope": "Same embedded order and full action populations; companion orientation mask labels may change",
+      "trace_indices": [
+        8,
+        29
+      ]
+    },
+    {
+      "affine_unit_witnesses": [
+        {
+          "affine_shift": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "inverse_unit": [
+            1,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "trace_index": 2,
+          "unit_ratio": [
+            1,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "affine_shift": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "inverse_unit": [
+            -1,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "trace_index": 23,
+          "unit_ratio": [
+            -1,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "conductor_key": [
+        83,
+        36,
+        1
+      ],
+      "representative": 2,
+      "scope": "Same embedded order and full action populations; companion orientation mask labels may change",
+      "trace_indices": [
+        2,
+        23
+      ]
+    },
+    {
+      "affine_unit_witnesses": [
+        {
+          "affine_shift": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "inverse_unit": [
+            1,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "trace_index": 10,
+          "unit_ratio": [
+            1,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "affine_shift": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "inverse_unit": [
+            -1,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "trace_index": 31,
+          "unit_ratio": [
+            -1,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "conductor_key": [
+        127,
+        94,
+        1
+      ],
+      "representative": 10,
+      "scope": "Same embedded order and full action populations; companion orientation mask labels may change",
+      "trace_indices": [
+        10,
+        31
+      ]
+    }
+  ],
+  "known_ambient_points": [
+    {
+      "canonical_mask": 0,
+      "dependency": "C20: C",
+      "label": "OM",
+      "point_id": "OM:00",
+      "root_fiber": [
+        0,
+        16
+      ],
+      "status": "known_vertex"
+    },
+    {
+      "canonical_mask": 1,
+      "dependency": null,
+      "label": "OM",
+      "point_id": "OM:01",
+      "root_fiber": [
+        1,
+        17
+      ],
+      "status": "unresolved"
+    },
+    {
+      "canonical_mask": 2,
+      "dependency": "C20: companion pair 17,38",
+      "label": "OM",
+      "point_id": "OM:02",
+      "root_fiber": [
+        2,
+        18
+      ],
+      "status": "previous_exclusion"
+    },
+    {
+      "canonical_mask": 3,
+      "dependency": null,
+      "label": "OM",
+      "point_id": "OM:03",
+      "root_fiber": [
+        3,
+        19
+      ],
+      "status": "unresolved"
+    },
+    {
+      "canonical_mask": 4,
+      "dependency": null,
+      "label": "OM",
+      "point_id": "OM:04",
+      "root_fiber": [
+        4,
+        20
+      ],
+      "status": "unresolved"
+    },
+    {
+      "canonical_mask": 5,
+      "dependency": null,
+      "label": "OM",
+      "point_id": "OM:05",
+      "root_fiber": [
+        5,
+        21
+      ],
+      "status": "unresolved"
+    },
+    {
+      "canonical_mask": 6,
+      "dependency": null,
+      "label": "OM",
+      "point_id": "OM:06",
+      "root_fiber": [
+        6,
+        22
+      ],
+      "status": "unresolved"
+    },
+    {
+      "canonical_mask": 7,
+      "dependency": "C20: A",
+      "label": "OM",
+      "point_id": "OM:07",
+      "root_fiber": [
+        7,
+        23
+      ],
+      "status": "known_vertex"
+    },
+    {
+      "canonical_mask": 8,
+      "dependency": null,
+      "label": "OM",
+      "point_id": "OM:08",
+      "root_fiber": [
+        8,
+        24
+      ],
+      "status": "unresolved"
+    },
+    {
+      "canonical_mask": 9,
+      "dependency": null,
+      "label": "OM",
+      "point_id": "OM:09",
+      "root_fiber": [
+        9,
+        25
+      ],
+      "status": "unresolved"
+    },
+    {
+      "canonical_mask": 10,
+      "dependency": null,
+      "label": "OM",
+      "point_id": "OM:10",
+      "root_fiber": [
+        10,
+        26
+      ],
+      "status": "unresolved"
+    },
+    {
+      "canonical_mask": 11,
+      "dependency": null,
+      "label": "OM",
+      "point_id": "OM:11",
+      "root_fiber": [
+        11,
+        27
+      ],
+      "status": "unresolved"
+    },
+    {
+      "canonical_mask": 12,
+      "dependency": null,
+      "label": "OM",
+      "point_id": "OM:12",
+      "root_fiber": [
+        12,
+        28
+      ],
+      "status": "unresolved"
+    },
+    {
+      "canonical_mask": 13,
+      "dependency": "C20: companion pair 1,22",
+      "label": "OM",
+      "point_id": "OM:13",
+      "root_fiber": [
+        13,
+        29
+      ],
+      "status": "previous_exclusion"
+    },
+    {
+      "canonical_mask": 14,
+      "dependency": null,
+      "label": "OM",
+      "point_id": "OM:14",
+      "root_fiber": [
+        14,
+        30
+      ],
+      "status": "unresolved"
+    },
+    {
+      "canonical_mask": 15,
+      "dependency": "C20: B",
+      "label": "OM",
+      "point_id": "OM:15",
+      "root_fiber": [
+        15,
+        31
+      ],
+      "status": "known_vertex"
+    },
+    {
+      "canonical_mask": 0,
+      "dependency": null,
+      "label": "R41:principal",
+      "point_id": "R41:principal:00",
+      "root_fiber": [
+        0,
+        16
+      ],
+      "status": "unresolved"
+    },
+    {
+      "canonical_mask": 1,
+      "dependency": null,
+      "label": "R41:principal",
+      "point_id": "R41:principal:01",
+      "root_fiber": [
+        1,
+        17
+      ],
+      "status": "unresolved"
+    },
+    {
+      "canonical_mask": 2,
+      "dependency": null,
+      "label": "R41:principal",
+      "point_id": "R41:principal:02",
+      "root_fiber": [
+        2,
+        18
+      ],
+      "status": "unresolved"
+    },
+    {
+      "canonical_mask": 3,
+      "dependency": null,
+      "label": "R41:principal",
+      "point_id": "R41:principal:03",
+      "root_fiber": [
+        3,
+        19
+      ],
+      "status": "unresolved"
+    },
+    {
+      "canonical_mask": 4,
+      "dependency": null,
+      "label": "R41:principal",
+      "point_id": "R41:principal:04",
+      "root_fiber": [
+        4,
+        20
+      ],
+      "status": "unresolved"
+    },
+    {
+      "canonical_mask": 5,
+      "dependency": null,
+      "label": "R41:principal",
+      "point_id": "R41:principal:05",
+      "root_fiber": [
+        5,
+        21
+      ],
+      "status": "unresolved"
+    },
+    {
+      "canonical_mask": 6,
+      "dependency": null,
+      "label": "R41:principal",
+      "point_id": "R41:principal:06",
+      "root_fiber": [
+        6,
+        22
+      ],
+      "status": "unresolved"
+    },
+    {
+      "canonical_mask": 7,
+      "dependency": null,
+      "label": "R41:principal",
+      "point_id": "R41:principal:07",
+      "root_fiber": [
+        7,
+        23
+      ],
+      "status": "unresolved"
+    },
+    {
+      "canonical_mask": 8,
+      "dependency": null,
+      "label": "R41:principal",
+      "point_id": "R41:principal:08",
+      "root_fiber": [
+        8,
+        24
+      ],
+      "status": "unresolved"
+    },
+    {
+      "canonical_mask": 9,
+      "dependency": null,
+      "label": "R41:principal",
+      "point_id": "R41:principal:09",
+      "root_fiber": [
+        9,
+        25
+      ],
+      "status": "unresolved"
+    },
+    {
+      "canonical_mask": 10,
+      "dependency": null,
+      "label": "R41:principal",
+      "point_id": "R41:principal:10",
+      "root_fiber": [
+        10,
+        26
+      ],
+      "status": "unresolved"
+    },
+    {
+      "canonical_mask": 11,
+      "dependency": null,
+      "label": "R41:principal",
+      "point_id": "R41:principal:11",
+      "root_fiber": [
+        11,
+        27
+      ],
+      "status": "unresolved"
+    },
+    {
+      "canonical_mask": 12,
+      "dependency": null,
+      "label": "R41:principal",
+      "point_id": "R41:principal:12",
+      "root_fiber": [
+        12,
+        28
+      ],
+      "status": "unresolved"
+    },
+    {
+      "canonical_mask": 13,
+      "dependency": null,
+      "label": "R41:principal",
+      "point_id": "R41:principal:13",
+      "root_fiber": [
+        13,
+        29
+      ],
+      "status": "unresolved"
+    },
+    {
+      "canonical_mask": 14,
+      "dependency": null,
+      "label": "R41:principal",
+      "point_id": "R41:principal:14",
+      "root_fiber": [
+        14,
+        30
+      ],
+      "status": "unresolved"
+    },
+    {
+      "canonical_mask": 15,
+      "dependency": null,
+      "label": "R41:principal",
+      "point_id": "R41:principal:15",
+      "root_fiber": [
+        15,
+        31
+      ],
+      "status": "unresolved"
+    },
+    {
+      "canonical_mask": 32,
+      "dependency": null,
+      "label": "R41:principal",
+      "point_id": "R41:principal:32",
+      "root_fiber": [
+        32,
+        48
+      ],
+      "status": "unresolved"
+    },
+    {
+      "canonical_mask": 33,
+      "dependency": null,
+      "label": "R41:principal",
+      "point_id": "R41:principal:33",
+      "root_fiber": [
+        33,
+        49
+      ],
+      "status": "unresolved"
+    },
+    {
+      "canonical_mask": 34,
+      "dependency": null,
+      "label": "R41:principal",
+      "point_id": "R41:principal:34",
+      "root_fiber": [
+        34,
+        50
+      ],
+      "status": "unresolved"
+    },
+    {
+      "canonical_mask": 35,
+      "dependency": null,
+      "label": "R41:principal",
+      "point_id": "R41:principal:35",
+      "root_fiber": [
+        35,
+        51
+      ],
+      "status": "unresolved"
+    },
+    {
+      "canonical_mask": 36,
+      "dependency": null,
+      "label": "R41:principal",
+      "point_id": "R41:principal:36",
+      "root_fiber": [
+        36,
+        52
+      ],
+      "status": "unresolved"
+    },
+    {
+      "canonical_mask": 37,
+      "dependency": null,
+      "label": "R41:principal",
+      "point_id": "R41:principal:37",
+      "root_fiber": [
+        37,
+        53
+      ],
+      "status": "unresolved"
+    },
+    {
+      "canonical_mask": 38,
+      "dependency": null,
+      "label": "R41:principal",
+      "point_id": "R41:principal:38",
+      "root_fiber": [
+        38,
+        54
+      ],
+      "status": "unresolved"
+    },
+    {
+      "canonical_mask": 39,
+      "dependency": null,
+      "label": "R41:principal",
+      "point_id": "R41:principal:39",
+      "root_fiber": [
+        39,
+        55
+      ],
+      "status": "unresolved"
+    },
+    {
+      "canonical_mask": 40,
+      "dependency": null,
+      "label": "R41:principal",
+      "point_id": "R41:principal:40",
+      "root_fiber": [
+        40,
+        56
+      ],
+      "status": "unresolved"
+    },
+    {
+      "canonical_mask": 41,
+      "dependency": null,
+      "label": "R41:principal",
+      "point_id": "R41:principal:41",
+      "root_fiber": [
+        41,
+        57
+      ],
+      "status": "unresolved"
+    },
+    {
+      "canonical_mask": 42,
+      "dependency": null,
+      "label": "R41:principal",
+      "point_id": "R41:principal:42",
+      "root_fiber": [
+        42,
+        58
+      ],
+      "status": "unresolved"
+    },
+    {
+      "canonical_mask": 43,
+      "dependency": null,
+      "label": "R41:principal",
+      "point_id": "R41:principal:43",
+      "root_fiber": [
+        43,
+        59
+      ],
+      "status": "unresolved"
+    },
+    {
+      "canonical_mask": 44,
+      "dependency": null,
+      "label": "R41:principal",
+      "point_id": "R41:principal:44",
+      "root_fiber": [
+        44,
+        60
+      ],
+      "status": "unresolved"
+    },
+    {
+      "canonical_mask": 45,
+      "dependency": null,
+      "label": "R41:principal",
+      "point_id": "R41:principal:45",
+      "root_fiber": [
+        45,
+        61
+      ],
+      "status": "unresolved"
+    },
+    {
+      "canonical_mask": 46,
+      "dependency": null,
+      "label": "R41:principal",
+      "point_id": "R41:principal:46",
+      "root_fiber": [
+        46,
+        62
+      ],
+      "status": "unresolved"
+    },
+    {
+      "canonical_mask": 47,
+      "dependency": null,
+      "label": "R41:principal",
+      "point_id": "R41:principal:47",
+      "root_fiber": [
+        47,
+        63
+      ],
+      "status": "unresolved"
+    },
+    {
+      "canonical_mask": 0,
+      "dependency": "C30",
+      "label": "R83:principal",
+      "point_id": "R83:principal:00",
+      "root_fiber": [
+        0,
+        16
+      ],
+      "status": "previous_exclusion"
+    },
+    {
+      "canonical_mask": 1,
+      "dependency": "C30",
+      "label": "R83:principal",
+      "point_id": "R83:principal:01",
+      "root_fiber": [
+        1,
+        17
+      ],
+      "status": "previous_exclusion"
+    },
+    {
+      "canonical_mask": 2,
+      "dependency": "C30",
+      "label": "R83:principal",
+      "point_id": "R83:principal:02",
+      "root_fiber": [
+        2,
+        18
+      ],
+      "status": "previous_exclusion"
+    },
+    {
+      "canonical_mask": 3,
+      "dependency": "C30",
+      "label": "R83:principal",
+      "point_id": "R83:principal:03",
+      "root_fiber": [
+        3,
+        19
+      ],
+      "status": "previous_exclusion"
+    },
+    {
+      "canonical_mask": 4,
+      "dependency": "C30",
+      "label": "R83:principal",
+      "point_id": "R83:principal:04",
+      "root_fiber": [
+        4,
+        20
+      ],
+      "status": "previous_exclusion"
+    },
+    {
+      "canonical_mask": 5,
+      "dependency": "C30",
+      "label": "R83:principal",
+      "point_id": "R83:principal:05",
+      "root_fiber": [
+        5,
+        21
+      ],
+      "status": "previous_exclusion"
+    },
+    {
+      "canonical_mask": 6,
+      "dependency": "C30",
+      "label": "R83:principal",
+      "point_id": "R83:principal:06",
+      "root_fiber": [
+        6,
+        22
+      ],
+      "status": "previous_exclusion"
+    },
+    {
+      "canonical_mask": 7,
+      "dependency": "C30",
+      "label": "R83:principal",
+      "point_id": "R83:principal:07",
+      "root_fiber": [
+        7,
+        23
+      ],
+      "status": "previous_exclusion"
+    },
+    {
+      "canonical_mask": 8,
+      "dependency": "C30",
+      "label": "R83:principal",
+      "point_id": "R83:principal:08",
+      "root_fiber": [
+        8,
+        24
+      ],
+      "status": "previous_exclusion"
+    },
+    {
+      "canonical_mask": 9,
+      "dependency": "C30",
+      "label": "R83:principal",
+      "point_id": "R83:principal:09",
+      "root_fiber": [
+        9,
+        25
+      ],
+      "status": "previous_exclusion"
+    },
+    {
+      "canonical_mask": 10,
+      "dependency": "C30",
+      "label": "R83:principal",
+      "point_id": "R83:principal:10",
+      "root_fiber": [
+        10,
+        26
+      ],
+      "status": "previous_exclusion"
+    },
+    {
+      "canonical_mask": 11,
+      "dependency": "C30",
+      "label": "R83:principal",
+      "point_id": "R83:principal:11",
+      "root_fiber": [
+        11,
+        27
+      ],
+      "status": "previous_exclusion"
+    },
+    {
+      "canonical_mask": 12,
+      "dependency": "C30",
+      "label": "R83:principal",
+      "point_id": "R83:principal:12",
+      "root_fiber": [
+        12,
+        28
+      ],
+      "status": "previous_exclusion"
+    },
+    {
+      "canonical_mask": 13,
+      "dependency": "C30",
+      "label": "R83:principal",
+      "point_id": "R83:principal:13",
+      "root_fiber": [
+        13,
+        29
+      ],
+      "status": "previous_exclusion"
+    },
+    {
+      "canonical_mask": 14,
+      "dependency": "C30",
+      "label": "R83:principal",
+      "point_id": "R83:principal:14",
+      "root_fiber": [
+        14,
+        30
+      ],
+      "status": "previous_exclusion"
+    },
+    {
+      "canonical_mask": 15,
+      "dependency": "C30",
+      "label": "R83:principal",
+      "point_id": "R83:principal:15",
+      "root_fiber": [
+        15,
+        31
+      ],
+      "status": "previous_exclusion"
+    },
+    {
+      "canonical_mask": 32,
+      "dependency": "C30",
+      "label": "R83:principal",
+      "point_id": "R83:principal:32",
+      "root_fiber": [
+        32,
+        48
+      ],
+      "status": "previous_exclusion"
+    },
+    {
+      "canonical_mask": 33,
+      "dependency": "C30",
+      "label": "R83:principal",
+      "point_id": "R83:principal:33",
+      "root_fiber": [
+        33,
+        49
+      ],
+      "status": "previous_exclusion"
+    },
+    {
+      "canonical_mask": 34,
+      "dependency": "C30",
+      "label": "R83:principal",
+      "point_id": "R83:principal:34",
+      "root_fiber": [
+        34,
+        50
+      ],
+      "status": "previous_exclusion"
+    },
+    {
+      "canonical_mask": 35,
+      "dependency": "C30",
+      "label": "R83:principal",
+      "point_id": "R83:principal:35",
+      "root_fiber": [
+        35,
+        51
+      ],
+      "status": "previous_exclusion"
+    },
+    {
+      "canonical_mask": 36,
+      "dependency": "C30",
+      "label": "R83:principal",
+      "point_id": "R83:principal:36",
+      "root_fiber": [
+        36,
+        52
+      ],
+      "status": "previous_exclusion"
+    },
+    {
+      "canonical_mask": 37,
+      "dependency": "C30",
+      "label": "R83:principal",
+      "point_id": "R83:principal:37",
+      "root_fiber": [
+        37,
+        53
+      ],
+      "status": "previous_exclusion"
+    },
+    {
+      "canonical_mask": 38,
+      "dependency": "C30",
+      "label": "R83:principal",
+      "point_id": "R83:principal:38",
+      "root_fiber": [
+        38,
+        54
+      ],
+      "status": "previous_exclusion"
+    },
+    {
+      "canonical_mask": 39,
+      "dependency": "C30",
+      "label": "R83:principal",
+      "point_id": "R83:principal:39",
+      "root_fiber": [
+        39,
+        55
+      ],
+      "status": "previous_exclusion"
+    },
+    {
+      "canonical_mask": 40,
+      "dependency": "C30",
+      "label": "R83:principal",
+      "point_id": "R83:principal:40",
+      "root_fiber": [
+        40,
+        56
+      ],
+      "status": "previous_exclusion"
+    },
+    {
+      "canonical_mask": 41,
+      "dependency": "C30",
+      "label": "R83:principal",
+      "point_id": "R83:principal:41",
+      "root_fiber": [
+        41,
+        57
+      ],
+      "status": "previous_exclusion"
+    },
+    {
+      "canonical_mask": 42,
+      "dependency": "C30",
+      "label": "R83:principal",
+      "point_id": "R83:principal:42",
+      "root_fiber": [
+        42,
+        58
+      ],
+      "status": "previous_exclusion"
+    },
+    {
+      "canonical_mask": 43,
+      "dependency": "C30",
+      "label": "R83:principal",
+      "point_id": "R83:principal:43",
+      "root_fiber": [
+        43,
+        59
+      ],
+      "status": "previous_exclusion"
+    },
+    {
+      "canonical_mask": 44,
+      "dependency": "C30",
+      "label": "R83:principal",
+      "point_id": "R83:principal:44",
+      "root_fiber": [
+        44,
+        60
+      ],
+      "status": "previous_exclusion"
+    },
+    {
+      "canonical_mask": 45,
+      "dependency": "C30",
+      "label": "R83:principal",
+      "point_id": "R83:principal:45",
+      "root_fiber": [
+        45,
+        61
+      ],
+      "status": "previous_exclusion"
+    },
+    {
+      "canonical_mask": 46,
+      "dependency": "C30",
+      "label": "R83:principal",
+      "point_id": "R83:principal:46",
+      "root_fiber": [
+        46,
+        62
+      ],
+      "status": "previous_exclusion"
+    },
+    {
+      "canonical_mask": 47,
+      "dependency": "C30",
+      "label": "R83:principal",
+      "point_id": "R83:principal:47",
+      "root_fiber": [
+        47,
+        63
+      ],
+      "status": "previous_exclusion"
+    },
+    {
+      "canonical_mask": 0,
+      "dependency": "C21-C29",
+      "label": "R83:nontrivial",
+      "point_id": "R83:nontrivial:00",
+      "root_fiber": [
+        0,
+        48
+      ],
+      "status": "previous_exclusion"
+    },
+    {
+      "canonical_mask": 1,
+      "dependency": "C21-C29",
+      "label": "R83:nontrivial",
+      "point_id": "R83:nontrivial:01",
+      "root_fiber": [
+        1,
+        49
+      ],
+      "status": "previous_exclusion"
+    },
+    {
+      "canonical_mask": 2,
+      "dependency": "C21-C29",
+      "label": "R83:nontrivial",
+      "point_id": "R83:nontrivial:02",
+      "root_fiber": [
+        2,
+        50
+      ],
+      "status": "previous_exclusion"
+    },
+    {
+      "canonical_mask": 3,
+      "dependency": "C21-C29",
+      "label": "R83:nontrivial",
+      "point_id": "R83:nontrivial:03",
+      "root_fiber": [
+        3,
+        51
+      ],
+      "status": "previous_exclusion"
+    },
+    {
+      "canonical_mask": 4,
+      "dependency": "C21-C29",
+      "label": "R83:nontrivial",
+      "point_id": "R83:nontrivial:04",
+      "root_fiber": [
+        4,
+        52
+      ],
+      "status": "previous_exclusion"
+    },
+    {
+      "canonical_mask": 5,
+      "dependency": "C21-C29",
+      "label": "R83:nontrivial",
+      "point_id": "R83:nontrivial:05",
+      "root_fiber": [
+        5,
+        53
+      ],
+      "status": "previous_exclusion"
+    },
+    {
+      "canonical_mask": 6,
+      "dependency": "C21-C29",
+      "label": "R83:nontrivial",
+      "point_id": "R83:nontrivial:06",
+      "root_fiber": [
+        6,
+        54
+      ],
+      "status": "previous_exclusion"
+    },
+    {
+      "canonical_mask": 7,
+      "dependency": "C21-C29",
+      "label": "R83:nontrivial",
+      "point_id": "R83:nontrivial:07",
+      "root_fiber": [
+        7,
+        55
+      ],
+      "status": "previous_exclusion"
+    },
+    {
+      "canonical_mask": 8,
+      "dependency": "C21-C29",
+      "label": "R83:nontrivial",
+      "point_id": "R83:nontrivial:08",
+      "root_fiber": [
+        8,
+        56
+      ],
+      "status": "previous_exclusion"
+    },
+    {
+      "canonical_mask": 9,
+      "dependency": "C21-C29",
+      "label": "R83:nontrivial",
+      "point_id": "R83:nontrivial:09",
+      "root_fiber": [
+        9,
+        57
+      ],
+      "status": "previous_exclusion"
+    },
+    {
+      "canonical_mask": 10,
+      "dependency": "C21-C29",
+      "label": "R83:nontrivial",
+      "point_id": "R83:nontrivial:10",
+      "root_fiber": [
+        10,
+        58
+      ],
+      "status": "previous_exclusion"
+    },
+    {
+      "canonical_mask": 11,
+      "dependency": "C21-C29",
+      "label": "R83:nontrivial",
+      "point_id": "R83:nontrivial:11",
+      "root_fiber": [
+        11,
+        59
+      ],
+      "status": "previous_exclusion"
+    },
+    {
+      "canonical_mask": 12,
+      "dependency": "C21-C29",
+      "label": "R83:nontrivial",
+      "point_id": "R83:nontrivial:12",
+      "root_fiber": [
+        12,
+        60
+      ],
+      "status": "previous_exclusion"
+    },
+    {
+      "canonical_mask": 13,
+      "dependency": "C21-C29",
+      "label": "R83:nontrivial",
+      "point_id": "R83:nontrivial:13",
+      "root_fiber": [
+        13,
+        61
+      ],
+      "status": "previous_exclusion"
+    },
+    {
+      "canonical_mask": 14,
+      "dependency": "C21-C29",
+      "label": "R83:nontrivial",
+      "point_id": "R83:nontrivial:14",
+      "root_fiber": [
+        14,
+        62
+      ],
+      "status": "previous_exclusion"
+    },
+    {
+      "canonical_mask": 15,
+      "dependency": "C21-C29",
+      "label": "R83:nontrivial",
+      "point_id": "R83:nontrivial:15",
+      "root_fiber": [
+        15,
+        63
+      ],
+      "status": "previous_exclusion"
+    },
+    {
+      "canonical_mask": 16,
+      "dependency": "C21-C29",
+      "label": "R83:nontrivial",
+      "point_id": "R83:nontrivial:16",
+      "root_fiber": [
+        16,
+        32
+      ],
+      "status": "previous_exclusion"
+    },
+    {
+      "canonical_mask": 17,
+      "dependency": "C21-C29",
+      "label": "R83:nontrivial",
+      "point_id": "R83:nontrivial:17",
+      "root_fiber": [
+        17,
+        33
+      ],
+      "status": "previous_exclusion"
+    },
+    {
+      "canonical_mask": 18,
+      "dependency": "C21-C29",
+      "label": "R83:nontrivial",
+      "point_id": "R83:nontrivial:18",
+      "root_fiber": [
+        18,
+        34
+      ],
+      "status": "previous_exclusion"
+    },
+    {
+      "canonical_mask": 19,
+      "dependency": "C21-C29",
+      "label": "R83:nontrivial",
+      "point_id": "R83:nontrivial:19",
+      "root_fiber": [
+        19,
+        35
+      ],
+      "status": "previous_exclusion"
+    },
+    {
+      "canonical_mask": 20,
+      "dependency": "C21-C29",
+      "label": "R83:nontrivial",
+      "point_id": "R83:nontrivial:20",
+      "root_fiber": [
+        20,
+        36
+      ],
+      "status": "previous_exclusion"
+    },
+    {
+      "canonical_mask": 21,
+      "dependency": "C21-C29",
+      "label": "R83:nontrivial",
+      "point_id": "R83:nontrivial:21",
+      "root_fiber": [
+        21,
+        37
+      ],
+      "status": "previous_exclusion"
+    },
+    {
+      "canonical_mask": 22,
+      "dependency": "C21-C29",
+      "label": "R83:nontrivial",
+      "point_id": "R83:nontrivial:22",
+      "root_fiber": [
+        22,
+        38
+      ],
+      "status": "previous_exclusion"
+    },
+    {
+      "canonical_mask": 23,
+      "dependency": "C21-C29",
+      "label": "R83:nontrivial",
+      "point_id": "R83:nontrivial:23",
+      "root_fiber": [
+        23,
+        39
+      ],
+      "status": "previous_exclusion"
+    },
+    {
+      "canonical_mask": 24,
+      "dependency": "C21-C29",
+      "label": "R83:nontrivial",
+      "point_id": "R83:nontrivial:24",
+      "root_fiber": [
+        24,
+        40
+      ],
+      "status": "previous_exclusion"
+    },
+    {
+      "canonical_mask": 25,
+      "dependency": "C21-C29",
+      "label": "R83:nontrivial",
+      "point_id": "R83:nontrivial:25",
+      "root_fiber": [
+        25,
+        41
+      ],
+      "status": "previous_exclusion"
+    },
+    {
+      "canonical_mask": 26,
+      "dependency": "C21-C29",
+      "label": "R83:nontrivial",
+      "point_id": "R83:nontrivial:26",
+      "root_fiber": [
+        26,
+        42
+      ],
+      "status": "previous_exclusion"
+    },
+    {
+      "canonical_mask": 27,
+      "dependency": "C21-C29",
+      "label": "R83:nontrivial",
+      "point_id": "R83:nontrivial:27",
+      "root_fiber": [
+        27,
+        43
+      ],
+      "status": "previous_exclusion"
+    },
+    {
+      "canonical_mask": 28,
+      "dependency": "C21-C29",
+      "label": "R83:nontrivial",
+      "point_id": "R83:nontrivial:28",
+      "root_fiber": [
+        28,
+        44
+      ],
+      "status": "previous_exclusion"
+    },
+    {
+      "canonical_mask": 29,
+      "dependency": "C21-C29",
+      "label": "R83:nontrivial",
+      "point_id": "R83:nontrivial:29",
+      "root_fiber": [
+        29,
+        45
+      ],
+      "status": "previous_exclusion"
+    },
+    {
+      "canonical_mask": 30,
+      "dependency": "C21-C29",
+      "label": "R83:nontrivial",
+      "point_id": "R83:nontrivial:30",
+      "root_fiber": [
+        30,
+        46
+      ],
+      "status": "previous_exclusion"
+    },
+    {
+      "canonical_mask": 31,
+      "dependency": "C21-C29",
+      "label": "R83:nontrivial",
+      "point_id": "R83:nontrivial:31",
+      "root_fiber": [
+        31,
+        47
+      ],
+      "status": "previous_exclusion"
+    }
+  ],
+  "limitations": "The all-trace OM identity awaits human completeness review. d3 predicted counts remain provisional; other proper modules are not enumerated. New v58 pilots are not promoted here.",
+  "source_sha256": {
+    "build/next-stage/geometry_queue.json": "c97f3915112121f65d615122c9916ada96ba7f640f8aba3e509a213cdb661d54",
+    "build/release-v57/consolidated/release.json": "f25e795cf078e6995d224dba32379f39094c99f1aa42114a28cd34ad0d4ff67e",
+    "experiments/nonmaximal_orders/discover_d3_strata.py": "d7e38dd61c7ecfb4e1bb5079b8f10a66797aae12805a9bf181d0395e18a8cdde"
+  },
+  "status": "DISCOVERY_COVERAGE_MANIFEST_NOT_FULL_PACKET_THEOREM",
+  "trace_partition": {
+    "nonmaximal_d3": 12,
+    "nonmaximal_d7": 4,
+    "other_maximal_trace": 4,
+    "other_nonmaximal_trace": 10,
+    "selected_maximal_companion": 12
+  },
+  "traces": [
+    {
+      "conductor": {
+        "exponent": 1,
+        "generator_coefficients": [
+          1,
+          -2,
+          0,
+          1,
+          0,
+          0
+        ],
+        "norm": 7,
+        "prime": 7,
+        "root_mod_prime": 1,
+        "status": "exact_arithmetic"
+      },
+      "equal_embedded_order_representative": 0,
+      "maximal_multiplier_points": [
+        "OM:00",
+        "OM:01",
+        "OM:02",
+        "OM:03",
+        "OM:04",
+        "OM:05",
+        "OM:06",
+        "OM:07",
+        "OM:08",
+        "OM:09",
+        "OM:10",
+        "OM:11",
+        "OM:12",
+        "OM:13",
+        "OM:14",
+        "OM:15"
+      ],
+      "maximal_point_identification_status": "EXACT_IDENTITY_PENDING_HUMAN_COMPLETENESS_REVIEW",
+      "opposite_trace_index": 21,
+      "phase": "nonmaximal_d3",
+      "prediction_scope": "Conditional module/unit/orientation argument; NOT a point count",
+      "proper_module_coverage": "PROVISIONAL_UNDEDUPLICATED",
+      "provisional_matrix_orientation_count": 96,
+      "trace_coefficients": [
+        4,
+        1,
+        -4,
+        0,
+        1,
+        0
+      ],
+      "trace_index": 0
+    },
+    {
+      "conductor": {
+        "ideal": "O_L",
+        "norm": 1,
+        "status": "exact_arithmetic"
+      },
+      "equal_embedded_order_representative": 1,
+      "maximal_multiplier_points": [
+        "OM:00",
+        "OM:01",
+        "OM:02",
+        "OM:03",
+        "OM:04",
+        "OM:05",
+        "OM:06",
+        "OM:07",
+        "OM:08",
+        "OM:09",
+        "OM:10",
+        "OM:11",
+        "OM:12",
+        "OM:13",
+        "OM:14",
+        "OM:15"
+      ],
+      "maximal_point_identification_status": "EXACT_IDENTITY_PENDING_HUMAN_COMPLETENESS_REVIEW",
+      "opposite_trace_index": 22,
+      "phase": "selected_maximal_companion",
+      "proper_module_coverage": "not_applicable",
+      "trace_coefficients": [
+        -2,
+        6,
+        1,
+        -5,
+        0,
+        1
+      ],
+      "trace_index": 1
+    },
+    {
+      "conductor": {
+        "exponent": 1,
+        "generator_coefficients": [
+          -1,
+          4,
+          1,
+          -4,
+          0,
+          1
+        ],
+        "norm": 83,
+        "prime": 83,
+        "root_mod_prime": 36,
+        "status": "exact_arithmetic"
+      },
+      "equal_embedded_order_representative": 2,
+      "maximal_multiplier_points": [
+        "OM:00",
+        "OM:01",
+        "OM:02",
+        "OM:03",
+        "OM:04",
+        "OM:05",
+        "OM:06",
+        "OM:07",
+        "OM:08",
+        "OM:09",
+        "OM:10",
+        "OM:11",
+        "OM:12",
+        "OM:13",
+        "OM:14",
+        "OM:15"
+      ],
+      "maximal_point_identification_status": "EXACT_IDENTITY_PENDING_HUMAN_COMPLETENESS_REVIEW",
+      "opposite_trace_index": 23,
+      "phase": "nonmaximal_d7",
+      "proper_module_coverage": "v45_complete_population",
+      "proper_multiplier_points": [
+        "R83:principal:00",
+        "R83:principal:01",
+        "R83:principal:02",
+        "R83:principal:03",
+        "R83:principal:04",
+        "R83:principal:05",
+        "R83:principal:06",
+        "R83:principal:07",
+        "R83:principal:08",
+        "R83:principal:09",
+        "R83:principal:10",
+        "R83:principal:11",
+        "R83:principal:12",
+        "R83:principal:13",
+        "R83:principal:14",
+        "R83:principal:15",
+        "R83:principal:32",
+        "R83:principal:33",
+        "R83:principal:34",
+        "R83:principal:35",
+        "R83:principal:36",
+        "R83:principal:37",
+        "R83:principal:38",
+        "R83:principal:39",
+        "R83:principal:40",
+        "R83:principal:41",
+        "R83:principal:42",
+        "R83:principal:43",
+        "R83:principal:44",
+        "R83:principal:45",
+        "R83:principal:46",
+        "R83:principal:47",
+        "R83:nontrivial:00",
+        "R83:nontrivial:01",
+        "R83:nontrivial:02",
+        "R83:nontrivial:03",
+        "R83:nontrivial:04",
+        "R83:nontrivial:05",
+        "R83:nontrivial:06",
+        "R83:nontrivial:07",
+        "R83:nontrivial:08",
+        "R83:nontrivial:09",
+        "R83:nontrivial:10",
+        "R83:nontrivial:11",
+        "R83:nontrivial:12",
+        "R83:nontrivial:13",
+        "R83:nontrivial:14",
+        "R83:nontrivial:15",
+        "R83:nontrivial:16",
+        "R83:nontrivial:17",
+        "R83:nontrivial:18",
+        "R83:nontrivial:19",
+        "R83:nontrivial:20",
+        "R83:nontrivial:21",
+        "R83:nontrivial:22",
+        "R83:nontrivial:23",
+        "R83:nontrivial:24",
+        "R83:nontrivial:25",
+        "R83:nontrivial:26",
+        "R83:nontrivial:27",
+        "R83:nontrivial:28",
+        "R83:nontrivial:29",
+        "R83:nontrivial:30",
+        "R83:nontrivial:31"
+      ],
+      "trace_coefficients": [
+        -5,
+        -11,
+        2,
+        7,
+        0,
+        -1
+      ],
+      "trace_index": 2
+    },
+    {
+      "conductor": {
+        "exponent": 1,
+        "generator_coefficients": [
+          -3,
+          -10,
+          -1,
+          7,
+          1,
+          -1
+        ],
+        "norm": 7,
+        "prime": 7,
+        "root_mod_prime": 1,
+        "status": "exact_arithmetic"
+      },
+      "equal_embedded_order_representative": 0,
+      "maximal_multiplier_points": [
+        "OM:00",
+        "OM:01",
+        "OM:02",
+        "OM:03",
+        "OM:04",
+        "OM:05",
+        "OM:06",
+        "OM:07",
+        "OM:08",
+        "OM:09",
+        "OM:10",
+        "OM:11",
+        "OM:12",
+        "OM:13",
+        "OM:14",
+        "OM:15"
+      ],
+      "maximal_point_identification_status": "EXACT_IDENTITY_PENDING_HUMAN_COMPLETENESS_REVIEW",
+      "opposite_trace_index": 24,
+      "phase": "other_nonmaximal_trace",
+      "proper_module_coverage": "OPEN",
+      "trace_coefficients": [
+        3,
+        -3,
+        -4,
+        1,
+        1,
+        0
+      ],
+      "trace_index": 3
+    },
+    {
+      "conductor": {
+        "exponent": 1,
+        "generator_coefficients": [
+          2,
+          1,
+          -3,
+          -3,
+          1,
+          1
+        ],
+        "norm": 43,
+        "prime": 43,
+        "root_mod_prime": 20,
+        "status": "exact_arithmetic"
+      },
+      "equal_embedded_order_representative": 4,
+      "maximal_multiplier_points": [
+        "OM:00",
+        "OM:01",
+        "OM:02",
+        "OM:03",
+        "OM:04",
+        "OM:05",
+        "OM:06",
+        "OM:07",
+        "OM:08",
+        "OM:09",
+        "OM:10",
+        "OM:11",
+        "OM:12",
+        "OM:13",
+        "OM:14",
+        "OM:15"
+      ],
+      "maximal_point_identification_status": "EXACT_IDENTITY_PENDING_HUMAN_COMPLETENESS_REVIEW",
+      "opposite_trace_index": 25,
+      "phase": "nonmaximal_d3",
+      "prediction_scope": "Conditional module/unit/orientation argument; NOT a point count",
+      "proper_module_coverage": "PROVISIONAL_UNDEDUPLICATED",
+      "provisional_matrix_orientation_count": 96,
+      "trace_coefficients": [
+        5,
+        14,
+        -5,
+        -11,
+        1,
+        2
+      ],
+      "trace_index": 4
+    },
+    {
+      "conductor": {
+        "exponent": 1,
+        "generator_coefficients": [
+          2,
+          4,
+          -6,
+          -4,
+          2,
+          1
+        ],
+        "norm": 41,
+        "prime": 41,
+        "root_mod_prime": 22,
+        "status": "exact_arithmetic"
+      },
+      "equal_embedded_order_representative": 5,
+      "maximal_multiplier_points": [
+        "OM:00",
+        "OM:01",
+        "OM:02",
+        "OM:03",
+        "OM:04",
+        "OM:05",
+        "OM:06",
+        "OM:07",
+        "OM:08",
+        "OM:09",
+        "OM:10",
+        "OM:11",
+        "OM:12",
+        "OM:13",
+        "OM:14",
+        "OM:15"
+      ],
+      "maximal_point_identification_status": "EXACT_IDENTITY_PENDING_HUMAN_COMPLETENESS_REVIEW",
+      "opposite_trace_index": 26,
+      "phase": "other_nonmaximal_trace",
+      "proper_module_coverage": "OPEN",
+      "trace_coefficients": [
+        -5,
+        -8,
+        2,
+        6,
+        0,
+        -1
+      ],
+      "trace_index": 5
+    },
+    {
+      "conductor": {
+        "exponent": 1,
+        "generator_coefficients": [
+          -3,
+          -7,
+          -1,
+          3,
+          1,
+          0
+        ],
+        "norm": 7,
+        "prime": 7,
+        "root_mod_prime": 1,
+        "status": "exact_arithmetic"
+      },
+      "equal_embedded_order_representative": 0,
+      "maximal_multiplier_points": [
+        "OM:00",
+        "OM:01",
+        "OM:02",
+        "OM:03",
+        "OM:04",
+        "OM:05",
+        "OM:06",
+        "OM:07",
+        "OM:08",
+        "OM:09",
+        "OM:10",
+        "OM:11",
+        "OM:12",
+        "OM:13",
+        "OM:14",
+        "OM:15"
+      ],
+      "maximal_point_identification_status": "EXACT_IDENTITY_PENDING_HUMAN_COMPLETENESS_REVIEW",
+      "opposite_trace_index": 27,
+      "phase": "other_nonmaximal_trace",
+      "proper_module_coverage": "OPEN",
+      "trace_coefficients": [
+        -4,
+        -11,
+        5,
+        7,
+        -1,
+        -1
+      ],
+      "trace_index": 6
+    },
+    {
+      "conductor": {
+        "ideal": "O_L",
+        "norm": 1,
+        "status": "exact_arithmetic"
+      },
+      "equal_embedded_order_representative": 1,
+      "maximal_multiplier_points": [
+        "OM:00",
+        "OM:01",
+        "OM:02",
+        "OM:03",
+        "OM:04",
+        "OM:05",
+        "OM:06",
+        "OM:07",
+        "OM:08",
+        "OM:09",
+        "OM:10",
+        "OM:11",
+        "OM:12",
+        "OM:13",
+        "OM:14",
+        "OM:15"
+      ],
+      "maximal_point_identification_status": "EXACT_IDENTITY_PENDING_HUMAN_COMPLETENESS_REVIEW",
+      "opposite_trace_index": 28,
+      "phase": "other_maximal_trace",
+      "proper_module_coverage": "not_applicable",
+      "trace_coefficients": [
+        6,
+        12,
+        -5,
+        -7,
+        1,
+        1
+      ],
+      "trace_index": 7
+    },
+    {
+      "conductor": {
+        "exponent": 1,
+        "generator_coefficients": [
+          3,
+          5,
+          -6,
+          -4,
+          2,
+          1
+        ],
+        "norm": 43,
+        "prime": 43,
+        "root_mod_prime": 31,
+        "status": "exact_arithmetic"
+      },
+      "equal_embedded_order_representative": 8,
+      "maximal_multiplier_points": [
+        "OM:00",
+        "OM:01",
+        "OM:02",
+        "OM:03",
+        "OM:04",
+        "OM:05",
+        "OM:06",
+        "OM:07",
+        "OM:08",
+        "OM:09",
+        "OM:10",
+        "OM:11",
+        "OM:12",
+        "OM:13",
+        "OM:14",
+        "OM:15"
+      ],
+      "maximal_point_identification_status": "EXACT_IDENTITY_PENDING_HUMAN_COMPLETENESS_REVIEW",
+      "opposite_trace_index": 29,
+      "phase": "nonmaximal_d3",
+      "prediction_scope": "Conditional module/unit/orientation argument; NOT a point count",
+      "proper_module_coverage": "PROVISIONAL_UNDEDUPLICATED",
+      "provisional_matrix_orientation_count": 96,
+      "trace_coefficients": [
+        3,
+        9,
+        -1,
+        -6,
+        0,
+        1
+      ],
+      "trace_index": 8
+    },
+    {
+      "conductor": {
+        "exponent": 1,
+        "generator_coefficients": [
+          1,
+          2,
+          -2,
+          -3,
+          1,
+          1
+        ],
+        "norm": 7,
+        "prime": 7,
+        "root_mod_prime": 1,
+        "status": "exact_arithmetic"
+      },
+      "equal_embedded_order_representative": 0,
+      "maximal_multiplier_points": [
+        "OM:00",
+        "OM:01",
+        "OM:02",
+        "OM:03",
+        "OM:04",
+        "OM:05",
+        "OM:06",
+        "OM:07",
+        "OM:08",
+        "OM:09",
+        "OM:10",
+        "OM:11",
+        "OM:12",
+        "OM:13",
+        "OM:14",
+        "OM:15"
+      ],
+      "maximal_point_identification_status": "EXACT_IDENTITY_PENDING_HUMAN_COMPLETENESS_REVIEW",
+      "opposite_trace_index": 30,
+      "phase": "other_nonmaximal_trace",
+      "proper_module_coverage": "OPEN",
+      "trace_coefficients": [
+        -7,
+        -17,
+        6,
+        12,
+        -1,
+        -2
+      ],
+      "trace_index": 9
+    },
+    {
+      "conductor": {
+        "exponent": 1,
+        "generator_coefficients": [
+          -4,
+          -12,
+          0,
+          8,
+          1,
+          -1
+        ],
+        "norm": 127,
+        "prime": 127,
+        "root_mod_prime": 94,
+        "status": "exact_arithmetic"
+      },
+      "equal_embedded_order_representative": 10,
+      "maximal_multiplier_points": [
+        "OM:00",
+        "OM:01",
+        "OM:02",
+        "OM:03",
+        "OM:04",
+        "OM:05",
+        "OM:06",
+        "OM:07",
+        "OM:08",
+        "OM:09",
+        "OM:10",
+        "OM:11",
+        "OM:12",
+        "OM:13",
+        "OM:14",
+        "OM:15"
+      ],
+      "maximal_point_identification_status": "EXACT_IDENTITY_PENDING_HUMAN_COMPLETENESS_REVIEW",
+      "opposite_trace_index": 31,
+      "phase": "other_nonmaximal_trace",
+      "proper_module_coverage": "OPEN",
+      "trace_coefficients": [
+        -1,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "trace_index": 10
+    },
+    {
+      "conductor": {
+        "ideal": "O_L",
+        "norm": 1,
+        "status": "exact_arithmetic"
+      },
+      "equal_embedded_order_representative": 1,
+      "maximal_multiplier_points": [
+        "OM:00",
+        "OM:01",
+        "OM:02",
+        "OM:03",
+        "OM:04",
+        "OM:05",
+        "OM:06",
+        "OM:07",
+        "OM:08",
+        "OM:09",
+        "OM:10",
+        "OM:11",
+        "OM:12",
+        "OM:13",
+        "OM:14",
+        "OM:15"
+      ],
+      "maximal_point_identification_status": "EXACT_IDENTITY_PENDING_HUMAN_COMPLETENESS_REVIEW",
+      "opposite_trace_index": 32,
+      "phase": "selected_maximal_companion",
+      "proper_module_coverage": "not_applicable",
+      "trace_coefficients": [
+        7,
+        16,
+        -6,
+        -12,
+        1,
+        2
+      ],
+      "trace_index": 11
+    },
+    {
+      "conductor": {
+        "exponent": 2,
+        "generator_coefficients": [
+          3,
+          4,
+          -6,
+          -4,
+          2,
+          1
+        ],
+        "norm": 49,
+        "prime": 7,
+        "root_mod_prime": 1,
+        "status": "exact_arithmetic"
+      },
+      "equal_embedded_order_representative": 12,
+      "maximal_multiplier_points": [
+        "OM:00",
+        "OM:01",
+        "OM:02",
+        "OM:03",
+        "OM:04",
+        "OM:05",
+        "OM:06",
+        "OM:07",
+        "OM:08",
+        "OM:09",
+        "OM:10",
+        "OM:11",
+        "OM:12",
+        "OM:13",
+        "OM:14",
+        "OM:15"
+      ],
+      "maximal_point_identification_status": "EXACT_IDENTITY_PENDING_HUMAN_COMPLETENESS_REVIEW",
+      "opposite_trace_index": 33,
+      "phase": "nonmaximal_d3",
+      "prediction_scope": "Conditional module/unit/orientation argument; NOT a point count",
+      "proper_module_coverage": "PROVISIONAL_UNDEDUPLICATED",
+      "provisional_matrix_orientation_count": 160,
+      "trace_coefficients": [
+        -1,
+        -9,
+        0,
+        6,
+        0,
+        -1
+      ],
+      "trace_index": 12
+    },
+    {
+      "conductor": {
+        "ideal": "O_L",
+        "norm": 1,
+        "status": "exact_arithmetic"
+      },
+      "equal_embedded_order_representative": 1,
+      "maximal_multiplier_points": [
+        "OM:00",
+        "OM:01",
+        "OM:02",
+        "OM:03",
+        "OM:04",
+        "OM:05",
+        "OM:06",
+        "OM:07",
+        "OM:08",
+        "OM:09",
+        "OM:10",
+        "OM:11",
+        "OM:12",
+        "OM:13",
+        "OM:14",
+        "OM:15"
+      ],
+      "maximal_point_identification_status": "EXACT_IDENTITY_PENDING_HUMAN_COMPLETENESS_REVIEW",
+      "opposite_trace_index": 34,
+      "phase": "other_maximal_trace",
+      "proper_module_coverage": "not_applicable",
+      "trace_coefficients": [
+        -6,
+        -9,
+        5,
+        6,
+        -1,
+        -1
+      ],
+      "trace_index": 13
+    },
+    {
+      "conductor": {
+        "exponent": 1,
+        "generator_coefficients": [
+          -3,
+          -5,
+          -1,
+          2,
+          1,
+          0
+        ],
+        "norm": 41,
+        "prime": 41,
+        "root_mod_prime": 12,
+        "status": "exact_arithmetic"
+      },
+      "equal_embedded_order_representative": 14,
+      "maximal_multiplier_points": [
+        "OM:00",
+        "OM:01",
+        "OM:02",
+        "OM:03",
+        "OM:04",
+        "OM:05",
+        "OM:06",
+        "OM:07",
+        "OM:08",
+        "OM:09",
+        "OM:10",
+        "OM:11",
+        "OM:12",
+        "OM:13",
+        "OM:14",
+        "OM:15"
+      ],
+      "maximal_point_identification_status": "EXACT_IDENTITY_PENDING_HUMAN_COMPLETENESS_REVIEW",
+      "opposite_trace_index": 35,
+      "phase": "nonmaximal_d7",
+      "proper_module_coverage": "v45_complete_population",
+      "proper_multiplier_points": [
+        "R41:principal:00",
+        "R41:principal:01",
+        "R41:principal:02",
+        "R41:principal:03",
+        "R41:principal:04",
+        "R41:principal:05",
+        "R41:principal:06",
+        "R41:principal:07",
+        "R41:principal:08",
+        "R41:principal:09",
+        "R41:principal:10",
+        "R41:principal:11",
+        "R41:principal:12",
+        "R41:principal:13",
+        "R41:principal:14",
+        "R41:principal:15",
+        "R41:principal:32",
+        "R41:principal:33",
+        "R41:principal:34",
+        "R41:principal:35",
+        "R41:principal:36",
+        "R41:principal:37",
+        "R41:principal:38",
+        "R41:principal:39",
+        "R41:principal:40",
+        "R41:principal:41",
+        "R41:principal:42",
+        "R41:principal:43",
+        "R41:principal:44",
+        "R41:principal:45",
+        "R41:principal:46",
+        "R41:principal:47"
+      ],
+      "trace_coefficients": [
+        2,
+        11,
+        -1,
+        -7,
+        0,
+        1
+      ],
+      "trace_index": 14
+    },
+    {
+      "conductor": {
+        "exponent": 1,
+        "generator_coefficients": [
+          1,
+          4,
+          -3,
+          -4,
+          1,
+          1
+        ],
+        "norm": 7,
+        "prime": 7,
+        "root_mod_prime": 1,
+        "status": "exact_arithmetic"
+      },
+      "equal_embedded_order_representative": 0,
+      "maximal_multiplier_points": [
+        "OM:00",
+        "OM:01",
+        "OM:02",
+        "OM:03",
+        "OM:04",
+        "OM:05",
+        "OM:06",
+        "OM:07",
+        "OM:08",
+        "OM:09",
+        "OM:10",
+        "OM:11",
+        "OM:12",
+        "OM:13",
+        "OM:14",
+        "OM:15"
+      ],
+      "maximal_point_identification_status": "EXACT_IDENTITY_PENDING_HUMAN_COMPLETENESS_REVIEW",
+      "opposite_trace_index": 36,
+      "phase": "nonmaximal_d3",
+      "prediction_scope": "Conditional module/unit/orientation argument; NOT a point count",
+      "proper_module_coverage": "PROVISIONAL_UNDEDUPLICATED",
+      "provisional_matrix_orientation_count": 96,
+      "trace_coefficients": [
+        5,
+        3,
+        -2,
+        -1,
+        0,
+        0
+      ],
+      "trace_index": 15
+    },
+    {
+      "conductor": {
+        "ideal": "O_L",
+        "norm": 1,
+        "status": "exact_arithmetic"
+      },
+      "equal_embedded_order_representative": 1,
+      "maximal_multiplier_points": [
+        "OM:00",
+        "OM:01",
+        "OM:02",
+        "OM:03",
+        "OM:04",
+        "OM:05",
+        "OM:06",
+        "OM:07",
+        "OM:08",
+        "OM:09",
+        "OM:10",
+        "OM:11",
+        "OM:12",
+        "OM:13",
+        "OM:14",
+        "OM:15"
+      ],
+      "maximal_point_identification_status": "EXACT_IDENTITY_PENDING_HUMAN_COMPLETENESS_REVIEW",
+      "opposite_trace_index": 37,
+      "phase": "selected_maximal_companion",
+      "proper_module_coverage": "not_applicable",
+      "trace_coefficients": [
+        -2,
+        -6,
+        4,
+        5,
+        -1,
+        -1
+      ],
+      "trace_index": 16
+    },
+    {
+      "conductor": {
+        "ideal": "O_L",
+        "norm": 1,
+        "status": "exact_arithmetic"
+      },
+      "equal_embedded_order_representative": 1,
+      "maximal_multiplier_points": [
+        "OM:00",
+        "OM:01",
+        "OM:02",
+        "OM:03",
+        "OM:04",
+        "OM:05",
+        "OM:06",
+        "OM:07",
+        "OM:08",
+        "OM:09",
+        "OM:10",
+        "OM:11",
+        "OM:12",
+        "OM:13",
+        "OM:14",
+        "OM:15"
+      ],
+      "maximal_point_identification_status": "EXACT_IDENTITY_PENDING_HUMAN_COMPLETENESS_REVIEW",
+      "opposite_trace_index": 38,
+      "phase": "selected_maximal_companion",
+      "proper_module_coverage": "not_applicable",
+      "trace_coefficients": [
+        -4,
+        3,
+        4,
+        -1,
+        -1,
+        0
+      ],
+      "trace_index": 17
+    },
+    {
+      "conductor": {
+        "exponent": 1,
+        "generator_coefficients": [
+          -2,
+          1,
+          1,
+          0,
+          0,
+          0
+        ],
+        "norm": 7,
+        "prime": 7,
+        "root_mod_prime": 1,
+        "status": "exact_arithmetic"
+      },
+      "equal_embedded_order_representative": 0,
+      "maximal_multiplier_points": [
+        "OM:00",
+        "OM:01",
+        "OM:02",
+        "OM:03",
+        "OM:04",
+        "OM:05",
+        "OM:06",
+        "OM:07",
+        "OM:08",
+        "OM:09",
+        "OM:10",
+        "OM:11",
+        "OM:12",
+        "OM:13",
+        "OM:14",
+        "OM:15"
+      ],
+      "maximal_point_identification_status": "EXACT_IDENTITY_PENDING_HUMAN_COMPLETENESS_REVIEW",
+      "opposite_trace_index": 39,
+      "phase": "nonmaximal_d3",
+      "prediction_scope": "Conditional module/unit/orientation argument; NOT a point count",
+      "proper_module_coverage": "PROVISIONAL_UNDEDUPLICATED",
+      "provisional_matrix_orientation_count": 96,
+      "trace_coefficients": [
+        2,
+        2,
+        -1,
+        -1,
+        0,
+        0
+      ],
+      "trace_index": 18
+    },
+    {
+      "conductor": {
+        "ideal": "O_L",
+        "norm": 1,
+        "status": "exact_arithmetic"
+      },
+      "equal_embedded_order_representative": 1,
+      "maximal_multiplier_points": [
+        "OM:00",
+        "OM:01",
+        "OM:02",
+        "OM:03",
+        "OM:04",
+        "OM:05",
+        "OM:06",
+        "OM:07",
+        "OM:08",
+        "OM:09",
+        "OM:10",
+        "OM:11",
+        "OM:12",
+        "OM:13",
+        "OM:14",
+        "OM:15"
+      ],
+      "maximal_point_identification_status": "EXACT_IDENTITY_PENDING_HUMAN_COMPLETENESS_REVIEW",
+      "opposite_trace_index": 40,
+      "phase": "selected_maximal_companion",
+      "proper_module_coverage": "not_applicable",
+      "trace_coefficients": [
+        4,
+        -1,
+        -2,
+        0,
+        0,
+        0
+      ],
+      "trace_index": 19
+    },
+    {
+      "conductor": {
+        "ideal": "O_L",
+        "norm": 1,
+        "status": "exact_arithmetic"
+      },
+      "equal_embedded_order_representative": 1,
+      "maximal_multiplier_points": [
+        "OM:00",
+        "OM:01",
+        "OM:02",
+        "OM:03",
+        "OM:04",
+        "OM:05",
+        "OM:06",
+        "OM:07",
+        "OM:08",
+        "OM:09",
+        "OM:10",
+        "OM:11",
+        "OM:12",
+        "OM:13",
+        "OM:14",
+        "OM:15"
+      ],
+      "maximal_point_identification_status": "EXACT_IDENTITY_PENDING_HUMAN_COMPLETENESS_REVIEW",
+      "opposite_trace_index": 41,
+      "phase": "selected_maximal_companion",
+      "proper_module_coverage": "not_applicable",
+      "trace_coefficients": [
+        -2,
+        2,
+        0,
+        -1,
+        0,
+        0
+      ],
+      "trace_index": 20
+    },
+    {
+      "conductor": {
+        "exponent": 1,
+        "generator_coefficients": [
+          -1,
+          2,
+          0,
+          -1,
+          0,
+          0
+        ],
+        "norm": 7,
+        "prime": 7,
+        "root_mod_prime": 1,
+        "status": "exact_arithmetic"
+      },
+      "equal_embedded_order_representative": 0,
+      "maximal_multiplier_points": [
+        "OM:00",
+        "OM:01",
+        "OM:02",
+        "OM:03",
+        "OM:04",
+        "OM:05",
+        "OM:06",
+        "OM:07",
+        "OM:08",
+        "OM:09",
+        "OM:10",
+        "OM:11",
+        "OM:12",
+        "OM:13",
+        "OM:14",
+        "OM:15"
+      ],
+      "maximal_point_identification_status": "EXACT_IDENTITY_PENDING_HUMAN_COMPLETENESS_REVIEW",
+      "opposite_trace_index": 0,
+      "phase": "nonmaximal_d3",
+      "prediction_scope": "Conditional module/unit/orientation argument; NOT a point count",
+      "proper_module_coverage": "PROVISIONAL_UNDEDUPLICATED",
+      "provisional_matrix_orientation_count": 96,
+      "trace_coefficients": [
+        -4,
+        -1,
+        4,
+        0,
+        -1,
+        0
+      ],
+      "trace_index": 21
+    },
+    {
+      "conductor": {
+        "ideal": "O_L",
+        "norm": 1,
+        "status": "exact_arithmetic"
+      },
+      "equal_embedded_order_representative": 1,
+      "maximal_multiplier_points": [
+        "OM:00",
+        "OM:01",
+        "OM:02",
+        "OM:03",
+        "OM:04",
+        "OM:05",
+        "OM:06",
+        "OM:07",
+        "OM:08",
+        "OM:09",
+        "OM:10",
+        "OM:11",
+        "OM:12",
+        "OM:13",
+        "OM:14",
+        "OM:15"
+      ],
+      "maximal_point_identification_status": "EXACT_IDENTITY_PENDING_HUMAN_COMPLETENESS_REVIEW",
+      "opposite_trace_index": 1,
+      "phase": "selected_maximal_companion",
+      "proper_module_coverage": "not_applicable",
+      "trace_coefficients": [
+        2,
+        -6,
+        -1,
+        5,
+        0,
+        -1
+      ],
+      "trace_index": 22
+    },
+    {
+      "conductor": {
+        "exponent": 1,
+        "generator_coefficients": [
+          1,
+          -4,
+          -1,
+          4,
+          0,
+          -1
+        ],
+        "norm": 83,
+        "prime": 83,
+        "root_mod_prime": 36,
+        "status": "exact_arithmetic"
+      },
+      "equal_embedded_order_representative": 2,
+      "maximal_multiplier_points": [
+        "OM:00",
+        "OM:01",
+        "OM:02",
+        "OM:03",
+        "OM:04",
+        "OM:05",
+        "OM:06",
+        "OM:07",
+        "OM:08",
+        "OM:09",
+        "OM:10",
+        "OM:11",
+        "OM:12",
+        "OM:13",
+        "OM:14",
+        "OM:15"
+      ],
+      "maximal_point_identification_status": "EXACT_IDENTITY_PENDING_HUMAN_COMPLETENESS_REVIEW",
+      "opposite_trace_index": 2,
+      "phase": "nonmaximal_d7",
+      "proper_module_coverage": "v45_complete_population",
+      "proper_multiplier_points": [
+        "R83:principal:00",
+        "R83:principal:01",
+        "R83:principal:02",
+        "R83:principal:03",
+        "R83:principal:04",
+        "R83:principal:05",
+        "R83:principal:06",
+        "R83:principal:07",
+        "R83:principal:08",
+        "R83:principal:09",
+        "R83:principal:10",
+        "R83:principal:11",
+        "R83:principal:12",
+        "R83:principal:13",
+        "R83:principal:14",
+        "R83:principal:15",
+        "R83:principal:32",
+        "R83:principal:33",
+        "R83:principal:34",
+        "R83:principal:35",
+        "R83:principal:36",
+        "R83:principal:37",
+        "R83:principal:38",
+        "R83:principal:39",
+        "R83:principal:40",
+        "R83:principal:41",
+        "R83:principal:42",
+        "R83:principal:43",
+        "R83:principal:44",
+        "R83:principal:45",
+        "R83:principal:46",
+        "R83:principal:47",
+        "R83:nontrivial:00",
+        "R83:nontrivial:01",
+        "R83:nontrivial:02",
+        "R83:nontrivial:03",
+        "R83:nontrivial:04",
+        "R83:nontrivial:05",
+        "R83:nontrivial:06",
+        "R83:nontrivial:07",
+        "R83:nontrivial:08",
+        "R83:nontrivial:09",
+        "R83:nontrivial:10",
+        "R83:nontrivial:11",
+        "R83:nontrivial:12",
+        "R83:nontrivial:13",
+        "R83:nontrivial:14",
+        "R83:nontrivial:15",
+        "R83:nontrivial:16",
+        "R83:nontrivial:17",
+        "R83:nontrivial:18",
+        "R83:nontrivial:19",
+        "R83:nontrivial:20",
+        "R83:nontrivial:21",
+        "R83:nontrivial:22",
+        "R83:nontrivial:23",
+        "R83:nontrivial:24",
+        "R83:nontrivial:25",
+        "R83:nontrivial:26",
+        "R83:nontrivial:27",
+        "R83:nontrivial:28",
+        "R83:nontrivial:29",
+        "R83:nontrivial:30",
+        "R83:nontrivial:31"
+      ],
+      "trace_coefficients": [
+        5,
+        11,
+        -2,
+        -7,
+        0,
+        1
+      ],
+      "trace_index": 23
+    },
+    {
+      "conductor": {
+        "exponent": 1,
+        "generator_coefficients": [
+          3,
+          10,
+          1,
+          -7,
+          -1,
+          1
+        ],
+        "norm": 7,
+        "prime": 7,
+        "root_mod_prime": 1,
+        "status": "exact_arithmetic"
+      },
+      "equal_embedded_order_representative": 0,
+      "maximal_multiplier_points": [
+        "OM:00",
+        "OM:01",
+        "OM:02",
+        "OM:03",
+        "OM:04",
+        "OM:05",
+        "OM:06",
+        "OM:07",
+        "OM:08",
+        "OM:09",
+        "OM:10",
+        "OM:11",
+        "OM:12",
+        "OM:13",
+        "OM:14",
+        "OM:15"
+      ],
+      "maximal_point_identification_status": "EXACT_IDENTITY_PENDING_HUMAN_COMPLETENESS_REVIEW",
+      "opposite_trace_index": 3,
+      "phase": "other_nonmaximal_trace",
+      "proper_module_coverage": "OPEN",
+      "trace_coefficients": [
+        -3,
+        3,
+        4,
+        -1,
+        -1,
+        0
+      ],
+      "trace_index": 24
+    },
+    {
+      "conductor": {
+        "exponent": 1,
+        "generator_coefficients": [
+          -2,
+          -1,
+          3,
+          3,
+          -1,
+          -1
+        ],
+        "norm": 43,
+        "prime": 43,
+        "root_mod_prime": 20,
+        "status": "exact_arithmetic"
+      },
+      "equal_embedded_order_representative": 4,
+      "maximal_multiplier_points": [
+        "OM:00",
+        "OM:01",
+        "OM:02",
+        "OM:03",
+        "OM:04",
+        "OM:05",
+        "OM:06",
+        "OM:07",
+        "OM:08",
+        "OM:09",
+        "OM:10",
+        "OM:11",
+        "OM:12",
+        "OM:13",
+        "OM:14",
+        "OM:15"
+      ],
+      "maximal_point_identification_status": "EXACT_IDENTITY_PENDING_HUMAN_COMPLETENESS_REVIEW",
+      "opposite_trace_index": 4,
+      "phase": "nonmaximal_d3",
+      "prediction_scope": "Conditional module/unit/orientation argument; NOT a point count",
+      "proper_module_coverage": "PROVISIONAL_UNDEDUPLICATED",
+      "provisional_matrix_orientation_count": 96,
+      "trace_coefficients": [
+        -5,
+        -14,
+        5,
+        11,
+        -1,
+        -2
+      ],
+      "trace_index": 25
+    },
+    {
+      "conductor": {
+        "exponent": 1,
+        "generator_coefficients": [
+          -2,
+          -4,
+          6,
+          4,
+          -2,
+          -1
+        ],
+        "norm": 41,
+        "prime": 41,
+        "root_mod_prime": 22,
+        "status": "exact_arithmetic"
+      },
+      "equal_embedded_order_representative": 5,
+      "maximal_multiplier_points": [
+        "OM:00",
+        "OM:01",
+        "OM:02",
+        "OM:03",
+        "OM:04",
+        "OM:05",
+        "OM:06",
+        "OM:07",
+        "OM:08",
+        "OM:09",
+        "OM:10",
+        "OM:11",
+        "OM:12",
+        "OM:13",
+        "OM:14",
+        "OM:15"
+      ],
+      "maximal_point_identification_status": "EXACT_IDENTITY_PENDING_HUMAN_COMPLETENESS_REVIEW",
+      "opposite_trace_index": 5,
+      "phase": "other_nonmaximal_trace",
+      "proper_module_coverage": "OPEN",
+      "trace_coefficients": [
+        5,
+        8,
+        -2,
+        -6,
+        0,
+        1
+      ],
+      "trace_index": 26
+    },
+    {
+      "conductor": {
+        "exponent": 1,
+        "generator_coefficients": [
+          3,
+          7,
+          1,
+          -3,
+          -1,
+          0
+        ],
+        "norm": 7,
+        "prime": 7,
+        "root_mod_prime": 1,
+        "status": "exact_arithmetic"
+      },
+      "equal_embedded_order_representative": 0,
+      "maximal_multiplier_points": [
+        "OM:00",
+        "OM:01",
+        "OM:02",
+        "OM:03",
+        "OM:04",
+        "OM:05",
+        "OM:06",
+        "OM:07",
+        "OM:08",
+        "OM:09",
+        "OM:10",
+        "OM:11",
+        "OM:12",
+        "OM:13",
+        "OM:14",
+        "OM:15"
+      ],
+      "maximal_point_identification_status": "EXACT_IDENTITY_PENDING_HUMAN_COMPLETENESS_REVIEW",
+      "opposite_trace_index": 6,
+      "phase": "other_nonmaximal_trace",
+      "proper_module_coverage": "OPEN",
+      "trace_coefficients": [
+        4,
+        11,
+        -5,
+        -7,
+        1,
+        1
+      ],
+      "trace_index": 27
+    },
+    {
+      "conductor": {
+        "ideal": "O_L",
+        "norm": 1,
+        "status": "exact_arithmetic"
+      },
+      "equal_embedded_order_representative": 1,
+      "maximal_multiplier_points": [
+        "OM:00",
+        "OM:01",
+        "OM:02",
+        "OM:03",
+        "OM:04",
+        "OM:05",
+        "OM:06",
+        "OM:07",
+        "OM:08",
+        "OM:09",
+        "OM:10",
+        "OM:11",
+        "OM:12",
+        "OM:13",
+        "OM:14",
+        "OM:15"
+      ],
+      "maximal_point_identification_status": "EXACT_IDENTITY_PENDING_HUMAN_COMPLETENESS_REVIEW",
+      "opposite_trace_index": 7,
+      "phase": "other_maximal_trace",
+      "proper_module_coverage": "not_applicable",
+      "trace_coefficients": [
+        -6,
+        -12,
+        5,
+        7,
+        -1,
+        -1
+      ],
+      "trace_index": 28
+    },
+    {
+      "conductor": {
+        "exponent": 1,
+        "generator_coefficients": [
+          -3,
+          -5,
+          6,
+          4,
+          -2,
+          -1
+        ],
+        "norm": 43,
+        "prime": 43,
+        "root_mod_prime": 31,
+        "status": "exact_arithmetic"
+      },
+      "equal_embedded_order_representative": 8,
+      "maximal_multiplier_points": [
+        "OM:00",
+        "OM:01",
+        "OM:02",
+        "OM:03",
+        "OM:04",
+        "OM:05",
+        "OM:06",
+        "OM:07",
+        "OM:08",
+        "OM:09",
+        "OM:10",
+        "OM:11",
+        "OM:12",
+        "OM:13",
+        "OM:14",
+        "OM:15"
+      ],
+      "maximal_point_identification_status": "EXACT_IDENTITY_PENDING_HUMAN_COMPLETENESS_REVIEW",
+      "opposite_trace_index": 8,
+      "phase": "nonmaximal_d3",
+      "prediction_scope": "Conditional module/unit/orientation argument; NOT a point count",
+      "proper_module_coverage": "PROVISIONAL_UNDEDUPLICATED",
+      "provisional_matrix_orientation_count": 96,
+      "trace_coefficients": [
+        -3,
+        -9,
+        1,
+        6,
+        0,
+        -1
+      ],
+      "trace_index": 29
+    },
+    {
+      "conductor": {
+        "exponent": 1,
+        "generator_coefficients": [
+          -1,
+          -2,
+          2,
+          3,
+          -1,
+          -1
+        ],
+        "norm": 7,
+        "prime": 7,
+        "root_mod_prime": 1,
+        "status": "exact_arithmetic"
+      },
+      "equal_embedded_order_representative": 0,
+      "maximal_multiplier_points": [
+        "OM:00",
+        "OM:01",
+        "OM:02",
+        "OM:03",
+        "OM:04",
+        "OM:05",
+        "OM:06",
+        "OM:07",
+        "OM:08",
+        "OM:09",
+        "OM:10",
+        "OM:11",
+        "OM:12",
+        "OM:13",
+        "OM:14",
+        "OM:15"
+      ],
+      "maximal_point_identification_status": "EXACT_IDENTITY_PENDING_HUMAN_COMPLETENESS_REVIEW",
+      "opposite_trace_index": 9,
+      "phase": "other_nonmaximal_trace",
+      "proper_module_coverage": "OPEN",
+      "trace_coefficients": [
+        7,
+        17,
+        -6,
+        -12,
+        1,
+        2
+      ],
+      "trace_index": 30
+    },
+    {
+      "conductor": {
+        "exponent": 1,
+        "generator_coefficients": [
+          4,
+          12,
+          0,
+          -8,
+          -1,
+          1
+        ],
+        "norm": 127,
+        "prime": 127,
+        "root_mod_prime": 94,
+        "status": "exact_arithmetic"
+      },
+      "equal_embedded_order_representative": 10,
+      "maximal_multiplier_points": [
+        "OM:00",
+        "OM:01",
+        "OM:02",
+        "OM:03",
+        "OM:04",
+        "OM:05",
+        "OM:06",
+        "OM:07",
+        "OM:08",
+        "OM:09",
+        "OM:10",
+        "OM:11",
+        "OM:12",
+        "OM:13",
+        "OM:14",
+        "OM:15"
+      ],
+      "maximal_point_identification_status": "EXACT_IDENTITY_PENDING_HUMAN_COMPLETENESS_REVIEW",
+      "opposite_trace_index": 10,
+      "phase": "other_nonmaximal_trace",
+      "proper_module_coverage": "OPEN",
+      "trace_coefficients": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "trace_index": 31
+    },
+    {
+      "conductor": {
+        "ideal": "O_L",
+        "norm": 1,
+        "status": "exact_arithmetic"
+      },
+      "equal_embedded_order_representative": 1,
+      "maximal_multiplier_points": [
+        "OM:00",
+        "OM:01",
+        "OM:02",
+        "OM:03",
+        "OM:04",
+        "OM:05",
+        "OM:06",
+        "OM:07",
+        "OM:08",
+        "OM:09",
+        "OM:10",
+        "OM:11",
+        "OM:12",
+        "OM:13",
+        "OM:14",
+        "OM:15"
+      ],
+      "maximal_point_identification_status": "EXACT_IDENTITY_PENDING_HUMAN_COMPLETENESS_REVIEW",
+      "opposite_trace_index": 11,
+      "phase": "selected_maximal_companion",
+      "proper_module_coverage": "not_applicable",
+      "trace_coefficients": [
+        -7,
+        -16,
+        6,
+        12,
+        -1,
+        -2
+      ],
+      "trace_index": 32
+    },
+    {
+      "conductor": {
+        "exponent": 2,
+        "generator_coefficients": [
+          -3,
+          -4,
+          6,
+          4,
+          -2,
+          -1
+        ],
+        "norm": 49,
+        "prime": 7,
+        "root_mod_prime": 1,
+        "status": "exact_arithmetic"
+      },
+      "equal_embedded_order_representative": 12,
+      "maximal_multiplier_points": [
+        "OM:00",
+        "OM:01",
+        "OM:02",
+        "OM:03",
+        "OM:04",
+        "OM:05",
+        "OM:06",
+        "OM:07",
+        "OM:08",
+        "OM:09",
+        "OM:10",
+        "OM:11",
+        "OM:12",
+        "OM:13",
+        "OM:14",
+        "OM:15"
+      ],
+      "maximal_point_identification_status": "EXACT_IDENTITY_PENDING_HUMAN_COMPLETENESS_REVIEW",
+      "opposite_trace_index": 12,
+      "phase": "nonmaximal_d3",
+      "prediction_scope": "Conditional module/unit/orientation argument; NOT a point count",
+      "proper_module_coverage": "PROVISIONAL_UNDEDUPLICATED",
+      "provisional_matrix_orientation_count": 160,
+      "trace_coefficients": [
+        1,
+        9,
+        0,
+        -6,
+        0,
+        1
+      ],
+      "trace_index": 33
+    },
+    {
+      "conductor": {
+        "ideal": "O_L",
+        "norm": 1,
+        "status": "exact_arithmetic"
+      },
+      "equal_embedded_order_representative": 1,
+      "maximal_multiplier_points": [
+        "OM:00",
+        "OM:01",
+        "OM:02",
+        "OM:03",
+        "OM:04",
+        "OM:05",
+        "OM:06",
+        "OM:07",
+        "OM:08",
+        "OM:09",
+        "OM:10",
+        "OM:11",
+        "OM:12",
+        "OM:13",
+        "OM:14",
+        "OM:15"
+      ],
+      "maximal_point_identification_status": "EXACT_IDENTITY_PENDING_HUMAN_COMPLETENESS_REVIEW",
+      "opposite_trace_index": 13,
+      "phase": "other_maximal_trace",
+      "proper_module_coverage": "not_applicable",
+      "trace_coefficients": [
+        6,
+        9,
+        -5,
+        -6,
+        1,
+        1
+      ],
+      "trace_index": 34
+    },
+    {
+      "conductor": {
+        "exponent": 1,
+        "generator_coefficients": [
+          3,
+          5,
+          1,
+          -2,
+          -1,
+          0
+        ],
+        "norm": 41,
+        "prime": 41,
+        "root_mod_prime": 12,
+        "status": "exact_arithmetic"
+      },
+      "equal_embedded_order_representative": 14,
+      "maximal_multiplier_points": [
+        "OM:00",
+        "OM:01",
+        "OM:02",
+        "OM:03",
+        "OM:04",
+        "OM:05",
+        "OM:06",
+        "OM:07",
+        "OM:08",
+        "OM:09",
+        "OM:10",
+        "OM:11",
+        "OM:12",
+        "OM:13",
+        "OM:14",
+        "OM:15"
+      ],
+      "maximal_point_identification_status": "EXACT_IDENTITY_PENDING_HUMAN_COMPLETENESS_REVIEW",
+      "opposite_trace_index": 14,
+      "phase": "nonmaximal_d7",
+      "proper_module_coverage": "v45_complete_population",
+      "proper_multiplier_points": [
+        "R41:principal:00",
+        "R41:principal:01",
+        "R41:principal:02",
+        "R41:principal:03",
+        "R41:principal:04",
+        "R41:principal:05",
+        "R41:principal:06",
+        "R41:principal:07",
+        "R41:principal:08",
+        "R41:principal:09",
+        "R41:principal:10",
+        "R41:principal:11",
+        "R41:principal:12",
+        "R41:principal:13",
+        "R41:principal:14",
+        "R41:principal:15",
+        "R41:principal:32",
+        "R41:principal:33",
+        "R41:principal:34",
+        "R41:principal:35",
+        "R41:principal:36",
+        "R41:principal:37",
+        "R41:principal:38",
+        "R41:principal:39",
+        "R41:principal:40",
+        "R41:principal:41",
+        "R41:principal:42",
+        "R41:principal:43",
+        "R41:principal:44",
+        "R41:principal:45",
+        "R41:principal:46",
+        "R41:principal:47"
+      ],
+      "trace_coefficients": [
+        -2,
+        -11,
+        1,
+        7,
+        0,
+        -1
+      ],
+      "trace_index": 35
+    },
+    {
+      "conductor": {
+        "exponent": 1,
+        "generator_coefficients": [
+          -1,
+          -4,
+          3,
+          4,
+          -1,
+          -1
+        ],
+        "norm": 7,
+        "prime": 7,
+        "root_mod_prime": 1,
+        "status": "exact_arithmetic"
+      },
+      "equal_embedded_order_representative": 0,
+      "maximal_multiplier_points": [
+        "OM:00",
+        "OM:01",
+        "OM:02",
+        "OM:03",
+        "OM:04",
+        "OM:05",
+        "OM:06",
+        "OM:07",
+        "OM:08",
+        "OM:09",
+        "OM:10",
+        "OM:11",
+        "OM:12",
+        "OM:13",
+        "OM:14",
+        "OM:15"
+      ],
+      "maximal_point_identification_status": "EXACT_IDENTITY_PENDING_HUMAN_COMPLETENESS_REVIEW",
+      "opposite_trace_index": 15,
+      "phase": "nonmaximal_d3",
+      "prediction_scope": "Conditional module/unit/orientation argument; NOT a point count",
+      "proper_module_coverage": "PROVISIONAL_UNDEDUPLICATED",
+      "provisional_matrix_orientation_count": 96,
+      "trace_coefficients": [
+        -5,
+        -3,
+        2,
+        1,
+        0,
+        0
+      ],
+      "trace_index": 36
+    },
+    {
+      "conductor": {
+        "ideal": "O_L",
+        "norm": 1,
+        "status": "exact_arithmetic"
+      },
+      "equal_embedded_order_representative": 1,
+      "maximal_multiplier_points": [
+        "OM:00",
+        "OM:01",
+        "OM:02",
+        "OM:03",
+        "OM:04",
+        "OM:05",
+        "OM:06",
+        "OM:07",
+        "OM:08",
+        "OM:09",
+        "OM:10",
+        "OM:11",
+        "OM:12",
+        "OM:13",
+        "OM:14",
+        "OM:15"
+      ],
+      "maximal_point_identification_status": "EXACT_IDENTITY_PENDING_HUMAN_COMPLETENESS_REVIEW",
+      "opposite_trace_index": 16,
+      "phase": "selected_maximal_companion",
+      "proper_module_coverage": "not_applicable",
+      "trace_coefficients": [
+        2,
+        6,
+        -4,
+        -5,
+        1,
+        1
+      ],
+      "trace_index": 37
+    },
+    {
+      "conductor": {
+        "ideal": "O_L",
+        "norm": 1,
+        "status": "exact_arithmetic"
+      },
+      "equal_embedded_order_representative": 1,
+      "maximal_multiplier_points": [
+        "OM:00",
+        "OM:01",
+        "OM:02",
+        "OM:03",
+        "OM:04",
+        "OM:05",
+        "OM:06",
+        "OM:07",
+        "OM:08",
+        "OM:09",
+        "OM:10",
+        "OM:11",
+        "OM:12",
+        "OM:13",
+        "OM:14",
+        "OM:15"
+      ],
+      "maximal_point_identification_status": "EXACT_IDENTITY_PENDING_HUMAN_COMPLETENESS_REVIEW",
+      "opposite_trace_index": 17,
+      "phase": "selected_maximal_companion",
+      "proper_module_coverage": "not_applicable",
+      "trace_coefficients": [
+        4,
+        -3,
+        -4,
+        1,
+        1,
+        0
+      ],
+      "trace_index": 38
+    },
+    {
+      "conductor": {
+        "exponent": 1,
+        "generator_coefficients": [
+          2,
+          -1,
+          -1,
+          0,
+          0,
+          0
+        ],
+        "norm": 7,
+        "prime": 7,
+        "root_mod_prime": 1,
+        "status": "exact_arithmetic"
+      },
+      "equal_embedded_order_representative": 0,
+      "maximal_multiplier_points": [
+        "OM:00",
+        "OM:01",
+        "OM:02",
+        "OM:03",
+        "OM:04",
+        "OM:05",
+        "OM:06",
+        "OM:07",
+        "OM:08",
+        "OM:09",
+        "OM:10",
+        "OM:11",
+        "OM:12",
+        "OM:13",
+        "OM:14",
+        "OM:15"
+      ],
+      "maximal_point_identification_status": "EXACT_IDENTITY_PENDING_HUMAN_COMPLETENESS_REVIEW",
+      "opposite_trace_index": 18,
+      "phase": "nonmaximal_d3",
+      "prediction_scope": "Conditional module/unit/orientation argument; NOT a point count",
+      "proper_module_coverage": "PROVISIONAL_UNDEDUPLICATED",
+      "provisional_matrix_orientation_count": 96,
+      "trace_coefficients": [
+        -2,
+        -2,
+        1,
+        1,
+        0,
+        0
+      ],
+      "trace_index": 39
+    },
+    {
+      "conductor": {
+        "ideal": "O_L",
+        "norm": 1,
+        "status": "exact_arithmetic"
+      },
+      "equal_embedded_order_representative": 1,
+      "maximal_multiplier_points": [
+        "OM:00",
+        "OM:01",
+        "OM:02",
+        "OM:03",
+        "OM:04",
+        "OM:05",
+        "OM:06",
+        "OM:07",
+        "OM:08",
+        "OM:09",
+        "OM:10",
+        "OM:11",
+        "OM:12",
+        "OM:13",
+        "OM:14",
+        "OM:15"
+      ],
+      "maximal_point_identification_status": "EXACT_IDENTITY_PENDING_HUMAN_COMPLETENESS_REVIEW",
+      "opposite_trace_index": 19,
+      "phase": "selected_maximal_companion",
+      "proper_module_coverage": "not_applicable",
+      "trace_coefficients": [
+        -4,
+        1,
+        2,
+        0,
+        0,
+        0
+      ],
+      "trace_index": 40
+    },
+    {
+      "conductor": {
+        "ideal": "O_L",
+        "norm": 1,
+        "status": "exact_arithmetic"
+      },
+      "equal_embedded_order_representative": 1,
+      "maximal_multiplier_points": [
+        "OM:00",
+        "OM:01",
+        "OM:02",
+        "OM:03",
+        "OM:04",
+        "OM:05",
+        "OM:06",
+        "OM:07",
+        "OM:08",
+        "OM:09",
+        "OM:10",
+        "OM:11",
+        "OM:12",
+        "OM:13",
+        "OM:14",
+        "OM:15"
+      ],
+      "maximal_point_identification_status": "EXACT_IDENTITY_PENDING_HUMAN_COMPLETENESS_REVIEW",
+      "opposite_trace_index": 20,
+      "phase": "selected_maximal_companion",
+      "proper_module_coverage": "not_applicable",
+      "trace_coefficients": [
+        2,
+        -2,
+        0,
+        1,
+        0,
+        0
+      ],
+      "trace_index": 41
+    }
+  ],
+  "verified_geometry": {
+    "exclusions": 66,
+    "hits": 3,
+    "open": 43,
+    "total_d7": 112
+  }
+}

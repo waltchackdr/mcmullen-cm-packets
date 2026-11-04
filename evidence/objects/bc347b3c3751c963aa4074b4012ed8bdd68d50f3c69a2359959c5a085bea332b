@@ -1,0 +1,23 @@
+{
+  "command": [
+    "python3",
+    "-m",
+    "unittest",
+    "discover",
+    "-s",
+    "tests",
+    "-p",
+    "test_obstructed_minimum_polarization_v157.py",
+    "-v"
+  ],
+  "cpu_limit_seconds_per_child": 20,
+  "independent_trace_wall_seconds": 0.041146,
+  "producer_optimized_mode_rejection": "PASS",
+  "regression_wall_seconds": 0.907376,
+  "returncode": 0,
+  "status": "PASS",
+  "stderr": "test_all_residue_annihilators (test_obstructed_minimum_polarization_v157.ObstructedMinimum.test_all_residue_annihilators) ... ok\n\n----------------------------------------------------------------------\nRan 1 test in 0.860s\n\nOK\n",
+  "stdout": "",
+  "submitted_pins_verified": 11,
+  "wall_timeout_seconds_per_child": 30
+}

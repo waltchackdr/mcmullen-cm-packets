@@ -1,0 +1,46 @@
+"""Small lattice regression only; the universal theorem is a human proof."""
+from collections import Counter
+from itertools import product
+import json
+import resource
+import signal
+
+
+def block_case(signs):
+    # F=((0,-1),(1,-1)); E=sign*((0,1),(-1,0)).
+    # The quotient by F-I has representatives (k,0), and b=sign*k^2.
+    for sign in signs:
+        for u, v, a, b in product(range(3), repeat=4):
+            f = lambda x, y: (-y, x-y)
+            e = lambda x, y, z, w: sign*(x*w-y*z)
+            fu, fv = f(u, v)
+            fa, fb = f(a, b)
+            assert (e(fu, fv, fa, fb)-e(u, v, a, b)) % 3 == 0
+            n = (fa-a, fb-b)
+            q = lambda x, y: e(x, y, *f(x, y)) % 3
+            assert q(u+n[0], v+n[1]) == q(u, v)
+            polar = (q(u+a, v+b)-q(u, v)-q(a, b)) % 3
+            assert polar == -e(u, v, n[0], n[1]) % 3
+    counts = Counter(sum(s*x*x for s, x in zip(signs, xs)) % 3
+                     for xs in product(range(3), repeat=len(signs)))
+    assert counts[1] == counts[2]
+    return {'levels': {str(k): counts[k] for k in range(3)},
+            'real_gauss_sum': counts[0]-counts[1]}
+
+
+def run():
+    balanced = block_case([1, 1, 1, -1, -1, -1])
+    negative_control = block_case([1]*6)
+    assert balanced == {'levels': {'0': 261, '1': 234, '2': 234},
+                        'real_gauss_sum': 27}
+    assert negative_control == {'levels': {'0': 225, '1': 252, '2': 252},
+                               'real_gauss_sum': -27}
+    return {'status': 'PASS_REGRESSION_NOT_GENERAL_PROOF',
+            'balanced_blocks': balanced, 'unbalanced_blocks': negative_control,
+            'S_target_evaluations': 0}
+
+
+if __name__ == '__main__':
+    resource.setrlimit(resource.RLIMIT_CPU, (20, 20))
+    signal.alarm(30)
+    print(json.dumps(run(), indent=2))

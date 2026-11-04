@@ -1,0 +1,14 @@
+{
+  "config_sha256": "b5a293c0b4d62b897f8c2a9c36225236eb589599c8c674ec07230289f5184900",
+  "error": null,
+  "finished_epoch": 1791859927.5481899,
+  "observer_sha256": "f90d5fa0ea39a5946993bc7c202cc7be8232cd0373c6c45d8acdec04e9e5597d",
+  "receipt_sha256": "86dab376ff8f0f3fd9f273d9dca12801ae41cbccc4c183c213d9a7bf0dbad5e9",
+  "returncode": 0,
+  "started_epoch": 1791853892.9584427,
+  "status": "CAPTURE_PARENT_CLOSED",
+  "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "theorem_promotion": false,
+  "wall_seconds": 6034.589747428894
+}

@@ -1,0 +1,19 @@
+{
+  "returncode": 0,
+  "started_epoch": 1791855746.8008142,
+  "finished_epoch": 1791855795.9465358,
+  "roots": [
+    "v88-node04-continuation-cohort1",
+    "v88-node04-continuation-dispatch-cohort1",
+    "v88-node04-terminal-observer-tools-cohort1",
+    "v88-node04-terminal-observer-launcher-cohort1",
+    "v88-node04-terminal-capture-cohort1"
+  ],
+  "sha256_verified": true,
+  "files": 474,
+  "bytes": 603620350,
+  "receipt_sha256": "7c93186cf315337ef806471f774eb70d3878dcbb659ab069d7675dfe72b0e52e",
+  "observer_completion_sha256": "1606d2ce80be5f3802800b12683198575c57928c859a80fb0f89ef37c26c17dd",
+  "inventory_sha256": "4135df9ad94a06a53e7e17844c49415f7489cc4b02bfd46cbcbae0a754376494",
+  "status": "FAILED_COHORT_RAW_BYTES_RETAINED_NOT_ADOPTED"
+}

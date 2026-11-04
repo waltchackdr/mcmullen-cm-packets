@@ -1,0 +1,82 @@
+{
+  "entries": [
+    {
+      "availability": "OMITTED_FROM_EDITION",
+      "bytes": 579267,
+      "locator": null,
+      "name": "packet-adoption",
+      "scope": "Fixed marked packet adoption; execution premises retained.",
+      "sha256": "f60f7912226e66ec1ec40cde4be3ebc7ec58dabf5c80dd4952e2cb125a4cf269"
+    },
+    {
+      "availability": "INCLUDED",
+      "bytes": 7293,
+      "locator": "certificates/actual_bc_polarizations_data.json",
+      "name": "principal-polarizations",
+      "path": "certificates/actual_bc_polarizations_data.json",
+      "scope": "Exact B/C polarization data; follow the associated certificate and review.",
+      "sha256": "76c0520fbbae970dd2abfbe1b70d9d71df59534a8c7f4b1f20433047c83f311c"
+    },
+    {
+      "availability": "INCLUDED",
+      "bytes": 2542,
+      "locator": "certificates/principal_bc_hom_data.json",
+      "name": "principal-maps",
+      "path": "certificates/principal_bc_hom_data.json",
+      "scope": "Retained integral homomorphism data, not an unqualified isomorphism claim.",
+      "sha256": "9f815f1592c8e22a2a14b15086d8d9cb63092f9ab84bb90a3d5ee4935b3fe22c"
+    },
+    {
+      "availability": "INCLUDED",
+      "bytes": 2346,
+      "locator": "certificates/curve_twist_image_data.json",
+      "name": "curve-unit-twist",
+      "path": "certificates/curve_twist_image_data.json",
+      "scope": "Unit-twist image data for the named curve construction.",
+      "sha256": "c11943e06abdb96e0463420cb6fd8025aa4573ec504228110927cbe79d4c5c16"
+    },
+    {
+      "availability": "OMITTED_FROM_EDITION",
+      "bytes": 1919,
+      "locator": null,
+      "name": "smaller-order-models",
+      "scope": "Index of smaller-order principal models; Jacobian statuses remain open.",
+      "sha256": "6b8f5be15ef574d373ef9b759470879fd219b4fe3ebfbbe8f1dac4a11ecf6f2e"
+    },
+    {
+      "availability": "OMITTED_FROM_EDITION",
+      "bytes": 4433,
+      "locator": null,
+      "name": "partial-theta-review",
+      "scope": "Partial retained theta result; not completion of all 156 cases.",
+      "sha256": "52d75e4b4a19eb1dded6626c4ae25627cd9e87f519de7ddde6bf38b034cce470"
+    },
+    {
+      "availability": "OMITTED_FROM_EDITION",
+      "bytes": 5797,
+      "locator": null,
+      "name": "historical-gaps",
+      "scope": "Five recovered bindings and two explicitly unrecovered historical versions.",
+      "sha256": "0708a77e18d70284be611cddf99fb7b3cb3d220cf8cd9ba5760adc68218a28ce"
+    },
+    {
+      "availability": "OMITTED_FROM_EDITION",
+      "bytes": 2298,
+      "locator": null,
+      "name": "internal-review",
+      "scope": "Internal closeout scope; no external specialist approval.",
+      "sha256": "5769ec597056c9adb0b4f38672f33db229f46de5e7a2221b6b18f32c03fc26c0"
+    },
+    {
+      "availability": "INCLUDED",
+      "bytes": 15225,
+      "locator": "papers/statement-index.csv",
+      "name": "statement-locations",
+      "path": "papers/statement-index.csv",
+      "scope": "140 statement locations; not 140 independent proof certificates.",
+      "sha256": "eff94ca4c86ff50c405965420def3dce461902d8b703c3181804fdafb0cb82e3"
+    }
+  ],
+  "schema_version": 1,
+  "scope": "Curated entry points only, not a full dependency or runtime inventory. Original data stay at receipt-bound paths."
+}

@@ -1,0 +1,97 @@
+#!/usr/bin/env python3
+"""Exact discovery census for one copy of each pair of fixed-field CM types.
+
+All factors use the SAME ordered Galois conjugations. Enumerating 4096
+subsets per factor and joining opposite weights exhausts the 2^24 supports.
+This counts Hodge classes; it makes no assertion of mixed-cycle algebraicity.
+"""
+from collections import defaultdict, Counter
+from hashlib import sha256
+from math import gcd
+from pathlib import Path
+import json
+
+ROOT = Path(__file__).resolve().parents[2]
+INPUT = "experiments/fixed_field_cm_census_v98/primary.json"
+INPUT_SHA = "2135edfe6a09b1a2c51a254f80e4570a761674e5be3208c15c549087f225917e"
+G = tuple(a for a in range(42) if gcd(a, 42) == 1)
+ZERO = (0,) * 12
+
+
+def subsets(phi):
+    # Entry g is the weight at embedding a of the conjugate g*Phi.
+    translates = [{g*a % 42 for a in phi} for g in G]
+    columns = [tuple(1 if a in p else -1 for p in translates) for a in G]
+    sums = [ZERO]
+    buckets = defaultdict(Counter)
+    witnesses = {}
+    for mask in range(4096):
+        if mask:
+            bit = mask & -mask
+            sums.append(tuple(x+y for x, y in zip(sums[mask ^ bit], columns[bit.bit_length()-1])))
+        degree = mask.bit_count()
+        buckets[sums[mask]][degree] += 1
+        witnesses.setdefault((sums[mask], degree), mask)
+    return buckets, witnesses
+
+
+def support(mask):
+    return [a for i, a in enumerate(G) if mask & (1 << i)]
+
+
+def check():
+    raw = (ROOT / INPUT).read_bytes()
+    assert sha256(raw).hexdigest() == INPUT_SHA
+    types = json.loads(raw)["orbits"]
+    data = [subsets(t["representative"]) for t in types]
+    for t, (b, _) in zip(types, data):
+        assert sum(sum(c.values()) for c in b.values()) == 4096
+        assert [b[ZERO][2*p] for p in range(7)] == t["hodge_dimensions_codimensions_0_through_6"]
+    results = []
+    for i in range(8):
+        for j in range(i, 8):
+            left, lw = data[i]
+            right, rw = data[j]
+            counts, separate = [0]*25, [0]*25
+            first_mixed = None
+            bidegrees = Counter()
+            for weight, degrees in left.items():
+                negative = tuple(-x for x in weight)
+                for a, n in degrees.items():
+                    for b, m in right.get(negative, {}).items():
+                        counts[a+b] += n*m
+                        if weight == ZERO:
+                            separate[a+b] += n*m
+                        else:
+                            bidegrees[a, b] += n*m
+                            candidate = (a+b, a, b, lw[weight, a], rw[negative, b])
+                            if first_mixed is None or candidate < first_mixed:
+                                first_mixed = candidate
+            assert counts == counts[::-1] and not any(counts[1::2])
+            assert not any(separate[1::2])
+            for p in range(13):
+                assert separate[2*p] == sum(left[ZERO][2*q]*right[ZERO][2*(p-q)] for q in range(7))
+            witness = None
+            if first_mixed:
+                _, a, b, lm, rm = first_mixed
+                witness = {"bidegree": [a, b], "left_embeddings": support(lm), "right_embeddings": support(rm)}
+            results.append({"pair": [i,j], "hodge_dimensions_by_codimension": counts[::2],
+                            "separate_factor_algebra_dimensions": separate[::2],
+                            "additional_mixed_dimensions": [a-b for a,b in zip(counts[::2],separate[::2])],
+                            "first_mixed_witness": witness,
+                            "mixed_counts_by_bidegree": {f"{a},{b}": n for (a,b),n in sorted(bidegrees.items())}})
+    return {"status": "EXACT_FINITE_DISCOVERY_NOT_ALGEBRAICITY_PROOF", "input_sha256": {INPUT: INPUT_SHA},
+            "modulus": 42, "galois_order": G,
+            "types": [{"index": i, "representative": t["representative"], "rank": t["rational_hodge_group_rank"]} for i,t in enumerate(types)],
+            "exhaustive_domain": "36 unordered pairs including8 self-pairs;4096 subsets per factor; opposite-weight joins cover all2^24 joint supports per pair.",
+            "mixed_algebraicity": "OPEN; additional means outside products of separate-factor classes, not nonalgebraic.",
+            "pairs": results}
+
+
+if __name__ == "__main__":
+    import resource
+    import signal
+    resource.setrlimit(resource.RLIMIT_CPU, (20, 22))
+    signal.alarm(30)
+    assert __debug__
+    print(json.dumps(check(), indent=2, sort_keys=True))

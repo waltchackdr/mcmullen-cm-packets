@@ -1,0 +1,56 @@
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{booktabs,longtable,array,graphicx}
+\usepackage{xurl}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{microtype}
+\usepackage{enumitem}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\setlength{\emergencystretch}{2em}
+\setcounter{tocdepth}{1}
+\numberwithin{equation}{section}
+\raggedbottom
+\hypersetup{colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+\theoremstyle{definition}
+\newtheorem{question}[theorem]{Question}
+\newtheorem*{executionhypothesis}{Packet execution hypothesis}
+\theoremstyle{plain}
+\newtheorem{theoremA}[theorem]{Theorem}
+\newtheorem{theoremB}[theorem]{Theorem}
+\newcommand{\OL}{\mathcal O_L}
+\newcommand{\OM}{\mathcal O_M}
+\newcommand{\Ql}{\mathbb Q}
+\newcommand{\Z}{\mathbb Z}
+\newcommand{\R}{\mathbb R}
+\newcommand{\C}{\mathbb C}
+\newcommand{\HH}{\mathbb H}
+\newcommand{\Gal}{\operatorname{Gal}}
+\newcommand{\End}{\operatorname{End}}
+\newcommand{\Tr}{\operatorname{Tr}}
+\newcommand{\Nm}{\operatorname{N}}
+\newcommand{\GL}{\operatorname{GL}}
+\newcommand{\SL}{\operatorname{SL}}
+\newcommand{\extD}{\ensuremath{D_{\mathrm{CM}}}}
+\newcommand{\extAlg}{\operatorname{Alg}}
+\newcommand{\extHdg}{\operatorname{Hdg}}
+\newcommand{\extHg}{\operatorname{Hg}}
+\newcommand{\extsupp}{\operatorname{supp}}
+\newcommand{\digest}[2]{\scalebox{0.9}{\texttt{#1#2}}}
+
+\makeatletter
+\renewcommand{\l@section}{\@dottedtocline{1}{0em}{2.3em}}
+\makeatother
+\newcommand{\externalref}[2]{\textnormal{\csname doccode@#1\endcsname.\ifcsname xnumber@#2\endcsname\csname xnumber@#2\endcsname\else ?\fi}}
+\input{shared/external-numbers.tex}
+\expandafter\def\csname doccode@packet\endcsname{I}
+\expandafter\def\csname doccode@quotients\endcsname{II}
+\expandafter\def\csname doccode@hodge\endcsname{H}
+\expandafter\def\csname doccode@supplement\endcsname{S}

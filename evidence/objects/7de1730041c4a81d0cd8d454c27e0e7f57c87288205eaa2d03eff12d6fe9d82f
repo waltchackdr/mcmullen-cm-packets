@@ -1,0 +1,23 @@
+"""Finite kernel model regression for the separate human conductor proof."""
+import importlib.util
+from pathlib import Path
+import unittest
+
+spec=importlib.util.spec_from_file_location('fermat_bc_kernel_arithmetic',
+    Path(__file__).resolve().parents[1]/'experiments/fermat_bc_isogenies_v153/kernel_arithmetic_candidate.py')
+arithmetic=importlib.util.module_from_spec(spec)
+spec.loader.exec_module(arithmetic)
+
+
+class FermatBCKernels(unittest.TestCase):
+    def test_all_projective_lines_and_additive_kernel_groups(self):
+        result=arithmetic.check()
+        self.assertEqual(result['distinct_lines'],28)
+        self.assertEqual(result['line_cardinalities'],[27])
+        self.assertEqual(result['additive_exponent'],3)
+        self.assertEqual(result['nonzero_partition_size'],728)
+        self.assertEqual(result['conditional_unit_orbit_sizes'],[14,14])
+
+
+if __name__=='__main__':
+    unittest.main()

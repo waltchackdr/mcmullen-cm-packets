@@ -1,0 +1,134 @@
+{
+  "b_cyclotomic_coordinates": [
+    -5,
+    -2,
+    2,
+    8,
+    9,
+    4,
+    -1,
+    -1,
+    0,
+    -3,
+    -2,
+    -5
+  ],
+  "cyclotomic_polynomial_ascending": [
+    1,
+    1,
+    0,
+    -1,
+    -1,
+    0,
+    1,
+    0,
+    -1,
+    -1,
+    0,
+    1,
+    1
+  ],
+  "geometry_claim": false,
+  "hermitian_determinant": -4202539929,
+  "identity_embedding_convention": "s3=i*sqrt3 and s7=i*sqrt7; positivity of s7 follows from sin(2pi/7)>sin(pi/7) and sin(4pi/7)>0",
+  "method": "cyclotomic integer quotient, exact Galois products and trace determinants; elementary angle signs",
+  "negative_determinant_square_root": 64827,
+  "norm_b": -9261,
+  "principal_polarization_claim": false,
+  "scope": "Arithmetic support for human Riemann-form proof and theorem-hypothesis review; not proof of Markman's theorem",
+  "signs": [
+    {
+      "b_sign": 1,
+      "chi7": 1,
+      "embedding": 1,
+      "selection_sign": 1
+    },
+    {
+      "b_sign": -1,
+      "chi7": -1,
+      "embedding": 5,
+      "selection_sign": 1
+    },
+    {
+      "b_sign": 1,
+      "chi7": 1,
+      "embedding": 11,
+      "selection_sign": 1
+    },
+    {
+      "b_sign": -1,
+      "chi7": -1,
+      "embedding": 13,
+      "selection_sign": 1
+    },
+    {
+      "b_sign": 1,
+      "chi7": -1,
+      "embedding": 17,
+      "selection_sign": -1
+    },
+    {
+      "b_sign": -1,
+      "chi7": -1,
+      "embedding": 19,
+      "selection_sign": 1
+    }
+  ],
+  "status": "PASS_EXACT_K7_SPLIT_POLARIZATION_ARITHMETIC",
+  "trace_discriminant": 453789,
+  "trace_hermitian_matrix": [
+    [
+      -21,
+      0,
+      -42,
+      63,
+      -63,
+      378
+    ],
+    [
+      0,
+      -42,
+      63,
+      -63,
+      378,
+      -21
+    ],
+    [
+      -42,
+      63,
+      -63,
+      378,
+      -21,
+      1743
+    ],
+    [
+      63,
+      -63,
+      378,
+      -21,
+      1743,
+      441
+    ],
+    [
+      -63,
+      378,
+      -21,
+      1743,
+      441,
+      7308
+    ],
+    [
+      378,
+      -21,
+      1743,
+      441,
+      7308,
+      3003
+    ]
+  ],
+  "unit_norms": {
+    "1": 1,
+    "13": 1,
+    "17": 1
+  }
+}

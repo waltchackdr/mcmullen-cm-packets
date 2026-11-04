@@ -1,0 +1,76 @@
+{
+  "code": {
+    "artifact_selection.py": {
+      "bytes": 2065,
+      "path": "experiments/bc_jacobian_v147/runtime/artifact_selection.py",
+      "sha256": "2b9cfc3d89a8f3a8cfd4379fc5e900fc6f2b7f652466a03c906ad8bd1d9dc4b8"
+    },
+    "artifact_store_candidate.py": {
+      "bytes": 3114,
+      "path": "experiments/final_binding_v124/artifact_store_candidate.py",
+      "sha256": "dd5d43b5427e82dc86f4b907c732098edb6d27c77a1084af226d45441746baef"
+    },
+    "guard_candidate.py": {
+      "bytes": 3840,
+      "path": "experiments/bc_jacobian_v147/runtime/guard_candidate.py",
+      "sha256": "e5c6f7f4da26daa5be73707bd4179447e229577519cbe500e432cffede48da87"
+    },
+    "http_server_candidate.py": {
+      "bytes": 8542,
+      "path": "experiments/bc_jacobian_v147/runtime/http_server_candidate.py",
+      "sha256": "c3f8ee5e5ad2792701c6ab85037bc0c03aea88006a5e58aafeb1383b7a326a96"
+    },
+    "job_manifest.json": {
+      "bytes": 840,
+      "path": "build/s-order-v164/preparation04/job1/job_manifest.json",
+      "sha256": "1b19cf77d0bab5c9b906ea6c86ed4fd752543944b85fc7881b6484aee195e618"
+    },
+    "service_core_candidate.py": {
+      "bytes": 5488,
+      "path": "experiments/bc_jacobian_v147/runtime/service_core_candidate.py",
+      "sha256": "db625f0c7754fdc0c0be328452d0750e5ada7d08fa10cc6d072f9ec13b6c202b"
+    }
+  },
+  "scope": "Job1: exact theta candidates on five S-order targets; pair indices0..7; no adoption",
+  "source_mapping": {
+    "build/s-order-v162/postprocessed01/model012.json": "build/s-order-v162/postprocessed01/model012.json",
+    "build/s-order-v162/postprocessed01/model015.json": "build/s-order-v162/postprocessed01/model015.json",
+    "build/s-order-v162/postprocessed01/model017.json": "build/s-order-v162/postprocessed01/model017.json",
+    "build/s-order-v162/postprocessed01/model040.json": "build/s-order-v162/postprocessed01/model040.json",
+    "build/s-order-v162/postprocessed01/model091.json": "build/s-order-v162/postprocessed01/model091.json",
+    "experiments/bc_jacobian_v147/certificate_worker_candidate.py": "experiments/s_order_theta_v164/worker_candidate.py",
+    "experiments/bc_jacobian_v147/exact_ball_candidate.py": "experiments/bc_jacobian_v147/exact_ball_candidate.py",
+    "experiments/bc_jacobian_v147/remote_wheels.json": "experiments/bc_jacobian_v147/remote_wheels.json",
+    "experiments/s_order_census_v162/adoption.json": "experiments/s_order_census_v162/adoption.json",
+    "experiments/s_order_census_v162/final_data_review01.json": "experiments/s_order_census_v162/final_data_review01.json",
+    "experiments/s_order_theta_v164/period_loader_candidate.py": "experiments/s_order_theta_v164/period_loader_candidate.py",
+    "experiments/s_order_theta_v164/remote_theta_candidate.py": "experiments/s_order_theta_v164/remote_theta_candidate.py"
+  },
+  "uploads": {
+    "pipeline": {
+      "bytes": 8367,
+      "path": "experiments/s_order_census_v162/pipeline_candidate.py",
+      "sha256": "b59ca77caf42a1dfffe9e4d7810fd7737a0f434b15899fa7b5204d63268c695b"
+    },
+    "selector": {
+      "bytes": 2065,
+      "path": "experiments/bc_jacobian_v147/runtime/artifact_selection.py",
+      "sha256": "2b9cfc3d89a8f3a8cfd4379fc5e900fc6f2b7f652466a03c906ad8bd1d9dc4b8"
+    },
+    "setup": {
+      "bytes": 7925,
+      "path": "experiments/bc_jacobian_v147/runtime/setup_candidate.py",
+      "sha256": "9afceb4fbfa8d1f6089a94d2a5a1ac490227f904d280c219fbb670e2457db37b"
+    },
+    "source_manifest": {
+      "bytes": 2545,
+      "path": "build/s-order-v164/preparation04/job1/source_manifest.json",
+      "sha256": "277b17d924379e2510f44e51093e557ffc28c535d26f930c02f55dbdd1abc950"
+    },
+    "source_tar": {
+      "bytes": 327680,
+      "path": "build/s-order-v164/preparation04/job1/source.tar",
+      "sha256": "9b1364ab02ed9b6bfcd4888f8a587fba8bd6cc8f664ac30fe380311b15043fa8"
+    }
+  }
+}

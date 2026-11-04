@@ -1,0 +1,202 @@
+{
+  "frontmatter": [
+    {
+      "derived_sha256": "42d1e964ec9d964cd7e9190ccb211148ed8b747c95f3f12ff49396e7c1c6247b",
+      "original_sha256": "d64b048adbb4d27e453be66e24f5b47b790ff3a42d510a9b0f7442e35d37b32c",
+      "path": "papers/packet-and-principal-models.tex",
+      "scope": "Date/status wording and supplement presentation only; mathematical claims unchanged."
+    },
+    {
+      "derived_sha256": "d1ea8f1d3c401520d489e188276fc5661259cee4be22ef84fea1fac9e597857f",
+      "original_sha256": "77210e2805c6791305c24bafaac30cfd4d62d7fcb65708d888a836c133f2face",
+      "path": "papers/quotients-and-descent.tex",
+      "scope": "Date/status wording and supplement presentation only; mathematical claims unchanged."
+    },
+    {
+      "derived_sha256": "2db3211916657f831ff285360773ef9f10e6338431d516e47f2da681d4a0141d",
+      "original_sha256": "0f830e19b642403ca54bc9e7143179b6c1085eb1abca2d7bc4087e1ac2550dda",
+      "path": "papers/hodge-classes.tex",
+      "scope": "Date/status wording and supplement presentation only; mathematical claims unchanged."
+    },
+    {
+      "derived_sha256": "d70779c6617e13dc67a0f0df442718bcf5035707b782caeb314ed6b946926a5d",
+      "original_sha256": "00121037fb54b42e9c70eb93859dc6037d94c9c6a6aed7e12ed236cac5816a01",
+      "path": "papers/arithmetic-and-computation.tex",
+      "scope": "Date/status wording and supplement presentation only; mathematical claims unchanged."
+    }
+  ],
+  "scope": "Editorial derivation and source byte preservation, not proof review.",
+  "source_navigation": [
+    {
+      "after_sha256": "03c3cd8f933fbe5f5eb73b99f4c91d86c60681ef499e3a2ecc3da614d42ced8e",
+      "before_sha256": "d70779c6617e13dc67a0f0df442718bcf5035707b782caeb314ed6b946926a5d",
+      "path": "papers/arithmetic-and-computation.tex"
+    },
+    {
+      "after_sha256": "18dc5c61bc6812e225d8383d933d89b5e77640cb85d3e3a5f89958c411469a53",
+      "before_sha256": "2db3211916657f831ff285360773ef9f10e6338431d516e47f2da681d4a0141d",
+      "path": "papers/hodge-classes.tex"
+    },
+    {
+      "after_sha256": "c1ef7705001c7c68f54c77dc2b76897011c915705ce6ec7bdcfb4baa575e2dd1",
+      "before_sha256": "42d1e964ec9d964cd7e9190ccb211148ed8b747c95f3f12ff49396e7c1c6247b",
+      "path": "papers/packet-and-principal-models.tex"
+    },
+    {
+      "after_sha256": "607805584ff0e3ae1e7bab9d3cdbfd2f78e2c19885458842691c6857607ce83d",
+      "before_sha256": "d1ea8f1d3c401520d489e188276fc5661259cee4be22ef84fea1fac9e597857f",
+      "path": "papers/quotients-and-descent.tex"
+    },
+    {
+      "after_sha256": "a61c71be414a50f102020a8843343cc2444c8e4b4641720c905174e752061614",
+      "before_sha256": "857f9f59a760f9958e932787fe149f68dd1092ca43f299fcd49d49a941422332",
+      "path": "papers/references/arithmetic-and-computation.tex"
+    },
+    {
+      "after_sha256": "31f596747ca4cb9e1c7e97abda8f700c945269f8fbef5ca7fde353b534ab76ef",
+      "before_sha256": "990b24eb865f735467b1a0a7fa06b57f58505fc403e6eff5c7a8d0035428e924",
+      "path": "papers/references/hodge-classes.tex"
+    },
+    {
+      "after_sha256": "964ac86c2f2e0e2a25e66d077f4e2fc782fb993a87a2991d476873a997576919",
+      "before_sha256": "a43dc22d81126b7ac1e9319a5a976c44993e85e3c134e4357988432fa80337a1",
+      "path": "papers/references/packet-and-principal-models.tex"
+    },
+    {
+      "after_sha256": "e5f3460d92896d4549492c2e1af9e528feb1bed5ebf4a6d1680ab57dec7478c7",
+      "before_sha256": "a2aa2ac83e3c2fa7d1b03905a0f3853d79d9c9337648bd4aa06c2610c62349be",
+      "path": "papers/references/quotients-and-descent.tex"
+    },
+    {
+      "after_sha256": "889fa48e1bcd6b03d6be1e7df4f1b0ab513bda3fdc7708ca542a90b9ebdd7923",
+      "before_sha256": "7eb0282d6a72724991cccd91735c287d253134d494e1c414bb569679c5f39e6c",
+      "path": "papers/sections/hodge/01-introduction.tex"
+    },
+    {
+      "after_sha256": "7690d5922de14ad0c743121a776144ed64a6369b9f1a3f5bedfeab783d63a2bd",
+      "before_sha256": "9c7d89b308856133bd5ef10eeb81f34ddca8507f872840463a5dfc96ab9c1fd1",
+      "path": "papers/sections/hodge/02-hodge-proofs.tex"
+    },
+    {
+      "after_sha256": "dcde29cd1a0ecfffb68bbb43a52a2ce15cdf2126f4e6c6836a0d22985e41bc28",
+      "before_sha256": "f65aed06ba7e2c8efe275fa31f52d9b4f9e9ab9d212ff6e80f78c14fdeb2b44f",
+      "path": "papers/sections/hodge/03-boundaries.tex"
+    },
+    {
+      "after_sha256": "f21928bc795bec0fe465fc0a14f8f52ece698844c205b5f6f8ea8665ca7c0bc2",
+      "before_sha256": "4208566ac22f824d718b625e8f1440590619666c399aebc9ab3beee3eefac6c5",
+      "path": "papers/sections/packet/01-introduction.tex"
+    },
+    {
+      "after_sha256": "7d8a2daeaa8821bbff223bd7419eff8daa49de9d03dc92ce881713347abf13a7",
+      "before_sha256": "062bdb072633ba9b77d33446afb3fcbd7fe5f6904ef27a6ec46b4d552b1193f8",
+      "path": "papers/sections/packet/02-fixed-data.tex"
+    },
+    {
+      "after_sha256": "7968811f9caad389f9119a78b1774ef9ccfa5e1a87c988a5151c4871d77e61c2",
+      "before_sha256": "f9f994aa1441c6b7e84a892a89a5a781b347a2b50d785d47e1ff671ba8f74906",
+      "path": "papers/sections/packet/03-packet-proof.tex"
+    },
+    {
+      "after_sha256": "7cba5317d40ead64132916bcfd5ec36b1cbce2399889a9e6897c5c44a4669bc5",
+      "before_sha256": "f966db20014f398e5de644e9c3d2510e4f4881da3add1e9956512cf6c4b6dd83",
+      "path": "papers/sections/packet/04-geometric-fibers.tex"
+    },
+    {
+      "after_sha256": "56788db600b0d171eb19beef66ce1adf92d0c351ee66001f6815e28a2706dd04",
+      "before_sha256": "d9aa23670923f206e3b8bb8dc44c7aa4323681546cfd6658ad8ae5350412e304",
+      "path": "papers/sections/packet/05-trace-polarization.tex"
+    },
+    {
+      "after_sha256": "1c5472bba9544b4a3bcc5d216cde34ca44120704dc54f8f4ce4be6d01ff8a020",
+      "before_sha256": "f8a42b00506796d791f505bf4567024383172ba7d7a4abffa01a6dece680d524",
+      "path": "papers/sections/packet/06-principal-family.tex"
+    },
+    {
+      "after_sha256": "f6bb1495c247c8a97866811869ed4c4dda62bf0a05cca600ee5b33d6883df3e3",
+      "before_sha256": "60dd23d994adc208906f05c8c950a571e0c3821c8a353e48274f69d7c703cd12",
+      "path": "papers/sections/packet/07-integral-models.tex"
+    },
+    {
+      "after_sha256": "4b7063aedb5b78e87bea746e8185c3d73e51ce74ba7351e55c1c90bd15074bb5",
+      "before_sha256": "be3f68d6ba35b0f92570cbbcfef058436cbe2061f5062ed27ca2570a08854954",
+      "path": "papers/sections/packet/08-unit-twist.tex"
+    },
+    {
+      "after_sha256": "801c00f9653d37c893c5717c26beb544c8d4dc69c0ff802a7e032dc000f9c31b",
+      "before_sha256": "a2a9a2595078f164622d330e628b8ef5f90e4b33dd612c62967e5674fcdec5e4",
+      "path": "papers/sections/packet/09-questions.tex"
+    },
+    {
+      "after_sha256": "9ed69e5e6490c8f4b6c41d416e0f734e6420a9cb748c30d77b1279a812ea03b0",
+      "before_sha256": "fd6647a300c2fa61a72493ac1776025878b394c12d2a5842e512834ad7d2d67b",
+      "path": "papers/sections/quotients/01-introduction.tex"
+    },
+    {
+      "after_sha256": "b524b44f840f31ede1e98d9d5723b175883d76eb5d931cf93f0ecd971a161600",
+      "before_sha256": "7d3ce9b6425724af3e66ef7729551b1eb436248505184036f9a18d541ea5e8fa",
+      "path": "papers/sections/quotients/02-family-and-descent.tex"
+    },
+    {
+      "after_sha256": "7648578185452273d9e46c6bbfd7e7f7f9cf0fa6f8f3458251d6b5df1974e0bb",
+      "before_sha256": "c385200d1d9ccee328ddbdef6c80205a693bd3a1a21177175cbb4638b1f8b15b",
+      "path": "papers/sections/quotients/03-jacobians.tex"
+    },
+    {
+      "after_sha256": "6a8ef283e817f1f36a617c93834c9d9aa4c88bf4d541510e66423fb2a7a058d1",
+      "before_sha256": "4f3661c319133932dc1c5cdd2799cecda20b521bd73ffc951f1a2eefc0720739",
+      "path": "papers/sections/quotients/04-smaller-order-theta.tex"
+    },
+    {
+      "after_sha256": "38efcb02f1ffe546d48dd83cf17eee008cc4ae8292c8c6b4d1643a1f0c11bfae",
+      "before_sha256": "e091aa61baac99f28598e699db7a20affaa69b3ba4afc61d38da0b8ad5c6490e",
+      "path": "papers/sections/quotients/05-open-questions.tex"
+    },
+    {
+      "after_sha256": "09fce57d11effb4bf2b3bf7ed4771273e51e8aa3021820547a595b1ddc5d9e4e",
+      "before_sha256": "15f57ecb69314adb219d975f5068e7eda22d34d8188610059bd2409caa0017ec",
+      "path": "papers/sections/supplement/01-guide.tex"
+    },
+    {
+      "after_sha256": "86825cd86d3d832b769244dc3f5029b4cf89066e0b7ee60fec2f1e93caf324cd",
+      "before_sha256": "ecf1c3229c1278c6050b2ed5a6f272704fa1cb345ff0ddb78f40ddb631ff5f71",
+      "path": "papers/sections/supplement/02-arithmetic.tex"
+    },
+    {
+      "after_sha256": "f042fb14fc313180700f3fe3b35c0b0c12df144db180133cd181b982e740c98c",
+      "before_sha256": "c1e756dbdab2c7558ca7e02646af4449c24b87057193d98db2ffa51f2824afd3",
+      "path": "papers/sections/supplement/03-historical-exclusions.tex"
+    },
+    {
+      "after_sha256": "51a2e18ce1ebff8eaf1ec4b44c98f265494028edc437cb628db939a4cab04548",
+      "before_sha256": "23e42b46a7c4ccfc43431c5db6bc98033dc32f5974d23210918343473daeb5f6",
+      "path": "papers/sections/supplement/04-local-lattices.tex"
+    },
+    {
+      "after_sha256": "9176b463f35f0479ed58ebe20f216a817dc76cf4e54e51b7639cfcbf4f6b11f8",
+      "before_sha256": "f59ba45a1b95a81cd6c675c9044a86fad7544b0da240ff238eb8ceba71de5d59",
+      "path": "papers/sections/supplement/05-units-and-maximal-packet.tex"
+    },
+    {
+      "after_sha256": "a9e83f467944ef6026b66b69942442477b411cc80e45cd1db0264c375ccb3597",
+      "before_sha256": "dcae4a2321def47dd7aee4f90174d192ea6881573346c0f2cbde4883b406fde5",
+      "path": "papers/sections/supplement/06-comparison.tex"
+    },
+    {
+      "after_sha256": "a0e58bb4b41ae8addb17357ea37ef4682f808b226eafdc5965b512d8c1cc69b0",
+      "before_sha256": "9663627243f64c9c307bc9ad441ed65f525c43db5d01d1cc67adac45b04bda41",
+      "path": "papers/sections/supplement/07-execution.tex"
+    },
+    {
+      "after_sha256": "26df6e9fe1578143f71a77f372fb4fe8cfbf524a572afb2c99bf452f0951a6c9",
+      "before_sha256": "a7e750524643dc753110c711f0bdfe16f756e2534dd2448da32d0135dbbfe511",
+      "path": "papers/shared/preamble.tex"
+    }
+  ],
+  "unchanged_mathematical_sources": [
+    {
+      "path": "papers/shared/external-numbers.tex",
+      "sha256": "74ed085c57cf5e6d38e929df8f9b28770844daf8a5e0b0f08c349fc378c767fc"
+    }
+  ]
+}

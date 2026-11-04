@@ -1,0 +1,18 @@
+{
+  "cyclic_generators": 648,
+  "cyclic_subspaces": 36,
+  "fixed_root_orbit_subspace_union_bound": 560,
+  "generators_per_length3_module": 18,
+  "normal_closures_outside_C3_contain_central_involution": true,
+  "obstructed_subspaces": 19656,
+  "root_adjustment_cube_signs": [
+    1,
+    -1
+  ],
+  "scalar_conjugation_image_order": 91,
+  "scope": "Small model check supporting structural proof; not33880-subspace or2808-orbit enumeration",
+  "status": "PASS",
+  "total_invariant_subspaces": 40,
+  "type21_subspaces": 4,
+  "wall_seconds": 0.004852000012760982
+}

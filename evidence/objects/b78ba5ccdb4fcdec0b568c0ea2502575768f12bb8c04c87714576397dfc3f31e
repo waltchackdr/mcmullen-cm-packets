@@ -1,0 +1,48 @@
+#!/usr/bin/env python3
+"""Resource wrapper; run separately so the coordinator never uses preexec_fn."""
+import argparse
+import json
+import os
+from pathlib import Path
+import resource
+import sys
+
+
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--cpu', type=int, required=True)
+    parser.add_argument('--memory-mib', type=int, required=True)
+    parser.add_argument('--file-mib', type=int, required=True)
+    parser.add_argument('--lease', type=Path, required=True)
+    parser.add_argument('--parent-pid', type=int, required=True)
+    parser.add_argument('command', nargs=argparse.REMAINDER)
+    args = parser.parse_args()
+    if not args.command or min(args.cpu, args.memory_mib, args.file_mib) <= 0:
+        raise ValueError('Positive limits and command required')
+    if os.getppid() != args.parent_pid:
+        raise RuntimeError('Coordinator disappeared before worker startup')
+    temporary = args.lease.with_suffix('.tmp')
+    with temporary.open('x') as stream:
+        json.dump({'pid': os.getpid(), 'parent_pid': args.parent_pid}, stream)
+        stream.flush()
+        os.fsync(stream.fileno())
+    temporary.replace(args.lease)
+    resource.setrlimit(resource.RLIMIT_CPU, (args.cpu, args.cpu + 1))
+    resource.setrlimit(resource.RLIMIT_CORE, (0, 0))
+    resource.setrlimit(resource.RLIMIT_FSIZE, (args.file_mib * 1024**2,) * 2)
+    # Darwin does not implement a reliable RLIMIT_AS. The campaign records this.
+    if sys.platform.startswith('linux'):
+        resource.setrlimit(resource.RLIMIT_AS, (args.memory_mib * 1024**2,) * 2)
+        # Kill a worker if its coordinator dies, including SIGKILL/power loss.
+        import ctypes
+        parent = args.parent_pid
+        if ctypes.CDLL(None, use_errno=True).prctl(1, 9) != 0:
+            raise OSError(ctypes.get_errno(), 'PR_SET_PDEATHSIG')
+        if parent == 1 or os.getppid() != parent:
+            raise RuntimeError('Coordinator exited before parent-death binding')
+    command = args.command[1:] if args.command[0] == '--' else args.command
+    os.execv(command[0], command)
+
+
+if __name__ == '__main__':
+    main()

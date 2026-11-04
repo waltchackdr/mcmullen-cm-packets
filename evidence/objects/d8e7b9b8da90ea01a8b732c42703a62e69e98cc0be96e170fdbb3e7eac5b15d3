@@ -1,0 +1,16 @@
+{
+  "status": "C62_PROPOSED_NOT_ADOPTED_ACTIVE_PAPER_UNCHANGED",
+  "base_sha256": "dcc696bc155767aa85ca2bdf506e2ff4841e9d32d1cb30dc56c5b27db9821fcf",
+  "candidate_sha256": "3ab23eca661eb3c01f86f94beb39a1756f795e7ba5042f363dc59f5cdb049e8f",
+  "insertion_sha256": "489d4807e10c7e4f480bcd1ae165acc755ee5763b8918d6af1ac30360accb5e5",
+  "replacement": {
+    "old": "realized explicitly with cyclic kernel.",
+    "new": "realized explicitly with cyclic kernel. The complete integral Hom module\nis an explicit invertible ideal representing a class of order two."
+  },
+  "insertion_anchor": "\\begin{corollary}[Weil points on the specified principal image]",
+  "supersedes": "manuscript01",
+  "corrections": [
+    "Attribute direct R equality only to primary; independent inherits reviewed C60 equality",
+    "Specify saturation isomorphism as normalized map with eta=1"
+  ]
+}

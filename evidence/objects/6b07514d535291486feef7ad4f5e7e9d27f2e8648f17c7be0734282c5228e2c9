@@ -1,0 +1,40 @@
+"""Separate exponent-arithmetic check; no producer imports or permutations.
+For a cyclic F729* generator g, trace-zero c=g^r means26r=364 mod728.
+Represent semilinear maps modulo U14 by (g^k Frob^j), k mod52.
+This checks the finite group lemma, not the geometric correspondence.
+"""
+import collections,json,resource,signal,time
+from pathlib import Path
+resource.setrlimit(resource.RLIMIT_CPU,(20,20));signal.alarm(30)
+t0=time.monotonic()
+one=(0,0)
+def product(x,y):return ((x[0]+pow(3,x[1],52)*y[0])%52,(x[1]+y[1])%6)
+def power(x,n):
+ result=one
+ for unused in range(n):result=product(result,x)
+ return result
+def order(x):return next(n for n in range(1,25) if power(x,n)==one)
+res=[]
+for r in range(728):
+ if 26*r%728!=364:continue
+ group={(k,j) for k in range(52) for j in range(6) if (28*k-r*(3**j-1))%728 in (0,364)}
+ assert len(group)==24
+ assert all(product(x,y) in group for x in group for y in group)
+ a=(13,0);assert a in group and order(a)==4
+ lifts=[x for x in group if x[1]==1];assert len(lifts)==4
+ for b in lifts:
+  assert order(b)==6 and product(b,a)==product(power(a,3),b)
+  assert {product(power(a,i),power(b,j)) for i in range(4) for j in range(6)}==group
+ center={x for x in group if all(product(x,y)==product(y,x) for y in group)}
+ assert len(center)==6
+ comm={product(product(product(x,y),power(x,order(x)-1)),power(y,order(y)-1)) for x in group for y in group}
+ assert comm=={one,(26,0)}
+ counts=dict(sorted(collections.Counter(order(x) for x in group).items()))
+ assert counts=={1:1,2:5,3:2,4:2,6:10,12:4}
+ res.append(r)
+assert len(res)==26
+field_degrees={n:next(d for d in range(1,7) if pow(3,d,n)==1) for n in (4,7,28)}
+assert field_degrees=={4:2,7:6,28:6}
+assert 19656//7==108*26==2808 and 182//7==26 and 26//2==13
+result={'status':'PASS','method':'Independent cyclic-exponent realization of semilinear similitudes modulo U14; no producer imports or permutation data','trace_zero_coefficient_exponents_checked':26,'group_order':24,'all_four_Frobenius_lifts_have_order':6,'element_order_counts':counts,'center_order':6,'commutator_exponents_mod52':[[0,0],[26,0]],'freeness_field_degrees':field_degrees,'minimum_classes':2808,'fiber_size':26,'pairs_per_fiber':13,'wall_seconds':time.monotonic()-t0}
+Path(__file__).with_suffix('.json').write_text(json.dumps(result,indent=2,sort_keys=True)+'\n');print(json.dumps(result,sort_keys=True))

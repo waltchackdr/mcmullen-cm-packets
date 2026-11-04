@@ -1,0 +1,8 @@
+{
+  "url": "https://stacks.math.columbia.edu/tag/0CCJ",
+  "observed_utc": "2026-11-03T06:07:39.315635+00:00",
+  "path": "experiments/all_underlying_galois_v165/real_descent_source/stacks_0CCJ.html",
+  "sha256": "b14dd154b0a709c975b7dfcf0df3038e578d6f0b8650115aabce191b3c640c39",
+  "bytes": 14824,
+  "hypothesis_check": "Spec(Qbar)->Spec(real algebraic numbers) is finite etale degree2, hence surjective finite locally free. The abelian variety is projective; explicit involution gives a descent datum. Lemma gives effectivity, not automatic datum existence."
+}

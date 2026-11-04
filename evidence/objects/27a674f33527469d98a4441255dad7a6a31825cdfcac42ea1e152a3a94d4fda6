@@ -1,0 +1,29 @@
+"""Replay the independent small field/incidence check; no Grassmannian loop."""
+import json
+from pathlib import Path
+import subprocess
+import sys
+import tempfile
+import unittest
+
+ROOT = Path(__file__).resolve().parents[1]
+
+
+class QuotientOrbitCensus(unittest.TestCase):
+    def test_small_norm_incidence_and_orbit_constraints(self):
+        source = ROOT / "experiments/all_underlying_galois_v165/referee_orbit_structure01.py"
+        with tempfile.TemporaryDirectory() as folder:
+            target = Path(folder) / source.name
+            target.write_bytes(source.read_bytes())
+            result = subprocess.run([sys.executable, str(target)], check=True,
+                                    capture_output=True, text=True, timeout=20)
+        data = json.loads(result.stdout)
+        self.assertEqual(data["status"], "PASS")
+        self.assertEqual(data["full_scalar_orbit_fixed_counts"], [94,2,10,14,10,2])
+        self.assertEqual(data["restricted_G_fixed_sums"], [67760,112,560,9520,560,112])
+        self.assertEqual(data["involution_invariant_lagrangians"], 28)
+        self.assertEqual(data["orbit_equation_solutions"], [[0,3,0,116]])
+
+
+if __name__ == "__main__":
+    unittest.main()

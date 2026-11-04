@@ -1,0 +1,78 @@
+"""Exact regression for separate C85 proof. Reuses C84 producer, not independent."""
+from collections import Counter, deque
+from itertools import combinations, product
+import json
+import resource
+import signal
+import importlib.util
+from pathlib import Path
+spec=importlib.util.spec_from_file_location("c84_model", Path(__file__).resolve().parents[1]/"fermat_all_quotients_v155/arithmetic_candidate.py")
+model=importlib.util.module_from_spec(spec)
+spec.loader.exec_module(model)
+
+
+def check():
+    if not __debug__:
+        raise RuntimeError("Enabled assertions required")
+    all_spaces = set()
+    for pivots in combinations(range(6), 3):
+        free = [(i, j) for i, p in enumerate(pivots)
+                for j in range(p+1, 6) if j not in pivots]
+        for values in product(range(3), repeat=len(free)):
+            rows = [[int(j == p) for j in range(6)] for p in pivots]
+            for (i, j), value in zip(free, values):
+                rows[i][j] = value
+            all_spaces.add(tuple(tuple(row) for row in rows))
+    assert len(all_spaces) == 33880
+
+    def gamma(v):
+        return tuple((x-y) % 3 for x, y in zip(model.shift(v), model.shift_inverse(v)))
+
+    def real_t(v):
+        return tuple(-x % 3 for x in model.real_action(v))
+
+    basis = tuple(tuple(int(i == j) for i in range(6)) for j in range(6))
+    transformed = basis
+    for exponent in range(1, 27):
+        transformed = tuple(real_t(v) for v in transformed)
+        assert (transformed == basis) == (exponent == 26)
+    assert tuple(real_t(v) for v in basis) != basis
+
+    def isotropic(h):
+        return all(model.pair(h[i], h[j]) == 0 for i in range(3) for j in range(i))
+
+    left = set(all_spaces)
+    census = Counter()
+    while left:
+        first = min(left)
+        orbit, pending = {first}, deque([first])
+        while pending:
+            h = pending.popleft()
+            for transform in [model.shift, gamma, real_t]:
+                target = model.rref([transform(v) for v in h])
+                assert len(target) == 3
+                if target not in orbit:
+                    orbit.add(target)
+                    pending.append(target)
+        assert orbit <= left
+        left -= orbit
+        census[(len(orbit), sum(isotropic(h) for h in orbit))] += 1
+    assert census == {(14, 14): 2, (182, 14): 78, (182, 0): 108}
+    return {'status': 'EXACT_UNPOLARIZED_ORBIT_MODEL_PASS',
+        'all_subspaces': len(all_spaces),
+        'unit_actions': ['T', 'T-T^-1 = adopted gamma residue', '-(T+T^-1) = real unit t'],
+        'real_unit_residue_order': 26,
+        'census_orbit_size_fixed_form_intersection_count': [
+            {'orbit_size': a, 'fixed_form_isotropic_count': b, 'orbit_count': c}
+            for (a, b), c in sorted(census.items())],
+        'underlying_quotient_classes': 188,
+        'principalizable_classes_candidate': 80,
+        'nonprincipalizable_classes_candidate': 108,
+        'unrestricted_minimum_principal_kernel_count_candidate': 14224,
+        'scope': 'Finite model only; separate C85 human proof and accepted C63/C83/C84 supply the geometric and global-unit conclusions.'}
+
+
+if __name__ == '__main__':
+    resource.setrlimit(resource.RLIMIT_CPU, (20, 20))
+    signal.alarm(30)
+    print(json.dumps(check(), indent=2, sort_keys=True))

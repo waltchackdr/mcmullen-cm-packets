@@ -1,0 +1,133 @@
+#!/usr/bin/env python3
+"""Scoped retained-log evidence only. Never imports mathematical modules."""
+import argparse, ast, hashlib, importlib.util, json, re
+from pathlib import Path
+
+ROOT=Path(__file__).resolve().parents[3]
+HERE=Path(__file__).resolve().parent
+BASE=ROOT/'build/research-v81/v84-recovery-cloud-2026-10-12/legacy-terminal-retained'
+ARCHIVE=ROOT/'build/research-v81/cloud/final-deployment-2026-10-12/v81-release159-source-evidence-cohort1/source-commit.tar'
+READER=ROOT/'experiments/continuous_v83/legacy_recovery/audit.py'
+PINS={
+ 'experiments/continuous_v83/legacy_recovery/audit.py':'1e699a5be7010527bf482da25faa8fb44d15462e9445fde120e3a0ff2cbfa0d2',
+ 'experiments/continuous_v82_review/legacy_completed_execution_evidence.json':'fe6a4a7266d3e8b40b0e6edd858da9d5b1f48a3c62d60a056316fd32c505d2ce',
+ 'experiments/continuous_v82_review/legacy_150_final_fixed_report_review.json':'69c0955f2d7ddc9191019c8c9bf0e042d5e7413633f8cd1cc88c756f0ccf348b',
+ 'experiments/continuous_v83/maximal_packet_assessment/q26-evidence-index-02.json':'71eb5f6311a9eef9abb8e9ccd2a2dfd40fc267f41633278e95b13d7e1ecf42cb',
+ 'experiments/continuous_v83/first_target_coverage/coverage.json':'cac499e1d40ed498e0d8e2c3f08d34a52ef726856bac4606332d483c72d024b6',
+ 'experiments/continuous_v82_review/first_target_coverage_review.json':'3879881003484d43773e8112935a85baf2849486c3f801f27e4e660d57b2b386',
+}
+LABELS=tuple('OM:pic0:%02d'%m for m in (1,2,3,4,5,6,8,9,10,11,12,13,14))
+FOUR={25:('primary',(17,38)),37:('sturm',(17,38)),26:('primary',(1,22)),38:('sturm',(1,22))}
+
+def need(ok,message):
+ if not ok:raise ValueError(message)
+def digest(path):return hashlib.sha256(path.read_bytes()).hexdigest()
+def literal_any(tree,name):
+ values=[x.value for x in ast.walk(tree) if isinstance(x,ast.Assign) and any(isinstance(t,ast.Name) and t.id==name for t in x.targets)]
+ need(len(values)==1,'Unique literal '+name);return ast.literal_eval(values[0])
+def result_expectation(raw):
+ tree=ast.parse(raw);found={}
+ for node in ast.walk(tree):
+  if isinstance(node,ast.Assert) and isinstance(node.test,ast.Compare) and len(node.test.ops)==1 and isinstance(node.test.ops[0],ast.Eq):
+   left=node.test.left
+   if isinstance(left,ast.Attribute) and isinstance(left.value,ast.Name) and left.value.id=='result' and left.attr in ('bottom_rows','nonzero_candidates','zero_candidates'):
+    need(left.attr not in found,'Duplicate scalar expectation');found[left.attr]=ast.literal_eval(node.test.comparators[0])
+ need(set(found)=={'bottom_rows','nonzero_candidates','zero_candidates'},'Expected exact scalar assertions')
+ return {'counts':found,'histogram':dict(literal_any(tree,'EXPECTED_HISTOGRAM')),'digests':literal_any(tree,'EXPECTED_DIGESTS')}
+
+def parse_four(text,backend,expected,terminal):
+ lines=text.splitlines();need(lines and lines[-1]==terminal and lines.count(terminal)==1,'Unique exact final success line required')
+ count_re=re.compile(r'^k=(\d+): bottom rows=(\d+); c!=0 candidates=(\d+); c=0 candidates=(\d+); polygon survivors=(\d+)(?:; exclusion digest=([0-9a-f]{64}))?$')
+ observed={}
+ for line in lines:
+  match=count_re.fullmatch(line)
+  if not match:continue
+  k,b,n,z,s=map(int,match.groups()[:5]);need(k not in observed,'Duplicate full result')
+  need((b,n,z)==tuple(expected['counts'][x] for x in ('bottom_rows','nonzero_candidates','zero_candidates')) and s==0,'Full counts or survivors differ')
+  need((match[6] is not None)==(backend=='primary'),'Wrong backend result form')
+  observed[k]={'bottom_rows':b,'nonzero_candidates':n,'zero_candidates':z,'survivor_count':s,'classification_digest':match[6]}
+ need(set(observed)==set(expected['digests']),'Complete two-companion results required')
+ for k,row in observed.items():
+  prefix=f'first-failure histogram k={k}: ' if backend=='primary' else f'k={k}: first-exclusion histogram='
+  values=[ast.literal_eval(x[len(prefix):]) for x in lines if x.startswith(prefix)]
+  need(len(values)==1 and dict(values[0])==expected['histogram'],'Exact complete histogram required')
+  need(sum(dict(values[0]).values())==row['nonzero_candidates']+row['zero_candidates'],'Every candidate classified')
+  row['histogram']=[[list(pair),n] for pair,n in sorted(expected['histogram'].items())]
+  if backend=='sturm':
+   prefix=f'k={k}: canonical exclusion SHA-256='
+   values=[x[len(prefix):] for x in lines if x.startswith(prefix)]
+   need(len(values)==1,'Unique complete digest required');row['classification_digest']=values[0]
+  need(row['classification_digest']==expected['digests'][k],'Source-bound digest differs')
+ return observed
+
+def run():
+ for name,pin in PINS.items():need(digest(ROOT/name)==pin,'Pinned input changed: '+name)
+ spec=importlib.util.spec_from_file_location('q26_stdlib_evidence_reader',READER)
+ a=importlib.util.module_from_spec(spec);spec.loader.exec_module(a)
+ anchors={ROOT/name:pin for name,pin in PINS.items()}
+ anchors.update({BASE/'state.json':a.PRIOR_SHA,BASE/'source-manifest.json':a.MANIFEST_SHA,BASE/'snapshot.json':a.SNAPSHOT_SHA,ARCHIVE:a.ARCHIVE_SHA})
+ for path,pin in anchors.items():need(a.digest(path)==pin,'Archive/retained anchor differs')
+ state=a.read(BASE/'state.json');manifest=a.read(BASE/'source-manifest.json');sources=a.source_archive(ARCHIVE,manifest)
+ runtime=BASE/'runtime-before.json';need(a.digest(runtime)==state['runtime_sha256'],'Original pre-execution runtime differs');anchors[runtime]=state['runtime_sha256']
+ index=a.read(HERE/'q26-evidence-index-02.json');report=a.read(ROOT/'experiments/continuous_v82_review/legacy_completed_execution_evidence.json')
+ need([x['point_label'] for x in index['rows']]==list(LABELS),'Exact OM13 order/domain')
+ records={x['index']:x for x in report['records']};rows={x['index']:x for x in state['rows']}
+ need(index['exact_indices']==sorted([25,26,37,38,*range(56,78)]),'Exact Q26 inventory')
+ observed=[];sealed={};source_statements={};proofs={};parsed_four={}
+ expected_file='certificates/d7_remaining_maximal_expected_v61.py'
+ expected_v61=a.literal(sources[expected_file],'EXPECTED')
+ for point in index['rows']:
+  need(len(point['bindings'])==2,'Two separate paths required')
+  for binding in point['bindings']:
+   n=binding['legacy_index'];row=rows[n];record=records[n];driver=binding['driver'];raw=sources[driver]
+   need(record==binding['hardened_auditor_record'],'Exact reviewed old result binding')
+   need(row['status']=='COMPLETE' and type(row['returncode'])is int and row['returncode']==0,'Whole old command incomplete')
+   need(row['argv']==binding['argv']==record['argv'],'Original exact argv differs')
+   need(hashlib.sha256(raw).hexdigest()==binding['driver_sha256']==manifest['files'][driver]['sha256'],'Archived driver differs')
+   log=ROOT/binding['log_path'];intent=BASE/row['directory']/'attempt.json';lease=BASE/row['directory']/'lease.json'
+   for path,h in ((log,record['log_sha256']),(intent,record['intent_sha256']),(lease,record['lease_sha256'])):
+    need(a.digest(path)==h,'Retained log/intent/lease differs');sealed[path]=h
+   text=log.read_text();tree=ast.parse(raw)
+   if n in FOUR:
+    backend,ks=FOUR[n]
+    sturm='independent/residual_orbit_k'+str(ks[0])+'_k'+str(ks[1])+'_sturm_v'+('42' if ks[0]==17 else '43')+'.py'
+    expected=result_expectation(sources[sturm]);need(set(expected['digests'])==set(ks),'Expected companion domain')
+    terminal=record['source_bound_result_markers'][0]
+    need(any(isinstance(x,ast.Constant) and x.value==terminal for x in ast.walk(tree)),'Terminal marker absent from archived driver')
+    complete=parse_four(text,backend,expected,terminal);parsed_four[n]=complete
+    observed.append({'index':n,'point_label':point['point_label'],'backend':backend,'full_companion_results':complete,
+      'driver_sha256':binding['driver_sha256'],'log_sha256':record['log_sha256'],'end_source_guard_reconstructed':False,
+      'adoption_requires_explicit_ordinary_immutable_source_runtime_assumption':True})
+   else:
+    mask=int(row['argv'][-1]);lines=text.splitlines()
+    points=[a.decode(x[len('POINT_PASS '):]) for x in lines if x.startswith('POINT_PASS ')]
+    need(points==[{'mask':mask,**expected_v61[mask]}],'V61 full expected output differs')
+    need(lines[-2]=='SUBSET_PASS masks='+str(mask) and lines[-1].startswith('SOURCE_SHA256 '),'V61 complete terminal tail')
+    declared=a.decode(lines[-1][len('SOURCE_SHA256 '):]);need(declared==record['reported_source_sha256'],'V61 declared closure differs')
+    need(all(manifest['files'][name]['sha256']==h for name,h in declared.items()),'V61 closure outside immutable archive')
+    observed.append({'index':n,'point_label':point['point_label'],'full_result':points[0],'log_sha256':record['log_sha256'],
+      'end_source_rehash_present_in_pinned_main':True,'old_pool_end_guard_reconstructed':False})
+   main=next(x for x in tree.body if isinstance(x,ast.FunctionDef) and x.name=='main')
+   source_statements[driver]={'sha256':binding['driver_sha256'],'main_line':main.lineno,'main_last_line':main.end_lineno,
+    'imports':[ast.unparse(x) for x in ast.walk(tree) if isinstance(x,(ast.Import,ast.ImportFrom))]}
+  prior=next(x for x in a.read(ROOT/'experiments/continuous_v83/first_target_coverage/coverage.json')['historical_116'] if x['point_label']==point['point_label'])
+  for proof in prior['proofs']:
+   need(proof['path'] in sources and hashlib.sha256(sources[proof['path']]).hexdigest()==proof['sha256'],'Historical proof archive mismatch')
+   proofs[proof['path']]=proof['sha256']
+ need(parsed_four[25]==parsed_four[37] and parsed_four[26]==parsed_four[38],'Separate four paths disagree')
+ for name in ('docs/REFEREE_AUDIT_V42.md','docs/REFEREE_AUDIT_V43.md','docs/D7_AMBIENT_CM_POINTS.md','docs/PACKET_ORDER_COVERAGE_V58.md','docs/FULL_PACKET_ARITHMETIC_V62.md','paper/main.tex'):
+  need(name in sources,'Historical human dependency absent');proofs[name]=hashlib.sha256(sources[name]).hexdigest()
+ for path,pin in {**anchors,**sealed}.items():need(a.digest(path)==pin,'Evidence changed during scoped audit')
+ return {'schema_version':1,'status':'Q26_SCOPED_EXECUTION_EVIDENCE_VERIFIED_PENDING_HUMAN_ADOPTION',
+  'labels':list(LABELS),'commands':26,'four_historical_commands':[25,26,37,38],'records':sorted(observed,key=lambda x:x['index']),
+  'source_statements':source_statements,'historical_proof_archive_sha256':proofs,
+  'anchor_sha256':{str(p.relative_to(ROOT)):h for p,h in anchors.items()},'sealed_selected_file_sha256':{str(p.relative_to(ROOT)):h for p,h in sealed.items()},
+  'ordinary_immutable_source_runtime_assumption_required':True,'end_source_guard_for_four_historical_commands':False,
+  'old_global_end_guard_reconstructed':False,'old159_pass':False,'theorem_promotion':False,'new_mathematical_execution':False,
+  'reader_sha256':digest(Path(__file__))}
+
+if __name__=='__main__':
+ p=argparse.ArgumentParser();p.add_argument('--output',type=Path,required=True);args=p.parse_args()
+ value=run()
+ with args.output.open('x') as f:json.dump(value,f,sort_keys=True,indent=2);f.write('\n')
+ print(value['status'])

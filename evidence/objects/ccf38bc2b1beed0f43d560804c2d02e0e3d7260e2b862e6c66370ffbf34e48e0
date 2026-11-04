@@ -1,0 +1,112 @@
+{
+  "actual_loader_record_validations": 16,
+  "archives": [
+    {
+      "bytes": 327680,
+      "files": 13,
+      "job": 0,
+      "unpack_snapshot_admission": "PASS"
+    },
+    {
+      "bytes": 327680,
+      "files": 13,
+      "job": 1,
+      "unpack_snapshot_admission": "PASS"
+    }
+  ],
+  "candidate_pins": 205,
+  "changed_worker_functions": [
+    "validate_plan",
+    "successful_results",
+    "main"
+  ],
+  "complete_queue_jobs_executed_by_stub": 2,
+  "complete_two_job_queue": "PASS",
+  "completion_negative_rejections": [
+    "missing_tau",
+    "unbound_source",
+    "modified_tau",
+    "bad_pivot",
+    "wrong_plan",
+    "wrong_period",
+    "bool_characteristic",
+    "bool_chi",
+    "bool_pair_index",
+    "bool_numerator",
+    "wrong_center",
+    "missing_enclosure",
+    "wrong_flag",
+    "false_finite",
+    "empty_argument",
+    "disjoint_argument",
+    "nan_duration",
+    "overlong_duration",
+    "extra_field",
+    "conclusion",
+    "original_data_free_input"
+  ],
+  "distinct_adopted_records": 10,
+  "failed_queue_jobs_executed_by_stub": 1,
+  "flint_imported": false,
+  "full_suite": false,
+  "loaded_interval_negatives": [
+    "contract",
+    "inflate",
+    "shape",
+    "asymmetric",
+    "shift_midpoint"
+  ],
+  "negative_plan_rejections": [
+    "job0/wrong_job",
+    "job0/wrong_target",
+    "job0/wrong_coordinates",
+    "job0/over_limit",
+    "job0/duplicate_chunk",
+    "job0/swapped_chunks",
+    "job0/omitted_task",
+    "job0/empty_chunk",
+    "job1/wrong_job",
+    "job1/wrong_target",
+    "job1/wrong_coordinates",
+    "job1/over_limit",
+    "job1/duplicate_chunk",
+    "job1/swapped_chunks",
+    "job1/omitted_task",
+    "job1/empty_chunk"
+  ],
+  "packet_pins": 21,
+  "pair_indices_per_target": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+  ],
+  "provider_calls": 0,
+  "queue_failure": "Complete job retention required",
+  "recovered_superseded_sources": {},
+  "selected_pairs": 80,
+  "status": "PASS_FROZEN05_ARCHIVE_COMPLETION_AND_RETENTION_DELTA",
+  "targets": [
+    0,
+    1,
+    2,
+    3,
+    6,
+    12,
+    15,
+    17,
+    40,
+    91
+  ],
+  "theta_calls": 0,
+  "unexpected_missing_task_artifacts": [],
+  "valid_synthetic_finite_schema": true,
+  "valid_synthetic_nonfinite_schema": true,
+  "wall_seconds": 0.44957400002749637,
+  "widened_synthetic_components": 318,
+  "widened_synthetic_schema": true
+}

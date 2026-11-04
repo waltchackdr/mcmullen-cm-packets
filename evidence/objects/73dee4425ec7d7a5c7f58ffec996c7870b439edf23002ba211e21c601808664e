@@ -1,0 +1,64 @@
+"""Verify retained catalog by explicit subspace sets, not producer RREF search.
+
+The adopted structural total 1120 plus 1120 distinct checked Lagrangians
+proves completeness; no repeat enumeration of all 33880 subspaces.
+"""
+import itertools
+import json
+from pathlib import Path
+import resource
+import signal
+
+ROOT=Path(__file__).resolve().parents[2]
+
+
+def run():
+    d=json.loads((ROOT/'experiments/s_order_models_v161/model.json').read_text())
+    c=json.loads((ROOT/'experiments/s_order_models_v161/catalog_candidate.json').read_text())
+    gram=[[int(x) for x in row] for row in d['discriminant_gram']]
+    root=[[int(x) for x in row] for row in d['order7_action']]
+    real=[[int(x) for x in row] for row in d['real_subfield_action']]
+    def space(rows):
+        assert len(rows)==3 and all(len(r)==6 for r in rows)
+        assert all(type(x) is int and 0<=x<3 for r in rows for x in r)
+        out=frozenset(tuple(sum(a[i]*rows[i][j] for i in range(3))%3 for j in range(6))
+                      for a in itertools.product(range(3),repeat=3))
+        assert len(out)==27
+        assert all(sum(rows[i][a]*gram[a][b]*rows[j][b] for a in range(6) for b in range(6))%3==0
+                   for i in range(3) for j in range(3))
+        return out
+    def image(m,sp):
+        return frozenset(tuple(sum(a*b for a,b in zip(row,v))%3 for row in m) for v in sp)
+    union=set(); rindices=[]
+    witness=space([[int(x) for x in row] for row in zip(*d['non_real_stable_lagrangian'])])
+    for i,entry in enumerate(c['models']):
+        assert entry['index']==i
+        rep=space(entry['lagrangian_rows'])
+        declared={space(rows) for rows in entry['root_orbit']}
+        actual=set();cur=rep
+        for _ in range(7):actual.add(cur);cur=image(root,cur)
+        assert cur==rep and len(actual)==7 and actual==declared
+        assert not(union&actual);union|=actual
+        flags={image(real,sp)==sp for sp in actual}
+        assert len(flags)==1
+        stable=flags.pop()
+        assert entry['endomorphism_order']==('R' if stable else 'S')
+        if stable:rindices.append(i)
+        if witness in actual:assert i==c['one_model_witness_orbit']==0
+    assert len(c['models'])==160 and len(union)==1120
+    assert rindices==[8,38,118,153]
+    assert (c['subspaces'],c['lagrangians'],c['polarized_orbits'],c['R_orbits'],c['S_orbits'])==(33880,1120,160,4,156)
+    # Negative control: a dependent alleged Lagrangian cannot pass.
+    bad=[list(x) for x in c['models'][0]['lagrangian_rows']];bad[1]=bad[0]
+    try:space(bad)
+    except AssertionError:pass
+    else:raise AssertionError('Dependent plane accepted')
+    return {'status':'PASS','producer_imports':False,'method':'Explicit 27-point subspace sets; structural C84 total supplies completeness',
+            'distinct_lagrangians':1120,'root_orbits':160,'orbit_size':7,'R_indices':rindices,'S_orbits':156,
+            'witness_orbit':0,'dependent_plane_negative_control':'REJECTED','full_33880_search_replayed':False,
+            'bulk_models_constructed':0,'theta_evaluations':0}
+
+
+if __name__=='__main__':
+    resource.setrlimit(resource.RLIMIT_CPU,(20,20));signal.alarm(30)
+    print(json.dumps(run(),indent=2))

@@ -1,0 +1,17 @@
+{
+  "archive_hash_is_in_archive_json": true,
+  "files": {
+    "anchors-before.json": "d9f10a5502d467abcacceeeafbfa7c138addfc20b30d1c662212a5f3c3cf6868",
+    "archive.json": "a5114e2633cbec137f58138791a67a8ade6b10e20f4c2d8dce1bb172197d7666",
+    "copy.json": "3b513650a8d0a1a23ba9c4b9dac06741d4c4832b877460efbdc09758d18cf5c6",
+    "full_ssd_harvest.py": "73ddcef70ad80a37a855211b49e7de6b49f2086fce241cc51f00b8c8370a4f7e",
+    "invocation.json": "8015a452369ea710a2c894c870a346a922888053946c44f27099f94f445abf10",
+    "provenance.json": "da91eb759ea203fa3c40b722ac493e296412f74da3dabb93e242aee1b17beec4",
+    "snapshot-run.json": "67f1724bc40e890511602b6120f92ccb650e9b7f2478b373b31894198b03b0ce",
+    "snapshot.log": "a3df3a176c8bed0af8111c959b7988a6eccaf9f04f40f67c21d74c8932507ffb",
+    "terminal-gate-after.json": "5e4256045870835205e21df384125f2c2b2d694f083f86ea900ef8955f5b1592",
+    "terminal-gate-before.json": "5e4256045870835205e21df384125f2c2b2d694f083f86ea900ef8955f5b1592"
+  },
+  "status": "ADMIN_PHASE_COMPLETE_LOCAL_RETRIEVAL_PENDING",
+  "theorem_promotion": false
+}

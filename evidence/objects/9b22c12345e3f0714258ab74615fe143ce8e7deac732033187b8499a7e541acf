@@ -1,0 +1,58 @@
+"""Bounded hostile telemetry14 fixtures; no credentials, network or numerical code."""
+import ast,hashlib,importlib.util,json,resource,signal,sys,time
+from pathlib import Path
+ROOT=Path(__file__).resolve().parents[2];D=ROOT/'experiments/s_order_theta_v164';HERE=ROOT/'experiments/bc_jacobian_v147/session_v150'
+def loadmod(name,path):
+ spec=importlib.util.spec_from_file_location(name,path);m=importlib.util.module_from_spec(spec);spec.loader.exec_module(m);return m
+def main():
+ start=time.monotonic();sys.path.insert(0,str(HERE));e=loadmod('ref_endpoint14',HERE/'endpoint_telemetry14.py')
+ packet=json.loads((D/'review_inputs14.json').read_bytes())
+ sha=lambda p:hashlib.sha256(p.read_bytes()).hexdigest()
+ assert sha(D/'review_inputs14.json')=='791ed04480f7747c36783a733066b79904d5bd006bde3fff176608bbdcbdf4c8'
+ for p,h in packet['pins'].items():assert sha(ROOT/p)==h,p
+ c=json.loads((ROOT/'build/s-order-v164/diagnostic14/execution_candidate.json').read_bytes());old=json.loads((D/'execution_authority13.json').read_bytes())
+ for p,h in c['pins'].items():assert sha(ROOT/p)==h,p
+ assert c['jobs']==old['jobs'] and c['bootstrap_code']==old['bootstrap_code'] and c['session_manifest']==old['session_manifest']
+ assert 'telemetry14' in c['local_entrypoint']
+ events=[];Marker=type('SYNTHETIC_PRIVATE_MARKER',(Exception,),{})
+ def badprovider(*a,**k):raise Marker('SYNTHETIC_BODY_MARKER')
+ try:e.discover(badprovider,'pod','name','cert',0,1200,lambda x:None,clock=lambda:0,sleep=lambda x:None,observe=events.append)
+ except Marker:pass
+ else:raise AssertionError('Provider exception suppressed')
+ dynamic=any(x.get('exception_type')=='SYNTHETIC_PRIVATE_MARKER' for x in events);assert dynamic
+ assert 'SYNTHETIC_BODY_MARKER' not in json.dumps(events)
+ now=[119.];calls=[]
+ def slowobserver(x):
+  if x['event']=='provider_read_started':now[0]+=2
+ def ready_later(*a,**k):calls.append({'started_seconds':now[0],'timeout_seconds':k['timeout']});return {'id':'pod','name':'name'}
+ try:e.discover(ready_later,'pod','name','cert',0,1200,lambda x:None,clock=lambda:now[0],sleep=lambda x:None,observe=slowobserver)
+ except TimeoutError:pass
+ else:raise AssertionError('Missing discovery timeout')
+ assert calls==[{'started_seconds':121.,'timeout_seconds':1.}]
+ # Observer persistence failure reaches unchanged lifecycle cleanup, without retry.
+ life=loadmod('ref_lifecycle14',HERE.parent/'runtime/lifecycle_candidate.py')
+ name='hodge-v147-abcdefghijkl';pod={'id':'pod','name':name,'costPerHr':.1,'cpuFlavorId':'cpu3c','vcpuCount':2,'containerDiskInGb':5,'volumeInGb':0}
+ live=[False];pcalls=[];saved={}
+ def provider(path,method='GET',**kw):
+  pcalls.append((method,path))
+  if method=='POST':live[0]=True;return pod
+  if method=='DELETE':live[0]=False;return {}
+  if path=='/pods':return [pod] if live[0] else []
+  if path=='/networkvolumes':return []
+  raise AssertionError('Unexpected endpoint read')
+ def broken_sink(x):raise OSError('synthetic storage failure')
+ def execute(p):return e.discover(provider,p,name,'cert',0,1200,lambda x:None,clock=lambda:0,sleep=lambda x:None,observe=broken_sink)
+ result=life.Lifecycle(provider,lambda k,v:saved.update({k:v}),clock=lambda:0,sleep=lambda x:None).run(name,{'name':name},execute,lambda:None)
+ assert result['status']=='EXECUTION_FAILED' and result['phase']=='WORKLOAD' and result['exception_type']=='OSError'
+ assert saved['cleanup.json']['provider_absence_verified'] and not live[0]
+ assert pcalls.count(('POST','/pods'))==1 and pcalls.count(('DELETE','/pods/pod'))==1
+ assert ('GET','/pods/pod') not in pcalls
+ # Nonchanged functions bind AST-identically; controller diff manually reviewed.
+ a=ast.parse((HERE/'session_controller_tls08.py').read_text());b=ast.parse((HERE/'session_controller_telemetry14.py').read_text())
+ funcs=lambda t:{n.name:ast.dump(n,include_attributes=False) for n in t.body if isinstance(n,(ast.FunctionDef,ast.AsyncFunctionDef))}
+ fa,fb=funcs(a),funcs(b);assert {n for n in fa if fa[n]!=fb[n]}=={'main'}
+ out={'status':'REJECT_CHANGED_TELEMETRY_BOUNDARY','blockers':['Unrestricted dynamic exception class name enters new diagnostic log','Telemetry write can consume endpoint deadline before provider read uses stale timeout'],'dynamic_class_name_reproduced':dynamic,'exception_message_not_logged':True,'deadline_reproduction':calls,'observer_failure_cleanup_pass':True,'same_sparse13_jobs_bootstrap_session':True,'unchanged_controller_functions':['load_packet','run_queue'],'packet_pins':len(packet['pins']),'candidate_pins':len(c['pins']),'provider_calls':0,'numerical_calls':0,'wall_seconds':time.monotonic()-start}
+ Path(__file__).with_suffix('.json').write_text(json.dumps(out,indent=2,sort_keys=True)+'\n');print(json.dumps(out,sort_keys=True))
+if __name__=='__main__':
+ if not __debug__:raise RuntimeError('Nonoptimized audit required')
+ resource.setrlimit(resource.RLIMIT_CPU,(20,20));signal.alarm(30);main()

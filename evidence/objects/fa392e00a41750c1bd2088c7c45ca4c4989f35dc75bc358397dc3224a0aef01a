@@ -1,0 +1,18 @@
+{
+  "actual_outcome_claimed": false,
+  "files_sha256": {
+    "README.md": "77dcc494e572fdda9566382fe7d8c6a8a36491557a6f5a4935e82c2d0714425f",
+    "common.py": "6e5770522d55fecd9c8b3ecd6ed06dd1fb6905fa757f18272366269e3f20bf69",
+    "conditional.py": "eca050d1478efad4702e7df8527205986cf8c7d8da535a62d991884a63bc9503",
+    "execution_fixture.py": "0acb7ee4a3f23a05e186e893bb07e25c954ffa7adcc974c6ee8c2ee17506c805",
+    "join32.py": "f53737f6854ca4fd5552ebb29bfa4e3a5b0c8d85ac8dc692e5a1c2a314b262ac",
+    "join32.py.diff": "72aaaea6e5896f2f30299de6df04b170e7be2f9998a2511a56b60d7d68061862",
+    "join_check.py": "cfc3c217c3f5bded85f3a8de0b2e60a6ebb06edead96d6423468979c76c57868",
+    "lineage.json": "4b6a3f8f2e412530ee485adcd7f5312c2b1347e7c3e4f93aef096802cc2cb57d"
+  },
+  "schema_version": 1,
+  "source_sha256": "f53737f6854ca4fd5552ebb29bfa4e3a5b0c8d85ac8dc692e5a1c2a314b262ac",
+  "status": "SOURCE_REVIEW_CANDIDATE_ONLY",
+  "theorem_promotion": false,
+  "validation_run_sha256": "4094ee81b8ff2b7e160f466a9830a03a8bb4078eb9e9cadf03d962698289b09d"
+}

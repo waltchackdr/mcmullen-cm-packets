@@ -1,0 +1,71 @@
+"""Bounded diagnostic of terminal retained data; no mathematical adoption."""
+import hashlib
+import json
+from pathlib import Path
+from certificate_reader_candidate import check_records
+
+ROOT = Path(__file__).resolve().parents[2]
+BASE = ROOT/'experiments/bc_jacobian_v147'
+def sha(raw): return hashlib.sha256(raw).hexdigest()
+def require(ok, message):
+    if not ok: raise ValueError(message)
+def bounded(path):
+    require(path.is_file() and not path.is_symlink() and path.stat().st_size <= 2000000,'File bound')
+    data=path.read_bytes();require(len(data)<=2000000,'Read bound');return data
+
+def inspect(run, approval_path, plan_path):
+    control=run/'controller'
+    outcome=json.loads(bounded(control/'outcome.json'))
+    require(outcome['remote_stage']=='PIPELINE_ENDED','Not terminal pipeline')
+    ref=outcome['retention'];raw=bounded(Path(ref['receipt']))
+    require(sha(raw)==ref['sha256'],'Retention hash')
+    receipt=json.loads(raw);require(not receipt['rejected'],'Rejected artifacts')
+    artifacts=receipt['artifacts'];data={}
+    require(len(artifacts)<=50,'Artifact count')
+    for name, item in artifacts.items():
+        blob=bounded(control/'retained/blobs'/(item['sha256']+'.blob'))
+        require(len(blob)==item['bytes'] and sha(blob)==item['sha256'],'Artifact integrity')
+        data[name]=blob
+    approval_raw=bounded(approval_path)
+    approval=json.loads(approval_raw)
+    review=approval['review'];require(sha(bounded(ROOT/review['path']))==review['sha256'],'Review hash')
+    for name,digest in approval['pins'].items():require(sha(bounded(ROOT/name))==digest,'Changed adoption pin')
+    packet_raw=bounded(ROOT/approval['packet']['path']);require(sha(packet_raw)==approval['packet']['sha256'],'Packet hash')
+    packet=json.loads(packet_raw)
+    snapshot=json.loads(bounded(control/'latest_snapshot.json'))
+    require(snapshot['artifacts']==artifacts,'Snapshot differs from retained map')
+    require(snapshot['manifest_sha256']==packet['code']['job_manifest.json']['sha256'],'Manifest identity')
+    for name,ref in packet['uploads'].items():
+        require(snapshot['uploaded'][name]=={'bytes':ref['bytes'],'sha256':ref['sha256']},'Upload identity')
+    plan_raw=bounded(plan_path);plan=json.loads(plan_raw);ph=sha(plan_raw)
+    manifest_ref=packet['uploads']['source_manifest']
+    source_manifest_raw=bounded(ROOT/manifest_ref['path'])
+    require(sha(source_manifest_raw)==manifest_ref['sha256'],'Source manifest identity')
+    require(json.loads(source_manifest_raw)['plan_sha256']==ph,'Archive plan authority')
+    started=json.loads(data['benchmark/started.json'])
+    require(started['plan_sha256']==ph and started['worker_sha256']==plan['pins']['experiments/bc_jacobian_v147/certificate_worker_candidate.py'],'Worker identity')
+    runtime=sha(data['setup/runtime.json'])
+    runtime_unchanged=(runtime=='b85ced7085eda60dd5c8d48850dad8a65a94d215ec17b81b69495d959ace3435')
+    summary=json.loads(data['benchmark/summary.json']);require(summary['plan_sha256']==ph,'Summary identity')
+    results=[]
+    for i,task in enumerate(plan['tasks']):
+        prefix=f'benchmark/task{i:02d}/';result=json.loads(data[prefix+'result.json'])
+        require(result['task']==task and summary['results'][i]==result,'Task/summary mismatch')
+        for name in ('stdout.jsonl','stderr.txt'):
+            raw=data[prefix+name];require(result['artifacts'][name]=={'bytes':len(raw),'sha256':sha(raw)},'Task artifact mismatch')
+        row={'task_index':i,'model':task['model'],'child_status':result['status'],'returncode':result['returncode']}
+        try:
+            records=[json.loads(line) for line in data[prefix+'stdout.jsonl'].splitlines() if line.strip()]
+            row['structural_check']=check_records(records,plan,i,ph)
+        except (ValueError,KeyError,TypeError) as error:
+            row['structural_error']=str(error)
+        results.append(row)
+    return {'status':'DIAGNOSTIC_ONLY_NO_MATHEMATICAL_ADOPTION','execution_adoption_sha256':sha(approval_raw),'runtime_sha256':runtime,'runtime_unchanged':runtime_unchanged,'plan_sha256':ph,'retention_sha256':outcome['retention']['sha256'],'pipeline':json.loads(data['pipeline.json']),'tasks':results}
+
+if __name__=='__main__':
+    import argparse,resource,signal
+    resource.setrlimit(resource.RLIMIT_CPU,(20,20));signal.alarm(30)
+    parser=argparse.ArgumentParser()
+    for name in ('run','approval','plan'):parser.add_argument(name,type=Path)
+    args=parser.parse_args()
+    print(json.dumps(inspect(args.run.resolve(),args.approval.resolve(),args.plan.resolve()),indent=2,sort_keys=True))

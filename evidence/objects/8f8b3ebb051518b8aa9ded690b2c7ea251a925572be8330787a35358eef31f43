@@ -1,0 +1,237 @@
+#!/usr/bin/env python3
+"""Distinct150+63+2 evidence conjunction; never rewrite either failed cohort."""
+import argparse
+import hashlib
+import importlib.util
+from pathlib import Path
+
+HERE=Path(__file__).absolute().parent
+COMMON_SHA = '521d5756438ba1b8faa569777fd90376eadd323b27c4e7314b7aa76a54adff13'
+if hashlib.sha256((HERE/'common.py').read_bytes()).hexdigest() != COMMON_SHA:
+    raise ValueError('Unreviewed common evidence helper')
+spec=importlib.util.spec_from_file_location('legacy_conjunction_common',HERE/'common.py')
+C=importlib.util.module_from_spec(spec);spec.loader.exec_module(C)
+RECOVER_SHA='87197a98259240701d8f8cb63181dfd99941baaf66f17f0aa22b56d5c74cba22'
+V87_EXECUTOR_SHA='6f5414078bacbce64c7bb56ba4ff8952bcb40dbbcba20f503eea4847de1e1755'
+OLD_JOIN_SHA='fdc1e81775454f4e1bf9d1e09905b30b4f43b98f6732c600a01355d0dd577349'
+V87_AUDITOR_SHA='d377a50ff79ce247b33f31bc7781230387c62ffc41fea2a304fe3f09e7ee8182'
+NEW_KEYS=('r83-1-04','r83-1-11')
+FAILED=tuple(range(48,56))+(118,)
+PINS={
+ 'legacy_audit':'fe6a4a7266d3e8b40b0e6edd858da9d5b1f48a3c62d60a056316fd32c505d2ce',
+ 'legacy_150_review':'69c0955f2d7ddc9191019c8c9bf0e042d5e7413633f8cd1cc88c756f0ccf348b',
+ 'legacy_conjunction_policy':'f90c022957b4e33d60b56d29c9132b5cdc48b474861dc9a34ff900c8c4ff1dba',
+ 'legacy_eight_review':'1a6ade13b3fb3f58797144f9ff4b7f78b366183756cfe8f7ff7245b68edc7b69',
+ 'legacy_state':'0da82aebdf83bc8eaa73cb5eee07b02655e6e77f79cba4894a0525df0514c921',
+ 'legacy_source_manifest':'d5cc8cdcab982e930c46e523aad544362f2f66cb293d13996fb304e4e9e19606',
+ 'legacy_snapshot':'e6aa5112a8465180d50e4a2b187f632d5f6b4196bb7e3d39d020d32c1810d2c0',
+ 'legacy_runtime':'816f3def8fa6a4a84e9931dce54f231e9b575f8de5eff7e3dfae6f95e8b8d4dc',
+ 'recovery63_review':'506e47c32457c839e324d9e0bdfa4b59bbefa38b77e289f45100179d72bfbfd6',
+ 'recovery_progress':'8ea5a1da791f2365e9e242cc6e0bad4085077ddce130efe184afaadc687e2859',
+ 'recovery_initial_state':'af650a831c29195cf5901b0e95294917d1b2541225200588670b5ffeea42efe0',
+ 'recovery_approval':'1a29c08107be9826d461f2e6c5b02316096191050653f9f0065e5992067d1632',
+ 'recovery_runtime':'b53a5cffa60a7313ebc7dee1f28461b42968e58db0d99cc51f0c70b612fbdccd',
+ 'partition_review':'f9341f514a2850a7fc02d916e86ab4aa24c3b65111f71666b0d6d390da15eb05',
+ 'coverage':'cac499e1d40ed498e0d8e2c3f08d34a52ef726856bac4606332d483c72d024b6',
+ 'coverage_review':'3879881003484d43773e8112935a85baf2849486c3f801f27e4e660d57b2b386',
+ 'ambient':'c0e84da6c266c087cbce65a6e8aca8e3f30350ce56b5a1089c4ae4978a381f36',
+ 'portable_plan':'568b8ad67ec1bc2033a224ae66e1f3a85c47138f59a3367b86be87c534dcbcae',
+}
+V87_NAMES=('v87_audit','v87_state','v87_approval','v87_runtime','v87_receipt','v87_inventory',
+           'v87_producer_completion','v87_observer_completion','v87_outcome_review')
+REQUIRED=tuple(PINS)+V87_NAMES+('conjunction_policy_amendment','legacy_outcome_review')
+
+
+def old150(o,h):
+    report,state,manifest,snapshot=[o[k] for k in ('legacy_audit','legacy_state','legacy_source_manifest','legacy_snapshot')]
+    review=o['legacy_150_review'];eight=o['legacy_eight_review']
+    C.need(report['status']=='150_ORIGINAL_SUCCESSFUL_EXECUTIONS_AUTHENTICATED_NO_GLOBAL_END_GUARD' and
+           review['status']=='PASS_FIXED_150_EXECUTION_EVIDENCE_REPORT_NOT_LEGACY_ADOPTION' and
+           review['actual_report_independently_reproduced'] is True and review['report_sha256']==h['legacy_audit'] and
+           review['policy_sha256']==h['legacy_conjunction_policy'],'Actual hardened150 evidence')
+    C.need(state['status']=='MATH_PHASE_FAILED_OR_INCOMPLETE' and report['old_pool_end_guard_status']=='NOT_EXECUTED_AFTER_FAILURE'
+           and all(report[k] is False for k in ('original159_pass','old_source_unchanged_proved','old_runtime_unchanged_proved')),
+           'Preserve old failure and missing endguards')
+    C.need(report['prior_state_sha256']==h['legacy_state'] and report['coverage_sha256']==h['coverage'],'Old report anchors')
+    C.need(state['runtime_sha256']==h['legacy_runtime'],'Original launch runtime, not a reconstructed endguard')
+    C.need(snapshot['commands']==159 and snapshot['commit']==state['source_commit'] and
+           snapshot['manifest_sha256']==state['source_manifest_sha256']==h['legacy_source_manifest'] and
+           state['snapshot_sha256']==h['legacy_snapshot'],'Committed source snapshot')
+    registered=manifest['registered_commands'];rows=state['rows'];records=report['records']
+    C.need(rows==state['registered_command_vectors'] and len(rows)==len(registered)==159 and
+           [r['index'] for r in rows]==[r['index'] for r in registered]==list(range(1,160)), 'Exact159 original vectors')
+    C.need(tuple(r['index'] for r in rows if r['status']!='COMPLETE')==FAILED,'Exact nine predecessor failures')
+    index={r['index']:r for r in records}
+    C.need(len(index)==len(records)==150 and set(index)==set(range(1,160))-set(FAILED),'Exact150 retained records')
+    bindings={}
+    for actual,expected in zip(rows,registered,strict=True):
+        C.need(actual['argv'][1]=='/workspace/v81-release159-source-cohort1/'+expected['command'][1] and
+               actual['argv'][2:]==expected['command'][2:] and actual['label']==expected['label'],'Original argv identity')
+        C.need(C.valid_hash(actual['log_sha256']),'Every original log, including failure, retained')
+        if actual['index'] in FAILED:continue
+        item=index[actual['index']]
+        C.need(type(actual['returncode']) is int and actual['returncode']==0 and item['argv']==actual['argv'] and
+               item['log_sha256']==actual['log_sha256'] and item['driver']==expected['command'][1] and
+               item['driver_sha256']==manifest['files'][item['driver']]['sha256'] and
+               C.valid_hash(item['intent_sha256']) and C.valid_hash(item['lease_sha256']),'Retained original complete execution')
+        bindings[item['index']]={'kind':'RETAINED_ORIGINAL_SUCCESS','evidence':item}
+    C.need(eight['status']=='PASS_EIGHT_INDIVIDUAL_COMPLETE_EXECUTIONS_WITH_SEPARATE_PRIOR_RAW_EVIDENCE' and
+           eight['state_sha256']==h['legacy_state'] and eight['prior_raw_canonical_files_rehashed']==64 and
+           eight['current_cloud_raw_artifacts_retained'] is False and eight['pool_final_source_runtime_guard_claimed'] is False,
+           'Lost current temporary artifacts remain explicit')
+    C.need(len(eight['records'])==8 and {r['index'] for r in eight['records']}==set(range(148,154))|{156,157},'Eight prior raw records')
+    for r in eight['records']:C.need(r['log_sha256']==index[r['index']]['log_sha256'],'Prior raw/current execution distinction')
+    return bindings
+
+
+def recovery63(o,h,plans):
+    review,progress,initial,approval=[o[k] for k in ('recovery63_review','recovery_progress','recovery_initial_state','recovery_approval')]
+    C.need(review['status']=='PASS_RETAINED63_INDIVIDUAL_EXECUTION_METADATA_NOT_COHORT_OR_ADOPTION' and
+           review['all_result_intent_lease_log_completed_mask_seals_verified'] is True and
+           review['full_terminal_parser_reexecuted_without_math'] is True,'Actual63 complete-log review')
+    for field,key in [('initial_state_sha256','recovery_initial_state'),('progress_sha256','recovery_progress'),('approval_sha256','recovery_approval')]:
+        C.need(review[field]==h[key],'Actual63 predecessor seal')
+    C.need(review['producer_source_sha256']==RECOVER_SHA and review['cohort65_pass'] is False and
+           review['cohort_final_source_guard_established'] is False and review['cohort_final_runtime_guard_established'] is False,
+           'No reconstructed old65 final guards')
+    C.need(initial['status']!='RECOVERY_65_FULL_JOBS_COMPLETE_REQUIRES_REVIEW' and progress['legacy159_pass'] is False,
+           'Do not reinterpret old state/progress')
+    C.need(initial['runtime_sha256']==h['recovery_runtime'] and initial['approval_sha256']==h['recovery_approval'] and
+           initial['prior_state_sha256']==h['legacy_state'] and initial['source_manifest_sha256']==h['legacy_source_manifest'],
+           'Old63 launch runtime/source identity')
+    rows=progress['rows']; by_key={r['key']:r for r in rows};planned={r['key']:r for r in plans}
+    C.need(len(rows)==len(by_key)==65 and set(by_key)==set(planned),'Exact65 obligation inventory')
+    complete={k:r for k,r in by_key.items() if r['status']=='COMPLETE'}
+    C.need(len(complete)==63 and sorted(complete)==sorted(review['completed_keys']) and
+           set(planned)-set(complete)==set(NEW_KEYS),'Only two unresolved paths replaced')
+    for key,row in by_key.items():
+        p=planned[key]
+        C.need(all(row[k]==v for k,v in p.items() if k!='status'),'Same frozen per-mask argv')
+        C.need(C.valid_hash(row['log_sha256']),'All65 full logs, including failed two')
+        if key in complete:
+            C.need(type(row['returncode']) is int and row['returncode']==0 and C.valid_hash(row['completed_mask_sha256']),
+                   'Full individual completion only')
+    C.need([by_key[k]['returncode'] for k in NEW_KEYS]==[-15,-24],'Exact old two failures')
+    C.need({r['key']:r['log_sha256'] for r in review['incomplete']}=={k:by_key[k]['log_sha256'] for k in NEW_KEYS},
+           'Failed two logs cannot disappear')
+    return complete,by_key
+
+
+def v87(o,h,old_rows,plans):
+    report,state,approval=o['v87_audit'],o['v87_state'],o['v87_approval']
+    C.need(report['status']=='V87_TWO_WHOLE_JOB_FULL_LOG_AUDIT_PASS_PENDING_OUTCOME_REVIEW' and report['keys']==list(NEW_KEYS)
+           and report['completed_jobs']==2 and report['auditor_sha256']==V87_AUDITOR_SHA
+           and report['common_sha256']==COMMON_SHA,'Actual new two full-log audit')
+    C.need(state['status']=='TWO_WHOLE_JOBS_COMPLETE_REQUIRES_REVIEW' and state['completed_jobs']==2 and
+           state['full_source_guard_after'] is True and state['runtime_guard_after'] is True,'Fresh whole pool guards')
+    for field,key in [('approval_sha256','v87_approval'),('runtime_sha256','v87_runtime')]:C.need(state[field]==h[key],'New source/runtime anchor')
+    C.need(state['source_manifest_sha256']==h['legacy_source_manifest'] and state['executor_sha256']==V87_EXECUTOR_SHA,
+           'Unchanged old mathematical source closure')
+    C.need(report['source_archive_sha256']==o['legacy_audit']['source_archive_sha256'],
+           'Identical immutable mathematical archive across cohorts')
+    for obj in (report,state):
+        for flag in ('original159_pass' if obj is report else 'legacy159_pass','old65_pass','theorem_promotion'):
+            C.need(obj[flag] is False,'No retroactive cohort PASS')
+    for key,name in [('state','v87_state'),('approval','v87_approval'),('runtime','v87_runtime'),('manifest','legacy_source_manifest'),
+                     ('receipt','v87_receipt'),('inventory','v87_inventory'),('producer_completion','v87_producer_completion'),
+                     ('observer_completion','v87_observer_completion')]:
+        C.need(report['binds'][key]==h[name],'Fresh auditor exact evidence binding')
+    rows={r['key']:r for r in state['rows']};records={r['key']:r for r in report['records']}
+    C.need(len(state['rows'])==len(report['records'])==len(rows)==len(records)==2 and set(rows)==set(NEW_KEYS),'No duplicate or substituted new job')
+    for key,row in rows.items():
+        p=plans[key]
+        C.need(all(row[k]==v for k,v in p.items() if k not in ('status','argv')) and
+               row['argv'][1:]==p['argv'][1:] and row['argv'][0]==approval['python_invocation'],'Identical whole mathematical argv')
+        C.need(row['status']=='COMPLETE' and type(row['returncode']) is int and row['returncode']==0 and
+               (row['cpu_soft'],row['cpu_hard'])==(7200,7201),'Exact full successful job')
+        C.need(row['predecessor']=={k:old_rows[key][k] for k in ('key','status','returncode','log_sha256','cpu_soft','directory')},
+               'New row retains predecessor failure')
+        for field in ('original_index','family','mask','backend','log_sha256','completed_mask_sha256'):
+            C.need(records[key][field]==row[field],'New audited row differs')
+    review=o['v87_outcome_review']
+    required=('v87_audit','v87_state','v87_approval','v87_runtime','v87_receipt','v87_inventory',
+              'v87_producer_completion','v87_observer_completion')
+    C.need(review['status']=='PASS_V87_TWO_CLOSED_EXECUTIONS_AND_RETENTION_NOT_ADOPTION' and
+           review['binds']=={k:h[k] for k in required} and review['normal_closure_and_retention_verified'] is True and
+           review['source_runtime_and_full_log_semantics_reviewed'] is True and review['theorem_promotion'] is False,
+           'Actual new two outcome/retention review, not source gate')
+    return rows
+
+
+def evaluate(o,h,recover,old_join):
+    # Validate known evidence even when later gates are missing.
+    bindings=old150(o,h) if all(k in o for k in ('legacy_audit','legacy_state','legacy_source_manifest','legacy_snapshot',
+                                                'legacy_150_review','legacy_eight_review','legacy_conjunction_policy')) else None
+    plans=None;retained=None;prior=None
+    if 'legacy_source_manifest' in o and 'recovery_approval' in o:
+        a=o['recovery_approval'];plans=recover.plan(o['legacy_source_manifest']['registered_commands'],Path(a['source']),a['python_invocation'])
+        if all(k in o for k in ('recovery63_review','recovery_progress','recovery_initial_state','recovery_runtime')):
+            retained,prior=recovery63(o,h,plans)
+    labels=o['portable_plan']['efficiency']['proposed_full_negative_control_labels'] if 'portable_plan' in o else []
+    C.need(not labels or len(labels)==len(set(labels))==16,'Fixed16 representative inventory')
+    missing=sorted(set(REQUIRED)-set(o))
+    base={'schema_version':1,'original159_pass':False,'old65_pass':False,'old_endguards_reconstructed':False,
+          'theorem_promotion':False,'full_release':False,'current_tmp_raw_retention_complete':False,
+          'fixed_representative_required_jobs':32,'fixed_representative_labels':labels,
+          'representative_policy_reduced_or_satisfied_by_legacy':False,'input_sha256':h}
+    if missing:
+        return {**base,'status':'LEGACY_150_63_2_CONJUNCTION_BLOCKED','missing_gates':missing,
+                'verified_retained_original_commands':0 if bindings is None else len(bindings),
+                'verified_old_recovery_completions':0 if retained is None else len(retained)}
+    partition=o['partition_review']
+    C.need(partition['status']=='PASS_CONDITIONAL_LEGACY_WHOLE_MASK_PARTITION_PROOF' and partition['replacement_jobs']==65,
+           'Exact same-mask decomposition human proof')
+    fresh=v87(o,h,prior,{r['key']:r for r in plans})
+    combined={**retained,**fresh};C.need(len(combined)==65 and not set(retained)&set(fresh),'63+2 disjoint cover')
+    for key,row in combined.items():
+        binding=bindings.setdefault(row['original_index'],{'kind':'CROSSCOHORT_WHOLE_SINGLETON_CONJUNCTION','jobs':[]})
+        binding['jobs'].append({'cohort':'V87_FRESH_TWO' if key in fresh else 'V84_RETAINED63','row':row})
+    C.need(set(bindings)==set(range(1,160)) and all(len(bindings[i]['jobs'])==(1 if i==118 else 8) for i in FAILED),
+           'Every original registered obligation restored exactly')
+    policy=o['conjunction_policy_amendment']
+    policy_deps=('legacy_audit','legacy_150_review','legacy_conjunction_policy','legacy_eight_review','legacy_runtime',
+                 'recovery63_review','recovery_initial_state','recovery_progress','recovery_runtime',
+                 'partition_review','legacy_source_manifest','legacy_snapshot')
+    C.need(policy['status']=='ACCEPTED_CONDITIONAL_150_63_2_EXECUTION_EVIDENCE_POLICY' and
+           policy['binds']=={k:h[k] for k in policy_deps} and policy['old150_immutable_source_runtime_assumption_accepted'] is True and
+           policy['old63_immutable_source_runtime_assumption_accepted'] is True and policy['old_endguards_reconstructed'] is False and
+           policy['prior_raw_current_execution_distinguished'] is True and policy['theorem_promotion'] is False,
+           'Explicit revised historical operational assumption policy')
+    _,historical,_=old_join.coverage_partition(o['ambient'],o['coverage'],o['coverage_review'])
+    mapping={}
+    for label,row in historical.items():
+        mapping[label]={'kind':'COLLECTIVE32' if row['transfer']=='R83_PIC1_COLLECTIVE_POPULATION' else 'POINTWISE',
+                        'legacy_command_indices':[c['index'] for c in row['commands']],
+                        'command_evidence':{str(c['index']):bindings[c['index']] for c in row['commands']}}
+    # The separate hostile review binds every actual input except itself. It
+    # authorizes this conjunction's evidence, not registration or a theorem.
+    review=o['legacy_outcome_review']
+    C.need(review['status']=='PASS_REVIEWED_150_63_2_EQUIVALENT_COVER_NOT_ORIGINAL_SUITE_PASS' and
+           review['binds']=={k:v for k,v in h.items() if k!='legacy_outcome_review'} and
+           review['actual_execution_source_runtime_and_retention_reviewed'] is True and
+           review['original159_pass'] is False and review['old65_pass'] is False and review['theorem_promotion'] is False,
+           'Final actual conjunction outcome review required')
+    return {**base,'status':'REVIEWED_LEGACY_150_PLUS_63_PLUS_2_EQUIVALENT_COVER_NOT_PROMOTION',
+            'missing_gates':[],'original_registered_obligations':159,'completed_executions':215,
+            'original150':150,'retained_recovery63':63,'fresh_whole_jobs':2,'command_bindings':bindings,
+            'first_target_historical_116':mapping,'failed_history':{
+                'original_nine':[r for r in o['legacy_state']['rows'] if r['index'] in FAILED],
+                'old_recovery_two':[prior[k] for k in NEW_KEYS]},
+            'whole_packet_final_join_still_required':True}
+
+
+def main():
+    p=argparse.ArgumentParser(description=__doc__)
+    for name in ('root','inputs','recover-source','old-join-source','output'):p.add_argument('--'+name,type=Path,required=True)
+    a=p.parse_args();config=C.read(a.inputs);C.need(type(config['schema_version']) is int and config['schema_version']==1,'Input schema')
+    before={p:C.sha(p) for p in (a.inputs,Path(__file__),HERE/'common.py',a.recover_source,a.old_join_source)}
+    e=C.Evidence(a.root,config['references'],PINS)
+    recover=C.load(a.recover_source,RECOVER_SHA,'frozen_legacy_partition_only')
+    previous=C.load(a.old_join_source,OLD_JOIN_SHA,'frozen_first_target_population_only')
+    result=evaluate(e.objects,e.seals,recover,previous)
+    result['auditor_sha256']=before[Path(__file__)];result['common_sha256']=before[HERE/'common.py']
+    e.recheck();C.need(all(C.sha(p)==h for p,h in before.items()),'Join source/input changed')
+    C.write_new(a.output,result,[*e.paths.values(),*before]);print(result['status'])
+
+
+if __name__=='__main__':main()

@@ -1,0 +1,97 @@
+"""Recover only complete tasks from the closed failed continuation10; never adopt.
+Specific failure path, separate from unchanged whole-session collector.
+"""
+import argparse,hashlib,importlib.util,json,resource,signal,sys
+from pathlib import Path
+ROOT=Path(__file__).resolve().parents[2]
+def load_module(name,path):
+    spec=importlib.util.spec_from_file_location(name,ROOT/path)
+    module=importlib.util.module_from_spec(spec);spec.loader.exec_module(module);return module
+helpers=load_module('retained162','experiments/s_order_census_v162/inspect_retained_candidate.py')
+worker=load_module('theta164','experiments/s_order_theta_v164/worker_candidate.py')
+checked,read_json=helpers.checked,helpers.read_json
+successful_results=worker.successful_results
+
+def inspect(authority,expected,controller,output):
+    if not __debug__:raise RuntimeError('Assertions required')
+    approval=read_json(authority,expected)
+    assert approval['status']=='INDEPENDENTLY_ACCEPTED_V150_SESSION'
+    for p,h in approval['pins'].items():checked(ROOT/p,h)
+    outcome=read_json(controller/'outcome.json');cleanup=read_json(controller/'cleanup.json')
+    assert outcome=={'exception_type':'ValueError','mathematical_conclusion':None,'phase':'WORKLOAD','status':'EXECUTION_FAILED','uncertain_create_outcome':False}
+    progress=read_json(controller/'session_progress.json')
+    assert progress['completed_jobs']==1 and len(progress['results'])==1
+    skipped=[]
+    assert cleanup['provider_absence_verified'] is True
+    output.mkdir(parents=True,exist_ok=False)
+    records=[];runtimes=[];counts={};requested=[]
+    for job,ref in enumerate(approval['jobs'][:1]):
+        packet=read_json(ROOT/ref['path'],ref['sha256'])
+        source=read_json(ROOT/packet['uploads']['source_manifest']['path'],packet['uploads']['source_manifest']['sha256'])
+        manifest=read_json(ROOT/packet['code']['job_manifest.json']['path'],packet['code']['job_manifest.json']['sha256'])
+        plan=read_json(ROOT/Path(ref['path']).parent/'certificate_plan_candidate.json',source['plan_sha256'])
+        assert plan['pair_start']==24 and plan['pair_count']==16
+        for p,h in plan['pins'].items():assert source['files'][p]['sha256']==h
+        root=controller/f'jobs/job{job}/controller';jobout=read_json(root/'outcome.json')
+        assert jobout==progress['results'][job] and jobout['remote_stage']=='PIPELINE_ENDED' and jobout['returncode']==1
+        retained=jobout['retention'];receiptpath=Path(retained['receipt']).resolve()
+        assert receiptpath.is_relative_to(root.resolve()/'retained')
+        receipt=read_json(receiptpath,retained['sha256'])
+        assert not receipt['rejected'] and set(receipt['missing'])<={'guard_delete.json'}
+        blobs={name:checked(root/'retained/blobs'/(r['sha256']+'.blob'),r['sha256'],r['bytes']) for name,r in receipt['artifacts'].items()}
+        started=json.loads(blobs['benchmark/started.json']);summary=json.loads(blobs['benchmark/summary.json']);pipeline=json.loads(blobs['pipeline.json'])
+        assert started['plan_sha256']==summary['plan_sha256']==source['plan_sha256']==manifest['transport']['plan_sha256']
+        assert started['worker_sha256']==source['files']['experiments/bc_jacobian_v147/certificate_worker_candidate.py']['sha256']
+        assert summary['complete_observation_count'] is None and len(summary['results'])==8
+        assert summary['mathematical_adoption'] is False
+        assert pipeline['status']=='PIPELINE_FAILED' and pipeline['benchmark_returncode']==1 and pipeline['setup_returncode']==0
+        runtime=blobs['setup/runtime.json'];setup=json.loads(blobs['setup/setup_complete.json'])
+        assert hashlib.sha256(runtime).hexdigest()==setup['runtime_sha256']==pipeline['runtime_sha256']
+        runtimes.append({'job':job,'sha256':hashlib.sha256(runtime).hexdigest(),'runtime':json.loads(runtime)})
+        extracted=output/f'job{job}';extracted.mkdir()
+        for task,spec in enumerate(plan['tasks']):
+            result=json.loads(blobs[f'benchmark/task{task:02}/result.json'])
+            assert result==summary['results'][task] and result['task']==spec
+            raw=blobs[f'benchmark/task{task:02}/stdout.jsonl']
+            folder=extracted/f'task{task:02}';folder.mkdir();(folder/'stdout.jsonl').write_bytes(raw)
+        for task,spec in enumerate(plan['tasks']):
+            result=summary['results'][task]
+            if task==7:
+                assert result['returncode']==-9 and spec['catalog_index']==6
+                skipped.append({'job':job,'task':task,'reason':'Incomplete killed child; entire prefix excluded'})
+                continue
+            assert result['returncode']==0
+            requested.extend((spec['catalog_index'],i) for i in spec['pair_indices'])
+            raw=blobs[f'benchmark/task{task:02}/stdout.jsonl'];lines=raw.splitlines()
+            values=[json.loads(line) for line in lines];index=spec['catalog_index']
+            assert len(values)==len(spec['pair_indices'])+2
+            assert values[0]['stage']=='EXACT_PERIOD_INPUT' and values[-1]['stage']=='BATCH_COMPLETE'
+            assert values[-1]['pair_indices']==spec['pair_indices']
+            assert all(v['task_index']==task and v['catalog_index']==index for v in values)
+            assert [v['pair_index'] for v in values[1:-1]]==spec['pair_indices']
+            count=counts.setdefault(index,{'observations':0,'finite':0,'reported_excluding_zero':0,'seconds':0,'tasks':0})
+            count['observations']+=len(values)-2;count['finite']+=sum(v['finite'] for v in values[1:-1])
+            count['reported_excluding_zero']+=sum(v['excludes_zero'] for v in values[1:-1])
+            count['seconds']+=values[-1]['total_seconds'];count['tasks']+=1
+            inputpath=output/f'model{index:03}_job{job}_task{task:02}_input.json';inputpath.write_bytes(lines[0]+b'\n')
+            for n,(line,value) in enumerate(zip(lines[1:-1],values[1:-1]),start=2):
+                path=output/f'model{index:03}_pair{value["pair_index"]:03}.json';assert not path.exists();path.write_bytes(line+b'\n')
+                records.append({'catalog_index':index,'pair_index':value['pair_index'],'path':str(path),
+                    'sha256':hashlib.sha256(line+b'\n').hexdigest(),'input_path':str(inputpath),
+                    'input_file_sha256':hashlib.sha256(lines[0]+b'\n').hexdigest(),
+                    'job':job,'task':task,'line':n,'stdout_sha256':hashlib.sha256(raw).hexdigest()})
+    assert sorted(counts)==[0,1,2,3] and len(records)==64
+    assert len(requested)==len(set(requested))==len(records)
+    assert {(v['catalog_index'],v['pair_index']) for v in records}==set(requested)
+    report={'status':'RECOVERED_COMPLETE_TASK_CANDIDATES_NOT_ADOPTED','skipped_tasks':skipped,'unstarted_jobs':[1],'authority_sha256':expected,'records':records,
+            'reported_counts':counts,'runtime_observations':runtimes,'provider_absence_verified':True,
+            'mathematical_adoption':False,'scope':'Raw retention/source/plan/task and complete stream extraction only. No mathematical interval or geometry validation; separate independent review required. Killed child prefix excluded; no session-success assertion.'}
+    (output/'inspection.json').write_text(json.dumps(report,indent=2)+'\n')
+    return {'status':report['status'],'observations':len(records),'reported_counts':counts,'output':str(output)}
+
+if __name__=='__main__':
+    resource.setrlimit(resource.RLIMIT_CPU,(20,20));signal.alarm(30)
+    p=argparse.ArgumentParser()
+    p.add_argument('--authority',type=Path,required=True);p.add_argument('--authority-sha256',required=True)
+    p.add_argument('--controller',type=Path,required=True);p.add_argument('--output',type=Path,required=True)
+    a=p.parse_args();print(json.dumps(inspect(a.authority,a.authority_sha256,a.controller,a.output)))

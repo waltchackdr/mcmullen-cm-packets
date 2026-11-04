@@ -1,0 +1,78 @@
+"""Bounded actual-discriminant orbit catalog; no160-model construction."""
+from itertools import combinations, product
+import hashlib
+import json
+from pathlib import Path
+import resource
+import signal
+
+BASE = Path(__file__).resolve().parent
+
+
+def rref(rows):
+    a = [[int(x) % 3 for x in row] for row in rows]
+    k = 0
+    for j in range(6):
+        p = next((i for i in range(k, len(a)) if a[i][j]), None)
+        if p is None:
+            continue
+        a[k], a[p] = a[p], a[k]
+        t = pow(a[k][j], -1, 3)
+        a[k] = [t*x % 3 for x in a[k]]
+        for i in range(len(a)):
+            if i != k:
+                t = a[i][j]
+                a[i] = [(x-t*y) % 3 for x, y in zip(a[i], a[k])]
+        k += 1
+        if k == len(a):
+            break
+    return tuple(tuple(row) for row in a[:k])
+
+
+def catalog(model):
+    gram = [[int(x) for x in row] for row in model['discriminant_gram']]
+    root = [[int(x) for x in row] for row in model['order7_action']]
+    real = [[int(x) for x in row] for row in model['real_subfield_action']]
+    pair = lambda v, w: sum(v[i]*gram[i][j]*w[j] for i in range(6) for j in range(6)) % 3
+    image = lambda a, h: tuple(tuple(sum(a[j][i]*row[i] for i in range(6)) % 3 for j in range(6)) for row in h)
+    all_h, subspaces = set(), 0
+    for piv in combinations(range(6), 3):
+        free = [(i,j) for i,p in enumerate(piv) for j in range(p+1,6) if j not in piv]
+        for values in product(range(3), repeat=len(free)):
+            rows = [[int(j == p) for j in range(6)] for p in piv]
+            for (i,j),value in zip(free,values):
+                rows[i][j] = value
+            subspaces += 1
+            if all(pair(rows[i], rows[j]) == 0 for i in range(3) for j in range(i)):
+                all_h.add(tuple(tuple(row) for row in rows))
+    assert subspaces == 33880 and len(all_h) == 1120
+    left = set(all_h)
+    models = []
+    while left:
+        h = min(left)
+        orbit, w = set(), h
+        for _ in range(7):
+            orbit.add(w)
+            w = rref(image(root, w))
+        assert w == h and len(orbit) == 7 and orbit <= left
+        left -= orbit
+        stable = rref(h+image(real,h)) == h
+        assert all((rref(g+image(real,g)) == g) == stable for g in orbit)
+        models.append({'index':len(models), 'endomorphism_order':'R' if stable else 'S',
+                       'lagrangian_rows':h, 'root_orbit':sorted(orbit)})
+    assert len(models) == 160
+    assert sum(m['endomorphism_order']=='R' for m in models) == 4
+    witness = rref(list(zip(*model['non_real_stable_lagrangian'])))
+    witness_index = next(m['index'] for m in models if witness in m['root_orbit'])
+    return {'status':'PROVISIONAL_EXACT_ACTUAL_DISCRIMINANT_CATALOG',
+            'subspaces':subspaces,'lagrangians':len(all_h),'polarized_orbits':160,
+            'R_orbits':4,'S_orbits':156,'one_model_witness_orbit':witness_index,
+            'models':models,'principal_lattice_models_built_here':0}
+
+
+if __name__ == '__main__':
+    resource.setrlimit(resource.RLIMIT_CPU, (20,20)); signal.alarm(30)
+    raw = (BASE/'model.json').read_bytes()
+    result = catalog(json.loads(raw))
+    result['input_model_sha256'] = hashlib.sha256(raw).hexdigest()
+    print(json.dumps(result,indent=2))

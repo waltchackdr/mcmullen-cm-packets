@@ -1,0 +1,64 @@
+#!/usr/bin/env python3
+"""Test whether the B x J7 unimodularity argument extends to B x D."""
+from collections import Counter
+from hashlib import sha256
+from itertools import combinations
+from math import gcd, lcm
+from pathlib import Path
+import json
+import sympy as sp
+
+ROOT = Path(__file__).resolve().parents[2]
+SOURCE = "experiments/fixed_field_cm_census_v98/primary.json"
+SOURCE_SHA = "2135edfe6a09b1a2c51a254f80e4570a761674e5be3208c15c549087f225917e"
+G = [1,5,11,13,17,19,23,25,29,31,37,41]
+
+
+def check():
+    raw = (ROOT / SOURCE).read_bytes()
+    assert sha256(raw).hexdigest() == SOURCE_SHA
+    orbits = json.loads(raw)["orbits"]
+    columns = [[1 if a*g % 42 in orbits[index]["representative"] else -1 for g in G]
+               for index in (0,2) for a in G[:6]]
+    full = sp.Matrix.hstack(*[sp.Matrix(c) for c in columns])
+    rows = list(full.T.rref()[1])
+    matrix = full[rows,:]
+    assert len(rows) == 6
+    minors = [{"columns":list(ix),"det":int(matrix[:,list(ix)].det())}
+              for ix in combinations(range(12),6)]
+    counts = Counter(abs(x["det"]) for x in minors)
+    assert counts == {0:290,32:512,64:120,128:2}
+    witness = None
+    for size in range(2,8):
+        for ix in combinations(range(12),size):
+            ns = matrix[:,list(ix)].nullspace()
+            if len(ns) != 1 or any(x == 0 for x in ns[0]):
+                continue
+            denom = lcm(*(int(x.q) for x in ns[0]))
+            v = [int(x*denom) for x in ns[0]]
+            common = gcd(*v)
+            v = [x//common for x in v]
+            if max(map(abs,v)) > 1:
+                expanded = [0]*12
+                for i,x in zip(ix,v): expanded[i] = x
+                assert full*sp.Matrix(expanded) == sp.zeros(12,1)
+                witness = {"columns":list(ix),"coefficients":v,"expanded":expanded,
+                           "minimality":"One-dimensional nullspace with no zero entry excludes a proper dependent subset."}
+                break
+        if witness: break
+    assert witness
+    return {"status":"FAILED_EXTENSION_OF_UNIT_CIRCUIT_METHOD_NOT_COUNTEREXAMPLE_TO_HC",
+            "input_sha256":{SOURCE:SOURCE_SHA},"pair":[0,2],"column_order":[[i,a] for i in (0,2) for a in G[:6]],
+            "full_weight_columns":columns,"independent_rows":rows,"maximal_minors":minors,
+            "absolute_minor_counts":dict(sorted(counts.items())),"nonunit_primitive_circuit":witness,
+            "interpretation":"All-powers reduction through squarefree unit circuits used for B x J7 does not extend unchanged. This makes no nonalgebraicity assertion.",
+            "theorem_promotion":False}
+
+
+if __name__ == "__main__":
+    import resource
+    import signal
+    resource.setrlimit(resource.RLIMIT_CPU,(20,22))
+    signal.alarm(30)
+    assert __debug__
+    print(json.dumps(check(),indent=2,sort_keys=True))

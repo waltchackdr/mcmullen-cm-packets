@@ -1,0 +1,119 @@
+% !TeX root = ../../quotients-and-descent.tex
+\section{The smaller-order Jacobian cases}
+The following criterion describes what a Jacobian in the $S$-order
+family would have to satisfy. Partial nonvanishing computations do not
+settle its $156$ polarized classes.
+
+\begin{proposition}[A structural theta filter for balanced cubic actions]
+\label{pp:prop:balancedtheta}
+Let $(Y,\lambda)$ be a complex principally polarized abelian sixfold
+with a polarized automorphism $\delta$ satisfying
+$\delta^2+\delta+1=0$ and tangent signature $(3,3)$.
+Its unique $\delta$-invariant symmetric principal line-bundle class
+has a unique effective divisor $\Theta$. Normalize the order-three
+bundle lift to fix the origin fiber. In $G=\ker(1-\delta)$ there
+are $261$ points with trivial fiber character and $234$ with each
+nontrivial character. The theta section has trivial character;
+therefore the $468$ points in the nontrivial sectors lie on $\Theta$.
+Every zero in the $261$-point sector is singular.
+\end{proposition}
+\begin{proof}
+Write $\Lambda=H_1(Y,\Z)$, let $E$ be its unimodular Riemann form,
+and let $F$ act as $\delta$. Since $(1-F)(2+F)=3$, the affine action
+on the torsor of symmetric representatives has a unique fixed class.
+Its semicharacter is $(-1)^{q(k)}$ for the invariant quadratic
+refinement $q$ of $E$ modulo two. In the Appell--Humbert convention
+$H(x,y)=E(x,Iy)-iE(x,y)$, where $I$ is the complex structure,
+the multiplier is
+$j_k(z)=(-1)^{q(k)}\exp(\pi H(z,k)+\pi H(k,k)/2)$;
+see \cite[\S1.2, pp.~7--8]{PolishchukTheta}.
+The lift $T(z,t)=(Fz,t)$ has order three and fixes the origin fiber.
+
+Put $N=F-I_{12}$. Fixed points are
+$x=-(F+2I_{12})k/3$, parametrized by $\Lambda/N\Lambda$.
+This quotient has order $3^6$ and is killed by three, since
+$N^2=-3F$ and $\det N=3^6$.
+Set $b(k)=E(k,Fk)$. Invariance of $q$ gives
+$q(k)=b(k)\pmod2$, and $E(3x,k)=b(k)$.
+The normalized fiber character is consequently
+\[
+ j_k(x)^{-1}
+ =\exp\bigl(\pi i(3q(k)+b(k))/3\bigr)
+ =\zeta_3^{2b(k)}.
+\]
+Modulo three, the polar form of $b$ is
+$B_b(k,l)=-E(k,Nl)$. Also $b(Nu)=0$ and $N^2=0$ modulo
+three, so $b$ descends to $\Lambda/N\Lambda$.
+Unimodularity makes the polar radical on $\Lambda/3\Lambda$
+equal to $\ker N=\operatorname{im}N$, both of dimension six.
+Thus the descended quadratic form is nondegenerate.
+
+Its six-variable Gauss sum is $+27$ or $-27$: diagonalization
+expresses it as a product of six sums $\pm i\sqrt3$.
+The inverse lift $\delta^*L\to L$ has the conjugate fiber sum,
+which has the same real value. Holomorphic Lefschetz
+\cite[Theorem~4.12]{AtiyahBott1968II} applies, with simple fixed
+points and complex denominator
+$(1-\zeta_3)^3(1-\zeta_3^2)^3=27$.
+Kodaira vanishing and Riemann--Roch give $H^{>0}(Y,L)=0$ and
+$h^0(Y,L)=1$. The section eigenvalue is therefore $+1$ or $-1$;
+its order divides three, so it must be $+1$. The Gauss sum is $27$.
+Character orthogonality gives $261,234,234$ for the three levels
+of $b$. Equivariance forces the nontrivial sectors to vanish.
+At a zero in the trivial sector, the first derivative intertwines
+the tangent action with the trivial fiber action. There is no
+invariant tangent covector, so this derivative vanishes as well.
+\end{proof}
+
+\begin{corollary}[Necessary Jacobian geometry of the smaller-order targets]
+\label{pp:cor:smallerjacobian}
+If any of the $156$ $S$-order principal classes of
+Theorem~\ref{pp:thm:fermatallquotients} is a canonical smooth-curve
+Jacobian, its curve is nonhyperelliptic, is a cyclic triple cover of
+$\mathbb P^1$ branched at eight points with inertia multiplicities
+four and four, and has full automorphism group $C_3$.
+For the invariant symmetric theta divisor, the fixed-point
+multiplicity distribution is
+\[
+\begin{array}{c|rrr}
+\text{fiber sector}&0&1&2\\\hline
+\text{trivial }(261)&213&0&48\\
+\text{nontrivial }(468)&0&456&12.
+\end{array}
+\]
+The origin is outside the divisor. Among the $130$ eligible nonzero
+opposite pairs there are then $106$ nonvanishing pairs and $24$
+double-zero pairs.
+\end{corollary}
+\begin{proof}
+Corollary~\ref{pp:cor:quotientweilhodge} supplies the integral cubic
+action and signature, and Theorem~\ref{pp:thm:fermatallquotients}
+gives the full polarized automorphism group $\mu_6$.
+The signed Torelli, Riemann--Hurwitz, cyclic-cover eigenspace and
+hyperelliptic arguments of Corollary~\ref{pp:cor:jacobianlist}
+therefore apply with the same hypotheses, giving the asserted curve
+geometry and full automorphism group.
+Proposition~\ref{pp:prop:trigonaltheta} gives total multiplicities
+$213,456,60$. Proposition~\ref{pp:prop:balancedtheta} puts all
+nonvanishing points in the trivial sector and makes its zeros
+singular. This gives the displayed table. At the origin, the three
+eigensheaf degrees in the proof of
+Proposition~\ref{pp:prop:trigonaltheta} are all $-1$, so its
+invariant theta characteristic has no section. Negation now gives
+the pair counts.
+\end{proof}
+
+The proof and regression are retained in
+\path{experiments/s_order_jacobian_v160/}. In particular, the split
+quadratic-form sign follows structurally from the balanced tangent
+action; it is not extrapolated from the four B/C matrices.
+No theta evaluation on these $156$ smaller-order classes is asserted,
+and their Jacobian status remains open. A certificate of nonvanishing
+on $107$ eligible nonzero opposite pairs would exclude the particular
+principal object tested; the B/C certificates do not supply such
+values on any new target.
+
+The classical two-prime isogeny decomposition appears in
+\cite[Eq.~(4.2) and Lem.~4.2]{Goodson2024}. The following argument
+computes the restriction on the specified embedded primitive factor.
+

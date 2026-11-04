@@ -1,0 +1,1944 @@
+% !TeX root = ../../quotients-and-descent.tex
+\section{The source factor and its polarization}
+\label{pp:sec:fermatintegral}
+Let $M=\mathbf Q(\zeta_{21})=\mathbf Q(\zeta_{42})$, with
+$\zeta_{42}=-\zeta_{21}^{11}$. The following construction separates a
+rational CM-type comparison from the principal polarizations classified in Section~\ref{q:jacobians}.
+The order-and-type census used here is proved in Theorem~\ref{pp:thm:tenprincipal}; its proof uses only the imported order arithmetic, not the quotient or descent conclusions.
+
+\begin{proposition}
+Let $H$ be the smooth projective curve with affine equation
+$y^2=x^{21}-1$. Put $\sigma(x,y)=(\zeta_{21}x,y)$ and let
+$\sigma_J([p-\infty])=[\sigma(p)-\infty]$ on $J(H)$.
+The connected image $A$ of a denominator-cleared primitive
+$\Phi_{21}$ idempotent is a simple abelian sixfold with
+$\operatorname{End}(A)=\mathcal O_M$. Its rational CM type belongs to the
+B/C orbit, but $A$ admits no principal polarization. In particular, the
+polarization restricted from $J(H)$ is nonprincipal.
+\end{proposition}
+
+\begin{proof}
+The double cover of the $x$-line has twenty-two simple branch points,
+including infinity, so $H$ has genus ten. A basis of holomorphic forms is
+$x^{i-1}dx/y$, $1\leq i\leq10$. At infinity the orders of $x,y,dx$ are
+$-2,-21,-3$, respectively, giving order $20-2i\geq0$ for these forms;
+at a finite branch point $dx/y$ is regular in the parameter $y$.
+The eigenvalue of $\sigma^*$ on the $i$th form is $\zeta_{21}^i$.
+The primitive characters are exactly
+\[
+T=\{1,2,4,5,8,10\}.
+\]
+Their complex conjugates complete the twelve primitive characters in
+rational cohomology. Abel--Jacobi equivariance identifies these with the
+cotangent eigenvalues of the stated $\sigma_J$; the derivative on the tangent space and its dual on cotangent
+forms have the same eigenvalues. This convention is essential:
+functorial pullback on $\operatorname{Pic}^0(H)$ would give $\sigma_J^{-1}$.
+
+The Chinese remainder decomposition of $\mathbf Q[t]/(t^{21}-1)$ gives
+a rational idempotent $e$ for $\Phi_{21}$, acting by $t=\sigma_J$.
+Choose an integer $N>0$ such that $Ne$ is an integral endomorphism.
+The image of this abelian-variety homomorphism is a connected abelian
+subvariety; its tangent space is the image of the derivative. Thus
+$A=\operatorname{im}(Ne)$ has dimension six. Its image does not depend on
+$N$, since multiplication by a nonzero integer is surjective on an
+abelian variety. The tangent CM type for $\zeta_{21}\mapsto\sigma_J|_A$
+is $T$. Under $\zeta_{42}=-\zeta_{21}^{11}$ its exponents become
+$\{1,5,23,25,29,31\}$, the actual B type.
+
+Both $\sigma_J$ and its inverse preserve $A$, since they commute with $e$.
+Their restriction is an integral automorphism with minimal polynomial
+$\Phi_{21}$, so
+$\mathcal O_M=\mathbf Z[\zeta_{21}]\subseteq\operatorname{End}(A)$.
+The primitive-type endomorphism calculation in Theorem~\ref{pp:thm:tenprincipal} gives simplicity and
+$\operatorname{End}^0(A)=M$ without requiring a principal polarization.
+Maximality of $\mathcal O_M$ then gives equality integrally.
+If $A$ admitted a principal polarization, it would occur in Theorem~\ref{pp:thm:tenprincipal}'s complete
+census: its endomorphisms contain the specified order $R$, and the Rosati
+involution on the CM field is complex conjugation. But the B/C type orbit
+has no principal object with full endomorphism order $\mathcal O_M$.
+This contradiction proves the assertion. Restriction of the ample
+Jacobian polarization is a polarization on $A$, hence is nonprincipal.
+\end{proof}
+
+There is also a direct Fermat domination. For $c^{21}=4$, the formula
+\[
+ (u,v)\longmapsto (X,Y)=(cuv,\,\mathrm i(u^{21}-v^{21}))
+\]
+on $u^{21}+v^{21}=1$ satisfies $Y^2=X^{21}-1$.
+The nonconstant map extends to the smooth projective models. The identity
+$f_*f^*=[\deg f]$ on Jacobians exhibits $J(H)$, and therefore $A$, as
+isogeny factors of the Fermat Jacobian.
+This does not identify $A$ with any of the four principally polarized
+B/C objects: their full endomorphism order is $R$, whereas that of $A$
+is $\mathcal O_M$. Proposition~\ref{pp:prop:fermatrestricted} below
+computes the actual restricted polarization. Proposition~\ref{pp:prop:fermatbcminimum}
+determines the minimum unpolarized isogenies to B/C. A polarized identification
+with a particular prior-art factor remains a separate question. Their genus-six Jacobian status is instead addressed by
+Theorem~\ref{pp:thm:jacobiancomplete}, under its stated computational contract.
+
+\begin{proposition}[The induced polarization on the Fermat factor]
+\label{pp:prop:fermatrestricted}
+For the actual embedded primitive factor $A\subset J(H)$ above,
+the restriction of the canonical principal polarization has type
+$(1,1,1,3,3,21)$ and degree $35721$. Put
+$H_d:y^2=x^d-1$ for $d=3,7$, taking smooth projective models,
+and let $f_d:H\to H_d$ be $(x,y)\mapsto(x^{21/d},y)$.
+The addition map
+\[
+ A\times J(H_3)\times J(H_7)\longrightarrow J(H),\qquad
+ (a,u,v)\longmapsto a+f_3^*u+f_7^*v
+\]
+is an isogeny of degree $35721$.
+\end{proposition}
+\begin{proof}
+The lower curves have genera one and three. Each $f_d$ has prime
+degree $q=21/d$ and is ramified: at $(0,\pm\mathrm i)$ the local
+parameter $x$ maps to $x^q$. The norm identity gives
+$f_{d,*}f_d^*=[q]$. If $\ker f_d^*$ contained a nonzero line bundle
+$L$, it would have exact order $q$. Its connected cyclic \'etale
+cover becomes trivial after pullback to $H$, so $f_d$ would factor
+through that cover. The remaining map would have degree one,
+contradicting ramification. Thus $f_d^*$ is an embedding.
+The canonical polarization adjunction, equivalently the degree
+formula for the integral cup pairing, gives induced form
+$q\lambda_{H_d}$ on its image $Z_d$.
+
+Let $T=\sigma_J$ in the covariant convention above, with compatible
+roots $\zeta_d=\zeta_{21}^{21/d}$. Equivariance
+implies that $\Phi_d(T)$ annihilates $Z_d$: the sum of the
+order-$d$ rotations factors through the Jacobian of the quotient
+$y$-line, which is zero. The integral identity
+\[
+ \Phi_7(t)-(t+t^4)\Phi_3(t)=1
+\]
+therefore proves $Z_3\cap Z_7=0$. Since $T$ preserves the canonical
+alternating form, eigenvectors pair to zero unless their eigenvalues
+are inverse. Primitive third and seventh characters are orthogonal.
+Thus $Z=Z_3+Z_7$ is the embedded product, with restricted form
+$7\lambda_{H_3}\oplus3\lambda_{H_7}$. Its polarization kernel is
+\[
+ (\mathbb Z/7)^2\oplus(\mathbb Z/3)^6
+ \simeq(\mathbb Z/3)^4\oplus(\mathbb Z/21)^2,
+\]
+so its type is $(1,3,3,21)$.
+
+The remaining rational homology characters are exactly the primitive
+twenty-first characters. They identify the actual $A$ with the
+connected orthogonal complement of $Z$. To keep the integral step
+explicit, let $\Lambda=H_1(J(H),\mathbb Z)$ and let $M,N$ be its
+saturated sublattices in the rational spaces of $Z,A$. The ambient
+form is unimodular. Projection of $\Lambda$ onto $M_{\mathbb Q}$
+maps onto the dual lattice $M^\#$: every integral functional on the
+primitive sublattice $M$ extends to $\Lambda$, and unimodularity
+realizes it by pairing with a lattice element. The projection kernel
+is $N$, whence
+\[
+ \Lambda/(M\oplus N)\simeq M^\#/M\simeq N^\#/N.
+\]
+The two restrictions have the same nonunit elementary divisors.
+The six-dimensional complement therefore adds two unit entries to
+the type of $Z$, giving $(1,1,1,3,3,21)$. The addition kernel is the
+displayed quotient, of order $7^2 3^6=35721$, which is also the degree
+of the restricted polarization on $A$.
+\end{proof}
+
+The degrees here are degrees of the specified polarization and
+addition map; the product of the six polarization elementary divisors
+is $189$. The minimum unpolarized B/C isogeny degree is instead $27$
+by Proposition~\ref{pp:prop:fermatbcminimum}. This structural argument uses neither the
+theta computation nor its analytic-library contract.
+
+\begin{corollary}[An integral primitive projector]
+\label{pp:cor:fermatprojector}
+With $T=\sigma_J$, the endomorphism
+\[
+ \mathcal N=21-3\sum_{j=0}^{6}T^{3j}-7(1+T^7+T^{14})
+\]
+has image $A$, is symmetric for the Rosati involution of $J(H)$,
+and satisfies $\mathcal N^2=21\mathcal N$.
+For the primitive projector $e=\mathcal N/21$, the least positive
+integer $n$ such that $ne\in\operatorname{End}(J(H))$ is $21$.
+\end{corollary}
+\begin{proof}
+The deck-group identities for the actual covers give
+\[
+ f_3^*f_{3,*}=\sum_{j=0}^{6}T^{3j},\qquad
+ f_7^*f_{7,*}=1+T^7+T^{14}.
+\]
+The first sum acts by $7$ on the order-three characters and by zero
+on the others; the second acts by $3$ on the order-seven characters
+and by zero on the others. Thus $\mathcal N/21$ is precisely the
+orthogonal projector onto the primitive part. Multiplication by $21$
+is surjective on $A$, proving the image assertion. Rosati sends $T$
+to $T^{-1}$ and preserves both subgroup sums. This proves symmetry;
+the projector identity gives $\mathcal N^2=21\mathcal N$.
+Equivalently, the polynomial residual is
+$42(1+T+\cdots+T^{20})$, which vanishes on $J(H)$ because the full
+rotation quotient is the projective $y$-line.
+
+Write $L_A=H_1(A,\mathbb Z)$ and $\Lambda=H_1(J(H),\mathbb Z)$.
+The saturated-lattice projection argument in
+Proposition~\ref{pp:prop:fermatrestricted} gives $e\Lambda=L_A^\#$.
+Consequently $ne$ preserves $\Lambda$ exactly when
+$nL_A^\#\subseteq L_A$. This is equivalent to $n$ annihilating
+$L_A^\#/L_A$, whose exponent is $21$. Lattice preservation gives a
+holomorphic endomorphism of the complex torus, hence an algebraic
+endomorphism of this abelian variety. Therefore $21$ is necessary
+and sufficient.
+\end{proof}
+
+This is minimality of the denominator of this specified projector;
+it is not a minimal isogeny statement for the principal B/C objects.
+
+
+\section{Minimum isogenies and the minimum source polarization}
+\begin{proposition}[Minimum isogenies from the Fermat factor]
+\label{pp:prop:fermatbcminimum}
+Let $A$ be the actual primitive factor of $J(H)$ above, and let
+$B,C$ denote the two underlying sixfolds of the four principal objects
+$B_0,B_1,C_0,C_1$. Among origin-preserving complex unpolarized
+isogenies, the minimum degree in each of the directions
+$A\to B$, $B\to A$, $A\to C$, $C\to A$ is $27$.
+Every minimum kernel is isomorphic to $(\mathbb Z/3)^3$.
+
+For the fixed source $A$, the minimum kernels giving a quotient
+isomorphic to $B$ or $C$ are exactly the $28$ one-dimensional
+$\mathbb F_{27}$-subspaces of
+$A[\pi]\simeq\mathcal O_M/\mathfrak P=\mathbb F_{729}$,
+where $\pi=1-z^{14}$: fourteen give each underlying target.
+For each fixed source $B$ or $C$, there is exactly one minimum
+kernel giving a quotient isomorphic to $A$.
+\end{proposition}
+\begin{proof}
+Put $O=\mathcal O_M$. Since $\operatorname{End}(A)=O$ and
+$\operatorname{Pic}(O)=1$, its actual rank-one CM lattice can be
+scaled to $O$. At a common CM type, the target lattice can be
+scaled to a line lift $I$ with
+\[
+ \mathfrak P\subset I\subset O,\qquad IO=O,\qquad [O:I]=27.
+\]
+These are isomorphisms of complex tori. The needed field re-marking
+preserves $O,R,\mathfrak P$ and the two classes of
+$\operatorname{Pic}(R)\simeq\mathbb Z/2$.
+Thus the actual $B,C$ classes remain $[\mathfrak a],[R]$, respectively, by
+Propositions~\externalref{packet}{pp:prop:picardorder},
+\externalref{packet}{pp:prop:idealclassmonoid} and \externalref{packet}{pp:prop:actualpolarizations}.
+
+Reduction modulo $\mathfrak P$ proves
+$(I:O)=\mathfrak P$: a nonzero residue scalar cannot send the
+whole field $\mathbb F_{729}$ into a proper
+$\mathbb F_{27}$-line. The equality $IO=O$ gives $(O:I)=O$.
+Multiplication by $\pi$ and inclusion supply isogenies in the two
+directions. Every other unmarked isogeny is scalar in these common
+coordinates, since composing with a rational inverse of either one
+lands in the full endomorphism algebra $M$. Therefore their degrees
+are exhausted by
+\[
+ [I:cO]=\frac{|N_{M/\mathbb Q}(c)|}{27}
+ \quad(c\in\mathfrak P\setminus\{0\}),\qquad
+ [O:cI]=27|N_{M/\mathbb Q}(c)|
+ \quad(c\in O\setminus\{0\}).
+\]
+The first minimum is $729/27=27$, attained exactly for
+$c=\pi u$, $u\in O^\times$; the second is $27$, attained
+exactly for $c\in O^\times$.
+
+The forward kernel is $\pi^{-1}u^{-1}I/O$. Multiplication by
+$\pi$ identifies it with the line $u_{\mathrm{res}}^{-1}(I/\mathfrak P)$
+in $O/\mathfrak P$, where $u_{\mathrm{res}}$ is the residue of $u$.
+The backward kernel is always
+$O/I$. Both groups are one-dimensional over $\mathbb F_{27}$.
+The $28$ projective lines form a torsor for
+$\mathbb F_{729}^{\times}/\mathbb F_{27}^{\times}$; the full
+global-unit image has order $14$ by
+Proposition~\externalref{packet}{pp:prop:picardorder}. Its two orbits give precisely
+the two ideal classes. Conversely every line lift $I'$ yields a
+kernel $\pi^{-1}I'/O$, whose quotient is scalar-isomorphic to the
+torus of lattice $I'$. This proves exhaustion and the split
+$14+14$. The backward formula proves uniqueness for each fixed
+source. Changing the scalar normalization permutes the same lines.
+\end{proof}
+
+These are counts of subgroups and minimum degrees of unpolarized
+maps. They impose no compatibility with the specified polarizations
+and do not specify a field of definition or a correspondence of curves.
+
+
+\begin{proposition}[Minimum polarization and principal quotients]
+\label{pp:prop:fermatminpolarization}
+The minimum degree of a polarization on the actual primitive factor
+$A\subset J(H)$ is $729$. There is exactly one such polarization
+up to origin-preserving automorphism of $A$; its type is
+$(1,1,1,3,3,3)$ and its kernel is $A[\pi]$.
+
+Fix a representative $\lambda_{\min}$. Each of the $28$
+$\mathbb F_{27}$-lines in $A[\pi]$ is maximal isotropic and gives
+a principally polarized quotient with pullback $\lambda_{\min}$.
+These quotients have exactly four polarized isomorphism classes,
+each realized by seven distinct kernels: they are $B_0,B_1,C_0,C_1$.
+\end{proposition}
+\begin{proof}
+Normalize the actual CM lattice of $A$ to $O=\mathcal O_M$ as in
+Proposition~\ref{pp:prop:fermatbcminimum}. The rotation preserves the
+restricted Jacobian polarization and generates $M$, so its Rosati
+involution is complex conjugation. Any other polarization differs
+from it by an element of the commutative algebra
+$\operatorname{End}^0(A)=M$, and therefore induces the same Rosati
+involution. Thus the trace-form classification applies to every
+polarization, without an additional compatibility assumption.
+
+Write $\kappa_O=1/(f'(t)(z-\bar z))$, so $O^\vee=\kappa_O O$.
+Integral alternating forms have parameters $\xi=\kappa_O a$ with
+$a\in\mathcal O_L$. At the actual B type, positivity forces the
+sign vector of $a$ to equal that of $\operatorname{Im}\kappa_O$,
+which has odd negative parity by
+Proposition~\externalref{packet}{pp:prop:markedpolarizations}. Hence
+$N_{L/\mathbb Q}(a)<0$, and the degree is
+$N_{L/\mathbb Q}(a)^2$ because the dual lattice is $a^{-1}O$.
+
+We claim that no real integer has negative norm of absolute value
+less than $27$. Since $\mathcal O_L=\mathbb Z[t]$, the following
+reductions of its defining polynomial determine the possible prime
+ideal norms below $27$:
+\[
+\begin{array}{c|l}
+p&f\bmod p\\ \hline
+2&\text{irreducible of degree }6\\
+3&(t^3-t^2+t+1)^2\\
+5&(t^3-t-2)(t^3+t^2+2)\\
+7&(t-1)^6.
+\end{array}
+\]
+The displayed cubics are irreducible by absence of roots. Modulo
+$2$, division by all fourteen monic polynomials of degrees at most
+three verifies irreducibility. For $p=11,13,17,19,23$, direct
+evaluation gives no root, so the prime ideal norms are at least
+$p^2>27$. This exhausts all rational primes below $27$. The finite reductions,
+root checks and norms here are reproduced exactly by
+\texttt{certificates/fermat\_minimum\_polarization\_norm\_v154.py};
+that certificate supplies arithmetic inputs to the geometric argument.
+The only prime ideal of norm below $27$ is consequently the one
+of norm $7$, generated by $t-1$, whose field norm is $f(1)=7$.
+An ideal of norm below $27$ is either this ideal or the unit ideal.
+All real units have norm $+1$ by Lemma~\externalref{supplement}{lem:narrowclass}, so
+all their generators have positive norm, proving the claim.
+
+Every polarization therefore has degree at least $729$. A minimum
+degree-$27$ map of Proposition~\ref{pp:prop:fermatbcminimum} to
+principally polarized B pulls back a polarization of degree $729$.
+Every minimum parameter $a$ generates the unique real prime above
+$3$, which has ideal norm $27$ and is generated by $\beta$ with
+$N_{L/\mathbb Q}(\beta)=-27$. Relative to one
+positive minimum parameter, all others differ by $E_L^+$.
+Theorem~\externalref{supplement}{thm:unitnorm} gives
+$N_{M/L}(O^\times)=E_L^+$, proving uniqueness up to automorphism.
+Since $\beta O=\mathfrak P=\pi O$, the kernel is
+$\pi^{-1}O/O\simeq(\mathbb Z/3)^6$, giving the stated type.
+
+The discriminant pairing on this kernel is alternating over
+$\mathbb F_3$ and self-adjoint for the real residue subfield
+$k=\mathbb F_{27}$. Thus for $a\in k$,
+$b(x,ax)=b(ax,x)=-b(x,ax)$, whence $b(x,ax)=0$.
+Every $k$-line is therefore isotropic and, having order $27$,
+maximal isotropic. Its inverse image in $O^\#$ is an integral
+self-dual overlattice for the same positive Riemann form. This
+gives the claimed principal quotient and pullback equality.
+
+The polarized automorphism group of $A$ is $\mu_{42}$:
+an $O$-unit preserving the form satisfies $u\bar u=1$ and is a
+root of unity. Its image in
+$\mathbb F_{729}^\times/\mathbb F_{27}^\times$ has order $7$,
+so it acts freely with four seven-element orbits on the lines.
+These orbits cannot merge under polarized quotient isomorphisms.
+Indeed, the quotient lattices are $\pi^{-1}I$ and all have
+$O$-saturation $\pi^{-1}O$. Every unmarked isomorphism between
+them is scalar by $\operatorname{End}^0(A)=M$. Equality of the
+saturations forces this scalar to be an $O$-unit, and preserving
+their common rational Riemann form forces it into $\mu_{42}$.
+Conversely every such root induces the corresponding isomorphism.
+Each fourteen-line B/C orbit splits into two seven-line orbits.
+Proposition~\externalref{packet}{pp:prop:actualpolarizations} identifies these as
+the two principal classes on each underlying variety.
+\end{proof}
+
+The minimum polarization here differs from the degree-$35721$
+restriction of Proposition~\ref{pp:prop:fermatrestricted}.
+The quotient statement in Proposition~\ref{pp:prop:fermatminpolarization}
+concerns the specified $\mathbb F_{27}$-lines; the
+following theorem treats all maximal isotropic subgroups. Neither
+statement specifies a field of definition or an explicit curve correspondence.
+
+
+\section{Principal and underlying quotient classifications}
+\begin{theorem}[All principal targets at minimum degree]
+\label{pp:thm:fermatallquotients}
+The minimum degree of an isogeny from the actual primitive factor $A$
+to any principally polarized abelian variety is $27$. Exactly $160$
+origin-preserving polarized isomorphism classes of principal targets
+admit an isogeny of this degree from $A$.
+
+Fix $\lambda_{\min}$ from Proposition~\ref{pp:prop:fermatminpolarization}.
+The maps with pullback $\lambda_{\min}$ have exactly $1120$ distinct
+kernels, the maximal isotropic subspaces of $A[\pi]\simeq\mathbb F_3^6$.
+They give the $160$ polarized target classes with seven kernels each.
+Four are $B_0,B_1,C_0,C_1$, with endomorphism ring $R$. The remaining
+$156$ have full endomorphism ring
+\[
+ S=\mathbb Z+\mathfrak P\subset\mathcal O_M,\qquad
+ [\mathcal O_M:S]=243.
+\]
+Each target has polarized automorphism group $\mu_6$.
+\end{theorem}
+\begin{proof}
+A degree-$d$ map to a principal target pulls back a polarization of
+degree $d^2$, so Proposition~\ref{pp:prop:fermatminpolarization}
+gives $d\ge27$, attained by the B/C maps. For any degree-$27$ map,
+uniqueness of the minimum form gives a source automorphism transporting
+its pullback to $\lambda_{\min}$. This preserves the polarized target,
+so it suffices to fix that pullback when counting target classes.
+
+Use the actual lattice $O=\mathcal O_M$ and its minimum Riemann form
+$E$. Its dual is $O^\#=\pi^{-1}O$. A subgroup
+$H\subset D=O^\#/O$ gives an integral quotient lattice $L_H$ precisely
+when it is isotropic, and $L_H^\#/O=H^\perp$. Thus the same positive
+form is principal on the quotient precisely when $H=H^\perp$.
+Conversely every map with fixed pullback gives such a self-dual
+overlattice, so these are exactly its kernels.
+
+If $L_n(q)$ counts Lagrangians in a symplectic space of dimension
+$2n$ over $\mathbb F_q$, counting pairs $(v,H)$ with $0\ne v\in H$
+gives
+\[
+ L_n(q)(q^n-1)=(q^{2n}-1)L_{n-1}(q),\qquad L_0(q)=1.
+\]
+Indeed those containing $v$ correspond to Lagrangians in
+$v^\perp/\langle v\rangle$. Consequently
+$L_3(3)=(3+1)(9+1)(27+1)=1120$.
+
+Under multiplication by $\pi$, view $H$ as a subspace of
+$K_{\rm res}=O/\mathfrak P=\mathbb F_{729}$, and write
+$L_H=\pi^{-1}I_H$, where $I_H$ is its inverse image in $O$.
+Every nonzero $H$ gives $I_HO=O$, since its nonzero residues
+generate the field $K_{\rm res}$ as an ideal. All quotient lattices
+therefore have the same $O$-saturation $\pi^{-1}O$.
+Every unmarked quotient isomorphism is scalar in $M$, by conjugating
+with the rational quotient maps and using $\operatorname{End}^0(A)=M$.
+Equality of saturations forces the scalar into $O^\times$; preserving
+the common form $E$ forces $u\bar u=1$, hence $u\in\mu_{42}$.
+Conversely such roots give the corresponding quotient isomorphisms.
+The target classes are exactly the $\mu_{42}$-orbits of Lagrangians.
+
+The residue image of $\mu_{42}$ has order $14$, with scalar
+subgroup $\{\pm1\}$, so the effective action has order $7$.
+A nonidentity effective element is represented, up to sign, by a
+primitive seventh root. It generates $\mathbb F_{729}$ over
+$\mathbb F_3$, since $\operatorname{ord}_7(3)=6$.
+It cannot preserve a three-dimensional subspace: such a subspace
+would then be a nonzero proper vector subspace over the whole field.
+The action is free, giving $1120/7=160$ classes, and each full
+stabilizer is the six-element scalar kernel $\mu_6$.
+
+Finally, a multiplier $cI_H\subseteq I_H$ lies in $O$ after
+extending to $O$. Its residue must belong to
+\[
+ F_H=\{a\in K_{\rm res}:aH\subseteq H\}.
+\]
+This is a subfield: a nonzero member acts bijectively on finite $H$,
+so its inverse also preserves $H$. Its degree over $\mathbb F_3$
+divides $\dim_{\mathbb F_3}H=3$. Hence $F_H$ is either
+$\mathbb F_3$ or $\mathbb F_{27}$, the latter exactly for the
+$28$ one-dimensional $\mathbb F_{27}$-subspaces. Their four
+polarized classes are the B/C objects already classified.
+All other $1092$ Lagrangians have multiplier equal to the inverse
+image of $\mathbb F_3$, namely $S=\mathbb Z+\mathfrak P$,
+of index $729/3=243$. They give $1092/7=156$ classes.
+Full rational endomorphisms remain $M$ by isogeny, so these
+multiplier orders are the full integral endomorphism rings.
+\end{proof}
+
+The $1120$ kernel count fixes the pullback polarization; the $160$
+target count allows arbitrary minimum pullbacks. The smaller order
+$S$ contains $\mathbb Z[z^{14}]=\mathcal O_{\mathbb Q(\sqrt{-3})}$,
+since $z^{14}\equiv1\pmod{\mathfrak P}$, but does not contain $R$.
+Thus these $156$ objects lie outside the selected-order hypothesis
+of Theorem~\ref{pp:thm:tenprincipal}. The census does not identify
+new points on the normalized McMullen curve or classify the new
+targets as Jacobians.
+
+
+
+\begin{theorem}[Galois orbits of the minimum principal targets]
+\label{pp:thm:quotientgalois}
+The $160$ polarized classes of
+Theorem~\ref{pp:thm:fermatallquotients} form eleven orbits under $\operatorname{Gal}(\overline{\mathbb Q}/\mathbb Q)$.
+One consists of $B_0,B_1,C_0,C_1$. The other ten, all of full order $S$,
+have sizes
+\[
+4,8,12,12,12,12,24,24,24,24.
+\]
+In particular, the property of being the canonically polarized Jacobian
+of a smooth curve for the $156$
+smaller-order classes can be decided on ten representatives.
+\end{theorem}
+\begin{proof}
+First the literal primitive factor $A$ has a model over $\mathbb Q$.
+The curve $y^2=x^{21}-1$ is defined over $\mathbb Q$, and Galois sends
+its Jacobian rotation $T$ to $T^a$. The primitive cyclotomic projector
+is invariant under this substitution, which permutes primitive
+characters. After clearing denominators it is a Galois-invariant
+homomorphism, hence descends to $\mathbb Q$, as does its connected
+image. All endomorphisms of $A$ are defined over $M$, since $T$ generates
+$\mathcal O_M$; their Galois action is the cyclotomic action.
+
+Fix a minimum polarization $\lambda$. Every conjugate is another
+minimum polarization on $A$, so
+Proposition~\ref{pp:prop:fermatminpolarization} gives an isomorphism
+$u_\sigma:(A,\sigma\lambda)\longrightarrow(A,\lambda)$, unique modulo
+$\mu_{42}$. This does not assert that $\lambda$ descends to $\mathbb Q$.
+The maps $u_\sigma\sigma$ act on
+$D=\ker\lambda\simeq K_{\rm res}=\mathbb F_{729}$ modulo the residue group
+$\mu_{14}$. They induce the actual Galois action on the polarized
+quotient classes: quotients and their polarizations commute with base
+change, and Theorem~\ref{pp:thm:fermatallquotients} identifies all
+polarized quotient isomorphisms with source root actions.
+
+The discriminant pairing has the form
+\[
+b(x,y)=\operatorname{Tr}_{K_{\rm res}/\mathbb F_3}(cxy^{27}),
+\qquad c^{27}=-c\ne0.
+\]
+This follows from trace nondegeneracy, adjoint conjugation and
+alternation. Its semilinear similitude group is
+\[
+G=\{x\mapsto ux^{3^j}:u^{28}=\varepsilon c^{3^j-1},\quad
+               j\in\mathbb Z/6,\ \varepsilon\in\mathbb F_3^\times\}.
+\]
+The norm $K_{\rm res}^\times\to\mathbb F_{27}^\times$ is surjective with
+kernel $C_{28}$, giving an exact sequence
+\[
+1\longrightarrow C_{28}\longrightarrow G
+ \longrightarrow C_6\times C_2\longrightarrow1.
+\]
+Thus $\overline G=G/\mu_{14}$ has order $24$.
+For $\sigma(\zeta_{42})=\zeta_{42}^a$, the normalized action has
+field exponent $3^j\equiv a\pmod7$ and pairing multiplier
+$\varepsilon\equiv a\pmod3$, by Galois functoriality of the
+polarization pairing. Consequently its image in $\overline G$
+surjects onto $C_6\times C_2$.
+
+To obtain the remaining kernel of order two, use CM reciprocity on
+the maximal-order source. The actual type
+$\Phi=\{1,5,11,13,17,19\}$ has trivial stabilizer; its reflex field
+is $M$ and its reflex type is the inverse type
+\cite[Example~1.19, Proposition~1.26]{MilneCM2020}.
+For an idele $s$ supported in the local units at $\mathfrak P$,
+with residue $r\in K_{\rm res}^\times$, the reflex norm has residue
+\[
+r^{1+3+9+27+243+3}=r^{286}.
+\]
+Since $\gcd(286,728)=26$, these residues exhaust $C_{28}$.
+Choose $\sigma$ fixing $M$ with
+$\sigma|_{M^{\rm ab}}=\operatorname{art}_M(s)$, using Milne's
+reciprocal Artin convention.
+The fundamental theorem supplies an $M$-quasi-isogeny
+$\alpha:A\to\sigma A$ with $\alpha N_\Phi(s)=\sigma$ on the finite
+rational Tate module \cite[Theorem~9.10]{MilneCM2020}.
+The reflex norm is an adelic unit, so $\alpha$ and its inverse are
+integral on every Tate module and therefore are actual isomorphisms.
+The polarization multiplier is
+$\chi_{\rm cyc}(\sigma)/N_{M/\mathbb Q}(s)$
+\cite[Remark~9.11(c)]{MilneCM2020}. By Lemma~9.5 of that source it is
+a positive rational number; both numerator and denominator are
+adelic units, so it equals one. Hence $\alpha$ is polarized.
+Taking $u_\sigma=\alpha^{-1}$ realizes $C_{28}/\mu_{14}$ in the
+normalized Galois image. That image is therefore all of $\overline G$.
+
+The exact finite action on the adopted $1120$ isotropic subspaces,
+grouped into $160$ root orbits, gives the eleven asserted orbits.
+Certificate \texttt{s\_order\_galois\_v163} retains the actual
+discriminant form and coordinate map; a separate implementation enumerates semilinear maps in those
+coordinates and verifies the same partition. No numerical periods
+enter this step. Finally, Galois conjugation preserves canonical
+Jacobians of smooth curves, in both directions, proving the last
+assertion.
+\end{proof}
+
+This orbit theorem does not decide any of the ten remaining Jacobian
+questions. It permits a separately certified exclusion on one
+representative to apply to its orbit; it does not identify theta values
+or torsion labels between distinct normalized period matrices.
+
+
+\begin{theorem}[Underlying quotients and the principal obstruction]
+\label{pp:thm:fermatunderlying}
+The $33880$ subgroups $H\subset A[\pi]$ of order $27$ give exactly
+$188$ origin-preserving unpolarized isomorphism classes of quotients:
+two with full endomorphism ring $R$, namely $B,C$, and $186$ with
+full endomorphism ring $S=\mathbb Z+\mathfrak P$.
+Exactly $80$ underlying varieties admit principal polarizations: $B,C$
+and $78$ of the $S$ varieties. Each admits exactly two principal
+polarization classes under its full automorphism group. The other
+$108$ varieties admit no principal polarization.
+
+Allowing arbitrary minimum pullback forms, the degree-$27$ isogenies
+from fixed $A$ to principally polarizable targets have exactly $14224$
+distinct kernels: $14$ for each $R$ target and $182$ for each of the
+$78$ eligible $S$ targets. Fixing $\lambda_{\min}$ instead gives the
+$1120$ kernels of Theorem~\ref{pp:thm:fermatallquotients}, with $14$
+per underlying target, seven for each principal polarization class.
+\end{theorem}
+\begin{proof}
+Put $k=\mathbb F_{27}\subset K_{\rm res}=\mathbb F_{729}$.
+The real unit $t$ has residue with irreducible polynomial
+$X^3-X^2+X+1$. Its norm to $\mathbb F_3$ is $-1$, so its order
+is $26$: it does not divide $13$, and irreducibility excludes orders
+$1,2$. Thus $E_L$ maps onto $k^\times$. The full global-unit image
+modulo $k^\times$ has order $14$, as in the conductor calculation
+above. Consequently the full image $U$ of $\mathcal O_M^\times$
+in $K_{\rm res}^\times$ has order $364$ and contains $k^\times$.
+
+Counting ordered bases gives
+\[
+ \#\operatorname{Gr}(3,6)(\mathbb F_3)
+ =\frac{(3^6-1)(3^6-3)(3^6-9)}{(3^3-1)(3^3-3)(3^3-9)}=33880.
+\]
+The common saturation and scalar-isomorphism argument in
+Theorem~\ref{pp:thm:fermatallquotients} applies to all these subspaces,
+without imposing isotropy. Unpolarized classes are exactly $U$-orbits.
+The stabilizer is $k^\times$ for the $28$ $k$-lines and
+$\mathbb F_3^\times$ otherwise. Hence the orbit sizes are $14$ and
+$182$, giving $28/14=2$ classes with ring $R$ and
+$(33880-28)/182=186$ with ring $S$.
+
+Set $E_0=\{u\in E_L:u\bmod\mathfrak P\in\mathbb F_3^\times\}$.
+Then $[E_L:E_0]=13$. This odd index preserves the signature image:
+$u^{13}\in E_0$ has the same signs as $u$. The image therefore has
+order $32$, whereas $E_0/E_0^2$ has order $64$ by its rank five and
+torsion $\{\pm1\}$. Thus $[E_0^+:E_0^2]=2$.
+Furthermore $S^\times=\mu_6E_0$. Indeed, for $u\in S^\times$,
+$u/\bar u$ is a root of unity reducing to $1$, hence belongs to
+$\mu_3$; dividing by a suitable element of $\mu_6$ makes $u$ real
+without changing the scalar residue condition. It follows that
+$N_{M/L}(S^\times)=E_0^2$.
+
+For any polarization on an $S$ quotient, pullback through the scalar
+isogeny from $A$ gives a polarization on $A$. Its Rosati involution on
+$M$ is conjugation by Proposition~\ref{pp:prop:fermatminpolarization};
+transport through the rational isogeny proves the same for the quotient.
+If an $S$ variety has one principal form $\lambda_0$, every other
+principal form is $\lambda_0 a$ with $a\in E_0^+$: symmetry is
+complex conjugation on $M$, and positivity is total positivity at
+its real places. Its full unmarked automorphism group is $S^\times$,
+so the classes are $E_0^+/E_0^2$, exactly two. The two $R$ varieties
+also have two principal classes each by
+Proposition~\externalref{packet}{pp:prop:actualpolarizations}.
+
+Any principal form on any quotient pulls back to a degree-$729$
+polarization on $A$. Proposition~\ref{pp:prop:fermatminpolarization}
+transports it to $\lambda_{\min}$ by a source automorphism. Thus
+Theorem~\ref{pp:thm:fermatallquotients} exhausts all principal polarization classes
+on all these quotients, giving $160/2=80$ underlying varieties and
+$188-80=108$ absolute principal obstructions.
+
+For any minimum map to a principally polarizable target, the same
+source normalization puts its kernel in $A[\pi]$. Source units commute
+with $\pi$, so its original kernel is also in $A[\pi]$. Conversely,
+every subgroup whose quotient is principally polarizable gives such
+a minimum map. Orbit sizes now give
+$2\cdot14+78\cdot182=14224$ kernels; the other
+$108\cdot182=19656$ subgroups have nonprincipalizable quotients.
+For the fixed pullback, each of the two principal classes contributes
+seven kernels. They cannot share a kernel, since the common rational
+form determines the quotient polarization uniquely.
+\end{proof}
+
+These counts concern complex abelian varieties and origin-preserving
+maps. They neither identify new points of the normalized McMullen
+curve nor assert a Jacobian classification for the $S$ varieties.
+
+\begin{corollary}[Galois orbits after forgetting polarization]
+\label{pp:cor:underlyinggalois}
+The $80$ underlying principalizable varieties of
+Theorem~\ref{pp:thm:fermatunderlying} form eleven Galois orbits.
+One consists of $B,C$; the ten smaller-order orbits have sizes
+\[
+2,4,6,6,6,6,12,12,12,12.
+\]
+Each orbit in Theorem~\ref{pp:thm:quotientgalois} maps onto exactly one
+of these underlying orbits, with fibers of size two.
+\end{corollary}
+\begin{proof}
+Write $U_d$ for the subgroup of order $d$ in
+$K_{\rm res}^{\times}$. The subgroup $U_{28}/U_{14}$, the kernel of the projection
+$\overline G\to C_6\times C_2$ in the normalized Galois group,
+acts trivially on underlying varieties,
+because $U_{28}\subset U_{364}$ and $U_{364}$ is the full global-unit
+residue image in the proof of Theorem~\ref{pp:thm:fermatunderlying}.
+The unit lift gives an actual lattice isomorphism.
+
+This kernel acts freely on polarized classes. A fixed class would
+give $uH=vH$ with $u\in U_{28}\setminus U_{14}$ and $v\in U_{14}$.
+The scalar $v^{-1}u$ has order $4$ or $28$, so generates a field of
+degree $2$ or $6$ over $\mathbb F_3$. The invariant subspace $H$
+would be a vector space over that field, contradicting
+$\dim_{\mathbb F_3}H=3$. Each forgetful fiber already has exactly
+two polarized classes, hence is exactly one free kernel orbit.
+Equivariance prevents distinct polarized Galois orbits from merging
+and halves every orbit size, as claimed.
+The human-proof certificate is
+\texttt{principalizable\_galois\_corollary\_v164}.
+\end{proof}
+
+This corollary concerns the principalizable subfamily only. It does
+not classify Galois orbits of the $108$ nonprincipalizable varieties
+or assert descent to a field of moduli.
+
+
+\begin{proposition}[Cyclotomic action on all underlying quotients]
+\label{pp:prop:allunderlyinggalois}
+On all $188$ underlying classes of
+Theorem~\ref{pp:thm:fermatunderlying}, the Galois action factors faithfully
+through $\operatorname{Gal}(M/\mathbb Q)\simeq C_6\times C_2$.
+Its orbits are exactly the full semilinear orbits on the
+three-dimensional $\mathbb F_3$-subspaces of $K_{\rm res}=\mathbb F_{729}$,
+modulo the global-unit subgroup $U_{364}$. Every orbit size divides $12$.
+The principalizable and nonprincipalizable subsets are invariant.
+\end{proposition}
+\begin{proof}
+The rational source $A$ and intrinsic subgroup $A[\mathfrak P]$ are
+Galois-invariant, as in Theorem~\ref{pp:thm:quotientgalois}.
+For every subgroup $H$, base change identifies the conjugate quotient
+with $A/\sigma H$, and the actual normalizing unit $u_\sigma$ identifies
+this with $A/(u_\sigma\sigma H)$. This requires no isotropy.
+The common-saturation argument of
+Theorem~\ref{pp:thm:fermatunderlying} identifies all underlying classes
+with $U_{364}$-orbits. Choice ambiguities lie in $U_{14}\subset U_{364}$.
+The proof of Theorem~\ref{pp:thm:quotientgalois} establishes surjectivity
+onto the group of semilinear maps $G/U_{14}$ before its isotropic
+orbit calculation, so applies on this full domain.
+
+The subgroup $U_{364}$ is normal in
+$\Gamma=K_{\rm res}^{\times}\rtimes\operatorname{Gal}(K_{\rm res}/\mathbb F_3)$.
+For a generator $g$ of $K_{\rm res}^{\times}$, the scalar $g^{13}$ lies
+in $G$, since $(g^{13})^{28}=-1$. Together with
+$U_{364}=\langle g^2\rangle$ it generates all scalars.
+Since $G$ surjects onto the six field automorphisms,
+$\langle U_{364},G\rangle=\Gamma$. The quotient
+$\Gamma/U_{364}\simeq C_2\times C_6$ has order $12$.
+
+If $\sigma$ fixes $M$, its normalized action has $j=0$ and
+$\epsilon=1$, hence scalar in $U_{28}\subset U_{364}$.
+The actual action therefore factors through $\operatorname{Gal}(M/\mathbb Q)$.
+Corollary~\ref{pp:cor:underlyinggalois} supplies an orbit of size $12$;
+its point stabilizer in this order-$12$ group is trivial, proving
+faithfulness. Principalizability is preserved by conjugation and its
+inverse. The human-proof certificate is
+\texttt{all\_underlying\_galois\_v165}.
+\end{proof}
+
+This determines the acting group on the $108$ nonprincipalizable
+classes, but does not enumerate their orbits or prove descent of
+individual varieties. There are $94$ full-scalar orbits on subspaces:
+one of size $28$ and $93$ of size $364$, by the multiplier-field
+stabilizers above. Frobenius may merge these scalar orbits.
+
+\section{Minimum forms on nonprincipalizable quotients}
+\begin{theorem}[Minimum polarizations on the obstructed quotients]
+\label{pp:thm:obstructedminimum}
+Each of the $108$ nonprincipalizable varieties of
+Theorem~\ref{pp:thm:fermatunderlying} has minimum polarization degree
+$3^{12}=531441$, with type $(1,3,3,3,3,9)$. Each has exactly $26$
+minimum polarization classes under its full origin-preserving
+ automorphism group.
+\end{theorem}
+\begin{proof}
+Write $O=\mathcal O_M$, let $\mathfrak Q=\mathfrak P\cap\mathcal O_L$,
+and fix the positive minimum form $E$ on $O$, with trace parameter
+$\kappa_Oa_0$. Proposition~\ref{pp:prop:fermatminpolarization} gives
+$(a_0)=\mathfrak Q$, $N_{L/\mathbb Q}(a_0)=-27$,
+$\mathfrak QO=\mathfrak P$, and $(3)=\mathfrak Q^2$ in $\mathcal O_L$.
+For $Y=A/H$, let $\Lambda$ be the inverse image of $H$ in
+$\mathfrak P^{-1}$. Then $[\Lambda:O]=27$ and
+$\Lambda O=\mathfrak P^{-1}$.
+
+Pulling any polarization back to $A$ and transporting its Rosati
+involution shows that every polarization on $Y$ has trace parameter
+$\kappa_Oa$ with $a\in L$. Integrality on $O\times O$ gives
+$a\in\mathcal O_L$. Mixed integrality on $O\times\Lambda$ is
+equivalent to $a\Lambda\subset O$ by trace duality and conjugation.
+Taking $O$-saturations gives $a\in\mathfrak P\cap L=\mathfrak Q$;
+conversely this condition suffices for mixed integrality.
+Thus $a=a_0v$ with $v\in\mathcal O_L$, and positivity is precisely
+total positivity of $v$.
+
+On $D=\mathfrak P^{-1}/O$ define, for $c\in k=\mathbb F_{27}$,
+\[
+ b_c(x+O,y+O)=3E(vx,y)\pmod3,\qquad v\bmod\mathfrak Q=c.
+\]
+This is independent of the lift and representatives: $E(O,\mathfrak
+P^{-1})\subset\mathbb Z$ and $\mathfrak Q\mathfrak P^{-1}\subset O$.
+The forms are alternating, and $b_c$ is nondegenerate for $c\ne0$.
+Put
+\[
+ T_H=\{c\in k:b_c|_{H\times H}=0\}.
+\]
+This is an $\mathbb F_3$-linear subspace. Integrality on
+$\Lambda\times\Lambda$ is equivalent to $v\bmod\mathfrak Q\in T_H$.
+For an integral positive form $E_v(x,y)=E(vx,y)$, its degree on $Y$ is
+\[
+ \deg(E_v|_\Lambda)
+ =\frac{729N_{L/\mathbb Q}(v)^2}{[\Lambda:O]^2}
+ =N_{L/\mathbb Q}(v)^2.
+\]
+This determinant calculation does not assume that $E$ itself is
+integral on $\Lambda$.
+
+By Theorem~\externalref{supplement}{thm:unitnorm}, the residue image of $E_L^+$ is the
+norm of the order-$364$ group $U$ from
+Theorem~\ref{pp:thm:fermatunderlying}. Conjugation on $K_{\rm res}$
+is the $27$th power map, so this norm image has order
+$364/\gcd(364,28)=13$, exactly the squares in $k^\times$.
+Since $-1$ is a nonsquare, every nonzero pair $\{c,-c\}$ contains
+such a residue. If $T_H\ne0$, linearity therefore gives a totally
+positive unit $\varepsilon$ with residue in $T_H$. Then $E_\varepsilon$
+is a principal form on $Y$. Conversely a principal form has a unit
+parameter and hence $T_H\ne0$. For the $108$ obstructed varieties,
+$T_H=0$, and all positive integral parameters are exactly the totally
+positive elements of $\mathfrak Q$.
+
+Write $\mathfrak Q=(\beta)$ with $N_{L/\mathbb Q}(\beta)=-27$.
+For such a parameter $v=\beta w$, positivity gives $N(w)<0$.
+The signed norm bound of Proposition~\ref{pp:prop:fermatminpolarization}
+gives $|N(w)|\ge27$, so $N(v)\ge729$. Equality is attained by $v=3$.
+At equality $(v)$ has norm $3^6$, hence is $\mathfrak Q^2=(3)$,
+since $\mathfrak Q$ is the unique prime above $3$, of norm $27$.
+Thus all minimum parameters are exactly $3E_L^+$, and the minimum
+degree is $729^2$.
+
+The full automorphism group is $S^\times$, with norm image $E_0^2$
+in the notation of Theorem~\ref{pp:thm:fermatunderlying}. The equal
+signature images of $E_0$ and $E_L$ give $[E_L^+:E_0^+]=13$.
+The minimum classes are therefore $E_L^+/E_0^2$, of size $13\cdot2=26$.
+
+Finally let $F=3E_\varepsilon$ be a minimum form. Modulo $3$ it
+vanishes on $O\times\Lambda$ and factors through $H=\Lambda/O$,
+since $3\Lambda\subset O$. The induced alternating form is
+$b_{\varepsilon\bmod\mathfrak Q}|_H$, nonzero because $T_H=0$.
+It has rank $2$ on the three-dimensional space $H$. Thus exactly one
+of the six elementary divisors of $F$ is prime to $3$. Their product
+is $3^6$, so that divisor is $1$ and the other five have positive
+$3$-adic exponents summing to $6$. The type is $(1,3,3,3,3,9)$.
+\end{proof}
+
+The residue obstruction also gives a direct count. If $H$ is isotropic
+for two independent coefficients $c,d\in k$, then it is a Lagrangian
+for $b_c$ and stable under $d/c$. This ratio generates $k$ over
+$\mathbb F_3$, so $H$ is a $k$-line. Each of the $28$ such lines is
+isotropic for every $b_c$. The $13$ coefficient lines therefore have
+disjoint non-$k$-line Lagrangian populations, giving
+$28+13(1120-28)=14224$ principalizable kernels and $19656$ obstructed
+ones. This finite incidence identity corroborates the full-unit orbit
+classification; the polarization minima additionally require the
+signed norm argument above.
+
+\begin{proposition}[Normalized group and minimum polarized action]
+\label{pp:prop:minimumpolarizedgalois}
+The normalized group $\overline G$ of
+Theorem~\ref{pp:thm:quotientgalois} is $D_8\times C_3$, with $D_8$
+of order $8$. Its commutator is the central involution $U_{28}/U_{14}$,
+and its abelianization is $C_6\times C_2$.
+
+The $2808=108\cdot26$ minimum polarized classes on the obstructed
+quotients identify with the $U_{14}$-orbits of the $19656$ subspaces
+with $T_H=0$, using the form descended from $3\lambda_{\min}$.
+Their actual Galois action is the restriction of this same normalized
+group, so every orbit size divides $24$. The central involution acts
+freely and preserves the underlying variety. Each $26$-element
+forgetful fiber is therefore the union of $13$ free pairs.
+\end{proposition}
+\begin{proof}
+The scalar subgroup of $G$ is $U_{56}$; its quotient by $U_{14}$
+is cyclic of order $4$, generated by $a$. Choose $b\in\overline G$
+above the Frobenius generator of $C_6$. Then $bab^{-1}=a^3=a^{-1}$.
+The cube of a representative is $w\operatorname{Frob}^3$ with
+multiplier $\epsilon\in\{1,-1\}$. Its square is the scalar
+\[
+ w^{28}=\epsilon c^{26}=-\epsilon\in U_{14},
+\]
+since $c^{27}=-c$. Thus $b^6=1$, and its projection forces its
+order to be $6$. The subgroups generated by $a$ and $b$ intersect
+trivially and generate $\overline G$. Now $b^2$ is central of order
+$3$, whereas $a,b^3$ generate $D_8$. These commuting factors
+intersect trivially. Their commutator is $\langle a^2\rangle
+=U_{28}/U_{14}$, proving the group assertions.
+
+By Theorem~\ref{pp:thm:obstructedminimum}, all minimum forms on an
+obstructed lattice are $3E_\varepsilon$ with $\varepsilon\in E_L^+$.
+Choose $u\in\mathcal O_M^\times$ with $u\bar u=\varepsilon^{-1}$
+using Theorem~\externalref{supplement}{thm:unitnorm}. Multiplication by $u$ from
+$\Lambda_{u^{-1}H}$ to $\Lambda_H$ pulls $3E_\varepsilon$ back to
+$3E$. Conversely $3E$ is integral on every such lattice and is
+minimum when $T_H=0$. A fixed-pullback polarized isomorphism between
+two quotients is a global unit $v$ by their common
+$\mathcal O_M$-saturation. Preserving $3E$ gives $v\bar v=1$;
+Kronecker's theorem then gives $v\in\mu_{42}$, with residue in
+$U_{14}$. This proves the claimed equivalence relation.
+
+An order-$7$ scalar generates $\mathbb F_{729}$ over $\mathbb F_3$
+and cannot preserve a three-dimensional subspace. Every root orbit
+therefore has size $7$, giving $19656/7=2808$. The source units
+normalizing $\lambda_{\min}$ also normalize $3\lambda_{\min}$;
+quotients and descended forms commute with base change. Hence
+Theorem~\ref{pp:thm:quotientgalois} supplies the actual action here.
+Nonprincipalizability is invariant under conjugation.
+
+If $u\in U_{28}\setminus U_{14}$ fixes a root orbit, then $uH=vH$
+for some $v\in U_{14}$. The scalar $v^{-1}u$ has order $4$ or $28$,
+and generates a field of degree $2$ or $6$ over $\mathbb F_3$.
+Its invariant subspace cannot have dimension $3$. Thus the involution
+acts freely. Since $U_{28}\subset U_{364}$, it preserves the
+underlying quotient, proving the fiber assertion. The human-proof
+certificate is \texttt{obstructed\_minimum\_galois\_v165}.
+\end{proof}
+
+The $13$ pairs do not exhaust the forgetful fiber as a single kernel
+orbit. Distinct polarized Galois orbits can merge after forgetting
+the polarization; the division-by-two orbit conclusion of
+Corollary~\ref{pp:cor:underlyinggalois} does not extend to these
+$26$-element fibers. No orbit list or descent statement follows
+from this proposition alone.
+
+\section{Galois action fields and orbit classification}
+\begin{theorem}[The ray field of the polarized-class action]
+\label{pp:thm:quotientrayfield}
+Let $\mathfrak P$ be the unique prime of $M$ above $3$, and put
+\[
+ \mathcal E=M\left(\sqrt{\frac{3+\sqrt{21}}2}\right).
+\]
+Then $\mathcal E$ is the ray class field of $M$ of modulus $\mathfrak P$,
+with $[\mathcal E:M]=2$ and relative discriminant and conductor
+$\mathfrak P$. It is Galois over $\mathbb Q$, with group
+$D_8\times C_3$, where $|D_8|=8$.
+
+The kernel of the normalized action on the $160$ principal polarized
+classes is exactly $\operatorname{Gal}(\overline{\mathbb Q}/\mathcal E)$.
+Their fields of moduli are contained in $\mathcal E$, with degrees
+equal to their orbit sizes; a class in a size-$24$ orbit has field of
+moduli $\mathcal E$. The $2808$ obstructed minimum polarized classes
+also have fields of moduli contained in $\mathcal E$.
+These statements do not assert effective descent of polarized models.
+For the complete finite family, including $A$, the common fixing fields
+are $M$ for the $189$ underlying classes and $\mathcal E$ for the
+$2969$ minimum polarized classes.
+\end{theorem}
+\begin{proof}
+The quadratic subfields $\mathbb Q(\sqrt{-3})$ and
+$\mathbb Q(\sqrt{-7})$ of $M$ give $F=\mathbb Q(\sqrt{21})\subset M$.
+Put $\omega=(1+\sqrt{21})/2$ and $a=\omega+1$. Then
+$\omega^2-\omega-5=0$, $\omega^2-4=a$ and $N_{F/\mathbb Q}(a)=-3$.
+In $F$, $(a)$ is the prime above $3$. Since $3$ has order $6$
+modulo $7$, the prime in $M$ has ramification index $2$ and residue
+degree $6$. Its ramification index over $F$ is $1$, so
+$v_{\mathfrak P}(a)=1$ and $(a)\mathcal O_M=\mathfrak P$.
+
+Let $t$ satisfy $t^2-\omega t+1=0$. The integral order
+$\mathcal O_M[t]$ has discriminant $a$, which is a unit away from
+$\mathfrak P$, including above $2$. At $\mathfrak P$, its discriminant
+valuation $1$ precludes a nontrivial local index. Thus
+$\mathcal E=M(t)$ is quadratic over $M$ with discriminant
+$\mathfrak P$. The quadratic conductor--discriminant formula gives
+the same conductor, with no infinite component because $M$ is CM
+\cite[Theorem V.3.27]{MilneCFT2020}.
+For an explicit equation, $\omega=t+t^{-1}$ gives the minimal polynomial
+\[
+ t^4-t^3-3t^2-t+1=0
+\]
+over $\mathbb Q$: $F\subset\mathbb Q(t)$ and $a$ is nonsquare even
+in $M$, so the degree is $4$.
+
+The class number of $M$ is $1$; independently, this follows from
+Masley's Main Theorem for $m=21$, with $\varphi(21)=12\le24$ and
+$21$ absent from its exceptional table \cite[p.~179]{Masley1976}.
+The full-unit residue image is $U_{364}$ by
+Theorem~\ref{pp:thm:fermatunderlying}. The finite-modulus ray sequence
+therefore gives
+\[
+ \operatorname{Cl}_{\mathfrak P}(M)
+ =\mathbb F_{729}^{\times}/U_{364}\simeq C_2.
+\]
+Ray class reciprocity and existence identify the conductor-$\mathfrak P$
+quadratic extension just constructed with the ray field
+\cite[Theorems V.1.7, V.3.6 and Remark V.3.8]{MilneCFT2020}.
+
+Restrict the normalized homomorphism of
+Theorem~\ref{pp:thm:quotientgalois} to
+$\operatorname{Gal}(\overline{\mathbb Q}/M)$. Its image is
+$U_{28}/U_{14}\simeq C_2$, hence it is a continuous abelian character.
+For a local unit at a finite place $v$, form the idele equal to that
+unit at $v$ and $1$ elsewhere. Its reflex norm is an everywhere
+integral adelic unit. The same Tate-lattice and cyclotomic-factor
+argument used in Theorem~\ref{pp:thm:quotientgalois} makes the CM
+comparison map an actual polarized isomorphism. Consequently the
+normalized residue action is the reflex norm modulo $U_{14}$.
+
+If $v\ne\mathfrak P$, the reflex norm has component $1$ at
+$\mathfrak P$: automorphisms preserve the underlying rational prime,
+and $\mathfrak P$ is the only place above $3$. At $\mathfrak P$
+the residue is $r^{286}$, as computed in
+Theorem~\ref{pp:thm:quotientgalois}. This is trivial on principal units
+and maps the full residue group onto $U_{28}$ because
+$\gcd(286,728)=26$. The quadratic character has conductor exactly
+$\mathfrak P$, by the local unit-filtration criterion
+\cite[Section I.1.9]{MilneCFT2020}; its fixed extension of $M$ is
+therefore $\mathcal E$.
+
+The quotient of the normalized action by $U_{28}/U_{14}$ is precisely
+$\operatorname{Gal}(M/\mathbb Q)$, so its full kernel is already
+contained in $\operatorname{Gal}(\overline{\mathbb Q}/M)$.
+It equals $\operatorname{Gal}(\overline{\mathbb Q}/\mathcal E)$.
+Surjectivity and Proposition~\ref{pp:prop:minimumpolarizedgalois}
+give the claimed degree and group over $\mathbb Q$. Faithfulness
+on the $160$ classes identifies their common fixing field exactly.
+The $2808$-class action factors through the same normalized map.
+Taking stabilizer fixed fields proves the fields-of-moduli assertions.
+No descent datum is supplied by this stabilizer calculation.
+Finally $A$ is defined over $\mathbb Q$ and has a unique minimum
+polarized isomorphism class, by
+Proposition~\ref{pp:prop:fermatminpolarization}. Adding these fixed
+classes changes neither kernel. Proposition~\ref{pp:prop:allunderlyinggalois}
+gives the underlying common field $M$; the faithful $160$-class
+subset detects the full polarized kernel while the $2808$-class
+action factors through it. This proves the complete-family assertion.
+\end{proof}
+
+\begin{theorem}[Complete Galois orbit census of the quotient family]
+\label{pp:thm:completequotientorbits}
+The $188$ underlying quotient classes have $22$ Galois orbits, with
+the following sizes and multiplicities:
+\[
+\begin{array}{c|rrrr}
+\text{orbit size}&2&4&6&12\\\hline
+\text{number of orbits}&2&4&4&12.
+\end{array}
+\]
+The $108$ obstructed underlying classes form three orbits of size $4$
+and eight of size $12$. Their $2808$ minimum polarized classes form
+three orbits of size $8$ and $116$ of size $24$.
+Above each underlying size-$4$ orbit lie one polarized size-$8$ orbit
+and four size-$24$ orbits; above each size-$12$ orbit lie thirteen
+size-$24$ orbits.
+
+Including $A$, the complete family has $23$ underlying orbits and
+$131$ minimum polarized orbits. The latter consist of one orbit of
+size $1$, two of size $4$, four of size $8$, four of size $12$, and
+$120$ of size $24$.
+\end{theorem}
+\begin{proof}
+Write $K=\mathbb F_{729}$, $k=\mathbb F_{27}$ and $F(x)=x^3$.
+Let $X$ be the $33880$ three-dimensional $\mathbb F_3$-subspaces
+of $K$. We first count invariant subspaces of $T=uF^j$. For
+$d=\gcd(6,j)$, with $d=6$ if $j=0$, put
+$n=N_{K/\mathbb F_{3^d}}(u)$. Scalar conjugation changes $u$ by
+$v^{1-3^j}$, whose image is precisely the norm-one subgroup. Thus
+the fixed-space count depends only on $n$, and each norm value
+occurs $728/(3^d-1)$ times.
+
+For $j=0$, invariance makes a three-plane a vector space over
+$\mathbb F_3(u)$, so only degrees $1$ and $3$ contribute.
+The scalars $\pm1$ fix all $33880$ planes, the other $24$ elements
+of $k^\times$ fix the $28$ $k$-lines, and all others fix none.
+
+For $j=1,5$, the operator is cyclic with minimal polynomial $X^6-n$.
+Indeed, a shorter relation among its powers would contradict linear
+independence of the six field automorphisms over $K$. For $n=1$,
+the two primary cyclic blocks $(X-1)^3,(X+1)^3$ have four submodules
+of total dimension $3$. For $n=-1$, the single irreducible quadratic
+factor of $(X^2+1)^3$ permits only even dimensions.
+
+For $j=2,4$, a norm value outside $\mathbb F_3$ forces invariance
+under $\mathbb F_9$, again excluding dimension $3$. For $n=\pm1$,
+a sign and scalar conjugation reduce to $F^j$. The nilpotent
+operator $F^j-1$ has cube zero and two-dimensional kernel, hence
+Jordan type $(3,3)$. Its invariant three-planes number
+\[
+ \frac{3^6-3^4}{3^3-3^2}+\binom{2}{1}_{\!3}=36+4=40.
+\]
+Here the cyclic submodules have length $3$; those of type $(2,1)$
+contain the kernel and correspond to lines of the second kernel
+modulo the kernel. Type $(1,1,1)$ is impossible.
+
+For $j=3$, $T$ is $k$-linear with $T^2=n$. If $n=1$, its two
+eigenspaces have dimension $3$ over $\mathbb F_3$, giving
+\[
+ \sum_{r=0}^3\binom{3}{r}_{\!3}\binom{3}{3-r}_{\!3}
+ =1+169+169+1=340
+\]
+invariant three-planes. If $n=-1$, an $\mathbb F_9$-structure
+excludes them. Each of the twelve nontrivial square values in
+$k^\times$ has degree $3$ and gives two invariant three-planes,
+its eigenspaces. The eigenvalues $r,-r$ are not Frobenius conjugate:
+$r^{3^i-1}=-1$ is impossible in the order-$26$ group for $i=1,2$,
+since the power image has odd order. The remaining twelve nonsquare
+values generate a degree-$6$ field after taking a square root and
+give no invariant three-plane.
+
+Let $S=X/K^\times$, of size $94$. The coset form of Burnside's
+lemma says that the number of $F^j$-fixed elements of $S$ is the
+average of $|\operatorname{Fix}_X(uF^j)|$ over $u\in K^\times$.
+The preceding counts give
+\[
+\begin{array}{c|rrrrrr}
+j&0&1&2&3&4&5\\\hline
+|\operatorname{Fix}_S(F^j)|&94&2&10&14&10&2.
+\end{array}
+\]
+For example the three nontrivial averages are
+$364\cdot4/728=2$, $91\cdot2\cdot40/728=10$, and
+$28(340+12\cdot2)/728=14$.
+Fixed-point inversion gives respectively $2,4,4,12$ Frobenius
+orbits of lengths $1,2,3,6$. Every full-scalar orbit splits into two
+$U_{364}$-orbits: its stabilizer is either $\mathbb F_3^\times$ or
+$k^\times$, both contained in $U_{364}$. Thus these lengths double
+in the $188$-class action of
+Proposition~\ref{pp:prop:allunderlyinggalois}. Subtracting
+Corollary~\ref{pp:cor:underlyinggalois} gives the obstructed
+underlying distribution.
+
+For the polarized count, use the actual similitude group
+$G=\{uF^j:u^{28}=\epsilon c^{3^j-1},\ \epsilon=\pm1\}$,
+with $c^{27}=-c$ and $|G|=336$.
+The sums of fixed three-planes restricted to these maps are
+\[
+\begin{array}{c|rrrrrr}
+j&0&1&2&3&4&5\\\hline
+\displaystyle\sum_{uF^j\in G}|\operatorname{Fix}_X(uF^j)|
+&67760&112&560&9520&560&112.
+\end{array}
+\]
+To verify the restriction, at $j=0$ only $\pm1$ contribute.
+For odd $j=1,5$, $u^{364}=-\epsilon$, so the $28$ maps with
+$\epsilon=-1$ each fix four planes. For $j=2,4$, the four possible
+values $n=u^{91}$ satisfy $n^4=\epsilon$, each with multiplicity
+$7$; only $n=\pm1$ contribute, giving $2\cdot7\cdot40$.
+At $j=3$, $n=u^{28}=-\epsilon$, and the $28$ involutions each
+fix $340$ planes. Burnside therefore gives $234$ $G$-orbits on $X$.
+
+We remove the principalizable planes by incidence. The thirteen
+coefficient lines in $k$ have pullback substitution
+$t\mapsto t^{3^{-j}}$, up to the irrelevant scalar $\epsilon$.
+Forward incidence transport uses its inverse; the fixed lines,
+stabilizers and orbit partition are the same.
+They form one fixed line $\mathbb F_3$ and four orbits of length
+$3$. A line in a nontrivial orbit has stabilizer
+$G_0=\{uF^j\in G:j=0,3\}$, of order $112$.
+Scalar multiplication identifies its Lagrangians with those for
+the actual form and normalizes $G_0$: at $j=3$ it changes $u$ by
+$v^{26}$, whose $28$th power is $1$.
+
+On the $1120$ Lagrangians, the $j=0$ fixed sum for $G_0$ is
+$2\cdot1120$. At $j=3$, the maps with $\epsilon=1$ square to
+$-1$ and fix no three-plane. Each of the $28$ maps with
+$\epsilon=-1$ is an anti-symplectic involution with complementary
+Lagrangian eigenspaces. An invariant Lagrangian is a subspace of
+one eigenspace together with its annihilator in the other, giving
+$\sum_r\binom{3}{r}_3=28$ choices. Hence $G_0$ has
+$(2240+28\cdot28)/112=27$ Lagrangian orbits.
+
+Consider pairs $(H,\ell)$ with $\ell\subset T_H$ a coefficient
+line. Their number of $G$-orbits is $11+4\cdot27=119$, using
+Theorem~\ref{pp:thm:quotientgalois} for the fixed coefficient line.
+A generic principalizable plane occurs once; a $k$-line occurs
+thirteen times. The $28$ $k$-lines are transitive under $G$ and
+under its normal index-$3$ subgroup $G_0$, since the number of
+$G_0$-orbits divides both $3$ and $28$. The incidence over these
+lines has five orbits, while the lines themselves have one.
+Thus the principalizable planes have $119-5+1=115$ orbits, leaving
+$234-115=119$ obstructed polarized orbits.
+
+The central involution acts freely, so stabilizers in $D_8\times C_3$
+have orders $1,2,3,6$ and orbit sizes $24,12,8,4$. Let $h$ generate
+the central $C_3$. Choose a representative $g$ above $F^2$ with
+$g^3=1$. For each $v\in U_7$, the map $v^{-1}g$ also has cube
+$1$, since $v^{91}=1$, and fixes $40$ three-planes. Their seven
+fixed sets are disjoint: an overlap would make a three-plane
+invariant under an order-$7$ scalar. These $280$ planes form
+exactly $40$ root orbits fixed by $h$.
+
+For a fixed principalizable plane outside the $k$-lines, its
+unique coefficient line must be fixed by $F^2$, so it is the
+actual coefficient line $\mathbb F_3$. The $k$-lines are also
+isotropic. Hence the principalizable fixed root orbits are exactly
+the fixed classes in the $160$-class population. Its two size-$4$
+orbits and one size-$8$ orbit give $16$ fixed classes. Thus $h$
+fixes $40-16=24$ obstructed polarized classes. If $a_d$ counts
+their orbits of size $d$, then
+\[
+\begin{split}
+ a_4+a_8+a_{12}+a_{24}&=119,\\
+ 4a_4+8a_8+12a_{12}+24a_{24}&=2808,\\
+ 4a_4+8a_8&=24.
+\end{split}
+\]
+Nonnegativity gives $a_4=6-2a_8\ge0$ and
+$a_{12}=2a_8-6\ge0$, forcing $a_8=3$, $a_{24}=116$ and
+$a_4=a_{12}=0$.
+
+Each polarized orbit maps onto an underlying orbit. The $312$
+classes over an underlying size-$12$ orbit therefore form thirteen
+size-$24$ orbits. Over each size-$4$ orbit the equation
+$8x+24y=104$ forces $x\equiv1\pmod3$. There are three such
+underlying orbits and only three size-$8$ polarized orbits in total,
+so each has $x=1,y=4$. Finally add the known principal orbits and
+the fixed minimum class of $A$. This proves all counts.
+\end{proof}
+
+\begin{corollary}[Fields of moduli in the obstructed family]
+\label{pp:cor:obstructedmodulifields}
+Put $F_0=\mathbb Q(\sqrt{-3},\sqrt{-7})$ and
+$E_0=F_0(\sqrt{(3+\sqrt{21})/2})$.
+The obstructed underlying classes in size-$4$ orbits have field of
+moduli $F_0$; those in size-$12$ orbits have field of moduli $M$.
+The minimum polarized classes in size-$8$ orbits have field of moduli
+$E_0$, and those in size-$24$ orbits have field of moduli $\mathcal E$.
+In particular their action is faithful, with common fixing field
+$\mathcal E$.
+
+The field $E_0$ is the degree-$8$ dihedral splitting field of
+$X^4-X^3-3X^2-X+1$. None of these field-of-moduli statements
+asserts effective descent.
+\end{corollary}
+\begin{proof}
+The unique order-$3$ subgroup of $\operatorname{Gal}(M/\mathbb Q)$
+fixes $F_0$; it is the stabilizer in a size-$4$ orbit. A size-$12$
+orbit has trivial stabilizer. Similarly the unique central $C_3$
+in $\operatorname{Gal}(\mathcal E/\mathbb Q)$ is the stabilizer in
+a size-$8$ orbit. It fixes $F_0$ and cannot negate the square root
+of $a=(3+\sqrt{21})/2$, since its order is $3$. Thus it fixes $E_0$.
+Since $\sqrt a\notin M$, the degree of $E_0$ over $\mathbb Q$ is $8$,
+so this is the full fixed field. A size-$24$ orbit has trivial stabilizer. Apply Theorem~\ref{pp:thm:quotientrayfield}.
+
+Write $a=(3+\sqrt{21})/2$ and $a'=(3-\sqrt{21})/2$, so $aa'=-3$.
+The field $E_0$ contains both $\sqrt a$ and
+$\sqrt{a'}=\sqrt{-3}/\sqrt a$, hence all four roots
+$t,t^{-1},t',t'^{-1}$. Conversely their sums give $\sqrt{21}$,
+their differences give $\sqrt a,\sqrt{a'}$, and the product of
+those differences gives $\sqrt{-3}$. The splitting field therefore
+contains $F_0$ and $\sqrt a$, and equals $E_0$.
+\end{proof}
+
+\begin{theorem}[Fields of moduli for the complete finite family]
+\label{pp:thm:completequotientmoduli}
+Choose $\sqrt{21}>0$, put $a=(3+\sqrt{21})/2$, and set
+\[
+ D=\mathbb Q\left(\frac{(1+\sqrt{21})/2+\sqrt a}{2}\right),
+ \qquad J=\mathbb Q(\zeta_7+\zeta_7^{-1}),
+ \qquad M^+=\mathbb Q(\zeta_{21}+\zeta_{21}^{-1}).
+\]
+Retain $F_0=\mathbb Q(\sqrt{-3},\sqrt{-7})$,
+$E_0=F_0(\sqrt a)$ and $\mathcal E=M(\sqrt a)$.
+The fields of moduli of the complete quotient family, including $A$,
+are given by the following tables. Non-normal fields are specified up to
+$\mathbb Q$-conjugacy in $\mathcal E$.
+\[
+\begin{array}{c|rrrrr}
+\text{underlying orbit size}&1&2&4&6&12\\\hline
+\text{number of orbits}&1&2&4&4&12\\
+\text{field of moduli}&\mathbb Q&\mathbb Q(\sqrt{21})&F_0&M^+&M
+\end{array}
+\]
+\[
+\begin{array}{c|rrrrr}
+\text{minimum polarized orbit size}&1&4&8&12&24\\\hline
+\text{number of orbits}&1&2&4&4&120\\
+\text{field of moduli}&\mathbb Q&D&E_0&DJ&\mathcal E
+\end{array}
+\]
+Here $D$ has degree $4$ and signature $(2,1)$, while $DJ$ has degree
+$12$ and signature $(6,3)$. With the chosen embedding,
+$DJ=\mathcal E\cap\mathbb R$; neither $D$ nor $DJ$ is totally real.
+These remain fields of moduli, with no assertion of effective descent.
+\end{theorem}
+\begin{proof}
+The normalized action projects to $\operatorname{Gal}(M/\mathbb Q)$
+by $(j,\epsilon)$, where $\zeta_7\mapsto\zeta_7^{3^j}$ and
+$\zeta_3\mapsto\zeta_3^\epsilon$. In particular complex conjugation
+projects to $(3,-1)$. A stabilizer avoiding the free central involution
+in $D_8\times C_3$ has order $1,2,3$ or $6$. Its order-$2$ factor,
+if present, is a reflection. The two reflection conjugacy classes are
+distinguished by the multipliers $\epsilon=1$ and $-1$ at $j=3$:
+the two lifts over either pair differ by the central involution and
+are conjugate by an order-$4$ scalar.
+
+Write $K_{\mathrm{res}}=\mathbb F_{729}$ and let
+$\operatorname{Frob}(x)=x^3$ on $K_{\mathrm{res}}$.
+A reflection of multiplier $1$ fixes no root orbit of any three-plane
+$H\subset K_{\mathrm{res}}$. Indeed write it as $g=u\operatorname{Frob}^3$. Then
+$g^2=u^{28}=-\epsilon$. If $gH=vH$ for $v\in U_{14}$, the operator
+$v^{-1}g$ preserves $H$ and has square $-\epsilon$, because $v^{28}=1$.
+For $\epsilon=1$, its irreducible polynomial $X^2+1$ would make $H$
+a vector space over $\mathbb F_9$, impossible in dimension $3$ over
+$\mathbb F_3$. Thus every reflection stabilizer is conjugate to complex
+conjugation $c$ in $\operatorname{Gal}(\mathcal E/\mathbb Q)$.
+
+It follows that the stabilizers of the principal polarized orbits of
+sizes $4,8,12,24$ are, up to conjugacy,
+$C_3\times\langle c\rangle$, $C_3$, $\langle c\rangle$, and $1$.
+The obstructed polarized orbits have only sizes $8,24$, already covered
+by Corollary~\ref{pp:cor:obstructedmodulifields}.
+
+The fields $E_0$ and $J$ lie in $\mathcal E$ and have coprime degrees
+$8,3$, so $\mathcal E=E_0J$. By the quartic irreducibility in
+Theorem~\ref{pp:thm:quotientrayfield},
+$D=\mathbb Q(\sqrt{21},\sqrt a)$ has degree $4$.
+It is fixed by $c$, as is $J$, and $[DJ:\mathbb Q]=12$.
+Consequently $\mathcal E^{\langle c\rangle}=DJ$ and
+$\mathcal E^{C_3\times\langle c\rangle}=D$.
+The quartic has two real roots over $\sqrt{21}>0$ and one complex
+pair over its negative conjugate. Since $J$ is totally real and
+linearly disjoint from $D$, the signatures follow.
+
+For underlying principalizable classes, forgetting the two forms is
+exactly quotienting by the free central involution $z$.
+Thus a polarized stabilizer $H$ gives the underlying stabilizer
+$H\langle z\rangle/\langle z\rangle$ in $\operatorname{Gal}(M/\mathbb Q)$.
+The size-$6$ underlying orbits therefore have fixed field $M^+$;
+the size-$2$ orbits have the field fixed by $C_3$ and complex
+conjugation, namely $\mathbb Q(\sqrt{21})$.
+The size-$4$ and size-$12$ fields are $F_0$ and $M$.
+Add the obstructed underlying orbits from
+Corollary~\ref{pp:cor:obstructedmodulifields} and the rational class
+of $A$, with its unique minimum polarization class.
+The multiplicities are those of Theorem~\ref{pp:thm:completequotientorbits}.
+\end{proof}
+
+\section{Real models and actual descent}
+\begin{theorem}[Real models and pseudoreal underlying varieties]
+\label{pp:thm:quotientrealmodels}
+In the complete $189$-class underlying family, exactly $15$ complex
+isomorphism classes admit a model over $\mathbb R$. Each admits a model
+over $\mathbb R_{\mathrm{alg}}=\overline{\mathbb Q}\cap\mathbb R$.
+Another $14$ classes are \emph{pseudoreal}: they are isomorphic to their
+complex conjugates but have no model over $\mathbb R$.
+
+Exactly $28$ of the $160$ principal polarized quotient classes admit
+real models, comprising two $R$-order and $26$ $S$-order classes.
+They lie over $14$ underlying classes, one of order $R$ and $13$ of
+order $S$, with both principal classes real on each. The $14$ pseudoreal
+classes also comprise one $R$-order and $13$ $S$-order classes.
+Including $A$ with its minimum polarization gives $29$ real minimum
+polarized classes. None of the $2808$ obstructed minimum polarized
+classes has a real model.
+
+These count complex isomorphism classes admitting models, not inequivalent
+real forms. Polarizations mean polarization morphisms; no chosen line-bundle
+linearization or descent to the smallest number field is asserted.
+\end{theorem}
+\begin{proof}
+Write $c$ for the chosen complex conjugation. The literal Fermat factor
+$A$ is defined over $\mathbb Q$, and the restricted Jacobian polarization
+$\mu$ is rational. Every geometric polarization $\lambda$ on $A$ has
+$\lambda=\mu\alpha$ with $\alpha\in\End^0(A)=M$. Rosati is CM conjugation,
+so symmetry gives $\alpha\in M^+$. The actual Galois action on $M$ is
+cyclotomic, hence $c(\lambda)=\lambda$. In particular the minimum
+polarization $\lambda_{\min}$ is defined over $\mathbb R_{\mathrm{alg}}$.
+This does not identify it with $\mu$ or assert that it is rational.
+
+Let $Y=A/H$ be a principal quotient with pullback $\lambda_{\min}$.
+If its polarized class is fixed by $c$, the exact root-orbit equivalence
+in Theorem~\ref{pp:thm:fermatallquotients} gives $c(H)=vH$ for
+$v\in\mu_{42}$. Multiplication by $v^{-1}$ induces a polarized group
+isomorphism $f:Y^c\longrightarrow Y$. Its conjugate cocycle is
+\[
+ f\,c(f)=1,\qquad v^{-1}\overline{v}^{\,-1}=1.
+\]
+This supplies a descent datum for the finite quadratic extension
+$\overline{\mathbb Q}/\mathbb R_{\mathrm{alg}}$.
+Since $Y$ is projective, finite locally free descent is effective
+\cite[Lemma~39.25.3, tag 0CCJ]{StacksDescent}.
+The origin, group law and polarization morphism descend by full
+faithfulness for fpqc descent of morphisms
+\cite[Section~35.35, tag 02VV]{StacksDescent}.
+Conversely, a real polarized model forces its class to be fixed by $c$.
+
+The real-embedding counts in
+Theorem~\ref{pp:thm:completequotientmoduli} give
+$1+2\cdot2+4\cdot6=29$ conjugation-fixed underlying classes and the
+same number of minimum polarized classes including $A$.
+There are $28$ principal fixed classes, two of order $R$ and $26$ of
+order $S$; the obstructed minimum orbits have no fixed classes.
+The free central involution exchanges the two principal classes over
+each principalizable underlying variety and commutes with $c$.
+Thus the $28$ real principal classes lie over $14$ underlying classes.
+Together with $A$ this gives $15$ real underlying classes. On each of
+the other $14$ conjugation-fixed underlying classes, $c$ exchanges its
+two principal classes.
+
+It remains to exclude even unpolarized real models for these last
+classes. Suppose $Y_0/\mathbb R$ were such a model and choose a complex
+isogeny $\phi:A_{\mathbb C}\longrightarrow Y_{0,\mathbb C}$.
+The rank-one $M$-module of rational homomorphisms gives
+$c(\phi)=\phi u$ for $u\in M^\times$. Commutativity of $M$ then gives
+\[
+ c(\phi\alpha\phi^{-1})
+   =\phi u\overline\alpha u^{-1}\phi^{-1}
+   =\phi\overline\alpha\phi^{-1}.
+\]
+So conjugation on the full endomorphism algebra of any such real form
+must be CM conjugation. Choose a real polarization $\mu_0$ on $Y_0$.
+For any geometric polarization $\eta=\mu_0\beta$, Rosati symmetry
+puts $\beta\in M^+$. Consequently $c(\eta)=\eta$, and descent of
+morphisms makes every geometric polarization morphism real.
+In particular each principal class would be fixed, contradicting their
+exchange. These $14$ classes are therefore pseudoreal. The remaining
+$160$ underlying classes are not conjugation-fixed and cannot admit real
+models. This proves the asserted counts and distinctions.
+\end{proof}
+
+\begin{corollary}[Real forms and forgetting the minimum polarization]
+\label{pp:cor:quotientrealforms}
+The family in Theorem~\ref{pp:thm:quotientrealmodels} has exactly
+$58$ origin-preserving real minimum polarized forms: $56$ principal
+forms, comprising four of order $R$ and $52$ of order $S$, and two
+forms of the minimum-polarized source. There are exactly $29$ underlying
+real forms. Forgetting the minimum polarization has two elements in
+every fiber. All forms admit models over $\mathbb R_{\mathrm{alg}}$,
+and each real polarized automorphism group is $\{1,-1\}$.
+\end{corollary}
+\begin{proof}
+Fix a real model and let $\tau$ be its semilinear descent involution.
+The preceding theorem forces conjugation on the full endomorphism
+algebra to be CM conjugation. Its action on the full geometric polarized
+automorphism group $G$ is therefore inversion. This group is $\mu_6$
+for every principal quotient and $\mu_{42}$ for the source.
+Every alternative polarized descent datum is $a\tau$ with $a\in G$,
+and $(a\tau)^2=1$. An isomorphism $h$ between $a\tau$ and $b\tau$
+exists exactly when $b=h^2a$. Effective descent thus identifies the
+real forms with $G/G^2$, which has two classes represented by $1$ and
+$-1$. Fixed automorphisms satisfy $h=h^{-1}$ and hence are $\pm1$.
+This argument applies over both $\overline{\mathbb Q}/\mathbb R_{\mathrm{alg}}$
+and $\mathbb C/\mathbb R$; the full automorphism groups agree under
+algebraically closed base extension.
+
+For the underlying variety with full order $T$, replace $G$ by
+$T^\times$. The cocycle quotient is
+\[
+ \frac{\{u\in T^\times:u\bar u=1\}}
+ {\{h/\bar h:h\in T^\times\}}.
+\]
+The numerator consists of roots of unity. Put $E_L=\mathcal O_{M^+}^{\times}$ and
+$U_S=S^\times\cap M^+$. The adopted identities
+$R^\times=\mu_6E_L$ and $S^\times=\mu_6U_S$ give denominator
+$\mu_3$, so each of the $14$ real quotient complex classes has two
+underlying real forms. For $T=\mathcal O_M$, root squares give
+$\mu_{21}$ in the denominator, while the unit
+$\gamma=z^6(1-z^2)$, $z=\zeta_{42}$, has
+$\gamma/\bar\gamma=-z^{14}\notin\mu_{21}$. The denominator is
+therefore all $\mu_{42}$, leaving just one underlying real form of $A$.
+This gives $2\cdot14+1=29$ underlying forms.
+
+For a fixed geometric principal class, the forgetful map on twist sets
+is the identity $\mu_6/\mu_3\longrightarrow\mu_6/\mu_3$.
+Each underlying quotient complex class has two principal classes,
+so each underlying real form supports two real principal classes.
+For the source the map is
+$\mu_{42}/\mu_{21}\longrightarrow\mu_{42}/\mu_{42}$, with two
+classes above its unique underlying real form. This proves the
+$58$-to-$29$ distribution. The classification concerns polarization
+morphisms and origin-preserving isomorphisms, without translations,
+real torsors or higher-degree polarization counts.
+\end{proof}
+
+\section{A common field of definition}
+\begin{theorem}[Common field of definition and underlying descent obstruction]
+\label{pp:thm:quotientdefinitionfield}
+Retain $M=\mathbb Q(\zeta_{21})$ and
+$\mathcal E=M(\sqrt{(3+\sqrt{21})/2})$.
+Let $Y$ be any of the $188$ underlying quotient classes $A/H$ in
+Theorem~\ref{pp:thm:fermatunderlying}. For every number field
+$M\subseteq F\subset\overline{\mathbb Q}$, the class $Y$ has a
+model over $F$ if and only if $\mathcal E\subseteq F$.
+In particular none of these $188$ classes descends to its embedded
+field of moduli, all of which lie in $M$. This negative assertion
+does not include the rational source $A$.
+
+There is a single twist $A^{\mathrm{tw}}/\mathcal E$ carrying the
+minimum polarization and with constant $\pi$-torsion. Its $33880$
+order-$27$ subgroup kernels and quotient maps are defined over
+$\mathcal E$. Hence $\mathcal E$ is the smallest common field of
+definition inside $\overline{\mathbb Q}$ for the $189$ underlying
+classes and also for their $2969$ minimum polarized classes.
+The common underlying field of moduli is $M$, strictly smaller.
+\end{theorem}
+\begin{proof}
+The source is rational with all endomorphisms defined over $M$.
+Writing $\lambda_{\min}=\mu\alpha$ using its rational restricted
+Jacobian polarization gives $\alpha\in M^+$, so $\lambda_{\min}$
+is defined over $M$. On
+$D=A[\pi]\simeq\mathbb F_{729}$, actual Galois action over $M$
+is therefore a continuous scalar character
+\[
+ q:G_M\longrightarrow U_{28}.
+\]
+Indeed it is $\mathcal O_M/\mathfrak P$-linear and preserves the
+polarization pairing, since $G_M$ fixes $\mu_3$. The normalization
+unit in Theorem~\ref{pp:thm:quotientgalois} may here be chosen to be
+$1$. Thus $q$ modulo $U_{14}$ is the adopted normalized action, and
+Theorem~\ref{pp:thm:quotientrayfield} gives
+\[
+ \ker(q\bmod U_{14})=G_{\mathcal E}.
+\]
+
+Suppose $Y_0/F$ represents $A/H$, with $F\supseteq M$, and choose the
+resulting degree-$27$ geometric isogeny $\phi:A\longrightarrow Y_0$.
+The rank-one $M$-module of rational homomorphisms gives
+$\sigma(\phi)=\phi a_\sigma$, $a_\sigma\in M^\times$, for
+$\sigma\in G_F$. Since $G_F$ fixes $M$, this is a character.
+The map $\phi$ is defined over a finite extension, so its character
+has finite image and therefore lies in $\mu_{42}$. This finite-order
+argument, rather than an assumed integrality of a quasi-isogeny ratio,
+is what makes $a_\sigma$ an automorphism. Taking kernels shows
+$\sigma(H)=a_\sigma^{-1}H$, so $G_F$ fixes the root orbit of $H$.
+If some $q_\sigma$ lay outside $U_{14}$, a scalar in
+$U_{28}\setminus U_{14}$ would preserve $H$. Such a scalar has
+order $4$ or $28$ and generates a field of degree $2$ or $6$ over
+$\mathbb F_3$. It cannot preserve a three-dimensional subspace.
+Consequently $G_F\subseteq G_{\mathcal E}$ and
+$\mathcal E\subseteq F$.
+
+For sufficiency, the character $q$ restricted to $G_{\mathcal E}$
+takes values in $U_{14}$. Reduction identifies
+$\mu_{14}\subset\mu_{42}$ with $U_{14}$, since its kernel on
+$\mu_{42}$ is $\mu_3$. Let $v_\sigma\in\mu_{14}$ be the unique
+lift of $q_\sigma$. The roots are defined over $M$, so $v$ is a
+character and $v_\sigma^{-1}\sigma$ is a coherent descent datum.
+It factors through a finite Galois extension of $\mathcal E$.
+Projectivity and descent of morphisms make it effective as a polarized
+abelian variety $A^{\mathrm{tw}}/\mathcal E$ \cite{StacksDescent}.
+The twisted action on $D$ is trivial. Every subgroup $H$ and quotient
+map is consequently defined over $\mathcal E$
+\cite[Chap.~IV, Lemma~2.1]{MilneAV2008}. For isotropic $H$,
+the quotient polarization with pullback $\lambda_{\min}$ descends.
+For obstructed $H$, use the minimum form with pullback
+$3\lambda_{\min}$; these represent all obstructed minimum classes
+by the root-orbit description above. The quotient construction
+commutes with base change, and the uniquely determined polarization
+morphism descends. This supplies every claimed model over $\mathcal E$.
+
+Finally any common field of definition for all underlying classes
+contains their common field of moduli $M$. The necessity just proved
+then forces it to contain $\mathcal E$. For all minimum polarized
+classes, their common field of moduli already is $\mathcal E$.
+The simultaneous construction proves minimality in both cases.
+No smallest field of definition for an individual class over fields
+not containing $M$ is specified.
+\end{proof}
+
+The individual existence of CM models over $\mathcal E$ also follows
+from the classical descent theorem of Milne, with its correction and
+addendum \cite{MilneModuli1972,MilneModuli1974}.
+That theorem concerns the fully marked polarized quotient triple,
+whose field of moduli here is $\mathcal E$, rather than the coarse
+underlying field contained in $M$. Its additional purity hypothesis
+holds: the quotient root group $\mu_6$ is a direct summand of
+$\mu_{42}$. The polarization-independent shorthand in Milne's
+Remark~2 does not remove the polarization requirement on the
+isomorphisms defining this field. Our construction gives, in addition,
+one explicit twist with constant $\pi$-torsion and all quotient maps
+simultaneously over $\mathcal E$; the underlying descent obstruction
+is proved separately above.
+
+\begin{theorem}[A common real number field for the real forms]
+\label{pp:thm:realdefinitionfield}
+Let $c$ be the chosen complex conjugation and put
+$\mathcal E_{\mathbb R}=\mathcal E^{\langle c\rangle}
+=\mathcal E\cap\mathbb R$. All $58$ minimum polarized real forms
+and all $29$ underlying real forms classified above have models over
+$\mathcal E_{\mathbb R}$ inducing those real forms under the selected
+embedding. This field has degree $12$ and signature $(6,3)$; it is
+not totally real.
+
+Among the $14$ underlying real quotient complex classes, exactly $12$
+have field of moduli $M^+$. For each of these, and for each of its real
+forms, $\mathcal E_{\mathbb R}$ is the smallest real algebraic field
+of definition inside $\overline{\mathbb Q}\cap\mathbb R$.
+It is also the smallest common real algebraic field of definition
+for all $15$ underlying real-model complex classes, for all $29$
+underlying real forms, and for all $58$ minimum polarized real forms.
+\end{theorem}
+\begin{proof}
+Use the character $q$ and its unique lift
+$v:G_{\mathcal E}\longrightarrow\mu_{14}$ from
+Theorem~\ref{pp:thm:quotientdefinitionfield}.
+On $D$, conjugation is semilinear for $x\mapsto x^{27}$, so
+\[
+ q(c\sigma c)=q(\sigma)^{27}=q(\sigma)^{-1},
+ \qquad v(c\sigma c)=c(v(\sigma)).
+\]
+The last equality follows from injectivity of root reduction on
+$\mu_{14}$. The sequence from $G_{\mathcal E}$ to
+$G_{\mathcal E_{\mathbb R}}$ splits by the actual involution $c$.
+Consequently $v(\sigma)^{-1}\sigma$ on $G_{\mathcal E}$ together
+with $c$ gives a coherent finite descent datum on the source.
+The minimum polarization is defined over
+$M^+\subset\mathcal E_{\mathbb R}$ and is preserved by these roots,
+so the datum is effective as a polarized abelian variety.
+Its $D$-action is trivial over $\mathcal E$ and is the original
+conjugation action over $\mathcal E_{\mathbb R}$.
+Only stability of $D$ is needed; the endomorphism $\pi$ itself is
+not asserted to be defined over $\mathcal E_{\mathbb R}$.
+
+For a conjugation-fixed principal quotient class choose $H$ and
+$r\in\mu_{42}$ with $c(H)=rH$. Replace the source datum at $c$
+by $r^{-1}c$. Its square is $1$, and its cross-relation with
+$G_{\mathcal E}$ is unchanged because $r$ is defined over
+$\mathcal E$ and commutes with the lifted roots. It preserves
+$H$ and the source polarization. Finite subgroup quotient descent
+and uniqueness of the quotient polarization therefore give the
+desired principally polarized model over $\mathcal E_{\mathbb R}$.
+For the source itself use the preceding datum.
+
+Twisting each model by $-1$ along
+$\mathcal E/\mathcal E_{\mathbb R}$ changes its real datum
+from $\tau$ to $-\tau$: under the selected real embedding this
+quadratic extension becomes $\mathbb C/\mathbb R$.
+The root-square classification above identifies these as exactly
+the two polarized real forms. This supplies all $58$ forms, hence
+all $29$ underlying forms by the proved forgetful surjection.
+
+The four polarized size-$12$ orbits have $24$ conjugation-fixed
+classes by signature $(6,3)$. The two conjugation-fixed principal
+classes above each real underlying class therefore give $12$ real
+underlying classes with field of moduli
+$M^+$. The other two real quotient classes, one of each order,
+have field of moduli $\mathbb Q(\sqrt{21})$.
+If an algebraic field $F\subset\overline{\mathbb Q}\cap\mathbb R$
+defines one of the former $12$ classes, it contains $M^+$.
+The model descends to a number field $F_0\subseteq F$, which we
+enlarge inside $F$ to contain $M^+$. Base change to $F_0M$ and
+Theorem~\ref{pp:thm:quotientdefinitionfield} imply
+$\mathcal E\subseteq F_0M\subseteq FM$. Since $M/M^+$ is imaginary quadratic,
+$(FM)^c=F$, whence $\mathcal E_{\mathbb R}\subseteq F$.
+The constructed models prove the individual and common minimality
+assertions. No minimality among arbitrary nonreal fields or
+transcendental real extensions is asserted.
+\end{proof}
+
+\section{Minimum degrees and the remaining cases}
+\begin{theorem}[Minimum degrees of underlying fields of definition]
+\label{pp:thm:definitiondegrees}
+Let $Y$ be one of the $188$ underlying quotient classes, with embedded
+field of moduli $k_Y\subseteq M$. Every number field $F$ defining $Y$
+satisfies $2\mid[F:k_Y]$. For the $144$ classes with $k_Y=M$, the
+minimum absolute degree of a field of definition is $24$, attained
+by $\mathcal E$. For the $24$ classes with $k_Y=M^+$, it is $12$,
+attained by suitable conjugates of $\mathcal E_{\mathbb R}$.
+The latter assertion includes the $12$ pseudoreal classes in those
+orbits, using nonreal embedded conjugates.
+
+For the remaining $16$ classes with field of moduli $B$, the lower
+bound is $8$; for the remaining four with field of moduli
+$\mathbb Q(\sqrt{21})$, it is $4$. No equality is asserted in
+these last two cases. The rational source $A$ has minimum degree $1$.
+\end{theorem}
+\begin{proof}
+A model over $F$ forces $k_Y\subseteq F$. Its base change to $FM$
+and Theorem~\ref{pp:thm:quotientdefinitionfield} give
+$\mathcal E\subseteq FM$, so $[FM:M]$ is even.
+Since $M/\mathbb Q$ is Galois, restriction identifies
+$\operatorname{Gal}(FM/F)$ with
+$\operatorname{Gal}(M/(M\cap F))$. The degree formula gives
+\[
+ [FM:M]=[F:M\cap F],\qquad
+ [F:k_Y]=[F:M\cap F]\,[M\cap F:k_Y].
+\]
+Thus $[F:k_Y]$ is even. The fields-of-moduli table gives the lower
+bounds and the counts $144+24+16+4=188$.
+
+The common $\mathcal E$ models attain degree $24$ when $k_Y=M$.
+Each of the four underlying size-$6$ orbits contains three real-model
+classes: its polarized size-$12$ orbit has six conjugation-fixed
+classes, with two above each real underlying class.
+Theorem~\ref{pp:thm:realdefinitionfield} supplies an
+$\mathcal E_{\mathbb R}$ model for such a real member. Conjugating
+this model by an automorphism of $\overline{\mathbb Q}/\mathbb Q$
+supplies a degree-$12$ model for every member of the same orbit.
+For a pseudoreal member the resulting embedded field cannot lie in
+$\mathbb R$, although its abstract signature is still $(6,3)$.
+This proves degree minimality without asserting a unique smallest
+field under inclusion among arbitrary nonreal fields.
+\end{proof}
+
+\section{Weil structures and maps from obstructed quotients}
+\begin{corollary}[Weil structures and Hodge classes on the quotient family]
+\label{pp:cor:quotientweilhodge}
+All $160$ principal polarized classes of
+Theorem~\ref{pp:thm:fermatallquotients}, every minimum polarization
+on each of the $108$ obstructed varieties of
+Theorem~\ref{pp:thm:obstructedminimum}, and the minimum class on the
+actual Fermat factor $A$ have integral
+$\mathcal O_K$ action for $K=\mathbb Q(\sqrt{-3})$, signature $(3,3)$,
+and Hermitian discriminant class $-1$.
+
+Each of the $188$ underlying quotients, and $A$, has rational Hodge
+algebra generated by divisors and its two-dimensional $K$-Weil space
+in codimension three, with Hodge-dimension polynomial
+$(1+t)^6+2t^3$. Every rational Hodge class on every finite product of
+these varieties, with repetitions allowed, is algebraic.
+\end{corollary}
+\begin{proof}
+Choose the minimum form $E$ on $A$ as the pullback of an actual
+principal B form through a degree-$27$ $M$-linear isogeny of
+Proposition~\ref{pp:prop:fermatbcminimum}. The accepted B form has
+signature $(3,3)$ and discriminant $-1$ by
+Corollary~\externalref{packet}{pp:cor:weilimage}. Pullback gives a rational $K$-linear
+isometry, so $E$ has the same discriminant. All $160$ principal
+classes admit a quotient presentation with pullback $E$ by
+Theorem~\ref{pp:thm:fermatallquotients}; the required source unit
+normalization commutes with $K$. Their rational Hermitian spaces
+are therefore isometric to B's.
+
+The full integral orders $O,R,S$ all contain
+$\mathcal O_K=\mathbb Z[z^{14}]$, since $z^{14}\equiv1\pmod{\mathfrak P}$.
+The actual analytic $K$ action retains signature $(3,3)$ under the
+specified isogenies, and every polarization Rosati involution restricts
+to conjugation. For a minimum form $F=3E_\varepsilon$ on an obstructed
+variety, Theorem~\ref{pp:thm:obstructedminimum} gives
+$\varepsilon\in E_L^+$. In common rational coordinates its Hermitian
+form is $h_F(x,y)=h_E(3\varepsilon x,y)$. Its determinant ratio is
+\[
+ N_{M/K}(3\varepsilon)=N_{L/\mathbb Q}(3\varepsilon)
+ =3^6=729=N_{K/\mathbb Q}(27),
+\]
+because $M=LK$, $L\cap K=\mathbb Q$, and $N(\varepsilon)=1$.
+The discriminant class remains $-1$. The minimum forms on $A$ differ
+by positive real units and have determinant ratio $1$. None of these
+rational determinant statements changes the nonprincipal polarization
+types or the integral lattices.
+
+Every quotient is $M$-linearly isogenous to $A$ and hence B. These
+algebraic isogenies identify rational cohomology rings, divisor subspaces,
+and the rational Weil spaces
+$W_K(Y)=\bigwedge_K^6H^1(Y,\mathbb Q)$. Thus the B-type
+ divisor/Weil generation and the displayed dimension polynomial transfer
+from the all-powers argument of Section~\externalref{hodge}{ext:sec:main}.
+The principal B model and the original trace-polarized B fiber are
+isogenous, as established in the principal-lattice construction; their
+integral polarizations are not being identified.
+
+A product $X$ of $n$ chosen factors is isogenous to $B^n$. Taking
+rational quasi-inverses in $\operatorname{Hom}\otimes\mathbb Q$ and
+clearing denominators gives an actual isogeny $f:B^n\to X$.
+Theorem~\externalref{hodge}{ext:thm:individual} supplies rational algebraicity on
+$B^n$. If a rational algebraic cycle $Z$ represents $f^*\alpha$,
+then $(\deg f)^{-1}f_*Z$ represents $\alpha$, since
+$f_*f^*=\deg f$ on rational cohomology. This proves algebraicity in
+every codimension for the stated products, all in one isogeny class.
+\end{proof}
+
+This corollary supplies rational algebraicity and ambient Weil structures.
+It gives no additional McMullen curve points, identification with
+Mostaed's literal normalization, integral Hodge statement, or explicit
+cycle equations.
+
+\begin{theorem}[Minimum principal-target isogenies from obstructed quotients]
+\label{pp:thm:obstructedisogenies}
+For each of the $108$ obstructed varieties $Y=A/H$, the minimum degree
+of an isogeny to any principally polarized target is $729$.
+The minimum degree of $Y\to A$ is $27$; all such minimum maps have
+one kernel $C_0\simeq(\mathbb Z/3)^3$ and differ by target automorphisms.
+
+For any fixed minimum polarization $\lambda$ on $Y$, the maps to
+principal targets with pullback $\lambda$ have exactly $89{,}360{,}320$
+distinct kernels. Their group types and counts are
+\[
+\begin{array}{c|r}
+(\mathbb Z/3)^6&91{,}840\\
+\mathbb Z/9\oplus(\mathbb Z/3)^4&89{,}268{,}480.
+\end{array}
+\]
+Exactly $1120$ contain $C_0$, equivalently factor through a minimum
+map $Y\to A$; the remaining $89{,}359{,}200$ do not.
+\end{theorem}
+\begin{proof}
+Use the common lattices $O$ and $\Lambda$ for $A$ and $Y$, with
+$[\Lambda:O]=27$ and $\Lambda O=\mathfrak P^{-1}$.
+Every rational map is scalar in $M$. The condition $c\Lambda\subset O$
+is equivalent, by taking $O$-saturations, to $c\in\mathfrak P$.
+Conversely $\mathfrak P\Lambda\subset O$, so
+\[
+ \operatorname{Hom}(Y,A)=\mathfrak P=\pi O,\qquad
+ \deg(\pi u:Y\to A)=27|N_{M/\mathbb Q}(u)|.
+\]
+The minimum is $27$, attained precisely for $u\in O^\times$.
+These maps differ by target units and have kernel
+$C_0=\mathfrak P^{-1}/\Lambda$, of order $27$ and exponent $3$.
+This is the kernel of $\pi:Y\to A$, not of $\pi:Y\to Y$.
+
+A degree-$d$ map to a principal target pulls back a polarization
+of degree $d^2$. Theorem~\ref{pp:thm:obstructedminimum} gives
+$d\ge729$. Composing $\pi:Y\to A$ with a degree-$27$ principal
+quotient of $A$ attains this bound. More precisely, write the fixed
+minimum form on $Y$ as $F=3E_\varepsilon$, with
+$\varepsilon\in E_L^+$. Since $\pi\bar\pi=3$, the map $\pi$
+pulls $E_\varepsilon$ back to $F$. Thus the bound is attained with
+each prescribed minimum form as pullback.
+
+Let $D=\Lambda^\#/\Lambda$ be the discriminant group for $F$.
+Its elementary divisors give the symplectic module
+\[
+ D\simeq(\mathbb Z/9)^2\oplus(\mathbb Z/3)^8,
+\]
+with one hyperbolic pair of denominator $9$ and four of denominator
+$3$. Integral self-dual overlattices correspond precisely to isotropic
+subgroups $J=J^\perp$ of order $3^6$, by the dual-lattice argument of
+Theorem~\ref{pp:thm:fermatallquotients}. These are exactly the kernels
+with fixed pullback $F$, including all possible principal targets.
+
+The subgroup $D[3]$ has dimension $10$ over $\mathbb F_3$, with
+pairing radical $3D$ of dimension $2$. An elementary Lagrangian of
+dimension $6$ must contain this radical: its image in the symplectic
+quotient $D[3]/3D$ has dimension at most $4$. Such Lagrangians are
+therefore the inverse images of the Lagrangians in that eight-dimensional
+quotient, giving
+\[
+ L_4(3)=(3+1)(9+1)(27+1)(81+1)=91840.
+\]
+
+For a cyclic subgroup $C=\langle x\rangle$ of order $9$,
+nondegeneracy supplies $y$ with pairing $1/9$. The pair $x,y$
+generates a nondegenerate $(\mathbb Z/9)^2$ summand $V$, so
+$D=V\oplus W$ orthogonally. Since $3V$ already has order $9=|3D|$,
+we have $3W=0$; hence $W$ is symplectic $\mathbb F_3^8$.
+Moreover $C^\perp=C\oplus W$. The Lagrangians containing $C$
+are exactly $C\oplus L$, with $L$ a Lagrangian in $W$, so there
+are $91840$ and each has type $\mathbb Z/9\oplus(\mathbb Z/3)^4$.
+Every non-elementary Lagrangian contains an order-$9$ element,
+so this exhausts the remaining types.
+
+There are
+\[
+ \frac{3^{12}-3^{10}}{9-3}=78732
+\]
+cyclic subgroups of order $9$ in $D$. Each non-elementary Lagrangian
+contains $(3^6-3^5)/(9-3)=81$ such subgroups. Counting pairs
+$(C,J)$ with $C\subset J$ therefore gives
+\[
+ \frac{78732\cdot91840}{81}=89268480
+\]
+non-elementary kernels. Adding the elementary population gives the
+stated total.
+
+Finally, a fixed-form principal quotient factors through
+$r=\pi:Y\to A$ exactly when its kernel contains $C_0$.
+The resulting map from $A$ has degree $27$ and pullback
+$E_\varepsilon$, since pullback by $r$ is injective on rational forms.
+Conversely every such principal quotient of $A$ gives a kernel above
+$C_0$. The subgroup correspondence $J\mapsto r^{-1}(J)$ is bijective,
+so Theorem~\ref{pp:thm:fermatallquotients} gives exactly $1120$.
+All minimum maps $Y\to A$ differ by target automorphisms, hence give
+the same factorization condition.
+\end{proof}
+
+The $89{,}360{,}320$ count fixes a minimum pullback form. It counts
+subgroups, not polarized target classes, and is not multiplied by
+$26$ when the pullback form varies: intersections between those
+kernel populations require a separate analysis.
+
+The finite family consisting of $A$ and its $188$ underlying quotients
+has the following complete minimum-polarization data. Here $c_{\min}$
+counts minimum polarization classes on one underlying variety, and
+$d_{\rm pp}$ is the minimum isogeny degree to a principal target.
+\begin{center}
+\small
+\begin{tabular}{c|r|r|c|r|r}
+Full order & $\#Y$ & $\deg\lambda_{\min}$ & Type & $c_{\min}$ & $d_{\rm pp}$\\\hline
+$O$ & 1 & 729 & $(1,1,1,3,3,3)$ & 1 & 27\\
+$R$ & 2 & 1 & $(1,1,1,1,1,1)$ & 2 & 1\\
+$S$ & 78 & 1 & $(1,1,1,1,1,1)$ & 2 & 1\\
+$S$ & 108 & 531441 & $(1,3,3,3,3,9)$ & 26 & 729
+\end{tabular}
+\end{center}
+The entries follow from Proposition~\ref{pp:prop:fermatminpolarization}
+and Theorems~\ref{pp:thm:fermatunderlying},
+\ref{pp:thm:obstructedminimum} and~\ref{pp:thm:obstructedisogenies}.
+Thus the $189$ underlying varieties support exactly
+$1+2\cdot2+78\cdot2+108\cdot26=2969$ minimum polarized classes.
+Different underlying varieties cannot merge as polarized varieties.
+Corollary~\ref{pp:cor:quotientweilhodge} gives their integral Weil
+structures and rational Hodge algebraicity on finite products.
+This is a finite Fermat three-torsion quotient family, distinct from
+the corrected $\ell=43$ Hecke packet and from a curve-point census.
+
+\section{A structural two-prime comparison}
+\begin{proposition}[The two-prime primitive factor]
+\label{pp:prop:twoprimefermat}
+Let $p<q$ be distinct odd primes, $m=pq$, and let $H_d$ denote
+the smooth projective curve $y^2=x^d-1$. In $J(H_m)$ let $A_m$ be
+the connected image of the primitive $\Phi_m$ projector, with its
+actual inclusion. Its dimension is $(p-1)(q-1)/2$, and the canonical
+restricted polarization has type
+\[
+ \bigl(1^{[(p-2)(q-1)/2]},\;
+       p^{[(q-p)/2]},\;(pq)^{[(p-1)/2]}\bigr),
+\]
+where bracketed superscripts denote multiplicities.
+Both this polarization and the addition isogeny
+$A_m\times J(H_p)\times J(H_q)\to J(H_m)$, using pullback along
+$(x,y)\mapsto(x^q,y)$ and $(x,y)\mapsto(x^p,y)$, have degree
+$q^{p-1}p^{q-1}$.
+For the covariant rotation $T$ of $J(H_m)$, put
+\[
+ \mathcal N_m=pq-p\sum_{j=0}^{q-1}T^{pj}
+                  -q\sum_{j=0}^{p-1}T^{qj}.
+\]
+Then $\operatorname{im}\mathcal N_m=A_m$, $\mathcal N_m$ is
+Rosati symmetric, and $\mathcal N_m^2=pq\mathcal N_m$.
+The least positive denominator of the projector
+$e_m=\mathcal N_m/(pq)$ in $\operatorname{End}(J(H_m))$ is $pq$.
+\end{proposition}
+\begin{proof}
+The prime-degree ramification argument of
+Proposition~\ref{pp:prop:fermatrestricted} applies to both actual
+pullbacks: they are embeddings with induced forms $q\lambda_{H_p}$
+and $p\lambda_{H_q}$. Their integral separation holds uniformly.
+Indeed choose $1\leq a<p$ with $qa=1+kp$. The identity
+\[
+ \left(\sum_{j=0}^{a-1}t^{qj}\right)\Phi_q(t)
+ -t\left(\sum_{l=0}^{k-1}t^{pl}\right)\Phi_p(t)=1
+\]
+follows by expanding the two consecutive geometric sums.
+Each cyclotomic polynomial annihilates the corresponding lower
+Jacobian image, so those images have zero intersection, including
+torsion. Their character spaces are orthogonal. The lower product's
+polarization kernel is consequently
+\[
+ (\mathbb Z/q)^{p-1}\oplus(\mathbb Z/p)^{q-1}
+ \simeq(\mathbb Z/p)^{q-p}\oplus(\mathbb Z/pq)^{p-1}.
+\]
+The holomorphic differentials $x^{i-1}dx/y$ and their conjugates
+give every nontrivial character of the order-$m$ rotation group once in full
+cohomology. The remaining characters have order $pq$, so the actual
+$A_m$ is the connected orthogonal complement of the lower product.
+The saturated unimodular lattice argument of
+Proposition~\ref{pp:prop:fermatrestricted} transfers the displayed
+discriminant group to $A_m$. Its nonunit elementary divisors give
+$(q-1)/2$ entries; the dimension supplies the stated number of unit
+entries. The common group order gives both claimed degrees.
+
+The two deck sums act by $q$ and $p$ on their respective lower
+character spaces and vanish on the primitive part. Thus
+$e_m$ is the orthogonal primitive projector. Inversion preserves
+the deck sums, proving Rosati symmetry. Its polynomial residual is
+$\mathcal N_m^2-pq\mathcal N_m=2pq(1+T+\cdots+T^{pq-1})$;
+the full trace factors through the Jacobian of the genus-zero rotation
+quotient and therefore vanishes. Finally, the discriminant group has exponent $pq$.
+The lattice-projection proof of
+Corollary~\ref{pp:cor:fermatprojector} therefore proves that $pq$
+is the least integral denominator.
+\end{proof}
+
+This uniform statement concerns the induced polarization and the
+specified projector. It requires neither simplicity of $A_m$ nor
+a classification of its other polarizations.
+
+

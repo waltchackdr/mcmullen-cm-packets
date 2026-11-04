@@ -1,0 +1,114 @@
+{
+  "actual_load_packet_pass": true,
+  "actual_worker_admission_pass": true,
+  "adopted_prior560_disjoint": true,
+  "candidate_pins": 304,
+  "data05_adoption_verified": true,
+  "jobs": [
+    {
+      "archive_bytes": 337920,
+      "changed_archive_members": [
+        "experiments/bc_jacobian_v147/certificate_plan_candidate.json"
+      ],
+      "job": 0,
+      "members": 13,
+      "observations": 64,
+      "task_pairs": [
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8
+      ]
+    },
+    {
+      "archive_bytes": 337920,
+      "changed_archive_members": [
+        "experiments/bc_jacobian_v147/certificate_plan_candidate.json"
+      ],
+      "job": 1,
+      "members": 13,
+      "observations": 64,
+      "task_pairs": [
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8
+      ]
+    }
+  ],
+  "negative_rejections": [
+    [
+      0,
+      "nine_pairs"
+    ],
+    [
+      0,
+      "duplicate_pair"
+    ],
+    [
+      0,
+      "duplicate_task"
+    ],
+    [
+      0,
+      "missing_task"
+    ],
+    [
+      0,
+      "wrong_total"
+    ],
+    [
+      0,
+      "wrong_numerator"
+    ],
+    [
+      0,
+      "changed_source"
+    ],
+    [
+      1,
+      "nine_pairs"
+    ],
+    [
+      1,
+      "duplicate_pair"
+    ],
+    [
+      1,
+      "duplicate_task"
+    ],
+    [
+      1,
+      "missing_task"
+    ],
+    [
+      1,
+      "wrong_total"
+    ],
+    [
+      1,
+      "wrong_numerator"
+    ],
+    [
+      1,
+      "changed_source"
+    ]
+  ],
+  "numerical_calls": 0,
+  "observations": 128,
+  "only_plan_bytes_changed_in_archives": true,
+  "packet_pins": 8,
+  "provider_calls": 0,
+  "source_functions_changed": [],
+  "status": "PASS_SPARSE_INPUT_EXECUTION_BOUNDARY",
+  "unchanged_numerical_payload_and_tls": true,
+  "wall_seconds": 0.0914477500191424
+}

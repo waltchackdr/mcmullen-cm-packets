@@ -1,0 +1,21 @@
+{
+  "status": "C62_PROMOTION_CANDIDATE_PENDING_ADOPTION",
+  "files": {
+    "certificates/principal_bc_hom_v127.py": {
+      "sha256": "abcf8b79fe447b3033e3e640b3ee0fb397b90304e0a97217690c2bd6d4552af0",
+      "bytes": 5593
+    },
+    "certificates/principal_bc_hom_data.json": {
+      "sha256": "9f815f1592c8e22a2a14b15086d8d9cb63092f9ab84bb90a3d5ee4935b3fe22c",
+      "bytes": 2542
+    },
+    "independent/principal_bc_hom_v127.py": {
+      "sha256": "bb55fca8c13329539ba537904facd41bbf0c106de48252a27abb6f096a9aa478",
+      "bytes": 9557
+    },
+    "tests/test_principal_bc_hom_v127.py": {
+      "sha256": "3aca2c75c87c7809fbac35977901484b4b12f519006e8cc419497ea1efc2fc33",
+      "bytes": 1569
+    }
+  }
+}

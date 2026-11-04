@@ -1,0 +1,39 @@
+"""Tiny separate abstract cocycle regression; no producer imports or geometric enumeration."""
+import json,resource,signal,time
+from pathlib import Path
+
+def main():
+ start=time.monotonic()
+ # Coordinates for C14 semidirect C2, with the second generator inverting C14.
+ group=[(a,e) for a in range(14) for e in range(2)]
+ def mul(g,h):return ((g[0]+(-1)**g[1]*h[0])%14,(g[1]+h[1])%2)
+ # Reduction mu42 -> U14 sends exponent k to k mod14. Its mu14 section is15a.
+ lift={a:next(k for k in range(0,42,3) if k%14==a) for a in range(14)}
+ assert all(lift[a]==15*a%42 for a in lift)
+ assert all(27*a%14==(-a)%14 for a in lift)
+ assert all(lift[(-a)%14]==(-lift[a])%42 for a in lift)
+ cases=0
+ for r in range(42):
+  # Root-adjusted c has root exponent -r; roots transform by inversion under c.
+  z=lambda g:(-lift[g[0]]-r*g[1])%42
+  for g in group:
+   for h in group:
+    assert z(mul(g,h))==(z(g)+(-1)**g[1]*z(h))%42
+    cases+=1
+  assert (z((0,1))-z((0,1)))%42==0
+ assert all((a-lift[a])%14==0 for a in range(14))
+ # Incorrectly letting c fix roots fails the cocycle identity already on C14.
+ wrong=0
+ z=lambda g:(-lift[g[0]])%42
+ for g in group:
+  for h in group:
+   if z(mul(g,h))!=(z(g)+z(h))%42:wrong+=1
+ assert wrong>0
+ for n in (6,42):
+  squares={2*k%n for k in range(n)}
+  assert len(squares)==n//2 and n//2 not in squares
+ result={'status':'PASS','scope':'Abstract finite-image root cocycle only; actual Galois action/descent/classification are adopted human-proof inputs','root_adjustments':42,'semidirect_elements':28,'cocycle_product_cases':cases,'wrong_trivial_conjugation_failures':wrong,'torsion_cancellation_cases':14,'polarized_twist_groups':[6,42],'minus_one_nonsquare_in_both':True,'wall_seconds':time.monotonic()-start}
+ Path(__file__).with_suffix('.json').write_text(json.dumps(result,indent=2,sort_keys=True)+'\n');print(json.dumps(result,sort_keys=True))
+if __name__=='__main__':
+ if not __debug__:raise RuntimeError('Nonoptimized regression required')
+ resource.setrlimit(resource.RLIMIT_CPU,(20,20));signal.alarm(30);main()

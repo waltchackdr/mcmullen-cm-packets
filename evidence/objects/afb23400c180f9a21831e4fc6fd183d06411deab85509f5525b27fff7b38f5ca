@@ -1,0 +1,85 @@
+"""Tiny independent regressions; universal validity is a separate human proof.
+
+Uses an explicit integral Bezout witness and aligned primary invariant factors,
+not the producer's determinant or convolution implementation.
+"""
+from collections import Counter
+from pathlib import Path
+import hashlib
+import json
+import math
+import resource
+import signal
+
+
+def sample(p, q):
+    # qa = 1 + kp gives an explicit identity over Z[t].
+    a = pow(q, -1, p)
+    k = (q * a - 1) // p
+    left = Counter(q * j + i for j in range(a) for i in range(q))
+    right = Counter(1 + p * j + i for j in range(k) for i in range(p))
+    assert left == Counter(range(q * a))
+    assert right == Counter(range(1, q * a))
+    assert left - right == Counter({0: 1})
+    assert not right - left
+
+    g = (p - 1) * (q - 1) // 2
+    primary_p = [1] * (g - (q - 1) // 2) + [p] * ((q - 1) // 2)
+    primary_q = [1] * (g - (p - 1) // 2) + [q] * ((p - 1) // 2)
+    actual_type = [x * y for x, y in zip(primary_p, primary_q)]
+    expected_type = ([1] * ((p - 2) * (q - 1) // 2)
+                     + [p] * ((q - p) // 2) + [p * q] * ((p - 1) // 2))
+    assert actual_type == expected_type
+    degree = math.prod(primary_p) ** 2 * math.prod(primary_q) ** 2
+    assert degree == p ** (q - 1) * q ** (p - 1)
+    assert math.prod(actual_type) ** 2 == degree
+    assert math.lcm(*actual_type) == p * q
+    assert g + (p - 1) // 2 + (q - 1) // 2 == (p * q - 1) // 2
+
+    m = p * q
+    sq, sp = set(range(0, m, p)), set(range(0, m, q))
+    count = lambda u, v: Counter((x + y) % m for x in u for y in v)
+    assert count(sq, sq) == Counter({x: q for x in sq})
+    assert count(sp, sp) == Counter({x: p for x in sp})
+    assert count(sq, sp) == Counter(range(m))
+    assert {(-x) % m for x in sq} == sq
+    assert {(-x) % m for x in sp} == sp
+    # N on the absent trivial character is -m, not 0 or m.
+    assert (m - p * q - q * p) ** 2 - m * (m - p * q - q * p) == 2 * m * m
+    return {'p': p, 'q': q, 'bezout_inverse_a': a, 'bezout_k': k,
+            'dimension': g, 'type': actual_type, 'degree': degree,
+            'least_denominator_from_group_exponent': math.lcm(*actual_type),
+            'negative_full_group_ring_residual': 2 * m * m}
+
+
+def main():
+    resource.setrlimit(resource.RLIMIT_CPU, (20, 20))
+    signal.alarm(30)
+    here = Path(__file__).resolve().parent
+    root = here.parents[1]
+    packet = json.loads((here / 'review_inputs.json').read_text())
+    for path, expected in packet['pins'].items():
+        assert hashlib.sha256((root / path).read_bytes()).hexdigest() == expected
+    results = [sample(p, q) for p, q in [(3, 5), (3, 7), (5, 7), (7, 11)]]
+    producer = json.loads((here / 'arithmetic01.json').read_text())
+    for independent, retained in zip(results, producer['samples']):
+        for key in ('p', 'q', 'dimension', 'type', 'degree'):
+            assert independent[key] == retained[key]
+    # Phi9 = 1+t^3+t^6 becomes 3 modulo Phi3. Thus Q-coprimality
+    # alone cannot imply a unit ideal in Z[t]: reduction modulo 3 kills it.
+    assert Counter(e % 3 for e in (0, 3, 6)) == Counter({0: 3})
+    output = {'status': 'PASS_INDEPENDENT_FINITE_REGRESSION_ONLY',
+              'pins_checked': len(packet['pins']), 'samples': results,
+              'integral_bezout_formula':
+              '(sum(j=0..a-1)t^(qj))*Phi_q - t*(sum(j=0..k-1)t^(pj))*Phi_p = 1, qa=1+kp',
+              'negative_controls': [
+                  'Phi3/Phi9 are Q-coprime but not Z-comaximal: Phi9 mod Phi3 is 3.',
+                  'Full cyclic group ring idempotence fails on the trivial character.'],
+              'scope': 'Finite regressions only; generality comes from the reviewed human proof.',
+              'producer_implementation_imported': False}
+    (here / 'referee_arithmetic01.json').write_text(json.dumps(output, indent=2, sort_keys=True) + '\n')
+    print(json.dumps(output, indent=2, sort_keys=True))
+
+
+if __name__ == '__main__':
+    main()

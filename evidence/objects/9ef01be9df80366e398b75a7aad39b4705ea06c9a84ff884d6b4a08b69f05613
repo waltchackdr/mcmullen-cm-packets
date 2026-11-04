@@ -1,0 +1,194 @@
+{
+  "R127": {
+    "conjugation_on_picard_classes": [
+      0,
+      2,
+      1
+    ],
+    "coset_representatives_are_disjoint_and_exhaustive": true,
+    "epsilon_order": 42,
+    "epsilon_projective": [
+      1,
+      80
+    ],
+    "module_slopes": [
+      0,
+      9,
+      100
+    ],
+    "picard_order": 3,
+    "prime": 127,
+    "primitive_beta": [
+      1,
+      9
+    ],
+    "quotient_order": 126,
+    "splitting": "split",
+    "trace_root": 94,
+    "z_order": 21,
+    "z_roots": [
+      40,
+      54
+    ]
+  },
+  "R41_12": {
+    "coset_representatives_are_disjoint_and_exhaustive": true,
+    "epsilon_order": 42,
+    "epsilon_projective": [
+      1,
+      35
+    ],
+    "module_slopes": [
+      0
+    ],
+    "picard_order": 1,
+    "prime": 41,
+    "primitive_beta": [
+      1,
+      1
+    ],
+    "quotient_order": 42,
+    "splitting": "inert",
+    "trace_root": 12,
+    "z_order": 21,
+    "z_roots": []
+  },
+  "R41_22": {
+    "coset_representatives_are_disjoint_and_exhaustive": true,
+    "epsilon_order": 42,
+    "epsilon_projective": [
+      1,
+      30
+    ],
+    "module_slopes": [
+      0
+    ],
+    "picard_order": 1,
+    "prime": 41,
+    "primitive_beta": [
+      1,
+      1
+    ],
+    "quotient_order": 42,
+    "splitting": "inert",
+    "trace_root": 22,
+    "z_order": 21,
+    "z_roots": []
+  },
+  "R43_20": {
+    "coset_representatives_are_disjoint_and_exhaustive": true,
+    "epsilon_order": 42,
+    "epsilon_projective": [
+      1,
+      33
+    ],
+    "module_slopes": [
+      0
+    ],
+    "picard_order": 1,
+    "prime": 43,
+    "primitive_beta": [
+      1,
+      1
+    ],
+    "quotient_order": 42,
+    "splitting": "split",
+    "trace_root": 20,
+    "z_order": 21,
+    "z_roots": [
+      30,
+      33
+    ]
+  },
+  "R43_31": {
+    "coset_representatives_are_disjoint_and_exhaustive": true,
+    "epsilon_order": 42,
+    "epsilon_projective": [
+      1,
+      6
+    ],
+    "module_slopes": [
+      0
+    ],
+    "picard_order": 1,
+    "prime": 43,
+    "primitive_beta": [
+      1,
+      1
+    ],
+    "quotient_order": 42,
+    "splitting": "split",
+    "trace_root": 31,
+    "z_order": 21,
+    "z_roots": [
+      5,
+      26
+    ]
+  },
+  "R7": {
+    "coset_representatives_are_disjoint_and_exhaustive": true,
+    "epsilon_order": 6,
+    "epsilon_projective": [
+      1,
+      3
+    ],
+    "module_slopes": [
+      0
+    ],
+    "picard_order": 1,
+    "prime": 7,
+    "primitive_beta": [
+      1,
+      1
+    ],
+    "quotient_order": 6,
+    "splitting": "split",
+    "trace_root": 1,
+    "z_order": 3,
+    "z_roots": [
+      3,
+      5
+    ]
+  },
+  "R7sq": {
+    "epsilon_order": 42,
+    "epsilon_ratio": [
+      5,
+      2
+    ],
+    "exponent": 2,
+    "picard_order": 1,
+    "prime": 7,
+    "quotient_order": 42,
+    "residue_ring": "F7[v]/(v^2)",
+    "trace_root": 1
+  },
+  "R83": {
+    "conjugation_on_picard_classes": [
+      0,
+      1
+    ],
+    "coset_representatives_are_disjoint_and_exhaustive": true,
+    "epsilon_order": 42,
+    "epsilon_power_equal_to_beta_square": 29,
+    "epsilon_projective": [
+      1,
+      65
+    ],
+    "module_slopes": [
+      0,
+      3
+    ],
+    "picard_order": 2,
+    "prime": 83,
+    "primitive_beta": [
+      1,
+      3
+    ],
+    "quotient_order": 84,
+    "splitting": "inert",
+    "trace_root": 36,
+    "z_order": 21,
+    "z_roots": []
+  }
+}

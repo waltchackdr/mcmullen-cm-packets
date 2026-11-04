@@ -1,0 +1,19 @@
+{
+  "cloud_rental": false,
+  "enumeration_executed": false,
+  "files": {
+    "ASSESSMENT.txt": {
+      "bytes": 5344,
+      "sha256": "ac4845e31182f85389421aded70c1e42f5b988a0b81d686e8d78f6ff6648cbd5"
+    },
+    "bounds01.json": {
+      "bytes": 2745,
+      "sha256": "06a678e539a4b9ae6852cf9d9d80f943db014028fe396f1bec1488edabbf2f7a"
+    },
+    "prepare_bounds.py": {
+      "bytes": 3232,
+      "sha256": "547b413826f66be2110e8be9691958296580e2101b4ce8f3e6a1b17b25c3f877"
+    }
+  },
+  "status": "PREPARED_ONLY_WAITING_FOR_C58_ADOPTION_AND_REDUCTION_REVIEW"
+}

@@ -1,0 +1,30 @@
+"""Finite root-cocycle regression; geometric descent is human proof."""
+import json
+from pathlib import Path
+import subprocess
+import sys
+import tempfile
+import unittest
+
+ROOT = Path(__file__).resolve().parents[1]
+
+
+class RealNumberFieldDescent(unittest.TestCase):
+    def test_cross_relations_and_both_twists(self):
+        source = ROOT / 'experiments/all_underlying_galois_v165/referee_real_number_field01.py'
+        with tempfile.TemporaryDirectory() as folder:
+            target = Path(folder) / source.name
+            target.write_bytes(source.read_bytes())
+            result = subprocess.run([sys.executable, str(target)], check=True,
+                                    capture_output=True, text=True, timeout=20)
+        data = json.loads(result.stdout)
+        self.assertEqual(data['status'], 'PASS')
+        self.assertEqual(data['cocycle_product_cases'], 32928)
+        self.assertEqual(data['root_adjustments'], 42)
+        self.assertEqual(data['wrong_trivial_conjugation_failures'], 336)
+        self.assertEqual(data['torsion_cancellation_cases'], 14)
+        self.assertTrue(data['minus_one_nonsquare_in_both'])
+
+
+if __name__ == '__main__':
+    unittest.main()

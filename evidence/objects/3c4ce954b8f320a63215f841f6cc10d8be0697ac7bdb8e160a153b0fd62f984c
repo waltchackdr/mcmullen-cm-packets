@@ -1,0 +1,111 @@
+#!/usr/bin/env python3
+"""Exact synchronized lattice preparation; algebraicity inputs remain separate."""
+import hashlib
+import json
+import math
+from pathlib import Path
+import resource
+import signal
+from sympy import Matrix,eye,zeros
+from sympy.matrices.normalforms import hermite_normal_form
+HERE=Path(__file__).resolve().parent
+ROOT=HERE.parents[1]
+CENSUS='experiments/fixed_field_cm_census_v98/primary.json'
+C51='experiments/mixed_triple_v102/primary.json'
+G=[g for g in range(1,42) if math.gcd(g,42)==1]
+
+def encoded(x): return (json.dumps(x,sort_keys=True,separators=(',',':'),allow_nan=False)+'\n').encode()
+def sha(x): return hashlib.sha256(x).hexdigest()
+def ints(M):
+    assert all(x.q==1 for x in M)
+    return [[int(x) for x in row] for row in M.tolist()]
+def chart(W):
+    R,piv=W.rref();free=[i for i in range(W.cols) if i not in piv]
+    K=Matrix.hstack(*W.nullspace());ints(K)
+    assert K[free,:]==eye(len(free)) and W*K==zeros(W.rows,len(free))
+    return K,list(piv),free
+
+def check():
+    inputs={p:(ROOT/p).read_bytes() for p in (CENSUS,C51)}
+    census=json.loads(inputs[CENSUS])['orbits']; c51=json.loads(inputs[C51])
+    columns=[];labels=[];reductions=[]
+    for i,orbit in enumerate(census):
+        phi=orbit['representative']; local={}
+        for a in G:
+            col=tuple(1 if a*g%42 in phi else -1 for g in G)
+            if col not in local:
+                j=len(columns);columns.append(col);labels.append([i,a]);local[col]=(j,1);local[tuple(-x for x in col)]=(j,-1)
+            j,s=local[col];reductions.append({'orbit':i,'embedding':a,'column':j,'sign':s})
+    assert [sum(x[0]==i for x in labels) for i in range(8)]==[6,3,6,6,3,6,1,1]
+    W=Matrix.hstack(*map(Matrix,columns));K,piv,free=chart(W)
+    assert W.rank()==6 and K.cols==26
+    assert len({tuple(s*x for x in c) for c in columns for s in (1,-1)})==64
+    S=[j for j,(i,a) in enumerate(labels) if i in [0,1,4,5,6,7]]
+    T=[j for j,(i,a) in enumerate(labels) if i in [0,2,4]]
+    assert [columns[j] for j in T]==[tuple(v) for v in c51['full_weight_columns']]
+    S_chart,sp,sf=chart(W[:,S]);assert S_chart.cols==14
+    retained=Matrix(c51['basis_vectors']).T;assert retained.shape==(15,9)
+    assert W[:,T]*retained==zeros(12,9)
+    def embed(M,indices):
+        out=zeros(32,M.cols)
+        for j,k in enumerate(indices):out[k,:]=M[j,:]
+        return out
+    known=embed(S_chart,S).row_join(embed(retained,T))
+    Q=known[free,:];selected=list(Q.rref()[1]);assert len(selected)==19
+    B=Q[:,selected];extra=[]
+    for j in range(26):
+        if B.row_join(eye(26)[:,j]).rank()>B.cols:
+            B=B.row_join(eye(26)[:,j]);extra.append(j)
+    assert len(extra)==7 and abs(B.det())==1
+    inv=B.inv();ints(inv)
+    assert B*inv==eye(26)
+    new=K[:,extra];assert [sum(abs(x) for x in new[:,j]) for j in range(7)]==[4,6,6,6,6,6,6]
+    lookup={(r['orbit'],r['embedding']):(r['column'],r['sign']) for r in reductions}
+    def act(v,g):
+        out=zeros(32,1)
+        for j,(factor,a) in enumerate(labels):
+            target,s=lookup[factor,a*g%42];out[target]+=s*v[j]
+        assert W*out==zeros(12,1)
+        return out
+    seeds=[new[:,0],new[:,1]];orbits=[]
+    for seed in seeds:
+        unique={tuple(act(seed,g)) for g in G}
+        orbits.append([list(map(int,v)) for v in sorted(unique)])
+    orbit_vectors=Matrix.hstack(*(Matrix(v) for o in orbits for v in o))
+    combined=known.row_join(orbit_vectors)
+    H=hermite_normal_form(combined[free,:])
+    assert H==eye(26)
+    # Also produce a selected square determinant-one subbasis where possible.
+    pick=list(combined[free,:].rref()[1]);square=combined[free,pick]
+    determinant=int(square.det())
+    assert abs(determinant)==1
+    inverse=ints(square.inv())
+    assert combined[:,pick]*Matrix(inverse)==K
+    new_data=[]
+    for j in range(7):
+        v=new[:,j]
+        new_data.append({'vector':list(map(int,v)),'tensor_degree':int(sum(abs(x) for x in v)),
+            'terms':[{'orbit':labels[k][0],'embedding_representative':labels[k][1],'coefficient':int(v[k])} for k in range(32) if v[k]]})
+    return {'schema_version':1,'status':'EXACT_INTEGER_LATTICE_PREPARATION_CONDITIONAL_ALGEBRAICITY',
+      'input_sha256':{p:sha(raw) for p,raw in inputs.items()},'synchronized_rows':G,'column_order':labels,
+      'full_weight_columns':[list(c) for c in columns],'original_embedding_reductions':reductions,
+      'reduced_counts':[6,3,6,6,3,6,1,1],'rank':6,'kernel_rank':26,'pivot_columns':piv,'free_columns':free,
+      'integral_kernel_chart':ints(K),'degree21_indices':S,'degree21_kernel_chart':ints(S_chart),
+      'degree21_kernel_rank':14,'degree21_algebraicity_source_gate':'Separate primary-source audit required; this file proves only its lattice.',
+      'C51_indices':T,'C51_retained_basis_exact_columns':True,'known_generators':ints(known.T),
+      'known_free_rank':19,'selected_known_indices':selected,'extra_chart_indices':extra,
+      'known_plus_seven_determinant':int(B.det()),'known_plus_seven_inverse':ints(inv),
+      'known_submodule_saturated_in_full_kernel':True,'remaining_free_quotient_rank':7,
+      'new_generators':new_data,'two_seed_galois_orbits':orbits,'two_seed_orbit_sizes':list(map(len,orbits)),
+      'known_plus_two_orbits_HNF':ints(H),'two_orbit_selected_basis_indices':pick,
+      'two_orbit_selected_determinant':determinant,'two_orbit_selected_inverse':inverse,
+      'two_orbit_basis_times_inverse_equals_kernel_chart':True,
+      'algebraicity_open_targets':['degree4 bridge between types0,1,2','degree6 bridge between types0,1,3 with two copies of type1'],
+      'no_conformal_generation_claim':True,'no_new_Hodge_or_geometry_claim':True,'no_release_or_suite_claim':True}
+
+if __name__=='__main__':
+    if not __debug__:raise RuntimeError('Assertions must be enabled')
+    resource.setrlimit(resource.RLIMIT_CPU,(20,20));signal.alarm(30)
+    data=check();data['source_sha256']=sha(Path(__file__).read_bytes())
+    with (HERE/'lattice.json').open('xb') as f:f.write(encoded(data))
+    print(json.dumps({'rank':data['rank'],'kernel_rank':data['kernel_rank'],'known_rank':data['known_free_rank'],'quotient_rank':7,'two_seed_orbit_sizes':data['two_seed_orbit_sizes'],'sha256':sha(encoded(data))}))

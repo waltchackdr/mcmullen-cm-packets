@@ -1,0 +1,374 @@
+{
+  "references": {
+    "allocation": {
+      "path": "experiments/continuous_v83/continuation/fanout/allocation-candidate.json",
+      "sha256": "27fd48603c124ca8cfc31dd94cf6eeb66e95ce3df00816331183051151aa8b52"
+    },
+    "allocation_execution_binding": {
+      "path": "build/research-v81/v88-fanout-2026-10-13/approved/final-selection-binding.json",
+      "sha256": "99cce75f9fc022bf0ae6fa54b8bbe7502a6d30446773d22e583d988670ea641b"
+    },
+    "ambient": {
+      "path": "certificates/full_packet_v62/ambient_points.json",
+      "sha256": "c0e84da6c266c087cbce65a6e8aca8e3f30350ce56b5a1089c4ae4978a381f36"
+    },
+    "amended_controller_source_review": {
+      "path": "experiments/continuous_v82_review/v89_accounting_controller_source_review.json",
+      "sha256": "456c46a566805758aa2198276fa148d23a1644660f3c00f14df994dccc956853"
+    },
+    "audit_administrative_window": {
+      "path": "build/research-v81/v94-actual-final-join-preparation-2026-10-13/cache7200-cohort4-live-metadata01/raw/administrative_window.json",
+      "sha256": "b6442fe3126f3d7508b857c57ec59ca02c123704759af8779c50e57ad70ea685"
+    },
+    "audit_audit_input": {
+      "path": "build/research-v81/v94-actual-final-join-preparation-2026-10-13/cache7200-cohort4-live-metadata01/raw/audit_input.json",
+      "sha256": "cd79a0d85981252ab76c3938d8466d1f4b5aafcb1c4f10ba71f8b12527afd9af"
+    },
+    "audit_configuration": {
+      "path": "build/research-v81/v94-actual-final-join-preparation-2026-10-13/cache7200-cohort4-live-metadata01/raw/configuration.json",
+      "sha256": "075cbec9a1e82c818c2466bb835327f0cf1857307ad778eb36e8993867a713ce"
+    },
+    "audit_execution_window_approval": {
+      "path": "build/research-v81/v94-actual-final-join-preparation-2026-10-13/cache7200-cohort4-live-metadata01/raw/execution_window_approval.json",
+      "sha256": "1d8fd220468d7ffa3ea1bff2125dd8ffcb85cfcbcddb006cf03a96a59c3077d1"
+    },
+    "audit_guard_handoff": {
+      "path": "build/research-v81/v94-actual-final-join-preparation-2026-10-13/cache7200-cohort4-live-metadata01/raw/guard_handoff.json",
+      "sha256": "cfdddbd7086f2de3b6fa6f00d3121056c7e00090f3b8c46c8298d81fff9a2fa2"
+    },
+    "audit_parent_completion": {
+      "path": "build/research-v81/v93-whole730-ssd-2026-10-13/whole730-cohort4-retention-actual01/raw/opt/v93-whole730-dispatch-cohort4/completion.json",
+      "sha256": "3c6dc906c3d77ca2d3030ccd699671bc0e87e795ad585656359ef757c579873d"
+    },
+    "audit_parent_launch": {
+      "path": "build/research-v81/v94-actual-final-join-preparation-2026-10-13/cache7200-cohort4-live-metadata01/raw/parent_launch.json",
+      "sha256": "d2848cdeb7ab2862fb4458c686fab4f1322edb915825828611721e66a535fd9a"
+    },
+    "audit_parent_result": {
+      "path": "build/research-v81/v93-whole730-ssd-2026-10-13/whole730-cohort4-retention-actual01/raw/opt/v93-whole730-dispatch-cohort4/result.json",
+      "sha256": "106e95d927fdad86ae2ff4124536bb72d05f60a235def7b7941a2b4f56854df4"
+    },
+    "audit_parent_source_review": {
+      "path": "experiments/continuous_v82_review/v93_cache7200_parent_source_data_review.json",
+      "sha256": "a3b69bfc93c197ecd4fcc5db33eb456ba120f0af6871eca80a53445e850151dc"
+    },
+    "audit_retention_receipt": {
+      "path": "build/research-v81/v93-whole730-ssd-2026-10-13/whole730-cohort4-retention-actual01/retention.json",
+      "sha256": "5e6b9fab12a706c1067259a1e6b08251d81fdf6cd3d0b614729ccd0ef3fe9d0c"
+    },
+    "audit_runtime": {
+      "path": "build/research-v81/v94-actual-final-join-preparation-2026-10-13/cache7200-cohort4-live-metadata01/raw/runtime.json",
+      "sha256": "49c0ae50e0f708abd602700ab7c087d8caf7241b637856c25c5ca0fb24acbc1e"
+    },
+    "audit_stderr": {
+      "path": "build/research-v81/v93-whole730-ssd-2026-10-13/whole730-cohort4-retention-actual01/raw/opt/v93-whole730-dispatch-cohort4/stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "audit_stdout": {
+      "path": "build/research-v81/v93-whole730-ssd-2026-10-13/whole730-cohort4-retention-actual01/raw/opt/v93-whole730-dispatch-cohort4/stdout.log",
+      "sha256": "c5ab71609db8f19ee719f80eb9456833ebe36214d1ca7b51b55bd661b83e32a0"
+    },
+    "audit_worker_limits": {
+      "path": "build/research-v81/v94-actual-final-join-preparation-2026-10-13/cache7200-cohort4-live-metadata01/raw/worker_limits.json",
+      "sha256": "9f43cf43ee04547c1677d43dbe6624247ffcdfe7fdcd14eb78409f158712a3ed"
+    },
+    "conditional730_source_review": {
+      "path": "experiments/continuous_v82_review/v86_halted_conditional_auditor_source_review.json",
+      "sha256": "31736da88a3ffab99188669a96f4cc014bfebc903673bddff19c9c099bf36b9c"
+    },
+    "configuration_serialization_review": {
+      "path": "experiments/continuous_v82_review/whole730_cpu1800_configuration_serialization_amendment_review.json",
+      "sha256": "43afff910266620acdb433d3f1f0662c814d7572bda4254aaab88bd1e63eb6bc"
+    },
+    "conjunction_policy_amendment": {
+      "path": "experiments/continuous_v82_review/legacy150_63_2_policy_amendment.json",
+      "sha256": "2a7a473fcded661a155545e83a937f8d759a7ab548b0107979dab7a3a9f4a1fa"
+    },
+    "coverage": {
+      "path": "experiments/continuous_v83/first_target_coverage/coverage.json",
+      "sha256": "cac499e1d40ed498e0d8e2c3f08d34a52ef726856bac4606332d483c72d024b6"
+    },
+    "coverage_review": {
+      "path": "experiments/continuous_v82_review/first_target_coverage_review.json",
+      "sha256": "3879881003484d43773e8112935a85baf2849486c3f801f27e4e660d57b2b386"
+    },
+    "existing_configuration": {
+      "path": "build/research-v81/v86-reflected-continuation-2026-10-13/deployment-candidate/actual-approved/configuration.json",
+      "sha256": "76bd4acafec50390afba073fb542ab1ebe611ad4f69f4724d141b9dce4210ae1"
+    },
+    "fanout_configuration": {
+      "path": "build/research-v81/v88-fanout-2026-10-13/approved/configuration.json",
+      "sha256": "36f7c248b52843470867ff1aeb2847bcc83aba20bd85371af9336c5e944ac8ca"
+    },
+    "legacy_150_review": {
+      "path": "experiments/continuous_v82_review/legacy_150_final_fixed_report_review.json",
+      "sha256": "69c0955f2d7ddc9191019c8c9bf0e042d5e7413633f8cd1cc88c756f0ccf348b"
+    },
+    "legacy_audit": {
+      "path": "experiments/continuous_v82_review/legacy_completed_execution_evidence.json",
+      "sha256": "fe6a4a7266d3e8b40b0e6edd858da9d5b1f48a3c62d60a056316fd32c505d2ce"
+    },
+    "legacy_conjunction_policy": {
+      "path": "experiments/continuous_v82_review/legacy_conjunction_endguard_policy_review.json",
+      "sha256": "f90c022957b4e33d60b56d29c9132b5cdc48b474861dc9a34ff900c8c4ff1dba"
+    },
+    "legacy_conjunction_report": {
+      "path": "build/research-v81/v87-two-job-continuation-2026-10-13/actual-conjunction-01/conjunction.json",
+      "sha256": "ebf870c3de0027706ad5fedd5662536d8348afab1e2b0cbfa026ffa3b5f56e87"
+    },
+    "legacy_conjunction_source_review": {
+      "path": "experiments/continuous_v82_review/legacy_150_63_2_conjunction_source_review.json",
+      "sha256": "a8d5c1fcbdbcc7107607910b2ecc8274fdca6935b0bbe9e99877882d201c0f05"
+    },
+    "legacy_eight_review": {
+      "path": "experiments/continuous_v82_review/legacy_eight_execution_outcome_review.json",
+      "sha256": "1a6ade13b3fb3f58797144f9ff4b7f78b366183756cfe8f7ff7245b68edc7b69"
+    },
+    "legacy_outcome_review": {
+      "path": "experiments/continuous_v82_review/legacy150_63_2_actual_conjunction_review.json",
+      "sha256": "35432b65aab1289bdf9d7944b076848afb217c9a4bddb11079593968cd0804eb"
+    },
+    "legacy_runtime": {
+      "path": "build/research-v81/v84-recovery-cloud-2026-10-12/full-ssd-cohort4/join-anchors/runtime-before.json",
+      "sha256": "816f3def8fa6a4a84e9931dce54f231e9b575f8de5eff7e3dfae6f95e8b8d4dc"
+    },
+    "legacy_snapshot": {
+      "path": "build/research-v81/v84-recovery-cloud-2026-10-12/legacy-terminal-retained/snapshot.json",
+      "sha256": "e6aa5112a8465180d50e4a2b187f632d5f6b4196bb7e3d39d020d32c1810d2c0"
+    },
+    "legacy_source_manifest": {
+      "path": "build/research-v81/v84-recovery-cloud-2026-10-12/legacy-terminal-retained/source-manifest.json",
+      "sha256": "d5cc8cdcab982e930c46e523aad544362f2f66cb293d13996fb304e4e9e19606"
+    },
+    "legacy_state": {
+      "path": "build/research-v81/v84-recovery-cloud-2026-10-12/legacy-terminal-retained/state.json",
+      "sha256": "0da82aebdf83bc8eaa73cb5eee07b02655e6e77f79cba4894a0525df0514c921"
+    },
+    "origin_index": {
+      "path": "build/research-v81/v86-reflected-continuation-2026-10-13/deployment-candidate/actual-approved/origin-index.json",
+      "sha256": "0eba23ec9c6e4b0389fffc4da7345396e27425cc4b0fe7b76c4c51f6f3090bb3"
+    },
+    "origin_review": {
+      "path": "experiments/continuous_v82_review/origin_scheduling_authentication_outcome_review.json",
+      "sha256": "509796279d7bd9e359e731456f7fb536982d7e88e6be48dace09ae716bea4dbd"
+    },
+    "partition_review": {
+      "path": "experiments/continuous_v82_review/legacy_single_mask_partition_review.json",
+      "sha256": "f9341f514a2850a7fc02d916e86ab4aa24c3b65111f71666b0d6d390da15eb05"
+    },
+    "portable_adoption_record": {
+      "path": "build/research-v81/release-prep/positive12-closure-preparation-2026-10-13/actual-source-adoption-record01/adoption.json",
+      "sha256": "c3b4580af66d6b8c4ca35bd6582bc50c0d5e7a6cc574a5af7f2e138f5409c67c"
+    },
+    "portable_adoption_review": {
+      "path": "experiments/continuous_v82_review/actual_whole730_portable_evidence_adoption_review.json",
+      "sha256": "0c30485fac4ef39bf3beb3111181be9062d07201011a36f0129181f6e812d9e2"
+    },
+    "portable_plan": {
+      "path": "experiments/continuous_v83/portable_plan/plan.json",
+      "sha256": "568b8ad67ec1bc2033a224ae66e1f3a85c47138f59a3367b86be87c534dcbcae"
+    },
+    "positive_control_audit": {
+      "path": "build/research-v81/v83-positive-controls-2026-10-12/retry-plan/merged-audit.json",
+      "sha256": "8753d2aee181a2a93ab8c5193be7b4e250a53c215264205c4eb033024d2bfe66"
+    },
+    "positive_control_review": {
+      "path": "experiments/continuous_v82_review/positive_control_review.json",
+      "sha256": "6990eee9c806158823d88e72787f74314e0f3aa7cfe603452805fec218a31d81"
+    },
+    "recovery63_review": {
+      "path": "experiments/continuous_v82_review/recovery63_retrospective_execution_review.json",
+      "sha256": "506e47c32457c839e324d9e0bdfa4b59bbefa38b77e289f45100179d72bfbfd6"
+    },
+    "recovery_approval": {
+      "path": "build/research-v81/v85-poststop-retention-2026-10-13/admin-attempt2/admin/v84-recovery-cohort1/approval.json",
+      "sha256": "1a29c08107be9826d461f2e6c5b02316096191050653f9f0065e5992067d1632"
+    },
+    "recovery_initial_state": {
+      "path": "build/research-v81/v85-poststop-retention-2026-10-13/admin-attempt2/admin/v84-recovery-cohort1/state.json",
+      "sha256": "af650a831c29195cf5901b0e95294917d1b2541225200588670b5ffeea42efe0"
+    },
+    "recovery_progress": {
+      "path": "build/research-v81/v85-poststop-retention-2026-10-13/admin-attempt2/admin/v84-recovery-cohort1/progress.json",
+      "sha256": "8ea5a1da791f2365e9e242cc6e0bad4085077ddce130efe184afaadc687e2859"
+    },
+    "recovery_runtime": {
+      "path": "build/research-v81/v84-recovery-cloud-2026-10-12/runtime-evidence/runtime-new.json",
+      "sha256": "b53a5cffa60a7313ebc7dee1f28461b42968e58db0d99cc51f0c70b612fbdccd"
+    },
+    "representative_control_audit": {
+      "path": "build/research-v81/release-prep/positive12-closure-preparation-2026-10-13/final34-actual-output02/join.json",
+      "sha256": "a77c1fecc52f659495b96a0f2bf8fece97801d689de22bd055e3a2c384a97a0c"
+    },
+    "representative_control_review": {
+      "path": "experiments/continuous_v82_review/actual_join34_outcome_retention_review.json",
+      "sha256": "6a35e5284e202e657a5ee8838e14eef1ed03844d6e70ae256d6eefbb5e92a85c"
+    },
+    "source_isomorphism_review": {
+      "path": "experiments/continuous_v82_review/actual_whole_packet_source_semantics_runtime_review.json",
+      "sha256": "58f865cb690b523629549f9826544e359e6962f18a427c9eac68f50be2f455c5"
+    },
+    "structural_cache_review": {
+      "path": "experiments/continuous_v82_review/whole730_structural_cache_cpu7200_source_review.json",
+      "sha256": "de2e4b221a867f08069444ba69148699663522844f948ba2337a4d806ad0f679"
+    },
+    "two_chamber_data": {
+      "path": "experiments/continuous_v82/finite_domain_bridge.json",
+      "sha256": "56b4674ee90cb1838ad161fe72ee4b1443c2228b4b17f2c929810af681406ca3"
+    },
+    "two_chamber_review": {
+      "path": "experiments/continuous_v82_review/two_chamber_bridge_verdict.json",
+      "sha256": "942ecc5125e5eccea6b9faf3d815ccbc8d9e531613d346cb150b6f829869a4a4"
+    },
+    "v82_aggregate": {
+      "path": "build/research-v81/v84-recovery-cloud-2026-10-12/full-ssd-cohort4/v82-full-ssd-aggregate-cohort5/v82-aggregate.json",
+      "sha256": "cd462477211b8b31a3c68d87f1e8b32d4d812f5a90e8f68fb664aac45fb024db"
+    },
+    "v82_manifest": {
+      "path": "build/research-v81/v84-recovery-cloud-2026-10-12/full-ssd-cohort4/join-anchors/manifest.json",
+      "sha256": "9085e438083c4a6cf96c00e8ab64e5e2b7ccdb660125497a65ef5f11570503fe"
+    },
+    "v82_outcome_review": {
+      "path": "experiments/continuous_v82_review/v82_outcome_review.json",
+      "sha256": "c93ae10f28108fcb434a30817b8976394c181b10b0723b68384cbffe36c1bdd6"
+    },
+    "v82_package": {
+      "path": "build/research-v81/v84-recovery-cloud-2026-10-12/full-ssd-cohort4/join-anchors/package.json",
+      "sha256": "18f75af69dfda0dbefde2f68ef7da79ecca701fd24cb625be8f74e44784d021c"
+    },
+    "v82_runtime": {
+      "path": "build/research-v81/v84-recovery-cloud-2026-10-12/full-ssd-cohort4/join-anchors/runtime-before.json",
+      "sha256": "816f3def8fa6a4a84e9931dce54f231e9b575f8de5eff7e3dfae6f95e8b8d4dc"
+    },
+    "v82_supervisor_result": {
+      "path": "build/research-v81/v84-recovery-cloud-2026-10-12/full-ssd-cohort4/join-anchors/supervisor-result.json",
+      "sha256": "d7d62ad56a23ff1c909bc881dcf7e255a4144cd8441c7336d5b1a64fecdeda10"
+    },
+    "v83_attempts": {
+      "path": "build/research-v81/v93-whole730-ssd-2026-10-13/whole730-cohort4-retention-actual01/raw/opt/v93-whole730-audit-cohort4/attempts.json",
+      "sha256": "010eb0594f94c90bb9b845e7fc9124504968e1a12dc9ae2b222a495fb1027a43"
+    },
+    "v83_audit": {
+      "path": "build/research-v81/v93-whole730-ssd-2026-10-13/whole730-cohort4-retention-actual01/raw/opt/v93-whole730-audit-cohort4/audit.json",
+      "sha256": "2873038647e2726c79fb6ed7151902e67a5c947ebfee62485c72aa4838ea3e7d"
+    },
+    "v83_frozen_audit": {
+      "path": "build/research-v81/v93-whole730-ssd-2026-10-13/whole730-cohort4-retention-actual01/raw/opt/v93-whole730-audit-cohort4/frozen-audit.json",
+      "sha256": "d6e035bb001f50c8ccf5166067fc9efbac898bbb1f4de846aed672d1149dde10"
+    },
+    "v83_outcome_review": {
+      "path": "experiments/continuous_v82_review/v93_actual_conditional730_outcome_retention_review.json",
+      "sha256": "c2a3bd203c4c64c908557018964227d62ced3b4cabdcf7b76953995e4977b536"
+    },
+    "v83_source_review": {
+      "path": "experiments/continuous_v82_review/v89_v90_v91_auditor_source_review.json",
+      "sha256": "3d95746107aeed40f14e6497f172b5f8daeaf94feca977df9c35000d67f3bb8e"
+    },
+    "v86_admission_record": {
+      "path": "build/research-v81/v93-whole730-ssd-2026-10-13/capture-retention-01/raw/v93-remaining12-capture-cohort1/provenance/v86-full78-driver-admission.json",
+      "sha256": "07f0cec3be79673cd9a40109c9060d14cb7bc5280dcf0dcc7a6f90c06e1e4171"
+    },
+    "v86_assessment": {
+      "path": "experiments/continuous_v82_review/v86_halted_selected26_policy_assessment.json",
+      "sha256": "ea32dd6885fc0dd2f3ec226cfc4670ae8a58aab99aaa657e1f3363a87e155c16"
+    },
+    "v86_halted_policy": {
+      "path": "experiments/continuous_v82_review/v86_halted_selected26_actual_policy.json",
+      "sha256": "a4b524ea6492a2bd2e0725619f63caaae23d7550724363624287bef548c89374"
+    },
+    "v86_receipt": {
+      "path": "build/research-v81/v86-reflected-continuation-2026-10-13/terminal-retention-02/observer/receipt.json",
+      "sha256": "1e8e48a4426f4d39487b3c936a726e3b7a1c521b849bdb655e9fe9d1c29273d7"
+    },
+    "v86_state": {
+      "path": "build/research-v81/v86-reflected-continuation-2026-10-13/terminal-retention-02/cohort/state.json",
+      "sha256": "ab9eba03f799e931c22f9793f22398f047851d70b6080df0a9d452a2704e99f8"
+    },
+    "v87_approval": {
+      "path": "build/research-v81/v87-two-job-continuation-2026-10-13/terminal-retention-01/observer/input-authority.bytes",
+      "sha256": "8f67999466f56b200b0c2ec6947c8dcd41551c7cf9c58da77e19bb6577dc4cb8"
+    },
+    "v87_audit": {
+      "path": "build/research-v81/v87-two-job-continuation-2026-10-13/actual-full-log-audit-01/audit.json",
+      "sha256": "edfedcc5b5a426d6fb2439dab16622eb8faab17579375f026355b3ca269a60e1"
+    },
+    "v87_inventory": {
+      "path": "build/research-v81/v87-two-job-continuation-2026-10-13/terminal-retention-01/observer/inventory.json",
+      "sha256": "ec4ba3b51b95eecf3f348dceddfc8b58e514366de615c869519e7aa49b6f35ca"
+    },
+    "v87_observer_completion": {
+      "path": "build/research-v81/v87-two-job-continuation-2026-10-13/terminal-retention-01/observer/observer-completion.json",
+      "sha256": "57072f94f92ceb2ae0bb1f530ba0e69bc32ce53a51f4fd8466e35e8ad94aff27"
+    },
+    "v87_outcome_review": {
+      "path": "experiments/continuous_v82_review/v87_two_job_outcome_review.json",
+      "sha256": "99351f9d499e4de3ba404e82fa860b07ccebced4410a5be3ff51b6c0a6e4c891"
+    },
+    "v87_producer_completion": {
+      "path": "build/research-v81/v87-two-job-continuation-2026-10-13/terminal-retention-01/observer/parent-completion.json",
+      "sha256": "ee1c42c4310959d69dd91680eba0e938295cf98c57b4725afb66cef76abf0ea4"
+    },
+    "v87_receipt": {
+      "path": "build/research-v81/v87-two-job-continuation-2026-10-13/terminal-retention-01/observer/receipt.json",
+      "sha256": "86dab376ff8f0f3fd9f273d9dca12801ae41cbccc4c183c213d9a7bf0dbad5e9"
+    },
+    "v87_runtime": {
+      "path": "build/research-v81/v87-two-job-continuation-2026-10-13/terminal-retention-01/observer/input-runtime.bytes",
+      "sha256": "caab54e97d70761044db07ceae563620ab9be053f1ad737f376e989ebe0be52e"
+    },
+    "v87_state": {
+      "path": "build/research-v81/v87-two-job-continuation-2026-10-13/terminal-retention-01/observer/state.json",
+      "sha256": "73535c88ad5f518e9a9e5f41fe8cce6dd33daf8bcbb7dbf19ba8f2cf7b668652"
+    },
+    "v89_amendment": {
+      "path": "build/research-v81/v89-accounting-repair-2026-10-13/selection-amendment.json",
+      "sha256": "1d145801f3ed4012270132412bc3834a4d09866cafa16400a4dd3262262195a6"
+    },
+    "v89_configuration": {
+      "path": "build/research-v81/v89-accounting-repair-2026-10-13/configuration.json",
+      "sha256": "5e03561b7e2aefa96c094e82714e1abaa08cebf14747a4a6d445992e53321a9a"
+    },
+    "v89_failed_review": {
+      "path": "experiments/continuous_v82_review/v88_nodes04_06_failed_history_retention_review.json",
+      "sha256": "ead99b30627eb1f46d9e88628ccc9b34191f9f91eeac9af77b2e7f9f9dc81693"
+    },
+    "v89_review": {
+      "path": "experiments/continuous_v82_review/v89_configuration_selection_parent_review.json",
+      "sha256": "d96a31bf81195ae4bdfb8b8f95ddc10a28a7ba378c08a0319062698a960eef03"
+    },
+    "v90_amendment": {
+      "path": "build/research-v81/v90-accounting-repair-node05-2026-10-13/selection-amendment.json",
+      "sha256": "c45be993dc5d75ed3c9323b0d890dbc44be1a00d943dc9923b0f89f7c7b13852"
+    },
+    "v90_configuration": {
+      "path": "build/research-v81/v90-accounting-repair-node05-2026-10-13/configuration.json",
+      "sha256": "e34ce76a1243e558df2b7b94b8039fc7b78ee01452c0be752382c6d8d9d24687"
+    },
+    "v90_failed_review": {
+      "path": "experiments/continuous_v82_review/v88_node05_failed_history_retention_review.json",
+      "sha256": "baeb931c2ea1a08c33457d206e8698524774501435cd05e17c95e42b3d369b2d"
+    },
+    "v90_review": {
+      "path": "experiments/continuous_v82_review/v90_node05_source_config_failed_history_review.json",
+      "sha256": "1b50f53bf1fb9779dbb6470280e7dab9fe2701e00b709826df271cf0383c5698"
+    },
+    "v91_amendment": {
+      "path": "build/research-v81/v91-accounting-repair-node01-2026-10-13/selection-amendment.json",
+      "sha256": "25a1ee38fe4a654480df5574e398037da2d7e906c2542bec1aad3edda1488111"
+    },
+    "v91_configuration": {
+      "path": "build/research-v81/v91-accounting-repair-node01-2026-10-13/configuration.json",
+      "sha256": "a101b705b261f8dab58ed8ba1ecd5479660931ed2db6cde6aeabe16e2084e7d7"
+    },
+    "v91_failed_review": {
+      "path": "experiments/continuous_v82_review/v88_node01_failed_history_retention_review.json",
+      "sha256": "f2d30147f9e85a70a0f6afdc3a712b3305f0593f9789b172282b400f5dabaeb8"
+    },
+    "v91_review": {
+      "path": "experiments/continuous_v82_review/v91_node01_source_config_failed_history_review.json",
+      "sha256": "2de618a8eb34b0d0adc7aaa404694aa33fa4c255448431b717e5e800f35a66d6"
+    }
+  },
+  "schema_version": 1,
+  "status": "EXPLICIT_CANONICAL_CONFIGURATION_V86_ASSUMPTION_JOIN34_INPUTS_NO_PROMOTION"
+}

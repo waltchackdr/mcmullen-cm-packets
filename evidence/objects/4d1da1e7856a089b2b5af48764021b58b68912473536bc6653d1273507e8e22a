@@ -1,0 +1,21 @@
+{
+  "status": "C63_THREE_FILE_PROMOTION_CANDIDATE_NOT_ADOPTED",
+  "files": {
+    "certificates/principal_order_class_v129.py": {
+      "sha256": "c72efaebd8fd81c2c84a1ea245bdc5a92f8f48b76948cc22b876925c01127d73",
+      "bytes": 4487
+    },
+    "independent/principal_order_class_v129.py": {
+      "sha256": "d6ce198aaf2802c5ec0b355985f86224416af12fc749b7b0abe99e6b1164477b",
+      "bytes": 5762
+    },
+    "tests/test_principal_order_class_v129.py": {
+      "sha256": "fde55d87f2de0198d7b7049d6209f9f9476bc57d25365de8ba72c1b44c786b31",
+      "bytes": 1742
+    }
+  },
+  "existing_pinned_inputs": [
+    "certificates/principal_bc_unpolarized_data.json",
+    "certificates/principal_bc_hom_data.json"
+  ]
+}

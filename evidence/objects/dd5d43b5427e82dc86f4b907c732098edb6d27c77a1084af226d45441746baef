@@ -1,0 +1,57 @@
+"""Immutable raw snapshots with explicit path mapping; no JSON rewriting."""
+import hashlib,os,re,stat,tempfile
+from pathlib import Path
+MAX_FILE=128*1024**2
+MAX_TOTAL=512*1024**2
+MAX_FILES=1024
+
+def identity(s):return (s.st_dev,s.st_ino,s.st_mode,s.st_nlink,s.st_size,s.st_mtime_ns,s.st_ctime_ns)
+class Store:
+ def __init__(self,base,job):
+  self.base=Path(base);self.job=Path(job);self.index={};self.total=0
+  if self.base.resolve()!=self.base or self.job.resolve()!=self.job:raise ValueError('Aliased storage root')
+  self.base.mkdir(exist_ok=False)
+ def publish(self,path):
+  p=Path(path);rel=p.relative_to(self.job)
+  if '..' in rel.parts or p.resolve()!=p:raise ValueError('Aliased artifact')
+  before=p.stat()
+  if not stat.S_ISREG(before.st_mode) or before.st_nlink!=1 or before.st_size>MAX_FILE:raise ValueError('Artifact type/size')
+  digest=hashlib.sha256();total=0;fd,temp=tempfile.mkstemp(dir=self.base,prefix='partial-');temp=Path(temp)
+  try:
+   with os.fdopen(fd,'wb') as target,p.open('rb') as source:
+    while chunk:=source.read(1024**2):
+     total+=len(chunk)
+     if total>MAX_FILE:raise ValueError('Artifact grew beyond size cap')
+     digest.update(chunk);target.write(chunk)
+    target.flush();os.fsync(target.fileno())
+   if identity(before)!=identity(p.stat()) or total!=before.st_size:raise ValueError('Artifact changed during snapshot')
+   key=digest.hexdigest();dest=self.base/(key+'.blob')
+   if key not in self.index:
+    if len(self.index)>=MAX_FILES or self.total+total>MAX_TOTAL:raise ValueError('Artifact aggregate cap')
+    os.link(temp,dest,follow_symlinks=False);self.index[key]={'bytes':total,'sha256':key};self.total+=total
+   elif self.index[key]['bytes']!=total or dest.stat().st_size!=total:raise ValueError('Content index conflict')
+   return {'remote_path':str(p),'retained_path':'raw/'+rel.as_posix(),'artifact_id':key,'bytes':total,'sha256':key,'raw_bytes_unchanged':True}
+  finally:temp.unlink(missing_ok=True)
+ def open_range(self,key,offset,length):
+  if not re.fullmatch('[0-9a-f]{64}',key) or key not in self.index:raise ValueError('Unknown artifact')
+  size=self.index[key]['bytes']
+  if type(offset)is not int or type(length)is not int or offset<0 or length<0 or length>1024**2 or offset+length>size:raise ValueError('Artifact range')
+  p=self.base/(key+'.blob')
+  if p.is_symlink() or p.stat().st_size!=size:raise ValueError('Artifact storage drift')
+  with p.open('rb') as f:f.seek(offset);raw=f.read(length)
+  if len(raw)!=length:raise ValueError('Incomplete artifact read')
+  return raw
+
+def candidate_paths(job):
+ """Only selected evidence trees, never source/runtime clone or home/tmp content."""
+ job=Path(job);selected=[]
+ for name in ('runtime_probe','supervisor-setup','supervisor-tooling','hook_fixtures'):
+  base=job/name
+  if base.is_dir():selected.extend(p for p in base.rglob('*') if p.is_file())
+ base=job/'tooling/run01'
+ if base.is_dir():
+  for p in base.rglob('*'):
+   rel=p.relative_to(base)
+   if any(part in {'source','bin','tmp','home'} for part in rel.parts):continue
+   if p.is_file():selected.append(p)
+ return sorted(set(selected))

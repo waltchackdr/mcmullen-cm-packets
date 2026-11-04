@@ -1,0 +1,9 @@
+{
+  "status": "DETERMINISTIC_FINITE_INPUT_COPY_THEOREM_GATE_PENDING",
+  "source": "experiments/fermat_minimum_polarization_v154/arithmetic_candidate.py",
+  "installed": "certificates/fermat_minimum_polarization_norm_v154.py",
+  "sha256": "22171d0c96b432de687ff296d05bb495f3eead8c6d9541e63357fbb1d499f645",
+  "byte_identical": true,
+  "regression": "tests/test_fermat_minimum_polarization_v154.py tests the byte-identical source",
+  "scope": "Exact prime-factor/root/norm checks only; C83 geometry is provisional until review/adoption."
+}

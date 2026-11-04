@@ -1,0 +1,51 @@
+{
+  "active_registry_count": 185,
+  "all_dynamic_dependencies_complete_claimed": false,
+  "bytes": 199072218,
+  "commit_created": false,
+  "credential_screen": {
+    "path": "build/research-v81/release-prep/stage1-certificate-commit-preparation-2026-10-13/content-screening.json",
+    "sha256": "93d9388847b25314daeb5db34735a0323dda5a9e9c8fa3429eb549ec03ad86dc"
+  },
+  "file_count": 2204,
+  "files_manifest": {
+    "path": "build/research-v81/release-prep/stage1-certificate-commit-preparation-2026-10-13/selected-files.json",
+    "sha256": "45c2ab17df1fab7a17dcf9d1830400588a3896f00183743cf63fb4faac198395"
+  },
+  "full_raw_retention_claimed": false,
+  "full_suite_pass": false,
+  "mathematical_certificate_payload_location": "Existing immutable V82/2998 staging paths; byte-identical installation deferred to stage2.",
+  "pending": [
+    "Hostile closure review of explicit source/layout graph and selected paths.",
+    "Actual committed blob comparison and root-owned scoped commit preserving unrelated index/worktree.",
+    "Post-commit mathematical theorem adoption; actual registration installation receipt/review.",
+    "Fresh immutable release/postcheck/manuscript/PDF/visual requirements."
+  ],
+  "phase_counts": [
+    159,
+    6,
+    498,
+    12,
+    34,
+    696
+  ],
+  "proposed_registered_obligation_count": 1405,
+  "protected_live_paths": [
+    "scripts/run_certificates.py",
+    "verify_all.sh",
+    "tests/registration/combined1405-installation.json",
+    "certificates/reflected_packet_v83/selection.json",
+    "certificates/reflected_packet_v83/expected.json",
+    "certificates/reflected_primary_v83.py",
+    "independent/reflected_sturm_v83.py",
+    "paper/main.tex",
+    "docs/CURRENT_STATE.md",
+    "docs/CLAIM_LEDGER.md",
+    "docs/PROOF_DEPENDENCIES.md",
+    "logs/RESEARCH_LOG.md"
+  ],
+  "registration_applied": false,
+  "schema_version": 1,
+  "status": "STAGE_ONE_EXPLICIT_CERTIFICATE_COMMIT_CANDIDATE_PENDING_SOURCE_AND_CLOSURE_REVIEW",
+  "theorem_promotion": false
+}

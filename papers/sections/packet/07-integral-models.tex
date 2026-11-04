@@ -1,0 +1,1006 @@
+% !TeX root = ../../packet-and-principal-models.tex
+\section{Integral models, polarizations and maps}
+We first give coordinates for the common principal component. We then
+separate marked, polarized and unpolarized equivalence. The ideal and unit
+calculations are also the explicitly cited arithmetic inputs to Paper II.
+
+
+\begin{proposition}[An explicit principal RM component]
+\label{pp:prop:explicit}
+Write $O=\OL$, $u=t-1$, $d=f'(t)$, and
+\[
+ \beta=-t^5+t^4+6t^3-2t^2-8t-2,\qquad
+ a=(\beta u^2)^{-1},\quad b=u^{-3},\quad
+ \delta=ab=(\beta u^5)^{-1}.
+\]
+The common self-dual lattice $P=\Lambda_{\mathrm{common}}$ has $O$-basis
+\begin{equation}\label{pp:eq:basis}
+ T=\begin{pmatrix}a&3b\\0&b\end{pmatrix},\qquad P=TO^2.
+\end{equation}
+Its determinant $\delta$ generates the codifferent and has signs
+$(+,-,+,-,+,-)$ in the ordered embeddings $1,5,11,13,17,19$.
+A principal RM presentation of the family in
+Theorem~\ref{thm:principalfamily} has homology module
+\[
+ P_{\rm std}=Oe_1+\delta Oe_2
+\]
+with the trace form $E_1$, period lattice $Ow+\delta O$, and arithmetic group
+\begin{equation}\label{pp:eq:group}
+ \Gamma_{\rm std}
+ =\left\{\begin{pmatrix}r&\delta s\\v/\delta&q\end{pmatrix}:
+ r,s,v,q\in O,\ rq-sv=1\right\}
+ =\operatorname{diag}(\delta,1)\SL_2(O)
+   \operatorname{diag}(\delta,1)^{-1}.
+\end{equation}
+Its period map on the universal covering curve is
+\begin{equation}\label{pp:eq:curve}
+ F_{{\rm std},i}(z)
+ =\frac{\sigma_i(a^2)F_{t,i}(z)}{3F_{t,i}(z)+1}.
+\end{equation}
+Thus its image lies in the specified principal RM component
+$\HH^6/\Gamma_{\rm std}$, with a compatible neat refinement when a fine
+moduli interpretation is required.
+\end{proposition}
+\begin{proof}
+The ideal identities $(u)=\mathfrak p_7$, $(\beta)=\mathfrak p_3$ and
+$(d)=\mathfrak p_3\mathfrak p_7^5$ give the unit
+\[
+ \varepsilon=\frac{d}{\beta u^5}
+ =28+215t+335t^2+82t^3-87t^4-35t^5,
+ \qquad N_{L/\Ql}(\varepsilon)=1.
+\]
+They may also be checked directly from $f$: $N(u)=7$,
+$N(\beta)=-27$ and $\beta$ vanishes modulo the degree-three factor at $3$.
+Under multiplication by $d$, the local conditions defining the common
+subgroup in Proposition~\ref{prop:commonprincipal} say
+\[
+ y\in\beta O,\qquad y\in u^2O,\qquad x-3y\in u^3O.
+\]
+Since $(\beta)$ and $(u)$ are coprime, their simultaneous solution is
+\[
+ dP=Ou^3(1,0)+O\beta u^2(3,1).
+\]
+Now
+\[
+ dT=\varepsilon
+ \begin{pmatrix}u^3&3\beta u^2\\0&\beta u^2\end{pmatrix},
+ \qquad
+ T^{-1}=\begin{pmatrix}\beta u^2&-3\beta u^2\\0&u^3\end{pmatrix}.
+\]
+The unit factor leaves the module unchanged, proving
+\eqref{pp:eq:basis} and $O^2\subset P$. Also $\delta d=\varepsilon$,
+so $\delta O=\mathfrak D_L^{-1}$ and
+$[P:O^2]=|N(\delta)|^{-1}=453789$.
+
+In the basis $T$, the pairing is
+$E_\delta((r,s),(r',s'))=\operatorname{Tr}_{L/\Ql}
+(\delta(r's-rs'))$. Exact arithmetic gives
+\[
+ \delta=-\frac{11}{21}-\frac{209}{21}t-\frac{55}{3}t^2
+       -\frac{110}{21}t^3+\frac{33}{7}t^4+2t^5.
+\]
+The integral matrix $(\operatorname{Tr}(\delta t^{i+j}))_{0\leq i,j\leq5}$
+has determinant $-1$, so its alternating trace form is unimodular.
+Disjoint rational isolating intervals for all six roots of $f$, followed
+by rational interval evaluation of this polynomial, certify the stated
+signs. The exact identities and signs are checked in
+\path{experiments/principal_normalization_v111/explicit_basis.py}
+and separately, using rational polynomial arithmetic, in
+\path{experiments/principal_normalization_v111/review/independent_basis_check.py}.
+
+At a period $z\in\HH^6$, interpreted componentwise, the basis columns
+evaluate to $az$ and $b(3z+1)$. Division by $b(3z+1)$ gives the period
+\[
+ \zeta=\frac{a}{b}\frac{z}{3z+1}
+\]
+on the standard $O^2$ module with form $E_\delta$. Its imaginary-part
+signs are those of $\delta$; $E_\delta$ is positive on this mixed
+component. Multiplication of the complex coordinate by $\delta$ gives
+$w=\delta\zeta=a^2z/(3z+1)$ and lattice $Ow+\delta O$. The corresponding
+homology identification is
+\[
+ C=\operatorname{diag}(1,\delta)T^{-1},\qquad \det C=1.
+\]
+It maps $P$ onto $P_{\rm std}$ and preserves $E_1$ exactly. Thus this
+is a polarized isomorphism, not just an isogeny comparison.
+The principal module $P_{\rm std}$ is self-dual because $\delta O$ is
+the codifferent. Its transition stabilizer for $g\mapsto g^{-\mathsf T}$
+is precisely \eqref{pp:eq:group}. The form $E_1$ is positive on its
+all-upper-half-plane domain.
+
+The composite period matrix is
+\[
+ W=\begin{pmatrix}a^2&0\\3&1\end{pmatrix}\in\GL_2^+(L),
+ \qquad \det W=a^2.
+\]
+It gives \eqref{pp:eq:curve}; its denominators do not vanish on $\HH$.
+The stabilizer calculation below verifies equivariance on the same
+connected cover as Theorem~\ref{thm:principalfamily}. That theorem's
+algebraization identifies the resulting moduli map with the original
+principal family, preserving its degree-$453789$ isogeny and its three
+specialized $K$-actions.
+\end{proof}
+
+\begin{proposition}[Explicit transition stabilizer]\label{pp:prop:stabilizer}
+For $g=\left(\begin{smallmatrix}r&s\\v&q\end{smallmatrix}\right)
+\in\SL_2(O)$ put $Q(g)=v+3r-3q-9s$. Then
+\[
+ \Gamma_H=\{g\in\SL_2(O):s\in\beta O,\ Q(g)\in uO\},
+ \qquad
+ W\Gamma_HW^{-1}=\Gamma_{\rm std}\cap W\SL_2(O)W^{-1}.
+\]
+\end{proposition}
+\begin{proof}
+The homology basis matrix is $T$, the period matrix is $S=T^{\mathsf T}$,
+and the transition action is $g^{-\mathsf T}$. Direct multiplication gives
+\[
+ T^{-1}g^{-\mathsf T}T
+ =\begin{pmatrix}
+ q+3s&-(\beta/u)Q(g)\\-(u/\beta)s&r-3s
+ \end{pmatrix}.
+\]
+Its integrality is equivalent to the two displayed congruences, because
+$u$ and $\beta$ are coprime. Determinant one then gives a lattice
+automorphism. On the final periods,
+\[
+ WgW^{-1}
+ =\begin{pmatrix}r-3s&a^2s\\a^{-2}Q(g)&q+3s\end{pmatrix}.
+\]
+The identities $a^2/\delta=u/\beta$ and $\delta a^{-2}=\beta/u$ prove
+the intersection assertion. Consequently \eqref{pp:eq:curve} is
+equivariant for $Wj(\Delta')W^{-1}\subset\Gamma_{\rm std}$.
+The indices $224$ and $28$ are those of
+Proposition~\ref{prop:principalstabilizer}; no new degree after neat
+refinement is inferred.
+\end{proof}
+
+\subsection{Marked and unmarked distinctions}
+\begin{proposition}[Distinct principal points with fixed real multiplication]
+\label{pp:prop:markeddistinct}
+Let $B_X$, for $X=A,B,C$, be the three specified principal fibers of
+Theorem~\ref{thm:principalfamily}, with their fixed $\OL$ actions.
+For $X\ne Y$ one has
+\[
+ \operatorname{Hom}_{\OL}(B_X,B_Y)\otimes_{\mathbf Z}\Ql=0.
+\]
+Consequently their images in the principal RM component
+$\HH^6/\Gamma_{\rm std}$ are pairwise distinct, also after forgetting
+auxiliary level while retaining the $\OL$ marking.
+\end{proposition}
+\begin{proof}
+The actual geometric CM types, expressed using $z=\zeta_{42}$, are
+\[
+ \Phi_A=\{1,5,17,19,29,31\},\quad
+ \Phi_B=\{1,5,23,25,29,31\},\quad
+ \Phi_C=\{1,5,11,13,17,19\}.
+\]
+Their $M$ actions restrict to the same prescribed $L$ action:
+the generators for $B,C$ satisfy $Z^2-tZ+I=0$, and the certified
+generator $Z_A=(A_t+tI)/(t^2-1)$ of
+Proposition~\externalref{supplement}{prop:Amaximalpair} satisfies the same identity and
+$Z_A^3=A_t$. Passing to transposes gives the homology actions without
+changing the scalar $t$. Thus $z+z^{-1}$ acts as the fixed scalar $t$
+in every case. These are the normalized geometric types, not companion types
+or representatives re-marked by arbitrary Galois automorphisms.
+The lattice inclusions of Theorem~\ref{thm:principalfamily} are the
+identity on rational $L^2$, and the coordinate normalization in
+Proposition~\ref{pp:prop:explicit} commutes with $L$ at each real
+place. Hence the same marked rational Hodge structures, with their
+rational $M$ actions, describe the principal fibers.
+
+For completeness, consider two rank-one $M$ rational Hodge structures
+with this fixed $L$ restriction. After identifying each rational
+vector space with $M$, every rational linear map is uniquely
+\[
+ F=\sum_{g\in G}m_g g,\qquad m_g\in M,\qquad
+ G=\operatorname{Gal}(M/\Ql).
+\]
+Indeed, after splitting $M$ over $\mathbf C$, each summand $Mg$
+occupies the matrix positions of its embedding permutation. These
+supports are disjoint and their dimensions sum to $[M:\Ql]^2$.
+Commutation with every $a\in L$ gives
+$m_g(g(a)-a)=0$. Since $M$ is a field, only
+$g\in\operatorname{Gal}(M/L)=\{1,c\}$ can remain, where $c$ is
+complex conjugation. If $m_g\ne0$, every conjugate of $m_g$ is
+nonzero. Its entries cannot cancel those of another summand.
+Preserving the Hodge subspaces therefore requires the two types to
+be equal for $g=1$, or complementary for $g=c$.
+
+The three displayed types are pairwise unequal, and all contain $1$
+and omit $41$, so no two are complementary. Thus every $L$-linear
+Hodge map between distinct fibers is zero. An $\OL$-linear
+homomorphism of abelian varieties induces such a map on rational
+homology, and a homomorphism with zero map on homology is zero.
+This proves the assertion without a primitivity assumption.
+An identification in the specified principal RM moduli component
+would be an $\OL$-linear polarized isomorphism, which is excluded.
+The unmarked isogeny relation $19\Phi_B=\Phi_C$ from
+Proposition~\ref{prop:knownCM} changes the $L$ marking and gives no
+contradiction. The next proposition treats the unmarked principal
+images; neither result identifies Mostaed's named image.
+\end{proof}
+
+
+\begin{proposition}[Three distinct unmarked principal fibers]
+\label{pp:prop:unmarkeddistinct}
+The three specified principally polarized fibers $B_A,B_B,B_C$ of
+Theorem~\ref{thm:principalfamily} are pairwise nonisomorphic as principally
+polarized complex abelian varieties, after forgetting both the fixed
+$\OL$ action and auxiliary level. Thus they give three distinct points
+of the coarse moduli space of principally polarized abelian sixfolds.
+\end{proposition}
+\begin{proof}
+By Proposition~\ref{prop:knownCM}, the underlying $A$ fiber is isogenous
+to $J(y^2=x^7-1)^2$, whereas the $B,C$ fibers are isogenous to the simple
+sixfold $X_{21}$. The principal-model isogenies preserve this distinction,
+so only $B_B$ versus $B_C$ remains.
+
+Write $z=\zeta_{42}$, $t=z+z^{-1}$, $u=t-1$ and
+\[
+ \beta=-t^5+t^4+6t^3-2t^2-8t-2,\qquad
+ a=(\beta u^2)^{-1},\quad b=u^{-3}.
+\]
+The actual common lattice of Proposition~\ref{pp:prop:explicit} is
+$P=\OL(a,0)+\OL(3b,b)$, with the restriction of $E_1$.
+For $X=B,C$, let $(c_X,d_X)$ be the bottom row of the normalized
+vertex matrix $X_t$. Explicitly,
+\[
+ c_B=t^{-1},\quad d_B=t,\qquad
+ c_C=t^{-1}(-1+5t+4t^2-t^3-t^4),\quad
+ d_C=-t+4t^2+4t^3-t^4-t^5.
+\]
+On homology, $z$ acts by $X_t^T$. The identification
+$J_X:M\longrightarrow L^2$ given by
+$J_X(v_0+v_1z)=(c_Xv_1,v_0+d_Xv_1)$ therefore has
+\[
+ I_X=J_X^{-1}(P)=\OL a w_X+\OL b(1+3w_X),\qquad
+ w_X=(z-d_X)/c_X.
+\]
+In these coordinates its actual polarization is
+\[
+ E_X(v,w)=\Tr_{M/\Ql}(\xi_Xv\bar w),\qquad
+ \xi_X=-\frac{c_X}{z-z^{-1}}.
+\]
+Indeed the relative trace equals $c_X(v_0w_1-v_1w_0)$, which
+recovers $E_1(J_Xv,J_Xw)$ after applying $\Tr_{L/\Ql}$.
+
+The disjoint-support argument in
+Proposition~\ref{pp:prop:markeddistinct} applies without imposing
+$L$-linearity: a term $m_g\sigma_g$ can preserve the Hodge subspaces
+only if $\Phi_B=g\Phi_C$. For the actual types displayed there, the
+unique such exponent is $g=31$ modulo $42$. Hence every possible
+isomorphism has the form $F(v)=m\sigma_{31}(v)$. Its integrality and
+polarization conditions imply, respectively,
+\[
+ m\in J:=\frac{I_C}{\sigma_{31}(aw_B)},\qquad
+ m\bar m=r:=\frac{\sigma_{31}(\xi_B)}{\xi_C}.
+\]
+The first condition uses only the image of the first actual lattice
+generator; it requires no invertibility of a nonmaximal-order ideal.
+The second follows by moving $\sigma_{31}$ through the absolute trace.
+In particular $q(m):=\Tr_{M/\Ql}(m\bar m/r)=12$ is necessary.
+
+We record the finite obstruction explicitly. Let $Q$ be the rational
+Gram matrix of $q$ on the basis of $J$ induced by
+$t^ja w_C,t^jb(1+3w_C)$, $0\leq j<6$, divided by
+$\sigma_{31}(aw_B)$. The certificate
+\path{certificates/principal_unmarked_bc_v122.py} reconstructs this
+matrix from the displayed field and polarization formulas. Its data
+file \path{certificates/principal_unmarked_bc_data.json} supplies an
+integral matrix $U$ with determinant $-1$ and the exact identity
+$U^TQU=H$, where
+\begingroup
+\setlength{\arraycolsep}{2.3pt}
+\scriptsize
+\[
+H=\left(\begin{array}{*{12}{r}}
+14&-7&0&0&-6&-2&3&2&0&0&-3&6\\
+-7&14&0&0&3&4&-6&-1&0&0&-3&-3\\
+0&0&14&0&4&-1&-2&-6&0&-7&2&-4\\
+0&0&0&14&-1&-6&2&-2&-7&0&1&1\\
+-6&3&4&-1&16&4&-8&-8&2&-2&-1&2\\
+-2&4&-1&-6&4&16&-8&4&3&2&2&2\\
+3&-6&-2&2&-8&-8&16&4&-1&4&-1&-1\\
+2&-1&-6&-2&-8&4&4&16&4&3&-1&2\\
+0&0&0&-7&2&3&-1&4&14&0&1&-2\\
+0&0&-7&0&-2&2&4&3&0&14&2&2\\
+-3&-3&2&1&-1&2&-1&-1&1&2&22&-11\\
+6&-3&-4&1&2&2&-1&2&-2&2&-11&22
+\end{array}\right).
+\]
+\endgroup
+Exact rational factorization proves $H$ positive definite, and direct
+inversion gives $12(H^{-1})_{ii}<4$ for every $i$. Cauchy--Schwarz
+therefore places every integer vector of norm at most $12$ in
+$\{-1,0,1\}^{12}$. Exact enumeration of this box gives only the
+origin in that closed ball. The primary certificate instead uses
+rational completion of squares, visiting $59$ nodes with the same
+result. The separate implementation
+\path{independent/principal_unmarked_bc_v122.py} reconstructs $Q$
+by cyclotomic companion matrices and checks all $3^{12}=531441$ box
+vectors by an integer split quadratic form. Both paths verify the
+unimodular change of basis and the complete bounds.
+In fact the lattice minimum is $14$: $H$ is even integral, the
+closed ball of norm $12$ contains only zero, and its first basis vector
+has norm $14$.
+
+Thus the necessary trace norm $12$ is impossible, excluding every
+polarized isomorphism $B_B\simeq B_C$. This leaves their established
+unmarked isogeny relation unchanged. The stronger unpolarized distinction
+is proved in Proposition~\ref{pp:prop:unpolarizeddistinct} below; neither
+argument asserts injectivity of the whole principal curve or identifies
+it with Mostaed's named image.
+\end{proof}
+
+
+\subsection{Scalar-polarized maps}
+\begin{proposition}[The smallest scalar-polarized $B$--$C$ isogeny]
+\label{pp:prop:bcisogeny}
+For the specified principal fibers $(B_B,\lambda_B)$ and
+$(B_C,\lambda_C)$, the smallest positive integer $k$ for which an
+isogeny $f:B_B\to B_C$ satisfies $f^*\lambda_C=k\lambda_B$ is $2$.
+There are exactly six such isogenies at $k=2$, each of degree $64$.
+They have the same kernel, a maximal isotropic subgroup of $B_B[2]$
+isomorphic to $(\Z/2\Z)^6$, and form one orbit under the polarized
+automorphisms of $B_C$. The origin-preserving polarized automorphism
+groups of both fibers are the explicit cyclic groups of order six
+generated, in their respective CM coordinates, by multiplication by $z^7$.
+\end{proposition}
+\begin{proof}
+Use $I_B,I_C,\xi_B,\xi_C,r,J,Q,H$ and the unique Hodge twist
+$\sigma_{31}$ from Proposition~\ref{pp:prop:unmarkeddistinct}.
+A rational Hodge map $m\sigma_{31}$ is an isogeny with multiplier $k$
+if and only if
+\[
+ m\sigma_{31}(I_B)\subseteq I_C,\qquad m\bar m=kr.
+\]
+The inclusion must be tested on the full integral lattices; membership
+in $J$ alone is insufficient. The norm equation is nonzero, so it makes
+the rational map invertible. An integral Hodge map between these
+abelian varieties is algebraic, as in the homology comparison above.
+On the common integral symplectic form $E$, its matrix satisfies
+$T^tET=kE$, so Pfaffians give its degree $\det T=k^6$.
+Moreover, any rational scalar multiplier is integral: unimodularity
+makes $E$ primitive, so integer linear combinations of its entries
+equal $1$, and the corresponding combinations of the entries of
+$T^tET$ equal $k$. Positivity then gives $k>0$.
+
+For $k=2$ the necessary trace norm is $24$. The exact inverse-diagonal
+bounds for $H$ give
+\[
+ (|n_1|,\ldots,|n_{12}|)\leq(1,1,1,1,2,1,1,1,1,1,1,1).
+\]
+The certificate \path{certificates/principal_bc_isogeny_v123.py}
+and the separate companion-matrix implementation
+\path{independent/principal_bc_isogeny_v123.py} prove completeness
+by rational suffix recursion and Schur-complement prefix minima,
+respectively. The independent path records $175$ vectors in the closed
+trace-norm ball of value $24$, and both find $84$ on its boundary.
+Of the latter, $72$ fail the
+full relative norm equation, and six more fail lattice integrality.
+The remaining six satisfy the full norm equation, all $144$ matrix
+integrality conditions, $T^tET=2E$ and $\det T=64$.
+
+Explicitly, one map is $F_0(v)=m_0\sigma_{31}(v)$, where
+\[
+\begin{split}
+127m_0={}&19-98z-85z^2-37z^3+15z^4+48z^5-56z^6\\
+        &{}+24z^7+7z^8+105z^9+82z^{10}+2z^{11}.
+\end{split}
+\]
+Its integral matrix is retained in
+\path{certificates/principal_bc_isogeny_data.json}; the implementations
+reconstruct it directly from the actual bases of $I_B,I_C$ and verify
+these identities. The complete six-map list is
+$F_j=z^{7j}F_0$, $0\leq j<6$. Multiplication by $z^7$ preserves each
+actual integral lattice and its polarization and has exact order six;
+both implementations check these statements directly.
+Thus all six maps have the same kernel.
+
+The identity $T^tET=2E$ gives the integral matrix
+$2T^{-1}=E^{-1}T^tE$. Hence the cokernel of $T$ is killed by $2$;
+its order $64$ makes it $(\Z/2\Z)^6$. It identifies with the kernel
+of the isogeny in $B_B[2]$. For representatives $v,w$ of kernel points,
+$2E_B(v,w)=E_C(F_0v,F_0w)$ is integral, so their $2$-Weil pairing is
+trivial. Its order $2^6$ makes this isotropic subgroup maximal.
+The independent certificate also computes the Smith form
+$\operatorname{diag}(1,1,1,1,1,1,2,2,2,2,2,2)$ for every map.
+
+Postcomposition with any polarized automorphism of $B_C$ permutes the
+six maps faithfully, since $F_0$ is surjective. Its orbit of $F_0$
+therefore has the size of that automorphism group and at most six
+elements. The six displayed units already occur, proving that they
+are the full group. The same argument by precomposition applies to
+$B_B$: if $F_0a=F_0b$, the connected image of the homomorphism $a-b$
+lies in the finite kernel of $F_0$, so $a=b$.
+
+Finally multiplier one would have degree one and give a polarized
+isomorphism, excluded by Proposition~\ref{pp:prop:unmarkeddistinct}.
+Thus multiplier two is minimal. This does not assert a minimum degree
+among arbitrary unpolarized isogenies, nor a fixed-$\OL$-linear map;
+the twist $\sigma_{31}$ changes the prescribed real multiplication.
+\end{proof}
+
+\subsection{Unpolarized isomorphisms and minimum degree}
+\begin{proposition}[Three distinct underlying abelian varieties]
+\label{pp:prop:unpolarizeddistinct}
+The three specified principal models $B_A,B_B,B_C$ of
+Theorem~\ref{thm:principalfamily} are pairwise nonisomorphic as complex
+abelian varieties, even after forgetting their polarizations and real
+multiplication markings.
+\end{proposition}
+\begin{proof}
+The accepted simple-factor decomposition distinguishes $B_A$ from
+$B_B,B_C$. For the latter pair, use the actual CM-coordinate lattices
+$I_B,I_C$ and the rational Hodge twist $\sigma_{31}$ from
+Proposition~\ref{pp:prop:unmarkeddistinct}. Write
+$S_X=\OM I_X$ for their maximal-order saturations, and let
+$F_0=m_0\sigma_{31}$ be the explicit degree-$64$ isogeny of
+Proposition~\ref{pp:prop:bcisogeny}. Put
+\[
+ s=z^6+z^{12}+z^{24}-z^{18}-z^{30}-z^{36},\qquad
+ \alpha=\frac{1+s}{2},\qquad \varpi=1-z^{14}.
+\]
+Then $s^2=-7$, $\alpha\bar\alpha=2$, and exact lattice calculations give
+\begin{equation}\label{pp:eq:unpolarizedlocaldata}
+ F_0(S_B)=\alpha S_C,\qquad [S_X:I_X]=27,\qquad
+ [\OM:R]=27,\quad R=(I_C:I_C),\quad
+ v-\bar v\in\varpi\OM\quad(v\in R).
+\end{equation}
+The first equality includes an integral determinant-one basis change;
+an equality of indices alone would not suffice. The last condition is
+verified on a basis of the \emph{full} multiplier order, not merely a
+selected suborder.
+
+Here is a finite exact description of the computation. In the basis
+$1,z,\ldots,z^{11}$, the saturation is the lattice generated by
+$z^i I_X$, $0\leq i<12$. For each basis element of $M$, write its
+multiplication matrix on $I_C$ and collect the $144$ entries as a column
+of a rational matrix $A$. The full multiplier order consists exactly
+of the coefficient vectors $x$ for which $Ax\in\Z^{144}$; it is the
+dual of the lattice generated by the rows of $A$.
+The certificate \path{certificates/principal_bc_unpolarized_v125.py}
+reconstructs these lattices by integer Hermite forms after clearing
+denominators. The separate certificate
+\path{independent/principal_bc_unpolarized_v125.py} checks the
+saturations by containment, stability under $z$ and generation modulo
+$3$, and the full multiplier order by linear integrality constraints
+modulo $3$. Both verify \eqref{pp:eq:unpolarizedlocaldata} on the actual
+C56 lattices and the displayed $F_0$.
+
+The ideal $\mathfrak P=\varpi\OM$ is the prime above $3$ with residue
+field $\mathbb F_{729}$. Indeed $\zeta_3=z^{14}$ reduces to $1$, and
+$3$ has order $6$ modulo $7$, so $\Phi_7$ is irreducible over
+$\mathbb F_3$. Complex conjugation acts on this field by $x\mapsto
+x^{27}$, since $27\equiv-1\pmod7$.
+
+Suppose now that $F=m\sigma_{31}$ were an unpolarized isomorphism
+$B_B\to B_C$. It would send $I_B$ onto $I_C$ and hence $S_B$ onto
+$S_C$. Comparing this with \eqref{pp:eq:unpolarizedlocaldata} shows that
+\[
+ \eta S_C=S_C,\qquad \eta=\alpha m/m_0.
+\]
+Multiplication by $\eta$ and by $\eta^{-1}$ therefore has an integral
+matrix on the full lattice $S_C$. Their characteristic polynomials
+show that both are algebraic integers: $\eta\in\OM^\times$.
+This uses no class-number-one or principal-ideal choice.
+
+Let $\Z_{(3)}$ denote localization at the rational prime $3$.
+Since $\det F_0=64$, the maps $F$ and $F_0$ are both isomorphisms
+from $I_B\otimes\Z_{(3)}$ to $I_C\otimes\Z_{(3)}$.
+Thus multiplication by $u=m/m_0$ belongs to
+$(R\otimes\Z_{(3)})^\times$. By the last condition in
+\eqref{pp:eq:unpolarizedlocaldata}, its nonzero residue is fixed by
+complex conjugation. Consequently
+\[
+ \frac{\eta}{\bar\eta}\equiv
+ \frac{\alpha}{\bar\alpha}\equiv s\pmod{\mathfrak P}.
+\]
+The second congruence uses $s^2=-1$ in characteristic $3$:
+$(1+s)/(1-s)=s$. The residue of $s$ has exact order $4$.
+On the other hand, the CM unit $\eta/\bar\eta$ has absolute value $1$
+at every complex embedding, so Kronecker's theorem makes it a root
+of unity in $M$, hence an element of $\mu_{42}$. In characteristic
+$3$ its reduction has order dividing $14$. The two orders are
+incompatible, proving the contradiction.
+The degree-$64$ isogenies remain valid. The next proposition determines
+the least degree among all unpolarized isogenies.
+\end{proof}
+
+\begin{proposition}[The least unpolarized isogeny degree]
+\label{pp:prop:mindegree}
+Among all isogenies $B_B\to B_C$ of the specified principal models,
+with no polarization compatibility imposed, the least degree is $7$.
+There is an explicit such isogeny with cyclic kernel of order $7$.
+\end{proposition}
+\begin{proof}
+Retain $I_X,S_X,m_0,\alpha$ from the preceding propositions and put
+$\beta=1+z-z^3$. Its absolute norm is $7$. Define
+\[
+ m_7=z^5\beta\alpha^{-1}m_0,\qquad F_7=m_7\sigma_{31}.
+\]
+Explicitly,
+\[
+\begin{split}
+127m_7={}&-40-41z-55z^2-9z^3+62z^4+46z^5+31z^6\\
+       &{}+23z^7+12z^8+53z^9+68z^{10}-51z^{11}.
+\end{split}
+\]
+The matrix $I_C^{-1}M(m_7)\sigma_{31}(I_B)$ is integral with
+determinant $7$. Thus the rational Hodge map $F_7$ induces an algebraic
+isogeny of degree $7$, with cyclic kernel. Its exact integral matrix is
+retained in \path{certificates/principal_bc_min_degree_data.json}.
+The certificate \path{certificates/principal_bc_min_degree_v126.py}
+checks every entry and the determinant; the separate companion
+implementation \path{independent/principal_bc_min_degree_v126.py}
+reconstructs the map independently and checks the Smith form.
+
+For the lower bound, any isogeny $F=m\sigma_{31}$ sends $I_B$ into
+$I_C$, and hence sends $S_B$ into $S_C$. The exact identity
+$F_0(S_B)=\alpha S_C$ gives
+\[
+ F(S_B)=\eta S_C\subseteq S_C,\qquad \eta=\alpha m/m_0.
+\]
+Its integral multiplication matrix makes $\eta$ an algebraic integer.
+Since $[S_B:I_B]=[S_C:I_C]=27$, lattice indices yield
+\[
+ \deg F=[I_C:F(I_B)]=[S_C:F(S_B)]
+       =[S_C:\eta S_C]=N_{M/\mathbb Q}(\eta).
+\]
+The last norm is positive because $M$ is CM. If it were between $2$
+and $6$, the ideal $(\eta)$ would have a prime ideal factor of norm
+$2$, $3$, $4$ or $5$. None exists. Indeed $\OM=\Z[z]$, and exact
+polynomial arithmetic gives
+\[
+ \gcd(\Phi_{42},X^4-X)=1\quad\text{over }\mathbb F_2,
+ \qquad
+ \gcd(\Phi_{42},X^p-X)=1\quad\text{over }\mathbb F_p,
+ \quad p=3,5.
+\]
+These exclude residue degrees one or two above $2$ and degree one
+above $3$ or $5$, exhausting the possible prime-power norms at most
+$6$. The primary certificate checks the three gcds; the independent
+certificate evaluates $\Phi_{42}$ on $\mathbb F_4$, $\mathbb F_3$
+and $\mathbb F_5$ and verifies that there are no roots.
+Degree one is excluded by Proposition~\ref{pp:prop:unpolarizeddistinct}.
+Together with $F_7$, this proves the asserted minimum.
+
+The map $F_7$ is not scalar-polarized for the specified principal
+polarizations: a positive rational scalar multiplier would be an
+integer $k$ and give degree $k^6$, which cannot equal $7$.
+This is compatible with the minimum scalar multiplier $2$ and degree
+$64$ in Proposition~\ref{pp:prop:bcisogeny}. We assert no finite census
+of all unpolarized isogenies.
+\end{proof}
+
+\subsection{The integral Hom ideal}
+\begin{proposition}[Integral maps and an ideal class of order two]
+\label{pp:prop:homideal}
+Set $R=(I_C:I_C)=\OL+\mathfrak P$, where
+$\mathfrak P=(1-z^{14})\OM$, and define
+\[
+ \mathfrak a=\alpha\OL+\mathfrak P,
+ \qquad \gamma=z^6(1-z^2).
+\]
+All integral homomorphisms $B_B\to B_C$ are, uniquely,
+\[
+ F_\eta=\frac{m_0}{\alpha}\eta\sigma_{31},\qquad
+ \eta\in\mathfrak a.
+\]
+The normalized module $\mathfrak a$ is an invertible fractional
+$R$-ideal under target postcomposition, with
+\[
+ [\OM:\mathfrak a]=27,
+ \qquad \mathfrak a\bar{\mathfrak a}=R,
+ \qquad \mathfrak a^2=\gamma R,
+ \qquad [\mathfrak a]\in\operatorname{Pic}(R)
+       \text{ of exact order }2.
+\]
+For every nonzero $\eta$, the map $F_\eta$ is an isogeny of degree
+$N_{M/\mathbb Q}(\eta)$. If
+$E_{B,q}(v,w)=\operatorname{Tr}_{M/\mathbb Q}(\xi_B qv\bar w)$,
+then its actual pullback on the source lattice is
+\[
+ F_\eta^*E_C=E_{B,\,\sigma_{19}(\eta\bar\eta)}.
+\]
+In particular the degree-$7$ map of Proposition~\ref{pp:prop:mindegree}
+has pullback polarization type $(1,1,1,1,1,7)$.
+\end{proposition}
+\begin{proof}
+Every rational Hodge map has the unique form $m\sigma_{31}$.
+The map $(m_0/\alpha)\sigma_{31}$ identifies $S_B$ with $S_C$
+by Proposition~\ref{pp:prop:unpolarizeddistinct}.
+Thus an integral map must have $\eta S_C\subseteq S_C$, so
+$\eta\in\OM$. Away from $3$, both original lattices equal their
+saturations locally, because their saturation indices are $27$;
+there is no further local restriction there.
+At $3$, the map $F_0$ is a lattice isomorphism and $\alpha$ is a unit.
+The remaining condition is exactly
+\[
+ \eta/\alpha\in R\otimes\Z_{(3)}.
+\]
+Since $R=\OL+\mathfrak P$ has residue field $\mathbb F_{27}$
+inside $\OM/\mathfrak P=\mathbb F_{729}$, this says that the
+residue of $\eta$ lies in the line $\alpha\mathbb F_{27}$.
+Its full inverse image in $\OM$ is precisely $\mathfrak a$.
+This proves the description of all maps, including sufficiency.
+
+These module equalities also have direct finite certificates. Collecting
+the $144$ entries of the map for each coefficient of $\eta$ gives
+rational linear integrality constraints. The primary certificate
+\path{certificates/principal_bc_hom_v127.py} takes the exact dual
+of their row lattice; the result is $\mathfrak a$, not just a
+sublattice of candidate maps. The independent implementation
+\path{independent/principal_bc_hom_v127.py} derives the same module
+from linear conditions modulo $3$, with containment and index checks.
+The primary additionally checks $R=\OL+\mathfrak P$; both verify
+the full products
+$\mathfrak a\bar{\mathfrak a}=R$ and
+$\mathfrak a^2=\gamma R$ on integral bases.
+They check that $\gamma\in\OM^\times$ has absolute norm $1$.
+The first product gives an explicit inverse fractional ideal.
+If $\mathfrak a=\delta R$ were principal, the equality
+$[\OM:\mathfrak a]=[\OM:R]=27$ would give
+$N_{M/\mathbb Q}(\delta)=1$. Since $\delta\in\mathfrak a$,
+the corresponding map would be an isomorphism, contradicting
+Proposition~\ref{pp:prop:unpolarizeddistinct}. Hence the class is
+nontrivial, and the second product proves that its order is exactly two.
+The full Picard group is determined in Proposition~\ref{pp:prop:picardorder} below.
+
+The degree formula is the saturation-index argument of
+Proposition~\ref{pp:prop:mindegree}. For the polarization, the identity
+$m_0\bar m_0=2r$ and $\alpha\bar\alpha=2$ gives
+$m\bar m=r\eta\bar\eta$. Moving $\sigma_{31}$ through the trace
+therefore gives
+\[
+ E_C(F_\eta v,F_\eta w)
+ =\operatorname{Tr}_{M/\mathbb Q}
+   \bigl(\xi_B\sigma_{19}(\eta\bar\eta)v\bar w\bigr),
+\]
+since $\sigma_{19}=\sigma_{31}^{-1}$. The inverse twist is essential
+on source coordinates. For nonzero $\eta$ its multiplier is totally
+positive; integrality follows from the integral map.
+The independent checker verifies all $78$ quadratic coefficients
+of this identity on a basis of $\mathfrak a$, including the mixed terms.
+For the degree-$7$ witness, both paths check the alternating Smith
+invariants $(1^{10},7^2)$, giving the displayed polarization type.
+The formula describes exactly the pullbacks arising from this Hom
+module; it does not assert that every totally positive element is realized.
+\end{proof}
+
+\subsection{Ideal classes and principal polarizations}
+\begin{proposition}[The full Picard group of the principal-model order]
+\label{pp:prop:picardorder}
+For the order $R=\OL+\mathfrak P$ in
+Proposition~\ref{pp:prop:homideal},
+\[
+ \operatorname{Pic}(R)\cong\mathbb Z/2\mathbb Z,
+ \qquad
+ \operatorname{Pic}(R)=\{[R],[\mathfrak a]\},
+ \qquad \mathfrak a=\alpha\OL+\mathfrak P.
+\]
+Here $\operatorname{Pic}(R)$ denotes invertible fractional $R$-ideals
+modulo principal fractional ideals, without an orientation or positivity
+condition.
+\end{proposition}
+\begin{proof}
+Write $O=\OM$. The conductor and residue computations above give
+\[
+ O/\mathfrak P=\mathbb F_{729},\qquad
+ R/\mathfrak P=\mathbb F_{27}.
+\]
+Masley's Main Theorem gives class number one for
+$M=\mathbb Q(\zeta_{42})=\mathbb Q(\zeta_{21})$:
+$\varphi(21)=12\le24$, and $21$ is absent from its exceptional table
+\cite[p.~179]{Masley1976}. This concerns the maximal order $O$;
+the following argument determines
+the class group of the proper order $R$.
+
+Let $I$ be an invertible fractional $R$-ideal. Since $IO$ is principal,
+rescale $I$ so that $IO=O$. Then
+\[
+ \mathfrak P\subseteq I\subseteq O:
+ \qquad \mathfrak P=\mathfrak P(IO)\subseteq I
+\]
+because $\mathfrak P O\subseteq R$.
+Away from the conductor maximal ideal $\mathfrak P$ of $R$,
+the order is maximal and the normalized ideal equals $O$ locally.
+At $\mathfrak P$, invertibility gives
+$I_{\mathfrak P}=uR_{\mathfrak P}$, where normalization makes
+$u$ a unit of $O_{\mathfrak P}$. Therefore $I/\mathfrak P$ is a
+nonzero $\mathbb F_{27}$-line in $\mathbb F_{729}$.
+Conversely, the inverse image $J_a$ of any such line
+$a\mathbb F_{27}$ is locally principal: at $\mathfrak P$ it is
+$uR_{\mathfrak P}$ for a lift $u$ of $a$, and elsewhere it is $O$.
+Thus every such $J_a$ is invertible, and
+$J_aJ_b=J_{ab}$ by the same local calculation.
+
+Any isomorphism between fractional ideals is multiplication by an
+element of $M^\times$. Between normalized ideals it must preserve
+their $O$-saturations, so it is multiplication by a global $O$-unit.
+Consequently this classifies every invertible ideal class and gives
+\[
+ \operatorname{Pic}(R)\cong
+ \frac{\mathbb F_{729}^{\times}}
+ {\mathbb F_{27}^{\times}\,\operatorname{im}(O^{\times})}.
+\]
+The intermediate quotient
+$Q=\mathbb F_{729}^{\times}/\mathbb F_{27}^{\times}$ is cyclic
+of order $28$. Conjugation induces $x\mapsto x^{27}$ on the residue
+field, and the ratio map
+\[
+ Q\longrightarrow\mathbb F_{729}^{\times},
+ \qquad [x]\longmapsto x/x^{27}
+\]
+is injective, since its kernel consists of the fixed-field units.
+
+For every $\varepsilon\in O^{\times}$, Kronecker's theorem gives
+$\varepsilon/\bar\varepsilon\in\mu_{42}$. The reduction of
+$\mu_{42}$ has order $14$, so the image of the entire global unit
+group in $Q$ is contained in the subgroup of order $14$.
+It equals that subgroup. Indeed $z$ has residue order $14$,
+and its ratio $z^2$ has order $7$. The global unit
+$\gamma=z^6(1-z^2)$ has norm $1$ and
+\[
+ \gamma/\bar\gamma=-z^{14}\equiv-1\pmod{\mathfrak P},
+\]
+so its class has order $2$. These two classes generate a subgroup
+of order $14$. The remaining quotient therefore has order $2$.
+
+Finally, $\alpha\bar\alpha=2$ makes the residue of $\alpha$
+nonzero. With $s=\sqrt{-7}$ chosen as above,
+\[
+ \alpha/\bar\alpha\equiv s\pmod{\mathfrak P},
+ \qquad s^2\equiv-1\pmod{\mathfrak P}.
+\]
+Its ratio has order $4$, so its class lies outside the global-unit
+image of order $14$. Its residue line has inverse image
+$\mathfrak a=\alpha\OL+\mathfrak P$. This identifies the
+nonidentity class and agrees with the ideal product identities of
+Proposition~\ref{pp:prop:homideal}.
+
+The finite inputs are checked by
+\path{certificates/principal_order_class_v129.py}, using Frobenius
+and polynomial gcds over $\mathbb F_3$ and exact rational resultants.
+The separate implementation
+\path{independent/principal_order_class_v129.py} checks all $39$
+possible monic divisors of degrees at most three, enumerates the
+$729$ residue elements, and computes the global norms by rational
+multiplication matrices. Both identify the residue field using
+\[
+ \Phi_{42}(X)\bmod3
+ =(X^6-X^5+X^4-X^3+X^2-X+1)^2.
+\]
+These finite checks supplement the class-number theorem and the
+ideal and global-unit arguments above; they do not enumerate
+the infinite group of global units.
+\end{proof}
+
+\begin{proposition}[The ordinary ideal-class monoid of the selected order]
+\label{pp:prop:idealclassmonoid}
+Let $O=\OM$ and retain $R$ and $\mathfrak a$ from
+Proposition~\ref{pp:prop:picardorder}. Let $\operatorname{ICM}(R)$
+be the monoid of nonzero fractional $R$-ideals that are full
+finitely generated $\mathbb Z$-lattices in $M$, modulo $R$-linear
+isomorphism, with ordinary ideal multiplication. Then
+\[
+ \operatorname{ICM}(R)=\{[R],[\mathfrak a],[O]\},\qquad
+ [\mathfrak a]^2=[R],\quad [\mathfrak a][O]=[O]^2=[O].
+\]
+Its unit group is $\operatorname{Pic}(R)\cong\mathbb Z/2\mathbb Z$;
+$[O]$ is the remaining, absorbing idempotent. The multiplier rings
+$(I:I)=\{x\in M:xI\subseteq I\}$ are $R$ for the first two
+classes and $O$ for the third. These are ordinary rank-one classes:
+the zero ideal is excluded, and equivalence is $R$-linear, without
+orientation or semilinear identifications. This statement for the
+selected order makes no geometric realization or polarization claim.
+\end{proposition}
+\begin{proof}
+Use the conductor $\mathfrak P$, residue fields
+$k=R/\mathfrak P=\mathbb F_{27}$ and
+$k_2=O/\mathfrak P=\mathbb F_{729}$, and
+$\operatorname{Pic}(O)=1$ established in the preceding proposition.
+For any ideal $I$ in the stated class, $IO$ is a nonzero fractional
+ideal of the Dedekind domain $O$. It is principal, even when $I$
+is not invertible over $R$. A scalar rescaling therefore gives
+$IO=O$ and $I\subseteq O$. Write $1=\sum_j i_j o_j$ with
+$i_j\in I$ and $o_j\in O$. For $p\in\mathfrak P$,
+\[
+ p=\sum_j i_j(po_j)\in I,
+\]
+since $po_j\in\mathfrak P\subseteq R$. Thus
+$\mathfrak P\subseteq I\subseteq O$, and $I/\mathfrak P$
+is a nonzero $k$-subspace of $k_2$; otherwise $I=\mathfrak P$
+would contradict $IO=O$. Since $[k_2:k]=2$, this subspace is
+either a line or all of $k_2$. The latter case gives $I=O$.
+
+For $t\in k_2^\times$, let $J_t$ be the inverse image of $tk$.
+A lift of $t$, together with $\mathfrak P$, generates $O$ as an
+$O$-ideal, so $J_tO=O$. The product $J_tJ_u$ also has saturation
+$O$ and hence contains $\mathfrak P$ by the same argument.
+Its residue is exactly $tuk$, giving
+\[
+ J_tJ_u=J_{tu},\qquad J_1=R,\qquad J_tJ_{t^{-1}}=R.
+\]
+Every line lift is therefore invertible over $R$.
+
+An $R$-linear isomorphism between these full rank-one ideals
+extends over $\operatorname{Frac}(R)=M$ to multiplication by
+$c\in M^\times$. Between normalized ideals it satisfies $cO=O$,
+so $c\in O^\times$. The preceding proposition gives exactly two
+line classes, represented by $R$ and $\mathfrak a$. The class of
+$O$ is distinct, since an $O$-unit cannot carry $O$ to a proper
+line lift. Normalization gives $[I][O]=[O]$ for every class,
+and the remaining products follow from $\operatorname{Pic}(R)$.
+
+Finally, $xI\subseteq I$ for a normalized ideal implies
+$xO\subseteq O$, hence $x\in O$. For $I=J_t$, preservation of
+the residue line $tk$ is equivalent to $x\bmod\mathfrak P\in k$,
+so $(J_t:J_t)=R$; also $(O:O)=O$. These rings are unchanged by
+scalar rescaling. As $R\ne O$, the third class is not invertible:
+an inverse ideal $H$ would give $xR=xIH\subseteq IH=R$ for
+every $x\in(I:I)$, forcing $(I:I)=R$.
+\end{proof}
+
+\begin{proposition}[Marked principal polarizations for the selected order]
+\label{pp:prop:markedpolarizations}
+Put $O=\OM$, and retain $R$ and $\mathfrak a$ from
+Proposition~\ref{pp:prop:homideal}. Fix a marked CM type $\Phi$ of $M$,
+obtained from $\Phi_0=\{1,5,11,13,17,19\}$ by conjugating a subset
+$T$ of its six embeddings. Among full fractional $R$-ideals, up to
+$M$-linear polarized isomorphism, the principal polarizations whose
+Rosati involution on $M$ is complex conjugation are as follows:
+\[
+\begin{array}{c|ccc|c}
+ & [R]&[\mathfrak a]&[O]&\text{total at }\Phi\\ \hline
+|T|\text{ even}&2&2&0&4\\
+|T|\text{ odd}&0&0&1&1
+\end{array}
+\]
+The origin-preserving marked polarized automorphism groups are
+$\mu_6$ in the first row and $\mu_{42}$ in the second. Thus there
+are $160$ marked polarized classes over the $64$ marked CM types.
+This count makes no identification between different types and no
+assertion that these objects lie on a specified curve.
+\end{proposition}
+\begin{proof}
+Write $I^\vee=\{x\in M:\Tr_{M/\Ql}(xI)\subseteq\Z\}$.
+An $M$-compatible alternating form is
+$E_\xi(x,y)=\Tr_{M/\Ql}(\xi x\bar y)$, with $\bar\xi=-\xi$.
+Its dual lattice is
+\[
+ I^{\#_\xi}=\xi^{-1}(\bar I)^\vee
+             =\xi^{-1}(R^\vee:\bar I).
+\]
+Indeed $x\bar I\subseteq R^\vee$ is equivalent to
+$\Tr(x\bar I)\subseteq\Z$, since $\bar I R=\bar I$.
+For invertible $I$, this colon equals $R^\vee\bar I^{-1}$.
+Replacing $R^\vee$ by the maximal-order codifferent here would be
+incorrect for a nonmaximal order.
+
+Set $d=f'(t)$, retain $\beta$ from Proposition~\ref{pp:prop:explicit},
+and put
+\[
+ \kappa_O=\frac1{d(z-\bar z)},\qquad
+ \kappa_R=\frac1{d\beta(z-\bar z)}.
+\]
+The identity $\beta O=(1-z^{14})O$ gives
+$O=\OL\oplus\OL z$ and $R=\OL\oplus\OL\beta z$.
+Monogenic relative trace duality, followed by trace transitivity,
+therefore gives $O^\vee=\kappa_O O$ and $R^\vee=\kappa_R R$.
+Since $\mathfrak a\bar{\mathfrak a}=R$, one also has
+$(\bar{\mathfrak a})^\vee=\kappa_R\mathfrak a$.
+Consequently principal compatible parameters on $R,\mathfrak a$
+are $\kappa_R u$, and those on $O$ are $\kappa_O u$, with
+$u\in E_L=\OL^\times$. For the nonmaximal models this follows
+because the real units of their multiplier ring $R$ are exactly $E_L$.
+The conductor identity is certified by
+\path{certificates/cm_polarization_conductor_v135.py}: it verifies
+$\beta=(1-z^{14})a_0$ with
+$a_0=1+z+z^5+z^6-z^8+z^{11}$ an integral unit of norm one.
+
+With the convention $E(x,Jx)>0$, positivity means
+$\operatorname{Im}\phi(\xi)>0$ for every $\phi\in\Phi$.
+At $\Phi_0$, the signs of $d$ are $(+,-,+,-,+,-)$ and
+$\operatorname{Im}\phi(z)>0$. Thus $\kappa_O$ has odd negative
+sign parity. Since $N_{L/\Ql}(\beta)=-27$, $\kappa_R$ has even
+parity. Conjugating an embedding reverses its imaginary sign.
+Lemma~\externalref{supplement}{lem:narrowclass} gives exactly the even-parity subgroup
+as the real-unit signature image, and
+$[E_L^+:E_L^2]=2$. This proves the asserted existence and
+nonexistence of positive parameters.
+
+We next compute the relevant unit norms. For $e\in R^\times$,
+Kronecker's theorem gives $e/\bar e\in\mu_{42}$.
+Its residue modulo $\mathfrak P$ is one because $R/\mathfrak P$
+is the conjugation-fixed field $\mathbb F_{27}$.
+The reduction of $\mu_{42}$ has order $14$, so its kernel is
+$\mu_3$. Choose $\zeta\in\mu_6$ with $\zeta^2=e/\bar e$.
+Then $e/\zeta\in E_L$. Conversely $\mu_6E_L\subset R^\times$,
+giving
+\[
+ R^\times=\mu_6E_L,\qquad N_{M/L}(R^\times)=E_L^2.
+\]
+By Theorem~\externalref{supplement}{thm:unitnorm}, $N_{M/L}(O^\times)=E_L^+$.
+For a fixed positive parameter the polarization classes form a torsor
+under $E_L^+/N_{M/L}(S^\times)$, where $S=(I:I)$.
+Proposition~\ref{pp:prop:idealclassmonoid} exhausts the three scalar
+classes and their multiplier rings, so these quotients prove the table.
+Polarized automorphisms have norm one and are roots of unity.
+The roots in $R$ are exactly $\mu_6$, while those in $O$ are
+$\mu_{42}$. Finally $32\cdot4+32\cdot1=160$.
+\end{proof}
+
+\begin{proposition}[All principal polarizations on the specified B/C models]
+\label{pp:prop:actualpolarizations}
+Let $B_B,B_C$ be the two specified principal models, with their
+original polarizations $\lambda_B,\lambda_C$. Put
+$\varepsilon_+=4-t^2$. Their scalar ideal classes are respectively
+$[\mathfrak a]$ and $[R]$. On each underlying variety $B_X$,
+exactly two isomorphism classes of principal polarizations occur,
+represented by $\lambda_X$ and $\lambda_X\circ\iota(\varepsilon_+)$.
+After forgetting all CM and RM markings these still give exactly
+four polarized isomorphism classes over the two underlying varieties.
+Each has origin-preserving polarized automorphism group $\mu_6$.
+\end{proposition}
+\begin{proof}
+Use the exact $I_B,I_C,\xi_B,\xi_C$ coordinates of
+Proposition~\ref{pp:prop:unmarkeddistinct}, and $m_0,\alpha$ from
+Proposition~\ref{pp:prop:homideal}. The scalars
+\[
+\begin{split}
+ c_B={}&8+11z+4z^2+4z^3+8z^4-5z^5-22z^6-24z^7\\
+       &{}-2z^8+20z^9+18z^{10}+3z^{11},\qquad
+ c_C=\alpha\sigma_{31}(c_B)/m_0
+\end{split}
+\]
+satisfy $c_BI_B=\mathfrak a$ and $c_CI_C=R$.
+The certificate \path{certificates/actual_bc_polarizations_v135.py}
+verifies integral unimodular changes of basis for both equalities,
+and transports each form to
+$\xi'_X=\xi_X/(c_X\bar c_X)=\kappa_Ru_X$ with $u_X\in E_L$.
+It checks the exact alternating matrices and their pullbacks against
+the original principal matrices. The complete coefficients and basis
+changes are retained in
+\path{certificates/actual_bc_polarizations_data.json}.
+These are finite identities using one arithmetic implementation;
+the following classification is a human argument.
+
+There is also a structural reason for $c_C$.
+For $D=(m_0/\alpha)\sigma_{31}(I_B)$, the complete Hom calculation
+gives $(I_C:D)=\mathfrak a$. The proved B identification makes
+$D=(m_0/\alpha)\sigma_{31}(c_B)^{-1}\bar{\mathfrak a}$ invertible;
+here $\sigma_{31}(\mathfrak a)=\bar{\mathfrak a}$.
+Multiplying by $D$ and using
+$\mathfrak a\bar{\mathfrak a}=R$ gives the C identification.
+
+For $\gamma=z^6(1-z^2)$ one has
+\[
+ \varepsilon_+=\gamma\bar\gamma=4-t^2,\qquad
+ \gamma/\bar\gamma=-z^{14}\notin\mu_{21}.
+\]
+Thus $\varepsilon_+$ is a totally positive real unit.
+If it were $v^2$ with $v\in E_L$, Kronecker's theorem would give
+$\gamma/v\in\mu_{42}$, forcing
+$\gamma/\bar\gamma\in\mu_{42}^2=\mu_{21}$, a contradiction.
+It represents the nontrivial class of $E_L^+/E_L^2$.
+Proposition~\ref{pp:prop:markedpolarizations} now supplies the two
+compatible principal polarization classes on each model.
+
+These are all principal polarizations, even without a marking.
+The actual B and C types in Proposition~\ref{pp:prop:markeddistinct}
+each have trivial stabilizer in $\operatorname{Gal}(M/\Ql)$.
+The disjoint permutation supports of
+$\operatorname{End}_{\Ql}(M)=\bigoplus_\sigma M\sigma$
+then show $\operatorname{End}^0(B_X)=M$.
+For any polarization $\lambda=\lambda_Xa$, its Rosati involution is
+$x\mapsto a^{-1}\bar x a=\bar x$, since $M$ is commutative.
+Thus every polarization is compatible, and every automorphism lies
+in the multiplier group $R^\times$. Its norm subgroup is $E_L^2$,
+so the two classes remain distinct without markings.
+Proposition~\ref{pp:prop:unpolarizeddistinct} excludes all cross
+identifications between B and C. The automorphism groups follow
+from Proposition~\ref{pp:prop:markedpolarizations}.
+No corresponding claim is made for the induced A type.
+\end{proof}
+

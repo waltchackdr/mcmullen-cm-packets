@@ -1,0 +1,412 @@
+"""Synthetic end-to-end safety checks for the resumable V81 discovery queue.
+
+Only tiny stdlib backend children run. No field arithmetic or research search
+is imported. Runtime package manifests are represented by a deterministic
+fixture so these tests focus on scheduler and checkpoint behavior.
+"""
+from __future__ import annotations
+import contextlib
+import fcntl
+import importlib.util
+import io
+import json
+import os
+from pathlib import Path
+import shutil
+import signal
+import subprocess
+import sys
+import tempfile
+import time
+from types import SimpleNamespace
+import unittest
+from unittest.mock import patch
+
+ROOT = Path(__file__).resolve().parents[1]
+HERE = 'experiments/continuous_v81'
+REAL_SLEEP = time.sleep
+FAKE_RUNTIME = {'python': 'synthetic-runtime', 'packages': {}}
+
+
+def load_runner():
+    spec = importlib.util.spec_from_file_location('v81_runner_test', ROOT / HERE / 'runner.py')
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+def canonical(value):
+    return json.dumps(value, sort_keys=True, separators=(',', ':')) + '\n'
+
+
+FAKE_BACKEND = r'''import argparse, hashlib, json, os, pathlib, sys, time
+SOURCE_PINS = {}
+ROOT = pathlib.Path(__file__).resolve().parents[2]
+backend = pathlib.Path(__file__).stem
+parser = argparse.ArgumentParser()
+parser.add_argument('--point', required=True)
+parser.add_argument('--output', type=pathlib.Path, required=True)
+parser.add_argument('--witness-plan', type=pathlib.Path)
+parser.add_argument('--prepare-only', action='store_true')
+args = parser.parse_args()
+output = args.output
+output.mkdir(parents=True, exist_ok=False)
+config = json.loads((ROOT/'behavior.json').read_text())
+phase = 'prep' if args.prepare_only else 'full'
+with (output/'entered.json').open('x') as stream:
+    json.dump({'point':args.point, 'backend':backend, 'phase':phase},stream)
+match = config.get('target', args.point) == args.point and config.get('backend', backend) == backend
+if match and config.get('fail') and phase == config.get('stage','prep'):
+    raise RuntimeError('deliberate synthetic non-resource failure')
+if match and config.get('timeout_first') and phase == config.get('stage','prep') and output.parent.name.endswith('-01'):
+    time.sleep(10)
+def text(value): return json.dumps(value, sort_keys=True,separators=(',',':'))+'\n'
+def sha(path): return hashlib.sha256(path.read_bytes()).hexdigest()
+def write(name,value):
+    (output/name).write_text(text(value)); return sha(output/name)
+plan = json.loads(args.witness_plan.read_text()) if args.witness_plan else {
+    'schema_version':1,'point_label':args.point,
+    'transport':{'inversion_first':False,'unit_exponents':[0]*5},
+    'entry_units':{k:[0]*5 for k in ('A','C','DEN','NUM')}}
+input_hash = sha(args.witness_plan) if args.witness_plan else None
+artifacts={'preparation.json':write('preparation.json',{'point_label':args.point}),
+           'witness-plan.json':write('witness-plan.json',plan)}
+result={'point_label':args.point,'backend':backend,
+    'status':'PREPARATION_ONLY' if args.prepare_only else 'FULL_GEOMETRY_DISCOVERY_COMPLETE',
+    'assertions_enabled':True,'sources_unchanged':True,'executable_unchanged':True,
+    'witness_plan_unchanged':True,'driver_sha256':sha(pathlib.Path(__file__)),
+    'source_sha256':SOURCE_PINS,'artifact_sha256':artifacts,
+    'input_witness_plan_sha256':input_hash,'witness_plan_sha256':input_hash or artifacts['witness-plan.json'],
+    'cpu_seconds':0.001,'wall_seconds':0.001}
+if not args.prepare_only:
+    survivor = bool(match and config.get('survivors'))
+    for name in ('A-entries.json','C-entries.json','bottom-rows.json','candidates-nonzero.json','candidates-zero.json'):
+        artifacts[name]=write(name,[1] if name != 'candidates-zero.json' else [])
+    artifacts['classification.json']=write('classification.json',{'survivors':[1] if survivor else []})
+    artifacts['survivors.json']=write('survivors.json',[1] if survivor else [])
+    if match and config.get('mismatch'):
+        artifacts['A-entries.json']=write('A-entries.json',[2])
+    result.update(a_count=1,c_count=1,bottom_rows=1,nonzero_candidates=1,zero_candidates=0,
+        candidate_count=1,survivor_count=int(survivor),classification_digest='synthetic',c_zero_audit=[0]*5,
+        canonical_artifact_sha256={name:artifacts[name] for name in (
+        'preparation.json','A-entries.json','C-entries.json','bottom-rows.json','candidates-nonzero.json',
+        'candidates-zero.json','classification.json','survivors.json')})
+write('result.json',result)
+'''
+
+
+class SyntheticCampaign(unittest.TestCase):
+    def setUp(self):
+        self.runner = load_runner()
+        self.temporary = tempfile.TemporaryDirectory()
+        self.addCleanup(self.temporary.cleanup)
+        self.base = Path(self.temporary.name)
+        self.root = self.base / 'repo'
+        self.root.mkdir()
+        self.campaign = self.base / 'campaign'
+        self.controls = self.base / 'controls'
+        self.controls.mkdir()
+        self.runtime_patch = patch.object(self.runner, 'runtime', return_value=FAKE_RUNTIME)
+        self.runtime_patch.start()
+        self.addCleanup(self.runtime_patch.stop)
+        self.root_patch = patch.object(self.runner, 'ROOT', self.root)
+        self.root_patch.start()
+        self.addCleanup(self.root_patch.stop)
+        self.signal_patch = patch.object(self.runner.signal, 'signal')
+        self.signal_patch.start()
+        self.addCleanup(self.signal_patch.stop)
+        self.runner.STOP = False
+        tree = self.root / HERE
+        tree.mkdir(parents=True)
+        for name in ('runner.py', 'child.py'):
+            shutil.copyfile(ROOT / HERE / name, tree / name)
+        for backend in ('primary', 'sturm'):
+            (tree / (backend + '.py')).write_text(FAKE_BACKEND)
+        (tree / 'nominate.py').write_text('# no arithmetic in synthetic tests\n')
+        self.save(self.root / 'behavior.json', {})
+        # Bind the behavior fixture in both literal source closures.
+        behavior_hash = self.runner.digest(self.root / 'behavior.json')
+        for backend in ('primary', 'sturm'):
+            path = tree / (backend + '.py')
+            path.write_text(FAKE_BACKEND.replace('SOURCE_PINS = {}', "SOURCE_PINS = {'behavior.json': '" + behavior_hash + "'}"))
+        source = ROOT / 'certificates/full_packet_v62/ambient_points.json'
+        target = self.root / source.relative_to(ROOT)
+        target.parent.mkdir(parents=True)
+        shutil.copyfile(source,target)
+        known = json.loads((ROOT / 'certificates/broader_principal_v75/expected.json').read_text())['points']
+        self.save(self.root / 'certificates/broader_principal_v75/expected.json',
+                  {'points':{label:self.expected(label) for label in known}})
+        self.save(self.root / 'certificates/r127_pic1_v80/expected.json',
+                  {'points':{label:self.expected(label) for label in self.runner.CONTROLS[:2]}})
+        for label in self.runner.CONTROLS:
+            self.save(self.controls/(self.runner.slug(label)+'.json'), self.plan(label))
+
+    def save(self, path, value):
+        path.parent.mkdir(parents=True,exist_ok=True)
+        path.write_text(canonical(value))
+
+    def plan(self,label):
+        return {'schema_version':1,'point_label':label,
+                'transport':{'inversion_first':False,'unit_exponents':[0]*5},
+                'entry_units':{kind:[0]*5 for kind in ('A','C','DEN','NUM')}}
+
+    def expected(self,label):
+        import hashlib
+        values = {'preparation.json':{'point_label':label},
+                  'classification.json':{'survivors':[]},'survivors.json':[]}
+        for name in ('A-entries.json','C-entries.json','bottom-rows.json','candidates-nonzero.json'):
+            values[name]=[1]
+        values['candidates-zero.json']=[]
+        return {'counts':{'a_count':1,'c_count':1,'bottom_rows':1,'nonzero_candidates':1,
+          'zero_candidates':0,'candidate_count':1,'survivor_count':0,'classification_digest':'synthetic','c_zero_audit':[0]*5},
+          'canonical_artifact_sha256':{name:hashlib.sha256(canonical(value).encode()).hexdigest() for name,value in values.items()}}
+
+    def configure(self, behavior):
+        self.save(self.root/'behavior.json',behavior)
+        checksum=self.runner.digest(self.root/'behavior.json')
+        for backend in self.runner.BACKENDS:
+            (self.root/HERE/(backend+'.py')).write_text(FAKE_BACKEND.replace('SOURCE_PINS = {}',
+                "SOURCE_PINS = {'behavior.json': '"+checksum+"'}"))
+
+    def initialize(self, remaining=None, controls=None, wall_multiplier=1):
+        args=SimpleNamespace(output=self.campaign,control_plans=self.controls,workers=4,
+            cpu_tiers=[1,2],preparation_cpu=1,memory_mib=256,file_mib=1,
+            campaign_seconds=8,minimum_free_mib=0)
+        with contextlib.redirect_stdout(io.StringIO()): self.runner.initialize(args)
+        manifest=self.runner.read(self.campaign/'manifest.json')
+        manifest['remaining']=remaining or []
+        if controls is not None:manifest['controls']=controls
+        manifest['limits']['wall_multiplier']=wall_multiplier
+        self.runner.write(self.campaign/'manifest.json',manifest)
+        state=self.runner.read(self.campaign/'state.json')
+        state['manifest_sha256']=self.runner.digest(self.campaign/'manifest.json')
+        self.runner.write(self.campaign/'state.json',state)
+        return manifest
+
+    def run_queue(self):
+        with patch.object(self.runner.time,'sleep',side_effect=lambda _:REAL_SLEEP(.005)), \
+             contextlib.redirect_stdout(io.StringIO()):
+            self.runner.run(SimpleNamespace(output=self.campaign))
+        return self.runner.read(self.campaign/'state.json')
+
+    def test_exact_open_domain_and_control_partition(self):
+        open_points,certified=self.runner.domain(self.root)
+        self.assertEqual(len(open_points),249)
+        self.assertEqual(len(certified),119)
+        self.assertFalse(set(open_points)&set(certified))
+        self.assertTrue(set(self.runner.CONTROLS)<=set(certified))
+        self.assertIn('R127:pic1:63',open_points)
+        self.assertNotIn('R127:pic1:00',open_points)
+        self.assertNotIn('R43_31:pic0:00',open_points)
+
+    def test_initialize_refuses_overwrite(self):
+        self.initialize()
+        original=(self.campaign/'manifest.json').read_bytes()
+        with self.assertRaises(FileExistsError): self.initialize()
+        self.assertEqual((self.campaign/'manifest.json').read_bytes(),original)
+
+    def test_exclusive_coordinator_lock(self):
+        self.initialize()
+        with (self.campaign/'coordinator.lock').open('a+') as held:
+            fcntl.flock(held,fcntl.LOCK_EX|fcntl.LOCK_NB)
+            with self.assertRaises(BlockingIOError): self.run_queue()
+        self.assertFalse((self.campaign/'attempts').exists())
+
+    def test_source_plan_runtime_and_manifest_tamper_stop_before_launch(self):
+        self.initialize()
+        source=self.campaign/'source/behavior.json'
+        original=source.read_bytes();source.write_text('{}\nchanged')
+        with self.assertRaisesRegex(ValueError,'Sealed content changed'):self.run_queue()
+        source.write_bytes(original)
+        plan=self.campaign/'plans'/(self.runner.slug(self.runner.CONTROLS[0])+'.json')
+        original=plan.read_bytes();plan.write_bytes(original+b' ')
+        with self.assertRaisesRegex(ValueError,'Changed control plan'):self.run_queue()
+        plan.write_bytes(original)
+        state=self.runner.read(self.campaign/'state.json');state['runtime']={'changed':True}
+        self.runner.write(self.campaign/'state.json',state)
+        with self.assertRaisesRegex(ValueError,'Runtime changed'):self.run_queue()
+        state['runtime']=None;self.runner.write(self.campaign/'state.json',state)
+        manifest=self.campaign/'manifest.json';manifest.write_bytes(manifest.read_bytes()+b' ')
+        with self.assertRaisesRegex(ValueError,'Campaign manifest changed'):self.run_queue()
+        self.assertFalse((self.campaign/'attempts').exists())
+
+    def test_all_three_full_controls_gate_new_point_launch(self):
+        label='R127:pic1:01'
+        self.initialize(remaining=[label])
+        launches=[];original=self.runner.launch
+        def inspect(campaign,manifest,state,task):
+            if task[0]==label:
+                self.assertTrue(all(c in state['points'] for c in self.runner.CONTROLS))
+                for control in self.runner.CONTROLS:
+                    for backend in self.runner.BACKENDS:
+                        self.assertIsNotNone(self.runner.accepted(campaign,state,control,'full',backend,verify=True))
+            launches.append(task)
+            return original(campaign,manifest,state,task)
+        with patch.object(self.runner,'launch',side_effect=inspect):state=self.run_queue()
+        self.assertEqual(len(launches),16)
+        self.assertEqual(set(state['points']),set(self.runner.CONTROLS)|{label})
+        self.assertEqual(state['points'][label]['status'],'PAIRED_EMPTY_DISCOVERY')
+        self.assertTrue(all(a['status']=='COMPLETE' for j in state['jobs'].values() for a in j['attempts']))
+
+    def test_paired_survivors_preserved_and_not_marked_hit(self):
+        label='R127:pic1:01'
+        self.configure({'target':label,'survivors':True})
+        self.initialize(remaining=[label])
+        state=self.run_queue()
+        point=state['points'][label]
+        self.assertEqual(point['status'],'PAIRED_SURVIVORS_REQUIRE_GEOMETRY')
+        self.assertEqual(point['survivor_count'],1)
+        for backend in self.runner.BACKENDS:
+            attempt=self.runner.accepted(self.campaign,state,label,'full',backend,verify=True)
+            self.assertEqual(self.runner.read(self.campaign/attempt['directory']/'output/survivors.json'),[1])
+
+    def test_paired_mismatch_halts_with_artifacts_retained(self):
+        label=self.runner.CONTROLS[0]
+        self.configure({'target':label,'backend':'sturm','mismatch':True})
+        self.initialize(controls=[label])
+        with self.assertRaisesRegex(ValueError,'PAIRED_MISMATCH'):self.run_queue()
+        state=self.runner.read(self.campaign/'state.json')
+        self.assertEqual(state['status'],'COHORT_HALTED')
+        for backend in self.runner.BACKENDS:
+            attempt=self.runner.accepted(self.campaign,state,label,'full',backend,verify=True)
+            self.assertIsNotNone(attempt)
+            self.assertTrue((self.campaign/attempt['directory']/'output/A-entries.json').exists())
+
+    def test_unexpected_child_failure_halts_cohort(self):
+        label=self.runner.CONTROLS[0]
+        self.configure({'target':label,'backend':'primary','fail':True})
+        self.initialize(controls=[label])
+        with self.assertRaises((RuntimeError,ValueError)):self.run_queue()
+        state=self.runner.read(self.campaign/'state.json')
+        self.assertEqual(state['status'],'COHORT_HALTED')
+        attempts=state['jobs'][self.runner.job_key(label,'prep','primary')]['attempts']
+        self.assertEqual(len(attempts),1)
+        self.assertEqual(attempts[0]['status'],'FAILED')
+        self.assertIn('deliberate synthetic', (self.campaign/attempts[0]['directory']/'child.log').read_text())
+        with self.assertRaisesRegex(ValueError,'reviewed repair and a new campaign'):
+            self.run_queue()
+
+    def test_both_backends_must_match_retained_control(self):
+        label=self.runner.CONTROLS[0]
+        self.configure({'target':label,'mismatch':True})
+        new='R127:pic1:01'
+        self.initialize(remaining=[new],controls=[label])
+        with self.assertRaisesRegex(ValueError,'RETAINED_CONTROL_MISMATCH'):
+            self.run_queue()
+        state=self.runner.read(self.campaign/'state.json')
+        self.assertEqual(state['status'],'COHORT_HALTED')
+        self.assertFalse(any(key.startswith(new+'/') for key in state['jobs']))
+
+    def test_timeout_preserves_first_attempt_then_restarts_whole(self):
+        label=self.runner.CONTROLS[0]
+        self.configure({'target':label,'backend':'primary','timeout_first':True})
+        self.initialize(controls=[label],wall_multiplier=.15)
+        state=self.run_queue()
+        attempts=state['jobs'][self.runner.job_key(label,'prep','primary')]['attempts']
+        self.assertEqual([a['status'] for a in attempts],['WALL_LIMIT','COMPLETE'])
+        self.assertNotEqual(attempts[0]['directory'],attempts[1]['directory'])
+        first=self.campaign/attempts[0]['directory']/'output'
+        second=self.campaign/attempts[1]['directory']/'output'
+        self.assertTrue((first/'entered.json').is_file())
+        self.assertFalse((first/'result.json').exists())
+        self.assertTrue((second/'result.json').is_file())
+        self.assertEqual(attempts[0]['cpu_limit'],1)
+        self.assertEqual(attempts[1]['cpu_limit'],2)
+
+    def test_resume_reuses_closed_outputs_and_rejects_tampering(self):
+        label=self.runner.CONTROLS[0]
+        self.initialize(controls=[label])
+        state=self.run_queue()
+        count=sum(len(j['attempts']) for j in state['jobs'].values())
+        deadline=state['deadline_epoch']
+        with patch.object(self.runner,'launch',side_effect=AssertionError('duplicate work')):
+            resumed=self.run_queue()
+        self.assertEqual(sum(len(j['attempts']) for j in resumed['jobs'].values()),count)
+        self.assertEqual(resumed['deadline_epoch'],deadline)
+        attempt=self.runner.accepted(self.campaign,resumed,label,'full','primary')
+        survivors=self.campaign/attempt['directory']/'output/survivors.json'
+        survivors.write_text('[999]\n')
+        with patch.object(self.runner,'launch',side_effect=AssertionError('duplicate work')):
+            with self.assertRaisesRegex(ValueError,'Sealed content changed'):self.run_queue()
+
+    def test_resume_recovers_nomination_plan_from_closed_primary_prep(self):
+        label=self.runner.CONTROLS[0]
+        self.initialize(controls=[label])
+        state=self.run_queue()
+        path=self.campaign/'plans'/(self.runner.slug(label)+'.json')
+        # Control plans are separately sealed, so exercise recovery on a new label
+        # using a minimal complete primary-prep state and its exact plan artifact.
+        new='R127:pic1:01'
+        original=self.runner.accepted(self.campaign,state,label,'prep','primary')
+        folder=self.campaign/'recovery/output';folder.mkdir(parents=True)
+        self.save(folder/'witness-plan.json',self.plan(new))
+        self.save(folder/'result.json',{'input_witness_plan_sha256':None})
+        recovery={'jobs':{self.runner.job_key(new,'prep','primary'):{'attempts':[{'status':'COMPLETE','directory':'recovery'}]}}}
+        self.runner.bind_plan(self.campaign,recovery,new)
+        copied=self.campaign/'plans'/(self.runner.slug(new)+'.json')
+        self.assertEqual(copied.read_bytes(),(folder/'witness-plan.json').read_bytes())
+        copied.write_bytes(copied.read_bytes()+b' ')
+        with self.assertRaisesRegex(ValueError,'Nomination changed'):self.runner.bind_plan(self.campaign,recovery,new)
+
+    def test_unrecorded_launch_intent_is_recovered_without_overwrite(self):
+        label=self.runner.CONTROLS[0]
+        self.initialize(controls=[label])
+        relative='attempts/'+self.runner.slug(label)+'/prep-primary-01'
+        intent={'status':'RUNNING','directory':relative,'task':[label,'prep','primary']}
+        self.save(self.campaign/relative/'attempt.json',intent)
+        self.save(self.campaign/relative/'partial.json',{'preserve':'interrupted attempt'})
+        state=self.runner.read(self.campaign/'state.json')
+        self.runner.recover_attempts(self.campaign,state)
+        attempts=state['jobs'][self.runner.job_key(label,'prep','primary')]['attempts']
+        self.assertEqual(len(attempts),1)
+        self.assertEqual(attempts[0]['status'],'INTERRUPTED')
+        self.assertTrue((self.campaign/relative/'partial.json').exists())
+        self.assertTrue(self.runner.eligible(self.campaign,self.runner.read(self.campaign/'manifest.json'),
+                        state,(label,'prep','primary')))
+
+    def test_live_lease_recovered_before_any_duplicate_launch(self):
+        label=self.runner.CONTROLS[0]
+        self.initialize(controls=[label])
+        relative='attempts/'+self.runner.slug(label)+'/prep-primary-01'
+        intent={'status':'RUNNING','directory':relative,'task':[label,'prep','primary']}
+        self.save(self.campaign/relative/'attempt.json',intent)
+        self.save(self.campaign/relative/'lease.json',{'pid':os.getpid(),'parent_pid':os.getppid()})
+        with patch.object(self.runner,'launch',side_effect=AssertionError('duplicate launch')):
+            with self.assertRaisesRegex(RuntimeError,'may still be alive'):
+                self.run_queue()
+        self.assertEqual(self.runner.read(self.campaign/relative/'attempt.json'),intent)
+
+
+class ChildWrapper(unittest.TestCase):
+    def test_child_applies_actual_cpu_and_file_caps(self):
+        with tempfile.TemporaryDirectory() as d:
+            # A Python child prints its inherited limits; this is not research math.
+            command=[sys.executable,'-I',str(ROOT/HERE/'child.py'),'--cpu','2','--memory-mib','256',
+                     '--file-mib','1','--lease',str(Path(d)/'lease.json'),
+                     '--parent-pid',str(os.getpid()),'--',sys.executable,'-I','-c',
+                     'import json,resource;print(json.dumps({"cpu":resource.getrlimit(resource.RLIMIT_CPU),"file":resource.getrlimit(resource.RLIMIT_FSIZE)}))']
+            result=subprocess.run(command,capture_output=True,text=True,timeout=3)
+            self.assertEqual(result.returncode,0,result.stderr)
+            limits=json.loads(result.stdout)
+            self.assertEqual(limits['cpu'],[2,3])
+            self.assertEqual(limits['file'],[1048576,1048576])
+            lease=json.loads((Path(d)/'lease.json').read_text())
+            self.assertEqual(lease['parent_pid'],os.getpid())
+            self.assertGreater(lease['pid'],0)
+
+    def test_child_rejects_wrong_parent_before_lease_or_payload(self):
+        with tempfile.TemporaryDirectory() as d:
+            lease=Path(d)/'lease.json'
+            payload=Path(d)/'payload.txt'
+            command=[sys.executable,'-I',str(ROOT/HERE/'child.py'),'--cpu','2','--memory-mib','256',
+                     '--file-mib','1','--lease',str(lease),'--parent-pid',str(os.getpid()+10000),
+                     '--',sys.executable,'-I','-c',f'open({str(payload)!r},"w").write("ran")']
+            result=subprocess.run(command,capture_output=True,text=True,timeout=3)
+            self.assertNotEqual(result.returncode,0)
+            self.assertIn('Coordinator disappeared',result.stderr)
+            self.assertFalse(lease.exists())
+            self.assertFalse(payload.exists())
+
+
+if __name__=='__main__':
+    unittest.main()

@@ -1,0 +1,24 @@
+"""Tiny mutation tests for stage-one metadata reader; never imports kernels."""
+import hashlib, importlib.util, tempfile, unittest
+from pathlib import Path
+P=Path(__file__).parent/'overlay/tests/test_staged_packet_release_v96.py'
+spec=importlib.util.spec_from_file_location('staged',P);m=importlib.util.module_from_spec(spec);spec.loader.exec_module(m)
+class Checks(unittest.TestCase):
+ def test_held_changed_bytes_rejected(self):
+  with tempfile.TemporaryDirectory() as d:
+   r=Path(d);p=r/'x';p.write_bytes(b'accepted');ref={'path':'x','sha256':hashlib.sha256(b'accepted').hexdigest()}
+   self.assertEqual(m.held(r,ref),b'accepted');p.write_bytes(b'mutated')
+   with self.assertRaises(ValueError):m.held(r,ref)
+ def test_symlink_rejected_even_with_correct_bytes(self):
+  with tempfile.TemporaryDirectory() as d:
+   r=Path(d);(r/'x').write_bytes(b'x');(r/'link').symlink_to(r/'x')
+   with self.assertRaises(ValueError):m.held(r,{'path':'link','sha256':hashlib.sha256(b'x').hexdigest()})
+ def test_missing_package_member_refused(self):
+  with tempfile.TemporaryDirectory() as d:
+   r=Path(d);(r/'p').write_text('{"files":{"missing":"'+('a'*64)+'"}}')
+   with self.assertRaises(ValueError):m.package(r,{'path':'p','sha256':hashlib.sha256((r/'p').read_bytes()).hexdigest()},'files')
+ def test_package_escape_refused(self):
+  with tempfile.TemporaryDirectory() as d:
+   r=Path(d);(r/'p').write_text('{"files":{"../foreign":"'+('a'*64)+'"}}')
+   with self.assertRaises(ValueError):m.package(r,{'path':'p','sha256':hashlib.sha256((r/'p').read_bytes()).hexdigest()},'files')
+if __name__=='__main__':unittest.main()

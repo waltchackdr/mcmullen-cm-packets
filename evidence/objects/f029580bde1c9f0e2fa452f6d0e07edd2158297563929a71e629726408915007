@@ -1,0 +1,47 @@
+"""Bounded native PDF build, including cross-document number resolution."""
+from pathlib import Path
+import re,json,os,subprocess,resource,time
+D=Path(__file__).resolve().parent
+docs=['packet','quotients','hodge','supplement']
+start=time.monotonic();out=[]
+def limits(): resource.setrlimit(resource.RLIMIT_CPU,(20,20))
+def catalog():
+ numbers={}
+ for doc in docs:
+  p=D/'build'/doc/(doc+'.aux')
+  if not p.exists():continue
+  aux=p.read_text()
+  for m in re.finditer(r'\\newlabel\{([^}]+)\}\{\{',aux):
+   lab=m[1];i=m.end();depth=1;j=i
+   while depth and j<len(aux):
+    if aux[j]=='{':depth+=1
+    elif aux[j]=='}':depth-=1
+    j+=1
+   if depth:raise ValueError('Unbalanced auxiliary label '+lab)
+   if '@cref' not in lab:numbers[lab]=aux[i:j-1]
+ text='% Generated from native auxiliary files; do not invent result numbers.\n'
+ text+=''.join('\\expandafter\\def\\csname xnumber@'+k+'\\endcsname{'+v+'}\n' for k,v in sorted(numbers.items()))
+ p=D/'external-numbers.tex';old=p.read_text();p.write_text(text)
+ return old!=text,numbers
+for iteration in range(3):
+ for doc in docs:
+  dest=D/'build'/doc;dest.mkdir(parents=True,exist_ok=True)
+  remaining=29-(time.monotonic()-start)
+  if remaining<1:raise RuntimeError('Bounded build wall limit reached')
+  r=subprocess.run(['/private/tmp/mcmullen-release-tools/tectonic','--keep-logs','--keep-intermediates','--outdir',str(dest),doc+'.tex'],cwd=D,env={**os.environ,'TECTONIC_CACHE_DIR':'/private/tmp/mcmullen-release-tools/cache'},capture_output=True,text=True,timeout=remaining,preexec_fn=limits)
+  (dest/f'compile-pass-{iteration}.txt').write_text(r.stdout+r.stderr)
+  out.append({'document':doc,'pass':iteration,'returncode':r.returncode})
+  if r.returncode:print((r.stdout+r.stderr)[-2500:]);raise RuntimeError(doc)
+ changed,numbers=catalog()
+ if not changed:break
+else:raise RuntimeError('Number catalog did not stabilize')
+from pypdf import PdfReader
+for doc in docs:
+ dest=D/'build'/doc; log=(dest/(doc+'.log')).read_text()
+ out.append({'document':doc,'pages':len(PdfReader(dest/(doc+'.pdf')).pages),'undefined':len(re.findall(r'(?:Reference|Citation).*?undefined',log)),'overfull':len(re.findall('Overfull',log))})
+refs=[]
+for p in (D/'sections').rglob('*.tex'):
+ refs+=re.findall(r'\\externalref\{[^}]+\}\{([^}]+)\}',p.read_text())
+assert not(set(refs)-set(numbers)),set(refs)-set(numbers)
+receipt={'wall_seconds':time.monotonic()-start,'documents':out,'external_labels_resolved':len(set(refs)),'external_numbers_stable':True}
+(D/'build_receipt.json').write_text(json.dumps(receipt,indent=2)+'\n');print(json.dumps(receipt,indent=2))

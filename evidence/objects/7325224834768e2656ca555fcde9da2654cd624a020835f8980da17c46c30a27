@@ -1,0 +1,86 @@
+#!/usr/bin/env python3
+"""Owned bounded parent for the exact final371 positive12 run or closed audit."""
+import argparse,ctypes,fcntl,hashlib,importlib.util,os,resource,runpy,signal,stat,sys,time
+from pathlib import Path
+HERE=Path(__file__).resolve().parent
+ADMIN_SHA='767ea3200ef9bb76f4adfb2a5d6cf4a95118ccfbfb12d037a978f8f557deae16'
+EXECUTOR_SHA='bad48cfabc321d1cc9bdc92bddf2f046cb859a98e860e2b007550a8ade4e18a2'
+LIFE_SHA='cce62b0db50df2d2721fde23c19a833c09916743bcdf66486e2c14e5ca00c3c4'
+REAPER_SHA='71258d39b52812ee69cf255d7982a89642dc08c4411e76b5641499b65eb9ef06'
+P=HERE/'metadata-admin.py'
+if hashlib.sha256(P.read_bytes()).hexdigest()!=ADMIN_SHA:raise ValueError('Admin source changed')
+s=importlib.util.spec_from_file_location('strict12_parent_admin',P);a=importlib.util.module_from_spec(s);s.loader.exec_module(a)
+def limits(mode):
+ a.need(mode in('run','audit'),'Mode');return((600,1801),(1024**3,2*1024**3))if mode=='run'else((600,610),(4*1024**3,)*2)
+def allowance(c,now):
+ a.need(type(c['schema_version'])is int and c['schema_version']==1 and c['status']=='ROOT_APPROVED_STRICT_POSITIVE12_'+c['mode'].upper()+'_DISPATCH','Explicit dispatch approval')
+ a.need(c['guard_stop_epoch']==1791886581 and c['provider_stop_epoch']==1791886641 and type(c['deadline_epoch'])is int and now<c['deadline_epoch']<=1791886581-60,'Funded immutable stop')
+ a.need(c['capacity_and_storage_reserved']is True and c['no_concurrent_4gib_admin']is True and c['no_automatic_retry']is True and c['theorem_promotion']is False,'Explicit capacity/no retry scope')
+ cpu,mem=limits(c['mode']);expected={'outer_cpu_limits':[30,cpu[1]],'outer_memory_limits':[256*1024**2,mem[1]],'payload_cpu_limits':list(cpu),'payload_memory_limits':list(mem),'file_limit_bytes':128*1024**2}
+ a.need(c['resources']==expected and all(type(n)is int for v in c['resources'].values()for n in(v if type(v)is list else[v])),'Exact parent/payload resources')
+ if c['mode']=='run':
+  a.need(type(c['queue_cutoff_epoch'])is int and now+3600<=c['queue_cutoff_epoch']and c['queue_cutoff_epoch']+1800<=c['guard_stop_epoch']and c['deadline_epoch']>=c['queue_cutoff_epoch']+300,'Full3600 wall and30min cleanup/audit reserve')
+  return int(c['deadline_epoch']-now)
+ return min(1200,int(c['deadline_epoch']-now))
+def command(c):
+ cmd=[str(a.ref(c['executor'],EXECUTOR_SHA)),c['mode'],'--manifest',str(a.ref(c['manifest'])),'--manifest-sha256',c['manifest']['sha256'],'--output',c['output']]
+ if c['mode']=='audit':cmd+=['--campaign',str(a.safe(c['campaign']))]
+ return cmd
+def setup(c,cp,ch):
+ allowance(c,time.time());a.need(a.sha(cp)==ch and c['launcher_sha256']==a.sha(__file__),'Actual parent/config')
+ e=a.load(a.ref(c['executor'],EXECUTOR_SHA),EXECUTOR_SHA,'strict12_exact_executor');args=argparse.Namespace(manifest=a.ref(c['manifest']),manifest_sha256=c['manifest']['sha256']);e.configure(args)
+ m,context,package,r,root,jobs=e.validate_manifest(args.manifest,args.manifest_sha256);a.need(len(jobs)==12 and e.ACTIVE_POLICY['host']==c['host']and e.ACTIVE_POLICY['auxiliary_lock']==c['capacity_lock'],'Exact host/lock/domain')
+ a.need(e.ACTIVE_POLICY['queue_cutoff_epoch']==c['queue_cutoff_epoch'],'Exact approved mathematical queue')
+ e.guard_live();a.no_math();e.runtime_check(e.frontend(root,'sturm'),r)
+ pins={str(cp):ch,str(Path(__file__)):a.sha(__file__),str(P):ADMIN_SHA,str(e.REFERENCE):e.REFERENCE_SHA}
+ for value in(c,m,e.ACTIVE_POLICY):
+  for ref in a.refs(value):path=a.ref(ref);pins[str(path)]=ref['sha256']
+ a.ref(c['lifecycle_helper'],LIFE_SHA);a.ref(c['adopted_cleanup'],REAPER_SHA)
+ # Imported cleanup module's sibling is also explicitly pinned.
+ cleanup_admin=Path(c['adopted_cleanup']['path']).with_name('admin.py');a.need(a.sha(cleanup_admin)=='a335b2949c93af0c10ceca397722317eb4746199df29c1a6946bcea40ea7e7f7','Cleanup sibling');pins[str(cleanup_admin)]=a.sha(cleanup_admin)
+ outputs=[a.safe(c['dispatch_directory']),a.safe(c['output'])];inputs=list(map(Path,pins))+[root,HERE,a.safe(c['capacity_lock'])]
+ if c['mode']=='audit':inputs.append(a.safe(c['campaign']))
+ a.disjoint(outputs,inputs);return e,m,r,root,pins
+
+def identity(pid):
+ p=Path('/proc',str(pid));raw=(p/'cmdline').read_bytes();fields=(p/'stat').read_text().rsplit(')',1)[1].split();a.need(raw.endswith(b'\0'),'argv terminator')
+ return {'pid':pid,'start_ticks':int(fields[19]),'state':fields[0],'argv':[v.decode()for v in raw[:-1].split(b'\0')],'boot_id':Path('/proc/sys/kernel/random/boot_id').read_text().strip()}
+def worker(c,cp,ch,parent):
+ a.need(os.getppid()==parent,'Live outer');death=signal.SIGTERM if c['mode']=='run'else signal.SIGKILL
+ a.need(ctypes.CDLL(None,use_errno=True).prctl(1,death,0,0,0)==0 and os.getppid()==parent,'Payload parent death')
+ cpu,mem=limits(c['mode']);resource.setrlimit(resource.RLIMIT_CPU,cpu);resource.setrlimit(resource.RLIMIT_AS,mem);resource.setrlimit(resource.RLIMIT_FSIZE,(128*1024**2,)*2);resource.setrlimit(resource.RLIMIT_CORE,(0,0))
+ a.need(c['launcher_sha256']==a.sha(__file__)and a.sha(cp)==ch,'Worker source/config');allowance(c,time.time())
+ a.write(Path(c['dispatch_directory'])/'payload-process.json',{'identity':identity(os.getpid()),'parent_pid':parent,'cpu_limits':list(cpu),'memory_limits':list(mem),'pdeathsig':int(death),'raw_invocation':sys.executable,'parent_soft_limits_raised_after_initial_installation':False})
+ sys.argv=command(c);runpy.run_path(sys.argv[0],run_name='__main__')
+def main():
+ p=argparse.ArgumentParser();p.add_argument('--config',type=Path,required=True);p.add_argument('--config-sha256',required=True);p.add_argument('--worker',action='store_true');p.add_argument('--parent-pid',type=int);args=p.parse_args()
+ a.need(__debug__ and sys.platform=='linux'and sys.flags.isolated and sys.flags.dont_write_bytecode,'Linux raw -I -B');cp=a.regular(args.config);a.need(a.sha(cp)==args.config_sha256,'External configuration pin');c=a.read(cp)
+ if args.worker:return worker(c,cp,args.config_sha256,args.parent_pid)
+ cpu,mem=limits(c['mode']);resource.setrlimit(resource.RLIMIT_CPU,(30,cpu[1]));resource.setrlimit(resource.RLIMIT_AS,(256*1024**2,mem[1]));resource.setrlimit(resource.RLIMIT_FSIZE,(128*1024**2,)*2);resource.setrlimit(resource.RLIMIT_CORE,(0,0))
+ e,m,r,root,pins=setup(c,cp,args.config_sha256);fd=os.open(a.regular(c['capacity_lock']),os.O_RDWR|os.O_NOFOLLOW);a.need(os.fstat(fd).st_nlink==1,'Unique lock');fcntl.flock(fd,fcntl.LOCK_EX|fcntl.LOCK_NB);fcntl.flock(fd,fcntl.LOCK_UN);os.close(fd)
+ # The frozen coordinator/auditor owns the same lock. Root prohibits intervening work.
+ libc=ctypes.CDLL(None,use_errno=True);previous=ctypes.c_int();a.need(not Path('/proc/self/task',str(os.getpid()),'children').read_text().strip(),'Dedicated owned-child parent')
+ a.need(libc.prctl(37,ctypes.byref(previous),0,0,0)==0 and libc.prctl(36,1,0,0,0)==0,'Subreaper')
+ cleanup=a.load(a.ref(c['adopted_cleanup']),REAPER_SHA,'strict12_cleanup');life=a.load(a.ref(c['lifecycle_helper']),LIFE_SHA,'strict12_lifecycle')
+ out=a.safe(c['dispatch_directory']);out.mkdir();record=None;errors=[];observation=None
+ try:
+  a.no_math();e.guard_live();wall=allowance(c,time.time());cmd=[sys.executable,'-I','-B',str(Path(__file__)), '--worker','--config',str(cp),'--config-sha256',args.config_sha256,'--parent-pid',str(os.getpid())]
+  a.write(out/'preflight.json',{'mode':c['mode'],'source_control_pins':pins,'runtime':r,'parent_identity':identity(os.getpid()),'payload_command':command(c),'wrapper_command':cmd,'wall_seconds':wall,'outer_cpu_limits':list(resource.getrlimit(resource.RLIMIT_CPU)),'outer_memory_limits':list(resource.getrlimit(resource.RLIMIT_AS)),'memory_model':'12x2GiB children +1GiB coordinator soft +256MiB outer soft; parents never raise installed soft limits. Hard AS sum28GiB within32e9, remaining1.80GiB for OS/guard. No concurrent4GiB administrative task.'})
+  record=life.execute(cmd,out,Path(c['output']),pins,wall_seconds=wall,rss_limit_kib=mem[0]//1024,cpu_limits=cpu)
+ except BaseException as exc:errors.append(repr(exc))
+ finally:
+  try:cleanup.reap_adopted()
+  except BaseException as exc:errors.append('adopted cleanup '+repr(exc))
+  finally:
+   if libc.prctl(36,previous.value,0,0,0)!=0:errors.append('Subreaper restore')
+ try:
+  a.verify_pins(pins);e.validate_manifest(a.ref(c['manifest']),c['manifest']['sha256']);e.runtime_check(e.frontend(root,'sturm'),r);e.guard_live();a.no_math()
+  if c['mode']=='run':
+   state=a.read(Path(c['output'])/'state.json');e.processes_absent(state,a.ref(c['manifest']),Path(c['output']),root);complete=e.terminal_consistency(state,[(k,b)for k in e.CASES for b in e.BACKENDS]);observation={'state_sha256':a.sha(Path(c['output'])/'state.json'),'status':state['status'],'complete_guarded_state':complete,'semantic_audit_still_required':True}
+  elif record and record['returncode']==0:
+   audit=a.read(Path(c['output'])/'audit.json');a.need(audit['status']in('TWELVE_STRICT_POSITIVE_REPLAYS_AUDITED','STRICT_POSITIVE12_INCOMPLETE')and audit['required_jobs']==12,'Exact audit scope');observation={'audit_sha256':a.sha(Path(c['output'])/'audit.json'),'status':audit['status']}
+ except BaseException as exc:errors.append('postguard '+repr(exc))
+ closed=record is not None and not errors
+ result={'schema_version':1,'status':'STRICT_POSITIVE12_'+c['mode'].upper()+'_PARENT_CLOSED'if closed else'STRICT_POSITIVE12_PARENT_FAILED_OR_INCOMPLETE','configuration_sha256':args.config_sha256,'launcher_sha256':a.sha(__file__),'executor_sha256':EXECUTOR_SHA,'runtime_sha256':m['runtime']['sha256'],'returncode':record['returncode']if record else None,'lifecycle_status':record['status']if record else None,'lifecycle_completion_sha256':a.sha(out/'completion.json')if(out/'completion.json').exists()else None,'source_runtime_endguards_passed':not errors,'terminal_or_product':observation,'errors':errors,'theorem_promotion':False,'semantic_outcome_and_full_retention_review_required':True}
+ a.write(out/'result.json',result);print(__import__('json').dumps(result));return 0 if closed and record['returncode']==0 else 1
+if __name__=='__main__':raise SystemExit(main())

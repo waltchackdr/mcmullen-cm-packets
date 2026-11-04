@@ -1,0 +1,194 @@
+{
+  "note": "Prior run paths document provenance only; portable drivers must not read build or experiments at runtime.",
+  "points": {
+    "R127:pic0:00": {
+      "canonical_artifact_sha256": {
+        "A-entries.json": "3df6f7f7df57743a316ead8678a9cbc6b8baf9dec7edfdac338c9ce2ce576baa",
+        "C-entries.json": "368c97decba7ef54861eb9c3a42f65f0e86708f1935185f0890090e5a5aa1ea3",
+        "bottom-rows.json": "cbf0711a55504dea20e12dd2b585b09e06271ae0c8ac6d246b27dbb87e113487",
+        "candidates-nonzero.json": "9d59c9d592d823d4ea659d25ba7c5fe19c77a473ce9668a17cc751a1bf3c1ea1",
+        "candidates-zero.json": "03ffd89cfffebf6e06cf4e983f6b20d0e8b27920f8298e931adc37be444823d1",
+        "classification.json": "641380998d35893d07f95b24ccf1a5b3bf2197c7d0c736bb7ba4d580c4cde3ad",
+        "preparation.json": "e81c3efc9550deaf1d2e6a9c764ab5e5626fd30e01a1b5319701ec0be23bef31",
+        "survivors.json": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+      },
+      "counts": {
+        "a_count": 233,
+        "bottom_rows": 1949,
+        "c_count": 65,
+        "c_zero_audit": [
+          133,
+          1,
+          74,
+          12,
+          2304
+        ],
+        "candidate_count": 8876,
+        "classification_digest": "ad75a5b1d54ab79d495709583c567023b16f175e00929301142dfaf5e8010c89",
+        "nonzero_candidates": 6572,
+        "survivor_count": 0,
+        "zero_candidates": 2304
+      },
+      "prior_comparison_sha256": "aeb8d10230e58a9ec1a12ab6d325dbb7ed58d4142a5ffd425c97cdb4b6d7e1db",
+      "prior_run": "build/research-v72/full-r127-pic0-00-2026-10-10"
+    },
+    "R41_22:pic0:00": {
+      "canonical_artifact_sha256": {
+        "A-entries.json": "f55e9c7ed8b0eac1553bb764130062ef6dc639997d6947e7c69ffb9813639585",
+        "C-entries.json": "c76b1bf42a875aeeb4946361f44622702471aaec8c81b625c155b661b4e1fd07",
+        "bottom-rows.json": "65630fe19bf8eaaae123947e3bd51536bfdd894a4ff577f9405e74e6b3450d95",
+        "candidates-nonzero.json": "58c641af52512e3d1f547f42d539f6e01deacda29026aea151d93b6323b75986",
+        "candidates-zero.json": "ca73bd729537ee94859e362e64ace0285245b163c6b2ae08d148ac237afed2a8",
+        "classification.json": "951f2ba99368e549ac6b2846b427bed6295558e218235584673fb68f7913e880",
+        "preparation.json": "acdb1cd96530873f27dc71694ed0386947e7f528278a57890e934106dcd5a871",
+        "survivors.json": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+      },
+      "counts": {
+        "a_count": 419,
+        "bottom_rows": 1855,
+        "c_count": 115,
+        "c_zero_audit": [
+          75,
+          1,
+          54,
+          12,
+          1616
+        ],
+        "candidate_count": 8764,
+        "classification_digest": "4d41b4cc2ec1a6fe20ab41bede61c4b4a6296b728728869b03d5119f59e583be",
+        "nonzero_candidates": 7148,
+        "survivor_count": 0,
+        "zero_candidates": 1616
+      },
+      "prior_comparison_sha256": "3f49a05621a51ac05bd7af8dceb3cf73a6b90f2bf74b031785707c202c744e85",
+      "prior_run": "build/research-v71/full-r41_22-pic0-00-2026-10-10"
+    },
+    "R43_20:pic0:00": {
+      "canonical_artifact_sha256": {
+        "A-entries.json": "bb9906e70c2c54e6a8fe28598e52c23b09c5b793f4559b6a16161e8bc190ff37",
+        "C-entries.json": "c1fc57487cdc9398c117f69bf9878a93b24731269be73d881119207fba53393f",
+        "bottom-rows.json": "f2cf274dbbd5b69598a5054d6a4214995eadd614cbf913430bf737dc79cd199f",
+        "candidates-nonzero.json": "5ff80c50946056d98c4a6588998f048d121aacd35ff3864c37e5b616a13e040e",
+        "candidates-zero.json": "aecfe921e64692ab0e97056ba91f4edc2329a850df58d379a86cc9d64df6fc47",
+        "classification.json": "0478864b6e708ea4c8cbd7738627ee35e5a267664eadd13b94e0f8a277fa7177",
+        "preparation.json": "bd3844722741e829ea27cb0a14d90b7081aebcb9e9d6d73fc6bbf9f19b535d34",
+        "survivors.json": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+      },
+      "counts": {
+        "a_count": 401,
+        "bottom_rows": 1941,
+        "c_count": 105,
+        "c_zero_audit": [
+          71,
+          1,
+          50,
+          8,
+          952
+        ],
+        "candidate_count": 8656,
+        "classification_digest": "c758b5e3bc263390dcf87aecd6f67b760cbc0bb1523fc97ebd688912c36f66ec",
+        "nonzero_candidates": 7704,
+        "survivor_count": 0,
+        "zero_candidates": 952
+      },
+      "prior_comparison_sha256": "d7b9ae6c1ff035a99a8ea4dd5bcb6524b2028aad8eadd920d5d9b87937f33256",
+      "prior_run": "build/research-v71/full-r43_20-pic0-00-2026-10-10"
+    },
+    "R43_31:pic0:00": {
+      "canonical_artifact_sha256": {
+        "A-entries.json": "f7c4d8204b5bc597c56bee2c0bf8d577de1224db28c975b9062d48125c3b7818",
+        "C-entries.json": "a81d861a61bd05c17b100639c4f7373fffbf48c2af1072697c3a2d2a5cf3682f",
+        "bottom-rows.json": "e99bb41192b4d9d8728b8ee5e93d7ff5ab0e49ffa2d27fa9d7cc8bbb48ded4eb",
+        "candidates-nonzero.json": "8208ce824b4ee958cca41cf4eb4062a9202bf51226845fad72ba989b81baae4d",
+        "candidates-zero.json": "521b38d3923bd17d6406e36b58d0dfe5a5f7ffa50196906d6dcac980c84f5f13",
+        "classification.json": "5a91ded2a8a12fc9eb352e9f38caacc49ccd49d91f563be5ac422789579e3e8b",
+        "preparation.json": "94a4373ccc3ef955e4ffdde3a9d6801b1afc2ac8ee2dc4b947574adec626df5a",
+        "survivors.json": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+      },
+      "counts": {
+        "a_count": 407,
+        "bottom_rows": 1943,
+        "c_count": 113,
+        "c_zero_audit": [
+          75,
+          1,
+          52,
+          12,
+          1436
+        ],
+        "candidate_count": 9992,
+        "classification_digest": "8e15b543531d8d19ce78e9590570638b0722f6fc7ea11f345d6a2799848cc798",
+        "nonzero_candidates": 8556,
+        "survivor_count": 0,
+        "zero_candidates": 1436
+      },
+      "prior_comparison_sha256": "d97ec9cad7c08baf5bd0bf6551fce059ff4078fcc454c21a60b95134d5df1abf",
+      "prior_run": "build/research-v72/full-r43_31-pic0-00-2026-10-10"
+    },
+    "R7:pic0:00": {
+      "canonical_artifact_sha256": {
+        "A-entries.json": "c0bf531268ceffffd914750750cf38fd83e57e3d6f57ed50d2895d500df67b5d",
+        "C-entries.json": "3eccfe88ff38613eafbed27fcb764539148961c78e4f2f83718ee5e31f9a3512",
+        "bottom-rows.json": "f43540487c59f5246c24b8537c355197d9833a743f154dd515559ebc2afb6499",
+        "candidates-nonzero.json": "fcd45bce38a040073115c21b00078d4017551be152e2e4cf5f817dd057413015",
+        "candidates-zero.json": "ae3036f0000452ad5bec3d842cf56798d068a11d81bb0c3444675f82321dac35",
+        "classification.json": "841871281765f35c274a78c10d5c969ee3776fab47cf8be24619f6804f1f9461",
+        "preparation.json": "fa592676d7daa728e2fd159a3ad4a49150084abc5e0cc831eef415ec61c62357",
+        "survivors.json": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+      },
+      "counts": {
+        "a_count": 1013,
+        "bottom_rows": 1859,
+        "c_count": 263,
+        "c_zero_audit": [
+          33,
+          1,
+          30,
+          10,
+          588
+        ],
+        "candidate_count": 9428,
+        "classification_digest": "db97bc46cf5c05c0e15e9b3ca29b637ffa6bedaade29a1c29b6140400cfc951d",
+        "nonzero_candidates": 8840,
+        "survivor_count": 0,
+        "zero_candidates": 588
+      },
+      "prior_comparison_sha256": "a33306ed63eff3c0bef08873601d46779edd7349332139c784a5715b0acae61b",
+      "prior_run": "build/research-v71/full-r7-pic0-00-2026-10-10"
+    },
+    "R7sq:pic0:00": {
+      "canonical_artifact_sha256": {
+        "A-entries.json": "893a55d9e7fe2c2a909e539cf6cea845a657e91201cbfc095fb694652daf241e",
+        "C-entries.json": "428f52ac1f411bbe8c762df7da3e6d6c894a436ebf09c0cb3e8f2602d2738bac",
+        "bottom-rows.json": "aa1a7ad6f581d3a4d971c5e2327e8fed1e52db370ac43eee4edd542acf9395e7",
+        "candidates-nonzero.json": "1a74c93028631c0fd64fc5f48cc5d7350827074586fd7d540f7150b74978f326",
+        "candidates-zero.json": "03e90ee983a004486ef36ad059ffa263370997e59bf93095bfccc54ef96c37fe",
+        "classification.json": "e5be9d31ee235e326a78b96a5ac6f752f274431b993ec3c1790e6e6fed9947c7",
+        "preparation.json": "f5d16ec73d4e2fb192dfea5871de9c4adb746027e2d3caebedadcc156f2f419c",
+        "survivors.json": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+      },
+      "counts": {
+        "a_count": 371,
+        "bottom_rows": 2013,
+        "c_count": 101,
+        "c_zero_audit": [
+          79,
+          1,
+          54,
+          12,
+          1320
+        ],
+        "candidate_count": 8404,
+        "classification_digest": "f1e674f9c60a3591b12f5712d954166a0aa5f10e8985f3632bd191f7c2989665",
+        "nonzero_candidates": 7084,
+        "survivor_count": 0,
+        "zero_candidates": 1320
+      },
+      "prior_comparison_sha256": "c2dde21befc95b065e23e4a6528e2552796966dd565864a9544366d8941d615a",
+      "prior_run": "build/research-v71/full-r7sq-pic0-00-2026-10-10"
+    }
+  },
+  "schema_version": 1,
+  "scope": "SIX_NAMED_PRINCIPAL_MASK_ZERO_POINTS_ONLY",
+  "status": "EXPECTED_DATA_ONLY_PENDING_PORTABLE_REPLAY_AND_REVIEW"
+}

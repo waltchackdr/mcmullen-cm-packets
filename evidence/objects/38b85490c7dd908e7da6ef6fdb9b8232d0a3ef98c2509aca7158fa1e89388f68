@@ -1,0 +1,7 @@
+{
+  "observed_utc": "2026-11-03T05:54:48.149212+00:00",
+  "pod_count": 0,
+  "network_volume_count": 0,
+  "no_active_resources": true,
+  "scope": "Authenticated provider inventory; not final billing."
+}

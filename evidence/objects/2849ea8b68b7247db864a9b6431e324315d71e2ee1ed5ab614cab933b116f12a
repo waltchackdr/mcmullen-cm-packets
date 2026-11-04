@@ -1,0 +1,183 @@
+{
+  "status": "RETAINED_REVIEW_DEPENDENCY_INDEX_NOT_REPROOF",
+  "adoption": "experiments/continuous_v83/whole_packet_assessment/final-adoption.json",
+  "review": {
+    "path": "experiments/continuous_v82_review/fixed_marked_packet_committed_mathematical_review.json",
+    "sha256": "061861c4115d20cb9773d0f0355648f1eedbcd72886835e094051f8835b78a44"
+  },
+  "dependencies": [
+    {
+      "role": "accepted_two_chamber_implication",
+      "path": "experiments/continuous_v82_review/two_chamber_bridge_verdict.json",
+      "sha256": "942ecc5125e5eccea6b9faf3d815ccbc8d9e531613d346cb150b6f829869a4a4",
+      "observed_sha256": "942ecc5125e5eccea6b9faf3d815ccbc8d9e531613d346cb150b6f829869a4a4",
+      "match": true,
+      "paths_in_certificate_inventory": [
+        "build/research-v81/release-prep/historical-c40-snapshot-2026-10-13/experiments/continuous_v82_review/two_chamber_bridge_verdict.json",
+        "experiments/continuous_v82_review/two_chamber_bridge_verdict.json"
+      ]
+    },
+    {
+      "role": "actual_V82_review",
+      "path": "experiments/continuous_v82_review/v82_outcome_review.json",
+      "sha256": "c93ae10f28108fcb434a30817b8976394c181b10b0723b68384cbffe36c1bdd6",
+      "observed_sha256": "c93ae10f28108fcb434a30817b8976394c181b10b0723b68384cbffe36c1bdd6",
+      "match": true,
+      "paths_in_certificate_inventory": [
+        "experiments/continuous_v82_review/v82_outcome_review.json"
+      ]
+    },
+    {
+      "role": "actual_legacy_equivalent_cover_review",
+      "path": "experiments/continuous_v82_review/legacy150_63_2_actual_conjunction_review.json",
+      "sha256": "35432b65aab1289bdf9d7944b076848afb217c9a4bddb11079593968cd0804eb",
+      "observed_sha256": "35432b65aab1289bdf9d7944b076848afb217c9a4bddb11079593968cd0804eb",
+      "match": true,
+      "paths_in_certificate_inventory": [
+        "experiments/continuous_v82_review/legacy150_63_2_actual_conjunction_review.json"
+      ]
+    },
+    {
+      "role": "actual_reflected730_review",
+      "path": "experiments/continuous_v82_review/v93_actual_conditional730_outcome_retention_review.json",
+      "sha256": "c2a3bd203c4c64c908557018964227d62ced3b4cabdcf7b76953995e4977b536",
+      "observed_sha256": "c2a3bd203c4c64c908557018964227d62ced3b4cabdcf7b76953995e4977b536",
+      "match": true,
+      "paths_in_certificate_inventory": [
+        "experiments/continuous_v82_review/v93_actual_conditional730_outcome_retention_review.json"
+      ]
+    },
+    {
+      "role": "additional_DEN_identity_pair_review",
+      "path": "experiments/continuous_v82_review/actual_den_identity_pair_outcome_retention_review.json",
+      "sha256": "93dc9231cfbf074df25c00e139f7ff8b8831d58e900b186192b63e9d32e9ec2e",
+      "observed_sha256": "93dc9231cfbf074df25c00e139f7ff8b8831d58e900b186192b63e9d32e9ec2e",
+      "match": true,
+      "paths_in_certificate_inventory": [
+        "experiments/continuous_v82_review/actual_den_identity_pair_outcome_retention_review.json"
+      ]
+    },
+    {
+      "role": "committed_blob_validation",
+      "path": "experiments/continuous_v82_review/committed_packet_blob_validation.json",
+      "sha256": "8ce726f8e6566240de939fd4c7db94a16dcc0116747bc73b414791046237bd2a",
+      "observed_sha256": "8ce726f8e6566240de939fd4c7db94a16dcc0116747bc73b414791046237bd2a",
+      "match": true,
+      "paths_in_certificate_inventory": []
+    },
+    {
+      "role": "computational_conjunction_review",
+      "path": "experiments/continuous_v82_review/actual_final34_computational_conjunction_review.json",
+      "sha256": "1b5c471903645b85f3d2e61fb3c39fbf31a658d99a25798ca32bcdae5cea92c4",
+      "observed_sha256": "1b5c471903645b85f3d2e61fb3c39fbf31a658d99a25798ca32bcdae5cea92c4",
+      "match": true,
+      "paths_in_certificate_inventory": [
+        "experiments/continuous_v82_review/actual_final34_computational_conjunction_review.json"
+      ]
+    },
+    {
+      "role": "conditional34_proposition",
+      "path": "experiments/continuous_v83/whole_packet_adoption_preparation/mathematical_cutset34_preparation01/PROPOSITION.md",
+      "sha256": "a4cd655306c425e9aee98a0b206bf6b81fc6c893e8af6adee18607a035617233",
+      "observed_sha256": "a4cd655306c425e9aee98a0b206bf6b81fc6c893e8af6adee18607a035617233",
+      "match": true,
+      "paths_in_certificate_inventory": [
+        "experiments/continuous_v83/whole_packet_adoption_preparation/mathematical_cutset34_preparation01/PROPOSITION.md"
+      ]
+    },
+    {
+      "role": "first_target_population_review",
+      "path": "experiments/continuous_v82_review/first_target_coverage_review.json",
+      "sha256": "3879881003484d43773e8112935a85baf2849486c3f801f27e4e660d57b2b386",
+      "observed_sha256": "3879881003484d43773e8112935a85baf2849486c3f801f27e4e660d57b2b386",
+      "match": true,
+      "paths_in_certificate_inventory": [
+        "build/research-v81/release-prep/historical-c40-snapshot-2026-10-13/experiments/continuous_v82_review/first_target_coverage_review.json",
+        "experiments/continuous_v82_review/first_target_coverage_review.json"
+      ]
+    },
+    {
+      "role": "focused_citation_hypothesis_review",
+      "path": "experiments/continuous_v82_review/focused_citation_application_review.json",
+      "sha256": "80e90bdd08e42691c330b52db8909cc5e2a54d21eb4b154a88091e3ffa786d8a",
+      "observed_sha256": "80e90bdd08e42691c330b52db8909cc5e2a54d21eb4b154a88091e3ffa786d8a",
+      "match": true,
+      "paths_in_certificate_inventory": [
+        "experiments/continuous_v82_review/focused_citation_application_review.json"
+      ]
+    },
+    {
+      "role": "fresh_strict_positive12_review",
+      "path": "experiments/continuous_v82_review/actual_repaired_final371_strict_positive12_outcome_retention_review.json",
+      "sha256": "d5aa207968258a76b386cd4ee05c030ccccb2813232befc406b1234aa99be37c",
+      "observed_sha256": "d5aa207968258a76b386cd4ee05c030ccccb2813232befc406b1234aa99be37c",
+      "match": true,
+      "paths_in_certificate_inventory": [
+        "experiments/continuous_v82_review/actual_repaired_final371_strict_positive12_outcome_retention_review.json"
+      ]
+    },
+    {
+      "role": "generic_finite_domain_argument",
+      "path": "experiments/continuous_v82_review/generic_finite_domain_review.md",
+      "sha256": "d9d4bf73a534e1f3ebeaa4515e8045956c87283994c7339dedb1acb00253e207",
+      "observed_sha256": "d9d4bf73a534e1f3ebeaa4515e8045956c87283994c7339dedb1acb00253e207",
+      "match": true,
+      "paths_in_certificate_inventory": []
+    },
+    {
+      "role": "portable_evidence_adoption_review",
+      "path": "experiments/continuous_v82_review/actual_whole730_portable_evidence_adoption_review.json",
+      "sha256": "0c30485fac4ef39bf3beb3111181be9062d07201011a36f0129181f6e812d9e2",
+      "observed_sha256": "0c30485fac4ef39bf3beb3111181be9062d07201011a36f0129181f6e812d9e2",
+      "match": true,
+      "paths_in_certificate_inventory": [
+        "experiments/continuous_v82_review/actual_whole730_portable_evidence_adoption_review.json"
+      ]
+    },
+    {
+      "role": "prior_C40_adoption",
+      "path": "experiments/continuous_v83/maximal_packet_assessment/final-adoption.json",
+      "sha256": "57660280db57cad71faba70c9f569ae10c7cb8c0ab9a0144970f38b4a61cdbba",
+      "observed_sha256": "57660280db57cad71faba70c9f569ae10c7cb8c0ab9a0144970f38b4a61cdbba",
+      "match": true,
+      "paths_in_certificate_inventory": [
+        "build/research-v81/release-prep/historical-c40-snapshot-2026-10-13/experiments/continuous_v83/maximal_packet_assessment/final-adoption.json"
+      ]
+    },
+    {
+      "role": "representative34_review",
+      "path": "experiments/continuous_v82_review/actual_join34_outcome_retention_review.json",
+      "sha256": "6a35e5284e202e657a5ee8838e14eef1ed03844d6e70ae256d6eefbb5e92a85c",
+      "observed_sha256": "6a35e5284e202e657a5ee8838e14eef1ed03844d6e70ae256d6eefbb5e92a85c",
+      "match": true,
+      "paths_in_certificate_inventory": [
+        "experiments/continuous_v82_review/actual_join34_outcome_retention_review.json"
+      ]
+    },
+    {
+      "role": "whole_executable_runtime_review",
+      "path": "experiments/continuous_v82_review/actual_whole_packet_source_semantics_runtime_review.json",
+      "sha256": "58f865cb690b523629549f9826544e359e6962f18a427c9eac68f50be2f455c5",
+      "observed_sha256": "58f865cb690b523629549f9826544e359e6962f18a427c9eac68f50be2f455c5",
+      "match": true,
+      "paths_in_certificate_inventory": [
+        "experiments/continuous_v82_review/actual_whole_packet_source_semantics_runtime_review.json"
+      ]
+    }
+  ],
+  "retained_proof_steps": [
+    "C01/C20/C36-C39 and the accepted exact census identify the marked368-point population from3520 trace-labelled classes, preserving determinant sectors, root fibres, nonprincipal module classes and ordered embeddings; no uniform division or extra sign quotient is introduced.",
+    "The first target is empty for the exact116 historical labels and disjoint249 original-target V82 labels. The accepted150+63+2 equivalent execution cover and504 V82 backend executions instantiate those first-target premises; failed159/65 wrappers remain failed.",
+    "For old nonprincipal R83 labels, equality is of the complete oriented32-point quotient population. If U has unit determinant d, choosing sector epsilon and centralizer eta with epsilon*d*N(eta)/delta=1 yields an integral SL2 conjugator. Universal emptiness transfers to all old masks without assigning any old digest to a new numeric mask.",
+    "The independently accepted whole730 outcome establishes empty paired reflected results for every one of the365 nonhits. The exact557+173 selected paths,225 complete continuation paths including52 duplicates, all required failed predecessors and halted V86 history are preserved.",
+    "The finite-domain argument is universal for positive-height source tuples: determinant-one height bounds, positive trace ellipsoid and inclusive exact lattice enumeration, unit-lattice bijections, primitive-row and affine determinant completion, simultaneous matrix-sign restoration, c=0 and closed boundary predicates. Full executed source/target/transport/runtime correspondence instantiates it for every label;34 observed-interface controls are additional checks, not a sampling proof.",
+    "If p=K F(z) were a curve hit, simultaneous two-chamber reduction and normalized SL2-equivariance give H=rho(eta)K^{-1} with Hp in P0 union P1. For a searched representative p_j=G_j p, H G_j^{-1} reaches the same target. Both target products are empty. This is a contradiction without assuming an arithmetic reflection normalizer or mixed coordinate chambers.",
+    "Existing exact C40 A/B/C realizations give three distinct positive quotient points. Fresh final2998 strict positive12 and the negative DEN identity pair preserve the final executable/package compatibility and34 interface conjunction. Thus containment is equality.",
+    "The same universal population exclusion restores C21-C30 and C41-C43 only in their exact existing scopes; C44/O04 closes the fixed368-point packet. C40/O01/O02 remain included and are not counted twice."
+  ],
+  "unresolved_index_roles": [
+    "committed_blob_validation",
+    "generic_finite_domain_argument"
+  ],
+  "preparation_failure": "Initial in-memory mapping incorrectly treated dependency objects as scalar digests and raised TypeError before any report write. Retried using explicit path/sha256 objects; no accepted files changed."
+}

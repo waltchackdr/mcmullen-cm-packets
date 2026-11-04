@@ -1,0 +1,331 @@
+% !TeX root = ../../arithmetic-and-computation.tex
+\section{Computer-assisted results and reproducibility}\label{app:computer}
+The arguments use computer assistance only for finite exact calculations.
+No theorem is based on an uncertified floating-point equality. The following
+inventory describes the packet certificates. The additional fixed-field
+Hodge-extension evidence is specified in Section~\externalref{hodge}{ext:sec:evidence}
+and Sections~\externalref{hodge}{six:sec:main}--\externalref{hodge}{eight:sec:main}; these form a separate
+regression scope and do not enlarge the historical $1405$-command execution
+claim below. A clean immutable-commit replay remains a separate release gate.
+\begin{longtable}{p{0.43\textwidth}p{0.49\textwidth}}
+\toprule
+Source & Role \\
+\midrule
+\path{certificates/packet_order_coverage_v58.py};
+\path{independent/packet_order_coverage_stdlib_v58.py}
+& Two exact paths for the $84$ norm-fiber representatives, $42$ traces,
+nine embedded orders and affine-unit identities in
+Proposition~\ref{prop:alltraceorders}. Completeness of the norm fiber and
+the common maximal population also use the human proofs.\\
+\path{certificates/known_cm_comparison_v58.py}
+& Exact regression for the supplied geometric CM types and explicit actions
+in Proposition~\externalref{packet}{prop:knownCM}; this does not independently reconstruct
+the geometric types.\\
+\path{certificates/k11_vertex_bridge_v60.py};
+\path{independent/k11_vertex_bridge_stdlib_v60.py}
+& New exact cyclotomic and quadratic reconstructions of the integral
+determinant-one $k=11$ bridge in Theorem~\externalref{packet}{thm:Bvertex}, including strict
+ellipticity. These replace the missing historical computations.\\
+\path{certificates/d3_completeness_v60.py};
+\path{independent/d3_completeness_quadratic_v60.py};
+\path{certificates/d3_matrix_manifest_v60.jsonl}
+& Separate exact reconstructions of the $1280$ trace-labelled matrix
+representatives in Theorem~\ref{thm:d3classes}. The human module and unit
+proof establishes completeness; these files give no ambient-point count.\\
+\path{certificates/d3_points_v60.py};
+\path{independent/d3_points_quadratic_v60.py};
+\path{certificates/d3_points_v60/canonical_points_v59.json};
+\path{certificates/d3_points_v60/matrix_to_point_bridges_v59.jsonl}
+& Two exact paths for the $144$ canonical points, unit-square basis
+corrections and all $1280$ integral determinant-one transports in
+Proposition~\externalref{packet}{prop:d3ambientpoints}. The two-root and intrinsic
+multiplier-order proof establishes quotient distinctness.\\
+\path{certificates/full_packet_arithmetic_v62.py};
+\path{independent/full_packet_cyclotomic_v62.py};
+\path{certificates/full_packet_v62/ambient_points.json};
+\path{certificates/full_packet_v62/root_bridges.jsonl}
+& Separate quadratic and degree-$12$ cyclotomic reconstructions of the
+complete $3520$-class, $368$-point census in
+Theorem~\externalref{packet}{thm:fullpacketarithmetic}, including the finite local
+quotients, all module and orientation representatives, and $736$
+root bridges. No curve-membership test is included.\\
+\path{certificates/a_vertex_certificate_v31.py};
+\path{independent/a_vertex_hodge_node_v31.js}
+& Exact A-type, discriminant, and Hodge calculation; the Node path is a supplied-type combinatorial cross-check.\\
+\path{certificates/a_principal_local_v33.py};
+\path{certificates/three_vertex_level_v37.py}
+& Restricted local free-line checks; the homology correction and nonfree common subgroup are certified below.\\
+\path{certificates/principal_homology_v56.py};
+\path{independent/principal_homology_stdlib_v56.py}
+& Two separate exact homology reconstructions: integral $K$-actions, corrected Hermitian bases, principal special fibers, and the common nonfree subgroup of Proposition~\externalref{packet}{prop:commonprincipal}. The global family is treated separately below.\\
+\path{certificates/principal_descent_v57.py};
+\path{independent/principal_descent_stdlib_v57.py}
+& Exact stabilizer indices $224$ and $28$, selected CM-order index $27$, and surviving vertex powers. Theorem~\externalref{packet}{thm:principalfamily} supplies the human descent and algebraization argument.\\
+\path{certificates/vertex_saturation_v35.py}
+& Exact B/C saturation, C-type, discriminant, and Hodge calculation.\\
+\path{certificates/maximal_vertex_orbits_v38.py};
+\path{certificates/four_vertex_audit_v40.py}
+& Exact maximal B/C orientations and four-vertex audit.\\
+\path{certificates/packet_hodge_v39.py};
+\path{independent/packet_cm_hodge_sturm_v41.py}
+& Two exact independent packet CM-type/Hodge implementations; the second is the theorem-grade standard-library/Sturm verifier required for Theorem~\ref{thm:packetHodge}.\\
+\path{independent/packet_hodge_node_v40.js}
+& Floating-point regression evidence only; it is not a theorem certificate or an independent exact implementation.\\
+\path{independent/quadrilateral_k17_stdlib_v41.py}
+& Standard-library quotient-field, Sturm, interval, and normalized-quadrilateral foundation used by the independent exact paths.\\
+\path{certificates/residual_orbit_k17_k38_v42.py};
+\path{independent/residual_orbit_k17_k38_sturm_v42.py}
+& Two exact independent exhaustive exclusions for $k=17,38$.\\
+\path{certificates/residual_orbit_k1_k22_v43.py};
+\path{independent/residual_orbit_k1_k22_sturm_v43.py}
+& Two exact independent exhaustive exclusions for $k=1,22$.\\
+\path{certificates/a_vertex_orbits_k20_k41_v44.py};
+\path{independent/a_vertex_orbits_k20_k41_sturm_v44.py}
+& Two exact independent A-orbit implementations, including the direct/conjugate CM-action assignment.\\
+\path{certificates/d7_nonmaximal_classes_v29.py};
+\path{certificates/d7_ambient_points_v45.py};
+\path{independent/d7_ambient_points_sturm_v45.py}
+& Exact $512$-class and $112$-point ambient classification. The number $107$
+is the v45 checkpoint, $75$ is the v53 checkpoint, and Corollary~\ref{cor:d7geometrycomplete} closes that $d=7$ remainder.\\
+\path{certificates/d7_r83_mask14_v46.py};
+\path{independent/d7_r83_mask14_sturm_v46.py}
+& Retained first proper-$R_{83}$ exact exclusion pair; the registered v47 run subsumes this primary search.\\
+\path{certificates/d7_r83_masks14_30_v47.py};
+\path{independent/d7_r83_masks14_30_sturm_v47.py}
+& Two exact independent paths for masks $14,30$.\\
+\path{certificates/d7_r83_masks15_31_v48.py};
+\path{independent/d7_r83_masks15_31_sturm_v48.py}
+& Two exact independent paths for masks $15,31$.\\
+\path{certificates/d7_r83_masks6_22_v49.py};
+\path{independent/d7_r83_masks6_22_sturm_v49.py}
+& Two exact independent paths for masks $6,22$.\\
+\path{certificates/d7_r83_masks1_17_v50.py};
+\path{independent/d7_r83_masks1_17_sturm_v50.py}
+& Two exact independent paths for masks $1,17$.\\
+\path{certificates/d7_r83_batch10_v51.py};
+\path{independent/d7_r83_batch10_sturm_v51.py}
+& Two exact independent paths for ten reflected pairs/twenty points.\\
+\path{certificates/d7_r83_masks13_29_v52.py};
+\path{independent/d7_r83_masks13_29_sturm_v52.py}
+& Two exact independent paths for masks $13,29$.\\
+\path{certificates/d7_r83_masks7_23_v53.py};
+\path{independent/d7_r83_masks7_23_sturm_v53.py}
+& Two exact independent paths for masks $7,23$, including the complete $1955=1954+1$ bottom-row split.\\
+\path{certificates/d7_remaining_maximal_v61.py};
+\path{independent/d7_remaining_maximal_sturm_v61.py};
+\path{certificates/d7_remaining_maximal_expected_v61.py}
+& Two exact paths for all eleven remaining maximal masks: $89{,}544$
+candidates per path, including $1{,}284$ with $c=0$, and zero survivors.
+These computations concern the original product; the next entry supplies
+the required second target for Theorem~\ref{thm:maximalallorientations}.\\
+\path{certificates/reflected_primary_v83.py};
+\path{independent/reflected_sturm_v83.py};
+\path{certificates/reflected_packet_v83/expected.json};
+\path{certificates/reflected_packet_v83/selection.json}
+& Two separate full-only reflected-target paths for the thirteen nonhit
+maximal labels: $1{,}113{,}924$ candidates per path, including $12{,}188$
+with $c=0$, and zero survivors. The complete mathematical dependency
+closure, source relocation and exact frozen plans are included; the
+expected table binds eight canonical artifacts and all nine result
+fields for every label.\\
+\path{certificates/d7_r41_v63.py};
+\path{independent/d7_r41_sturm_v63.py};
+\path{certificates/d7_r41_expected_v63.py}
+& Two exact exhaustive paths for all $32$ proper-$(41,t-12)$ points:
+$62{,}474$ bottom rows and $265{,}212$ candidates per path, including
+$33{,}468$ with $c=0$, and zero survivors. The frozen table binds every
+center's counts and digests. Theorem~\ref{thm:d7r41complete} and
+Corollary~\ref{cor:d7geometrycomplete} give the scoped exclusion and
+complete $d=7$ classification.\\
+\path{certificates/d7_r83_principal_v55.py};
+\path{independent/d7_r83_principal_sturm_v55.py};
+\path{certificates/d7_r83_principal_expected_v55.py}
+& Two exact independent exhaustive paths for all $32$ principal-Picard-class
+proper-$R_{83}$ points; the third source is the frozen comparison table.\\
+\path{certificates/broader_principal_v75.py};
+\path{independent/broader_principal_sturm_v75.py};
+\path{certificates/broader_principal_v75/expected.json}
+& Two exact exhaustive paths for the six named principal-Picard mask-zero
+points in Proposition~\ref{prop:broadersevenexclusions}: $54{,}120$
+candidates per path and zero survivors. The portable data directory
+contains the point and unit witnesses; the expected table binds every
+point's counts and eight canonical artifact hashes. No other mask or
+whole-stratum exclusion is asserted.\\
+\path{certificates/r127_pic1_v80.py};
+\path{independent/r127_pic1_sturm_v80.py};
+\path{certificates/r127_pic1_v80/expected.json}
+& Fresh exhaustive reconstruction of the nonprincipal
+\texttt{R127:pic1:00} row of
+Proposition~\ref{prop:broadersevenexclusions}: $8{,}488$ candidates and
+zero survivors in each path. The entry-unit witness file is in the same
+directory; the point and DEN/NUM witnesses are reused from the preceding
+portable package. The principal \texttt{R127:pic0:00} replay is an
+already-certified control, not another new exclusion.\\
+\path{certificates/continuous_primary_v82.py};
+\path{independent/continuous_sturm_v82.py}
+& Original-target portable replay: $249$ nonvertex labels in both
+paths, with six full historical controls, for $504$ commands.\\
+\path{certificates/reflected_primary_v83.py};
+\path{independent/reflected_sturm_v83.py};
+\path{certificates/reflected_packet_v83/selection.json};
+\path{certificates/reflected_packet_v83/expected.json};
+\path{certificates/reflected_packet_v83/source-relocation.json}
+& Reflected-target $365$-label exclusion certificate, with complete
+plans and both exact paths. The common $371$-record table also includes
+the six labelled positive controls ($A,B,C$ in both targets), producing
+$730+12$ full commands.\\
+\bottomrule
+\end{longtable}
+The two broader exclusion packages recompute the finite sets from their
+portable source/data closure and read no discovery or build-directory
+search output at runtime. Their full success status requires all counts
+and all eight canonical artifacts to agree with the frozen comparison
+tables. Source-only and preparation-only checks make no geometric claim.
+The targeted full replays and their recorded adversarial audits are
+complete; an immutable whole-suite release remains a separate gate.
+
+\paragraph{Principal-model regressions.}
+The following paired implementations verify the exact inputs to the
+principal-model arguments. Their human completeness arguments are given
+in the cited propositions. They are additional regression tests and are
+not part of the historical $1405$-command packet execution record.
+Each pair has a corresponding test in the repository's test directory;
+the installed regression replays both implementations.
+\begin{longtable}{p{0.43\textwidth}p{0.49\textwidth}}
+\toprule
+Source & Role \\
+\midrule
+\path{certificates/principal_unmarked_bc_v122.py};
+\path{independent/principal_unmarked_bc_v122.py}
+& Actual-lattice reconstruction and the complete finite norm obstruction
+for unmarked polarized distinction.\\
+\path{certificates/principal_bc_isogeny_v123.py};
+\path{independent/principal_bc_isogeny_v123.py}
+& Complete scalar-multiplier-$2$ map list, common kernel, and inputs to
+the full polarized automorphism-group argument
+(Proposition~\externalref{packet}{pp:prop:bcisogeny}).\\
+\path{certificates/principal_bc_unpolarized_v125.py};
+\path{independent/principal_bc_unpolarized_v125.py}
+& Full multiplier order, maximal-order saturations and local residue
+obstruction to unpolarized isomorphism
+(Proposition~\externalref{packet}{pp:prop:unpolarizeddistinct}).\\
+\path{certificates/principal_bc_min_degree_v126.py};
+\path{independent/principal_bc_min_degree_v126.py}
+& Degree-$7$ cyclic-kernel witness and small-prime norm exclusions
+(Proposition~\externalref{packet}{pp:prop:mindegree}).\\
+\path{certificates/principal_bc_hom_v127.py};
+\path{independent/principal_bc_hom_v127.py}
+& Complete Hom module, fractional-ideal products and source pullback
+identities (Proposition~\externalref{packet}{pp:prop:homideal}).\\
+\path{certificates/principal_order_class_v129.py};
+\path{independent/principal_order_class_v129.py}
+& Residue field, explicit unit norms and unit-image inputs for the
+ordinary Picard-group computation
+(Proposition~\externalref{packet}{pp:prop:picardorder}).\\
+\bottomrule
+\end{longtable}
+
+\paragraph{Whole-packet execution provenance and regression scope.}
+The original-target cover is $116+249=365$ distinct nonvertex points.
+Its legacy component is assembled from $150$ retained original commands,
+$63$ individually accepted single-mask replacements and two complete
+later replacements. The $65$ replacement commands partition nine old
+command domains. This is a reviewed equivalent cover, not a claim that
+the interrupted old $159$-command pool or the old $65$-job recovery pool
+completed normally. Failed and interrupted histories remain retained.
+The original-target portable aggregate is bound by
+\path{experiments/continuous_v82_review/v82_outcome_review.json}.
+
+Four historical V42/V43 companion commands have no recorded per-command
+end-source guard; their use assumes the archived sources and runtime
+were not transiently replaced during execution. The original legacy
+pool also lacks a common final source/runtime guard. Present hashes
+cannot establish the absence of a transient replacement, and no missing
+guard is reconstructed. The previously scoped maximal-only acceptance
+remains recorded in
+\path{experiments/continuous_v82_review/om13_q26_scoped_outcome_review.json}.
+
+The reflected aggregate selects exactly $730$ full backend results:
+$557$ original results and $173$ selected continuation results. It
+reconciles all $365$ paired empty outcomes, complete row journals and
+additional completed duplicates, while retaining failed predecessors.
+Its actual outcome and retention are bound by
+\path{experiments/continuous_v82_review/v93_actual_conditional730_outcome_retention_review.json}.
+One continuation cohort halted after $78$ complete results, with
+$26$ interrupted and $69$ unstarted tasks. Its selected $26$ results
+and $52$ completed duplicates retain their individual driver checks;
+the missing coordinator-wide final guards are not supplied by later
+hashes. Use of this cohort retains the explicitly reviewed ordinary
+historical source/runtime immutability assumption.
+
+The portable mathematical closure has sixteen files: fourteen unchanged
+files and two drivers with reversible root/helper-path relocation.
+The nineteen-file executed closure includes its operational wrappers.
+Whole-executable comparison covers dynamic imports, active target
+installation, plans, globals and actual interpreter/package profiles.
+The old expected-data module imported by a retained foundation remains
+an inert lineage dependency for these searches: its historical
+assertions may abort execution, but it supplies no new-label bounds or
+candidate decisions. New comparison expectations are checked only after
+complete enumeration.
+
+The portable controls comprise the original sixteen negative labels
+plus the exact additional \texttt{R127:pic1:03} pair, hence $34$ full
+negative runs, and twelve strict positive runs on the final common
+$371$-record package. The added pair exercises the otherwise uncovered
+identity-denominator scaling branch. The original $32$-run conjunction
+failed that observed-interface requirement and remains a failed record;
+it is not renamed as a pass. The revised conjunction retains every
+original result comparison and requires coverage of the unchanged
+observed interface inventory. Controls test relocation and entrypoint
+integration; they do not replace exhaustive results for the other labels.
+
+The final adoption joining the two target populations, the selected
+executions, and the source correspondence is
+\path{experiments/continuous_v83/whole_packet_assessment/final-adoption.json}.
+This is the final packet receipt; the intermediate outcome receipts above
+are supporting records, not substitutes for that join. Its use retains the
+packet execution hypothesis stated in Paper I.
+
+The installed registration and evidence map are recorded in
+\path{tests/registration/combined1405.json} and
+\path{tests/registration/combined1405-installation.json}.
+The inventory is exactly $159+504+12+730=1405$ commands. Within the
+reflected $730$, the $34$ control commands precede the remaining $696$;
+the old maximal-only $26$ commands are subsumed rather than duplicated.
+The existing $159$ command vectors and default four-worker limit are
+preserved. Installation, equivalent-cover adoption and targeted
+executions are not a fresh integrated $1405$-command suite pass.
+An immutable source/evidence release, its final manuscript compilation
+and visual PDF inspection remain separately recorded verification steps.
+
+The audited local environment uses Python~3.14.6, SymPy~1.14.0, and
+Node.js~22.19.0.  The file \path{requirements.txt} pins the SymPy version.
+The Sturm implementations written with the Python standard library do not
+import SymPy.  The verifier
+\path{scripts/run_certificates.py} fails if any registered source is missing,
+if a registered program exits nonzero, or if the required Node runtime is
+unavailable.  The wrapper \path{verify_all.sh} also checks repository
+invariants, compiles the manuscript when a LaTeX engine is available, writes
+the full run log, and emits a SHA-256 manifest.  Separate implementations are
+machine-verification paths, not independent human proofs.
+
+All theorem-relevant embedding labels in the SymPy certificates are ordered
+by exact rational endpoints of pairwise disjoint root intervals, with strict
+separation asserted.  Decimal formatting in the independent quadrilateral
+module is display-only.  The exact packet verifiers exhaust the CM-character
+subsets as a regression check; Lemma~\externalref{packet}{lem:primitivebinary} supplies the
+conceptual classification for the primitive block.
+
+
+\paragraph{Availability of computational evidence.}
+The manuscript and research repository are currently private working
+materials. The historical receipts and source paths in this supplement refer
+to that retained workspace. A complete, versioned package sufficient to
+inspect every theorem-relevant dependency has not been released. The
+selected source snapshot and its short smoke checks are not such a package.
+No assertion of public data availability or fresh full-suite reproduction
+is made. Before external circulation, the evidence required by each
+computer-assisted result must be assembled and its access instructions
+checked against the exact manuscript version.
+

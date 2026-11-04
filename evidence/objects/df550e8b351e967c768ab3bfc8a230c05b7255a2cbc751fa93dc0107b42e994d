@@ -1,0 +1,35 @@
+{
+  "status": "PASS",
+  "candidate_pins_verified": 121,
+  "current_status_not_dispatchable": true,
+  "unchanged_bootstrap_and_local_entrypoint": "BASELINE_IDENTICAL except canonical session manifest",
+  "archives": [
+    {
+      "job": 0,
+      "files": 10,
+      "bytes": 593920,
+      "unpack_and_snapshot": "PASS"
+    },
+    {
+      "job": 1,
+      "files": 10,
+      "bytes": 593920,
+      "unpack_and_snapshot": "PASS"
+    }
+  ],
+  "all_160_indices_exactly_once": true,
+  "virtual_mapping": "Archive bytes equal mapped sources; worker and plan historical names intentional",
+  "negative_completion_fixtures": [
+    "short",
+    "extra",
+    "reordered",
+    "wrong index",
+    "theta evaluation",
+    "nonzero child"
+  ],
+  "pipeline_nonzero_worker_fixture": "PIPELINE_FAILED, returncode17 retained",
+  "queue_nonzero_pipeline_fixture": "First job only; second not admitted",
+  "provider_calls": 0,
+  "child_mathematical_processes": 0,
+  "full_suite": false
+}

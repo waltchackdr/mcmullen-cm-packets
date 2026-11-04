@@ -1,0 +1,21 @@
+{
+  "status": "PRODUCER_INPUT_ONLY_CHECK_PASS",
+  "scope": "No numerical reevaluation or independent adoption. New grid is above every prior adopted index and disjoint128pendingdata04.",
+  "archive_comparisons": [
+    {
+      "job": 0,
+      "changed_members": [
+        "experiments/bc_jacobian_v147/certificate_plan_candidate.json"
+      ],
+      "unchanged_members": 12
+    },
+    {
+      "job": 1,
+      "changed_members": [
+        "experiments/bc_jacobian_v147/certificate_plan_candidate.json"
+      ],
+      "unchanged_members": 12
+    }
+  ],
+  "new_observations": 128
+}

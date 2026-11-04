@@ -1,0 +1,45 @@
+{
+  "additional_interface": "scale:DEN:identity",
+  "additional_label": "R127:pic1:03",
+  "identical1405_argv_multiset": true,
+  "installed": false,
+  "new_phase_counts": [
+    159,
+    6,
+    498,
+    12,
+    34,
+    696
+  ],
+  "original_fixed_labels": [
+    "OM:pic0:01",
+    "R127:pic0:00",
+    "R127:pic1:00",
+    "R127:pic1:16",
+    "R127:pic1:32",
+    "R127:pic1:63",
+    "R41_12:pic0:00",
+    "R41_22:pic0:00",
+    "R43_20:pic0:00",
+    "R43_31:pic0:00",
+    "R7:pic0:00",
+    "R7:pic0:32",
+    "R7sq:pic0:00",
+    "R83:pic0:00",
+    "R83:pic1:00",
+    "R83:pic1:16"
+  ],
+  "prior_manifest_sha256": "212d65a3358865b2359f4ce92c8818d699bfc13549f06f5f05a0b371b012676e",
+  "prior_phase_counts": [
+    159,
+    6,
+    498,
+    12,
+    32,
+    698
+  ],
+  "prior_source_review_sha256": "764dcb1289337563156ab93907bb14456c1ecfa52ff63fc1a839089d3ab53dad",
+  "schema_version": 1,
+  "status": "REGISTRATION34_BARRIER_CANDIDATE_PENDING_ADDITIONAL_PAIR_OUTCOME",
+  "theorem_promotion": false
+}

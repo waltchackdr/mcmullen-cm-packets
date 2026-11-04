@@ -1,0 +1,75 @@
+"""Bounded samples of universal formulas; the human proof supplies generality."""
+import json
+from math import prod, isqrt
+
+
+def det_bareiss(a):
+    a = [row[:] for row in a]
+    sign, previous = 1, 1
+    for k in range(len(a)-1):
+        if a[k][k] == 0:
+            j = next(j for j in range(k+1, len(a)) if a[j][k])
+            a[k], a[j] = a[j], a[k]
+            sign *= -1
+        pivot = a[k][k]
+        for i in range(k+1, len(a)):
+            for j in range(k+1, len(a)):
+                numerator = a[i][j]*pivot-a[i][k]*a[k][j]
+                assert numerator % previous == 0
+                a[i][j] = numerator // previous
+            a[i][k] = 0
+        previous = pivot
+    return sign*a[-1][-1]
+
+
+def sample(p, q):
+    assert 2 < p < q
+    assert all(n % d for n in [p, q] for d in range(2, isqrt(n)+1))
+    # Multiplication by Phi_q modulo monic Phi_p, with integral coordinates.
+    columns = []
+    for k in range(p-1):
+        a = [0]*k+[1]*q
+        while len(a) >= p:
+            v = a[-1]
+            shift = len(a)-p
+            for j in range(p):
+                a[shift+j] -= v
+            a.pop()
+        columns.append(a+[0]*(p-1-len(a)))
+    resultant = det_bareiss([list(row) for row in zip(*columns)])
+    assert resultant == 1
+    g = (p-1)*(q-1)//2
+    ty = [1]*((p-2)*(q-1)//2)+[p]*((q-p)//2)+[p*q]*((p-1)//2)
+    assert len(ty) == g
+    assert all(b % a == 0 for a, b in zip(ty, ty[1:]))
+    assert 2*sum(x % p == 0 for x in ty) == q-1
+    assert 2*sum(x % q == 0 for x in ty) == p-1
+    degree = q**(p-1)*p**(q-1)
+    assert prod(ty)**2 == degree
+    m = p*q
+    norm = [0]*m
+    norm[0] = m
+    for j in range(q):
+        norm[p*j] -= p
+    for j in range(p):
+        norm[q*j] -= q
+    residual = [0]*m
+    for i, a in enumerate(norm):
+        for j, b in enumerate(norm):
+            residual[(i+j) % m] += a*b
+    residual = [a-m*b for a, b in zip(residual, norm)]
+    assert residual == [2*m]*m
+    assert norm == [norm[-i % m] for i in range(m)]
+    assert sum(residual) == 2*m*m
+    return {'p':p, 'q':q, 'dimension':g, 'type':ty, 'degree':degree,
+            'multiplication_determinant':resultant, 'least_denominator_from_type':ty[-1],
+            'full_group_ring_residual_coefficient':2*m}
+
+
+def check():
+    return {'status':'FINITE_REGRESSION_ONLY_NOT_UNIVERSAL_PROOF',
+            'samples':[sample(p,q) for p,q in [(3,5),(3,7),(5,7),(7,11)]]}
+
+
+if __name__ == '__main__':
+    print(json.dumps(check(),indent=2))

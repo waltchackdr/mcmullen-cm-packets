@@ -1,0 +1,27 @@
+{
+  "human_obligations": [
+    "global identification with C31 common lattice",
+    "explicit inverse-transpose stabilizer formulas",
+    "positive target normalization and principal RM group",
+    "identification of constructed map with C33 family, without literal Mostaed equality"
+  ],
+  "no_global_or_manuscript_edits": true,
+  "no_new_theorem_promotion": true,
+  "pins": {
+    "ASSESSMENT.md": "486a1068679d4d14fabb571edf8f5d9f2432f9d5504ad4e9bf4fcf02975a83de",
+    "EXPLICIT_MODEL.md": "cf9e7148ad18177b9d4b8a2ebe6edee4f04237c80728cd04c69c53c120871ff5",
+    "basis_attempt01_failure.json": "2002788724b5665468b124edce4c4173d5b0e900571c9921c46f5c5312020b2c",
+    "explicit_basis.json": "1eb7015345817d76bc948fe3108e6a7bbd3995e36eadf7af11949ba61fc4e6e0",
+    "explicit_basis.py": "5a2d123fd59f6ee2d9a1696c98900eed9200f25884268fda6ba757a0d71fee7f",
+    "source_hypotheses.json": "ca526db934d592d73e52e2c05d43ad75215e291c13ebc901a08e73b22c3eae9b"
+  },
+  "run": {
+    "cpu_limit_seconds": 20,
+    "elapsed_math_seconds": 0.48470220802119,
+    "result": "PASS",
+    "scope": "selected exact field/basis/trace/sign identities only",
+    "wall_limit_seconds": 30
+  },
+  "schema": "explicit-principal-model-preparation-v111-1",
+  "status": "PENDING_INDEPENDENT_REVIEW"
+}

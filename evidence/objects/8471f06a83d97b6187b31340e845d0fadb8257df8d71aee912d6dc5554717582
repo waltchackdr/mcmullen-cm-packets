@@ -1,0 +1,102 @@
+{
+  "actual_loader_record_validation": 10,
+  "archives": [
+    {
+      "bytes": 327680,
+      "files": 13,
+      "job": 0,
+      "unpack_snapshot_admission": "PASS"
+    },
+    {
+      "bytes": 327680,
+      "files": 13,
+      "job": 1,
+      "unpack_snapshot_admission": "PASS"
+    }
+  ],
+  "candidate_pins": 205,
+  "changed_worker_functions": [
+    "validate_plan",
+    "successful_results",
+    "main"
+  ],
+  "completion_negative_rejections": [
+    "missing_tau",
+    "unbound_source",
+    "modified_tau",
+    "bad_pivot",
+    "wrong_plan",
+    "wrong_period",
+    "bool_characteristic",
+    "bool_chi",
+    "bool_pair_index",
+    "bool_numerator",
+    "wrong_center",
+    "missing_enclosure",
+    "wrong_flag",
+    "false_finite",
+    "empty_argument",
+    "disjoint_argument",
+    "nan_duration",
+    "overlong_duration",
+    "extra_field",
+    "conclusion",
+    "original_data_free_input"
+  ],
+  "flint_imported": false,
+  "full_suite": false,
+  "jobs_executed_by_stub": 1,
+  "negative_plan_rejections": [
+    "job0/wrong_job",
+    "job0/wrong_target",
+    "job0/wrong_coordinates",
+    "job0/over_limit",
+    "job1/wrong_job",
+    "job1/wrong_target",
+    "job1/wrong_coordinates",
+    "job1/over_limit"
+  ],
+  "packet_pins": 14,
+  "pair_indices_per_target": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+  ],
+  "provider_calls": 0,
+  "queue_failure": "Complete job retention required",
+  "recovered_superseded_sources": {},
+  "selected_pairs": 80,
+  "status": "BLOCKING_FIVE_TASK_RETENTION_MISMATCH_REPRODUCED",
+  "targets": [
+    0,
+    1,
+    2,
+    3,
+    6,
+    12,
+    15,
+    17,
+    40,
+    91
+  ],
+  "theta_calls": 0,
+  "unexpected_missing_task_artifacts": [
+    "benchmark/task05/result.json",
+    "benchmark/task05/stderr.txt",
+    "benchmark/task05/stdout.jsonl",
+    "benchmark/task06/result.json",
+    "benchmark/task06/stderr.txt",
+    "benchmark/task06/stdout.jsonl",
+    "benchmark/task07/result.json",
+    "benchmark/task07/stderr.txt",
+    "benchmark/task07/stdout.jsonl"
+  ],
+  "valid_synthetic_finite_schema": true,
+  "valid_synthetic_nonfinite_schema": true,
+  "wall_seconds": 0.24462591600604355
+}

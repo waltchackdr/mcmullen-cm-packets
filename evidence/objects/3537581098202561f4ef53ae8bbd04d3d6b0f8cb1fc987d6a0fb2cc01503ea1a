@@ -1,0 +1,141 @@
+#!/usr/bin/env python3
+"""Separate bounded V109 regression registration and clean selected-input replay."""
+import argparse,contextlib,hashlib,importlib.util,io,json,os,resource,signal,stat,subprocess,sys,tempfile,time,unittest
+from pathlib import Path
+HERE=Path(__file__).resolve().parent;ROOT=HERE.parents[1]
+REG='experiments/integration_v110/regression_registration.json'
+RUNNER='experiments/integration_v110/regression_runner.py'
+TEST='tests/test_v109_reductions.py'
+WIT='experiments/all_eight_v109/positive_witnesses.json'
+METHODS=['test_independent_kernel_checker_rejects_inverse_corruption','test_joint_integer_kernel_and_source_domains_independent','test_positive_record_fixture_and_identity_multiset_rejections','test_retained_production_witnesses_exact_source_and_blocks','test_six_orbit_exact_identification_by_fractional_ages','test_witness_blocks_require_balance_and_explicit_split']
+IDS=['test_v109_reductions.V109Reductions.'+x for x in METHODS]
+BASE={TEST:'entrypoint',
+'experiments/six_orbit_v109/identification.json':'six-type finite payload',
+'experiments/fixed_field_cm_census_v98/primary.json':'canonical types',
+'experiments/all_eight_v109/review/independent_check.py':'independent lattice checker',
+'experiments/all_eight_v109/lattice.json':'integer kernel/inverse certificate',
+'experiments/all_eight_v109/source_manifest.json':'fixed source copies and cases',
+'experiments/mixed_triple_v102/primary.json':'reviewed synchronized C51 input',
+'experiments/all_eight_v109/validate_witness.py':'independent positive block/type validator',
+WIT:'portable actual positive production witnesses'}
+
+def need(ok,msg):
+    if not ok:raise ValueError(msg)
+def canonical(x):return (json.dumps(x,sort_keys=True,separators=(',',':'),allow_nan=False)+'\n').encode()
+def sha(raw):return hashlib.sha256(raw).hexdigest()
+def safe(base,name):
+    p=Path(name);need(p.as_posix()==name and not p.is_absolute() and '..' not in p.parts,'Unsafe relative path')
+    p=base/p
+    for a in (p,*p.parents):
+        if a==base:break
+        need(not a.is_symlink(),'Symlink input')
+    need(p.resolve().is_relative_to(base.resolve()),'Escaping path')
+    return p
+
+def pin(base,name):
+    p=safe(base,name);before=p.stat()
+    need(stat.S_ISREG(before.st_mode) and before.st_nlink==1 and not before.st_mode&0o7000,'Nonordinary input')
+    need(before.st_size<=8*1024*1024,'Oversized input')
+    raw=p.read_bytes();after=p.stat()
+    need((before.st_ino,before.st_size,before.st_mtime_ns,before.st_ctime_ns)==(after.st_ino,after.st_size,after.st_mtime_ns,after.st_ctime_ns),'Input changed during hash')
+    return {'sha256':sha(raw),'bytes':len(raw),'mode':format(stat.S_IMODE(before.st_mode),'04o')}
+
+def roles():
+    result=dict(BASE);w=json.loads((ROOT/WIT).read_text())
+    for p,h in w['validated_input_sha256'].items():
+        if p.startswith('experiments/'):
+            need(pin(ROOT,p)['sha256']==h,'Portable witness input drift')
+            result.setdefault(p,'raw file hash consumed by portable witness regression; not necessarily executed')
+    return result
+
+def prepare():
+    r=roles();pins={p:pin(ROOT,p) for p in sorted(r)}
+    need(len(pins)==14,'Direct input count changed')
+    data={'schema_version':1,'name':'V109 six-test mathematical regression registration',
+      'status':'SEPARATE_REGRESSION_REGISTRATION_NOT_THEOREM_PROOF_OR_RELEASE',
+      'entrypoint':TEST,'expected_test_ids':IDS,'expected_test_count':6,
+      'expected_captured_stdout':'','expected_captured_stderr':'','reject_skips_expected_failures_unexpected_successes':True,
+      'repository_inputs':pins,'input_roles':r,'runner_inputs':{RUNNER:pin(ROOT,RUNNER)},
+      'limits':{'cpu_seconds_per_process':20,'total_parent_wall_seconds':30,'child_timeout_seconds':25},
+      'command_template':['.venv/bin/python','-I','-B',RUNNER,'run','--registry-sha256','<independently reviewed registry SHA256>'],
+      'scope':'Six exact finite regressions including portable production partitions, independent lattice identities and negative fixtures. Static explicit repository closure, verified in a temporary selected-input stage.',
+      'human_steps_not_proved':['published full P21 input and Shioda hypotheses','actual isogenies and source-transfer correspondences','nonzero contraction/polarization and rational-descent proof','general target-variety geometry'],
+      'excluded_provenance_only':['original raw cloud task records and validation build paths named inside portable witness file','other nested references not opened by these tests'],
+      'runtime_closure':False,'full1405_replay':False,'frozen1405_registry_modified':False,'theorem_promotion':False,'release':False}
+    with (ROOT/REG).open('xb') as f:f.write(canonical(data))
+    print(json.dumps({'registry_sha256':sha(canonical(data)),'repository_inputs':len(pins),'runner_inputs':1}))
+
+def verify(base,registry):
+    for family in ('repository_inputs','runner_inputs'):
+        for p,wanted in registry[family].items():need(pin(base,p)==wanted,'Input hash/size/mode drift: '+p)
+
+def load(expected):
+    raw=(ROOT/REG).read_bytes();need(sha(raw)==expected,'External registry digest mismatch')
+    r=json.loads(raw)
+    need(r['entrypoint']==TEST and r['expected_test_ids']==IDS and r['expected_test_count']==6,'Fixed test contract mismatch')
+    need(len(r['repository_inputs'])==14 and set(r['runner_inputs'])=={RUNNER},'Input family contract mismatch')
+    need(set(r['repository_inputs'])==set(roles()),'Static direct input domain mismatch')
+    verify(ROOT,r);return r,raw
+
+def flatten(suite):
+    for t in suite:
+        if isinstance(t,unittest.TestSuite):yield from flatten(t)
+        else:yield t
+
+def worker(expected):
+    registry,raw=load(expected)
+    out,err=io.StringIO(),io.StringIO();start=time.monotonic()
+    with contextlib.redirect_stdout(out),contextlib.redirect_stderr(err):
+        spec=importlib.util.spec_from_file_location('test_v109_reductions',ROOT/TEST)
+        mod=importlib.util.module_from_spec(spec);spec.loader.exec_module(mod)
+        suite=unittest.defaultTestLoader.loadTestsFromModule(mod)
+        ids=[t.id() for t in flatten(suite)];need(ids==IDS,'Discovered test identity mismatch')
+        result=unittest.TestResult();suite.run(result)
+    verify(ROOT,registry);need((ROOT/REG).read_bytes()==raw,'Registry changed during worker')
+    need(result.testsRun==6 and not(result.failures or result.errors or result.skipped or result.expectedFailures or result.unexpectedSuccesses),'Test result not exact success')
+    need(out.getvalue()=='' and err.getvalue()=='','Unexpected test output')
+    return {'status':'PASS','test_ids':ids,'tests_run':6,'failures':0,'errors':0,'skips':0,'expected_failures':0,'unexpected_successes':0,
+       'elapsed_seconds':time.monotonic()-start,'pre_post_inputs_and_registry':'PASS','captured_stdout':'','captured_stderr':''}
+
+def run(expected):
+    registry,raw=load(expected);start=time.monotonic()
+    source_files=set(registry['repository_inputs'])|set(registry['runner_inputs'])
+    with tempfile.TemporaryDirectory(prefix='mcmullen-v109-regression-') as td:
+        stage=Path(td)
+        for p in sorted(source_files):
+            dst=stage/p;dst.parent.mkdir(parents=True,exist_ok=True)
+            with dst.open('xb') as f:f.write((ROOT/p).read_bytes())
+            os.chmod(dst,int((registry['repository_inputs']|registry['runner_inputs'])[p]['mode'],8))
+        (stage/REG).write_bytes(raw);verify(stage,registry)
+        command=[sys.executable,'-I','-B',str(stage/RUNNER),'worker','--registry-sha256',expected]
+        p=subprocess.run(command,cwd=stage,capture_output=True,text=True,timeout=25)
+        need(p.returncode==0,'Staged child failure: '+p.stderr[-2000:])
+        need(p.stderr=='','Unexpected child stderr')
+        child=json.loads(p.stdout);need(child['status']=='PASS' and child['test_ids']==IDS,'Invalid child receipt')
+        verify(stage,registry);need((stage/REG).read_bytes()==raw,'Staged registry drift')
+        actual={str(p.relative_to(stage)) for p in stage.rglob('*') if p.is_file()}
+        need(actual==source_files|{REG},'Unexpected staged file creation')
+    verify(ROOT,registry);need((ROOT/REG).read_bytes()==raw,'Original registry drift')
+    executable=Path(sys.executable).resolve()
+    return {'schema_version':1,'status':'PASS_SELECTED_STAGED_V109_REGRESSION','registry_sha256':expected,
+      'runner_sha256':pin(ROOT,RUNNER)['sha256'],'author_execution_not_independent_audit':True,'child':child,
+      'repository_inputs':14,'runner_inputs':1,'stage_file_count':16,'stage_exact_file_set':'PASS',
+      'original_and_stage_pre_post_pins':'PASS','elapsed_seconds':time.monotonic()-start,
+      'runtime_observation':{'python_version':sys.version,'invoked_executable':sys.executable,'resolved_executable':str(executable),
+          'resolved_executable_sha256':sha(executable.read_bytes()),'assertions_enabled':__debug__,'optimization':sys.flags.optimize},
+      'runtime_closure':False,'full1405_replay':False,'mathematical_human_proof_verified_by_tests':False,'release':False}
+
+def main():
+    if not __debug__ or sys.flags.optimize:raise RuntimeError('Assertions must remain enabled')
+    resource.setrlimit(resource.RLIMIT_CPU,(20,20))
+    def deadline(*_):raise TimeoutError('30-second wall deadline')
+    signal.signal(signal.SIGALRM,deadline);signal.alarm(30)
+    parser=argparse.ArgumentParser();sub=parser.add_subparsers(dest='action',required=True)
+    sub.add_parser('prepare')
+    for action in ('run','worker'):
+        p=sub.add_parser(action);p.add_argument('--registry-sha256',required=True)
+    args=parser.parse_args()
+    if args.action=='prepare':prepare()
+    else:print(json.dumps(worker(args.registry_sha256) if args.action=='worker' else run(args.registry_sha256),sort_keys=True,indent=2))
+
+if __name__=='__main__':main()

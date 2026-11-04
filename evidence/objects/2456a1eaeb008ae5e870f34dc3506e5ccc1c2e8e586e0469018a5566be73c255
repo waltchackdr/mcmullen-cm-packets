@@ -1,0 +1,7 @@
+{
+  "returncode": 0,
+  "seconds": 4.7445937499869615,
+  "cpu_limit_seconds": 20,
+  "wall_alarm_seconds": 30,
+  "status": "PASS"
+}

@@ -1,0 +1,26 @@
+"""Full small symplectic-space regression; geometry is a separate human proof."""
+import importlib.util
+from pathlib import Path
+import unittest
+
+spec = importlib.util.spec_from_file_location('all_quotients',
+    Path(__file__).resolve().parents[1] /
+    'experiments/fermat_all_quotients_v155/arithmetic_candidate.py')
+arithmetic = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(arithmetic)
+
+
+class AllPrincipalQuotients(unittest.TestCase):
+    def test_all_lagrangians_and_smaller_order_partition(self):
+        result = arithmetic.check()
+        self.assertEqual(result['all_dimension3_subspaces'], 33880)
+        self.assertEqual(result['lagrangian_count'], 1120)
+        self.assertEqual(result['real_subfield_stable_count'], 28)
+        self.assertEqual(result['order7_orbit_count'], 160)
+        self.assertEqual(result['real_stable_orbits'], 4)
+        self.assertEqual(result['other_orbits'], 156)
+        self.assertEqual(result['orbit_sizes'], [7])
+
+
+if __name__ == '__main__':
+    unittest.main()

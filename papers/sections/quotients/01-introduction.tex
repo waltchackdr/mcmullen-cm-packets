@@ -1,0 +1,107 @@
+% !TeX root = ../../quotients-and-descent.tex
+\section{Introduction}
+This paper asks an integral question within one complex CM isogeny class:
+which quotients of a fixed sixfold admit principal polarizations, and over
+which fields can the quotients and their polarizations be defined? A
+rational Hodge-algebraicity theorem does not answer either question.
+The starting variety is defined from a curve, independently of any
+Hilbert-modular packet.
+
+Let $H$ be the smooth projective model of $y^2=x^{21}-1$. Its primitive
+$\Phi_{21}$ factor $A\subset J(H)$ is six-dimensional and has full
+endomorphism ring $\mathcal O_M$, where $M=\mathbb Q(\zeta_{21})$.
+We keep this actual embedded factor distinct from isogenous principal
+models. Its restricted Jacobian polarization has degree $35721$, whereas
+its minimum polarization has degree $729$ and type $(1,1,1,3,3,3)$.
+
+\subsection{The finite family and the equivalence relations}
+Fix the minimum polarization $\lambda_{\min}$ and write its kernel as
+$A[\pi]\simeq\mathbb F_3^6$, with the notation made explicit below.
+The family consists of $A$ and all quotients $A/H_0$ for subgroups
+$H_0\subset A[\pi]$ of order $27$. All isomorphisms preserve the origin.
+An underlying class forgets the polarization; a polarized class retains
+it but forgets CM and RM markings. A kernel is a subgroup of the fixed
+source, not a target isomorphism class. These distinctions account for the
+different counts in the following summary.
+
+\begin{center}
+\begin{tabular}{lr}
+\toprule
+Object being counted & Number\\\midrule
+Order-$27$ subgroups of the fixed source kernel & $33880$\\
+Underlying quotient classes (excluding $A$) & $188$\\
+Underlying classes including $A$ & $189$\\
+Principalizable underlying quotients & $80$\\
+Principal polarized quotient classes & $160$\\
+Nonprincipalizable underlying quotients & $108$\\
+Minimum polarized classes including $A$ & $2969$\\\bottomrule
+\end{tabular}
+\end{center}
+The last number is $1+160+108\cdot26$. The source contributes its unique
+minimum polarization, and each obstructed quotient contributes $26$.
+Fixing the pullback form gives $1120$ principal-target kernels; allowing
+all minimum pullback forms gives $14224$. Neither number counts all
+$33880$ order-$27$ subgroups as principal-target kernels.
+
+\subsection{Main results and proof route}
+Theorem~\ref{pp:thm:fermatallquotients} classifies the principal targets;
+Theorem~\ref{pp:thm:fermatunderlying} forgets the polarizations and identifies
+the obstruction; Theorem~\ref{pp:thm:obstructedminimum} determines the
+minimum forms on the remaining $108$ varieties. Their proofs pass from
+integral lattices to finite residue subspaces and distinguish the relevant
+unit actions before taking orbits.
+
+The Galois action then determines fields of moduli, but a fixed isomorphism
+class need not descend. Put
+\[
+ \mathcal E=M\bigl(\sqrt{(3+\sqrt{21})/2}\bigr).
+\]
+Theorem~\ref{pp:thm:quotientdefinitionfield} proves that for number fields $M\subseteq F\subset\overline{\mathbb Q}$, any one of the $188$ quotient classes has an $F$-model
+exactly when $F$ contains $\mathcal E$. A single twist makes all subgroup
+kernels and quotient maps available over $\mathcal E$. Thus the common
+field-of-moduli computation and the actual defining-field construction
+are distinct stages of the argument.
+Theorem~\ref{pp:thm:definitiondegrees} gives sharp absolute degrees for
+$168$ quotient classes and lower bounds for the other $20$.
+
+The final geometric section treats Jacobians. It distinguishes the
+restricted ten-class principal census with $R$-containment from the $156$
+principal classes with smaller endomorphism order $S$. The former has
+exactly one canonical Jacobian under the stated enclosure and execution
+contract. The latter $156$ statuses remain open.
+
+\subsection{Arithmetic inputs and relation to other work}
+Write $z=\zeta_{42}=-\zeta_{21}^{11}$, $t=z+z^{-1}$, $L=M^+$ and
+\[
+ f(T)=T^6+T^5-6T^4-6T^3+8T^2+8T+1,\qquad
+ \mathfrak P=(1-z^{14})\mathcal O_M,
+ \quad R=\mathcal O_L+\mathfrak P,\quad S=\mathbb Z+\mathfrak P.
+\]
+Here $\mathfrak P$ is the prime over $3$; its residue field is
+$\mathbb F_{729}$ and $R/\mathfrak P=\mathbb F_{27}$. The letter $\pi$
+below is $1-z^{14}$, a generator of $\mathfrak P$ in $M$. It is \emph{not} the norm-$43$ generator of
+Paper I. We use $K=\mathbb Q(\sqrt{-3})$ for the Weil action.
+Write $E_L=\mathcal O_L^\times$ and let $E_L^+$ denote its subgroup
+of totally positive units.
+
+The imported arithmetic inputs are the ideal classification and marked
+polarization classification of Paper I, Propositions~\externalref{packet}{pp:prop:picardorder},
+\externalref{packet}{pp:prop:idealclassmonoid} and~\externalref{packet}{pp:prop:markedpolarizations},
+and the unit-norm theorem in the supplement. They are established without
+using this quotient family. The notations $B_0,B_1,C_0,C_1$ mean the two
+principal-polarization classes on each of the two $R$-ideal models in the
+B/C CM-type orbit; Paper I identifies them with its principal curve fibers.
+The quotient construction here needs their arithmetic classification, not
+that curve placement. The type representatives are
+$\Phi_B=\{1,5,23,25,29,31\}$ and
+$\Phi_C=\{1,5,11,13,17,19\}$; $\Phi_0=\Phi_C$.
+
+Goodson and Saller discuss the rational CM-type/Fermat comparison
+\cite{Goodson2024,Saller2026}. The general CM Hodge assertion in
+\cite{OpenAICM2026}, if valid, concerns algebraicity of rational classes;
+it does not itself provide the integral census or descent data here.
+The existence of individual models must also be compared with classical
+CM descent, including Milne's correction and addendum
+\cite{MilneModuli1972,MilneModuli1974}. Our explicit simultaneous twist,
+field obstruction and finite tables are distinguished from that existence
+question. These comparisons are not a certification of historical priority.

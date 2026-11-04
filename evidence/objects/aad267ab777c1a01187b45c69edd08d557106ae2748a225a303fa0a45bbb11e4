@@ -1,0 +1,15 @@
+{
+  "aggregate_pass": false,
+  "all_snapshot_and_dispatch_file_seals_verified": true,
+  "archive_bytes": 652341116,
+  "archive_sha256": "a1da7ab9ec1fbc93946193984c62d2203f773f409e31ed2647dbec7043173eee",
+  "observed_epoch": 1791847726.3250408,
+  "schema_version": 1,
+  "snapshot_cpu_seconds": 52.874523999999994,
+  "snapshot_dispatch_sha256": "597c0b472903e1fea0279a192dad23db4cb5e7194ed955f8a116bfc669fa630e",
+  "snapshot_provenance_sha256": "da91eb759ea203fa3c40b722ac493e296412f74da3dabb93e242aee1b17beec4",
+  "snapshot_retrieval_sha256": "4c91f81306032b5bc4c0fe6ef622a05ce3d4d2bacf52dfacacc0c11424e9ab45",
+  "snapshot_wall_seconds": 850.8472283259034,
+  "status": "COMPLETE_RAW_V82_BACKUP_AND_SNAPSHOT_POSTGUARDS_RETRIEVED_NOT_AGGREGATE_PASS",
+  "theorem_promotion": false
+}

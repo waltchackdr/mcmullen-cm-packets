@@ -1,0 +1,62 @@
+"""Prepare a fresh immutable two-job audit/period packet; never authorize it."""
+from pathlib import Path
+import argparse,copy,hashlib,io,json,tarfile
+ROOT=Path(__file__).resolve().parents[2]
+def raw(p):return (ROOT/p).read_bytes()
+def sha(b):return hashlib.sha256(b).hexdigest()
+def ref(p):
+ b=raw(p);return {'path':p,'sha256':sha(b),'bytes':len(b)}
+def write(p,d,canonical=False):
+ target=ROOT/p;target.parent.mkdir(parents=True,exist_ok=True)
+ target.write_text(json.dumps(d,sort_keys=True,**({} if canonical else {'indent':2}))+'\n')
+p=argparse.ArgumentParser();p.add_argument('--output',required=True);args=p.parse_args();base=args.output
+assert base.startswith('build/s-order-v162/') and '..' not in Path(base).parts and not (ROOT/base).exists()
+old=json.loads(raw('experiments/s_order_census_v162/execution_authority01.json'));oldpacket=json.loads(raw(old['jobs'][0]['path']))
+common=['experiments/s_order_models_v161/model.json','experiments/s_order_models_v161/adoption.json',
+ 'experiments/s_order_models_v161/catalog_candidate.json','experiments/s_order_census_v162/review.json',
+ 'build/s-order-v162/models01/compact_inventory.json','experiments/s_order_census_v162/referee_data_checker.py',
+ 'experiments/s_order_census_v162/period_recon_candidate.py','experiments/s_order_census_v162/period_interval_candidate.py',
+ 'experiments/s_order_census_v162/postprocess_candidate.py','experiments/bc_jacobian_v147/exact_ball_candidate.py',
+ 'experiments/bc_jacobian_v147/remote_wheels.json']
+compact=json.loads(raw('build/s-order-v162/models01/compact_inventory.json'))
+inspection=json.loads(raw(compact['parent_inspection']['path']));assert sha(raw(compact['parent_inspection']['path']))==compact['parent_inspection']['sha256']
+assert compact['models']==inspection['models']
+packets=[];manifests=[];mappings=[]
+for job in (0,1):
+ folder=f'{base}/job{job}';mapping={p:p for p in common}
+ mapping['experiments/bc_jacobian_v147/certificate_worker_candidate.py']='experiments/s_order_census_v162/postprocess_worker_candidate.py'
+ for task in range(8):
+  item=compact['models'][80*job+10*task]
+  source=f"build/s-order-v162/session_run02/controller/jobs/job{job}/controller/retained/blobs/{item['stdout_sha256']}.blob"
+  assert sha(raw(source))==item['stdout_sha256']
+  mapping[f'experiments/s_order_census_v162/inputs/chunk{8*job+task:02d}.jsonl']=source
+ plan={'scope':'Exact model audits plus candidate period coordinates/enclosures; no theta','job_index':job,'concurrency':2,'max_tasks':8,
+       'pins':{v:sha(raw(p)) for v,p in mapping.items()},
+       'tasks':[{'start':80*job+10*i,'count':10,'max_cpu_seconds':120,'child_wall_seconds':150,'parent_kill_seconds':160} for i in range(8)]}
+ pp=f'{folder}/certificate_plan_candidate.json';write(pp,plan)
+ contents={v:raw(p) for v,p in mapping.items()};contents['experiments/bc_jacobian_v147/certificate_plan_candidate.json']=raw(pp)
+ archive=io.BytesIO()
+ with tarfile.open(fileobj=archive,mode='w',format=tarfile.USTAR_FORMAT) as tar:
+  for name,b in sorted(contents.items()):
+   info=tarfile.TarInfo(name);info.size=len(b);info.mode=0o444;info.mtime=0;info.uid=info.gid=0;info.uname=info.gname='';tar.addfile(info,io.BytesIO(b))
+ data=archive.getvalue();assert len(data)<=2*1024**2 and len(contents)<=64
+ (ROOT/folder/'source.tar').write_bytes(data)
+ scope=f'Job{job}: independent model audit and period candidates for indices{80*job}..{80*job+79}; no theta'
+ manifest={'scope':scope,'archive_sha256':sha(data),'plan_sha256':sha(raw(pp)),'files':{n:{'sha256':sha(b),'bytes':len(b)} for n,b in contents.items()}}
+ mf=f'{folder}/source_manifest.json';write(mf,manifest)
+ uploads={'pipeline':ref('experiments/s_order_census_v162/pipeline_candidate.py'),'selector':oldpacket['uploads']['selector'],'setup':oldpacket['uploads']['setup'],'source_tar':ref(f'{folder}/source.tar'),'source_manifest':ref(mf)}
+ jm=f'{folder}/job_manifest.json';jobmanifest={'image':json.loads(raw(oldpacket['code']['job_manifest.json']['path']))['image'],'scope':scope,
+ 'transport':{'blobs':{n:{'sha256':v['sha256'],'bytes':v['bytes']} for n,v in uploads.items()},'plan_sha256':manifest['plan_sha256']}}
+ write(jm,jobmanifest,True);code=copy.deepcopy(oldpacket['code']);code['job_manifest.json']=ref(jm)
+ packet={'scope':scope,'code':code,'uploads':uploads,'source_mapping':mapping}
+ ep=f'{folder}/execution_packet.json';write(ep,packet);packets.append(ref(ep));manifests.append(jobmanifest);mappings.append(mapping)
+sm=f'{base}/session_manifest.json';write(sm,{'version':1,'jobs':manifests},True)
+a=copy.deepcopy(old);a['baseline_model_execution_authority']=ref('experiments/s_order_census_v162/execution_authority01.json')
+a['baseline_model_review']=a.pop('independent_review');a['baseline_model_candidate']=a.pop('candidate')
+a['status']='CANDIDATE_V162_POSTPROCESS_NOT_AUTHORIZED';a['jobs']=packets;a['session_manifest']=ref(sm);a['bootstrap_code']['job_manifest.json']=ref(sm)
+a['scope']='Two model-audit/period-candidate jobs,80+80, no theta. Changed mathematical producer and worker command/status require review. Same1200/1500sec lifecycle and0.50reservation/0.35hourcap. No execution or data adoption.'
+paths=set(p for mapping in mappings for p in mapping.values())
+paths|={'experiments/s_order_census_v162/prepare_postprocess_candidate.py','experiments/s_order_census_v162/NEXT_PERIOD_INTERFACE.md','tests/test_s_order_period_recon_v162.py','tests/test_s_order_postprocess_worker_v162.py','build/s-order-v162/period_smoke02.json',compact['parent_inspection']['path'],'experiments/s_order_census_v162/inspect_retained_candidate.py'}
+paths|={str(p.relative_to(ROOT)) for p in (ROOT/base).rglob('*') if p.is_file()}
+a['pins'].update({p:sha(raw(p)) for p in paths});write(f'{base}/execution_candidate.json',a)
+print(json.dumps({'candidate':f'{base}/execution_candidate.json','candidate_sha256':sha(raw(f'{base}/execution_candidate.json')),'archive_bytes':[len(raw(f'{base}/job{j}/source.tar')) for j in (0,1)],'source_files_per_job':len(contents),'status':a['status']}))

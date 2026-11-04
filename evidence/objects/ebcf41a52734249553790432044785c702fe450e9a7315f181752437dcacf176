@@ -1,0 +1,11 @@
+{
+  "status": "LOCAL_IDEMPOTENT_RECOVERY_DELTA_ONLY",
+  "candidate_sha256": "a0e4ea02705dea987c05efb547c1f1c368f532db4b334f0b310e6a9d257a2433",
+  "job_function_ast_unchanged": true,
+  "controller_changed_functions": [
+    "main"
+  ],
+  "remote05_archives_unchanged": true,
+  "tests": "14PASS0.000seconds, synthetic only",
+  "source_ancestry": "06 accepted local helper,05 accepted remote loader, same original resource lifecycle"
+}

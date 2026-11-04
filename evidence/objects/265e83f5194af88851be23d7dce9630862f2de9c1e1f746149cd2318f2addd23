@@ -1,0 +1,30 @@
+{
+  "accepted_substantive_review": {
+    "path": "experiments/continuous_v82_review/focused_citation_application_review.json",
+    "sha256": "80e90bdd08e42691c330b52db8909cc5e2a54d21eb4b154a88091e3ffa786d8a"
+  },
+  "exact_replacements": [
+    [
+      "$\\mathrm{Cl}$\\mathcal O_M$=1$",
+      "$\\mathrm{Cl}(\\mathcal O_M)=1$"
+    ],
+    [
+      "(I\\bar I=$u$=\\mathcal O_M)",
+      "$I\\bar I=(u)=\\mathcal O_M$"
+    ],
+    [
+      "(H^2(A,\\mathbf Q)\\cap H^{1,1}$A$)",
+      "$H^2(A,\\mathbf Q)\\cap H^{1,1}(A)$"
+    ],
+    [
+      "(H^2(A,\\mathcal O_A)=H^{0,2}$A$)",
+      "$H^2(A,\\mathcal O_A)=H^{0,2}(A)$"
+    ]
+  ],
+  "mathematical_argument_changed": false,
+  "new_path": "APPLICATION-format02.md",
+  "new_sha256": "64cdf2770ddd3d40979b29e1b6a0749bc6fdb0de9ea2189c68b1d8133de61622",
+  "old_path": "APPLICATION.md",
+  "old_sha256": "44b184b611e441a2164dc67e22bc76426866aae12956498c51580a718ca87579",
+  "status": "PROSE_ONLY_FOUR_MATH_DELIMITER_REPAIRS"
+}

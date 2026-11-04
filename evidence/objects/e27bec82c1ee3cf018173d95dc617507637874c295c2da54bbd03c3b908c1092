@@ -1,0 +1,20 @@
+{
+  "status": "PASS_REGRESSION_NOT_GENERAL_PROOF",
+  "balanced_blocks": {
+    "levels": {
+      "0": 261,
+      "1": 234,
+      "2": 234
+    },
+    "real_gauss_sum": 27
+  },
+  "unbalanced_blocks": {
+    "levels": {
+      "0": 225,
+      "1": 252,
+      "2": 252
+    },
+    "real_gauss_sum": -27
+  },
+  "S_target_evaluations": 0
+}

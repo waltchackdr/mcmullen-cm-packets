@@ -1,0 +1,8 @@
+{
+  "returncode": 0,
+  "seconds": 4.727784999995492,
+  "cpu_limit_seconds": 20,
+  "wall_alarm_seconds": 30,
+  "status": "PASS",
+  "scope": "Installed C60 full two-path regression only"
+}

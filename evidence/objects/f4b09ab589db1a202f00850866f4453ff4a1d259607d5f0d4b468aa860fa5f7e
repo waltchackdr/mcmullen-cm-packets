@@ -1,0 +1,46 @@
+"""Synthetic exact records: structure checks only, never theta evidence."""
+from pathlib import Path
+import sys,json,hashlib,copy,unittest
+R=Path(__file__).resolve().parents[1]/'experiments/bc_jacobian_v147';sys.path.insert(0,str(R))
+import certificate_reader_candidate as reader
+
+def part(m=0,r=0):return {'mid':[m,0],'rad':[r,0]}
+def ball(re=0,im=0,r=0):return {'real':part(re,r),'imag':part(im,r)}
+
+class Tests(unittest.TestCase):
+    def setUp(self):
+        self.plan=json.loads((R/'certificate_plan_candidate.json').read_text());self.task=self.plan['tasks'][0]
+        t=self.task;idx=t['characteristic_index']
+        names=['interval_periods.py','prepare_periods.py','period_setup.json','reduced_periods.json','reduced_fixed_pairs.json','remote_certificate_candidate.py','certificate_worker_candidate.py','exact_ball_candidate.py']
+        first={'stage':'EXACT_PERIOD_INPUT','model':t['model'],'task_index':0,'plan_sha256':'fixture',
+               'characteristic_index':idx,'chi':[(idx>>i)&1 for i in range(11,-1,-1)],'precision_bits':96,
+               'source_sha256':{n:self.plan['pins']['experiments/bc_jacobian_v147/'+n] for n in names},
+               'tau':[[ball(0,int(i==j)) for j in range(6)] for i in range(6)]}
+        h=hashlib.sha256(json.dumps(first,sort_keys=True).encode()).hexdigest();self.records=[first]
+        for i,v in zip(t['pair_indices'],t['numerators_mod3']):
+            self.records.append({'stage':'EXACT_THETA_OBSERVATION','model':t['model'],'task_index':0,
+                'pair_index':i,'input_sha256':h,'numerator_mod3':v,'centered_lift':[x if x<=1 else x-3 for x in v],
+                'characteristic_index':idx,'precision_bits':96,'quantity':'theta_characteristic_squared',
+                'argument':[ball(r=100) for _ in range(6)],'finite':True,'enclosure':ball(1),
+                'excludes_zero':True})
+        self.records.append({'stage':'BATCH_COMPLETE','model':t['model'],'task_index':0,'pair_indices':t['pair_indices']})
+    def check(self):return reader.check_records(self.records,self.plan,0,'fixture')
+    def test_complete_and_partial_distinguished(self):
+        self.assertTrue(self.check()['complete'])
+        self.records=self.records[:3];self.assertFalse(self.check()['complete'])
+    def test_input_hash_duplicate_and_false_flags_rejected(self):
+        original=copy.deepcopy(self.records)
+        for key,value in [('input_sha256','wrong'),('pair_index',7),('excludes_zero',False)]:
+            self.records=copy.deepcopy(original);self.records[1][key]=value
+            with self.subTest(key=key):
+                with self.assertRaises(ValueError):self.check()
+    def test_wrong_argument_and_incomplete_final_rejected(self):
+        original=copy.deepcopy(self.records);self.records[1]['argument']=[ball() for _ in range(6)]
+        with self.assertRaises(ValueError):self.check()
+        self.records=original[:2]+original[-1:]
+        with self.assertRaises(ValueError):self.check()
+    def test_nonfinite_is_observation_not_nonzero(self):
+        self.records[1].update(finite=False,enclosure=None,excludes_zero=False)
+        self.assertNotIn(0,self.check()['nonzero_reported_and_rationally_checked'])
+
+if __name__=='__main__':unittest.main()

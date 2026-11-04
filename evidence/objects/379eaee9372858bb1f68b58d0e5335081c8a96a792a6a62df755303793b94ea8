@@ -1,0 +1,35 @@
+{
+  "all_four_Frobenius_lifts_have_order": 6,
+  "center_order": 6,
+  "commutator_exponents_mod52": [
+    [
+      0,
+      0
+    ],
+    [
+      26,
+      0
+    ]
+  ],
+  "element_order_counts": {
+    "1": 1,
+    "2": 5,
+    "3": 2,
+    "4": 2,
+    "6": 10,
+    "12": 4
+  },
+  "fiber_size": 26,
+  "freeness_field_degrees": {
+    "4": 2,
+    "7": 6,
+    "28": 6
+  },
+  "group_order": 24,
+  "method": "Independent cyclic-exponent realization of semilinear similitudes modulo U14; no producer imports or permutation data",
+  "minimum_classes": 2808,
+  "pairs_per_fiber": 13,
+  "status": "PASS",
+  "trace_zero_coefficient_exponents_checked": 26,
+  "wall_seconds": 0.1266469580004923
+}

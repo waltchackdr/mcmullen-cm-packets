@@ -1,0 +1,989 @@
+{
+  "approval_sha256": "1a29c08107be9826d461f2e6c5b02316096191050653f9f0065e5992067d1632",
+  "full_release": false,
+  "legacy159_pass": false,
+  "original_completed_commands": 150,
+  "prior_state_sha256": "0da82aebdf83bc8eaa73cb5eee07b02655e6e77f79cba4894a0525df0514c921",
+  "required_recovery_jobs": 65,
+  "rows": [
+    {
+      "argv": [
+        "/opt/v81-runtime/cohort.i8xmfN8X/venv/bin/python",
+        "/workspace/v81-release159-source-cohort1/independent/d7_r41_sturm_v63.py",
+        "--masks",
+        "8"
+      ],
+      "backend": "sturm",
+      "family": "R41",
+      "key": "r41-sturm-08",
+      "mask": 8,
+      "original_index": 118,
+      "status": "PENDING"
+    },
+    {
+      "argv": [
+        "/opt/v81-runtime/cohort.i8xmfN8X/venv/bin/python",
+        "/workspace/v81-release159-source-cohort1/certificates/d7_r83_principal_v55.py",
+        "--masks",
+        "0"
+      ],
+      "backend": "primary",
+      "family": "R83",
+      "key": "r83-0-00",
+      "mask": 0,
+      "original_index": 48,
+      "status": "PENDING"
+    },
+    {
+      "argv": [
+        "/opt/v81-runtime/cohort.i8xmfN8X/venv/bin/python",
+        "/workspace/v81-release159-source-cohort1/independent/d7_r83_principal_sturm_v55.py",
+        "--masks",
+        "0",
+        "--mode",
+        "enumerate"
+      ],
+      "backend": "sturm",
+      "family": "R83",
+      "key": "r83-1-00",
+      "mask": 0,
+      "original_index": 52,
+      "status": "PENDING"
+    },
+    {
+      "argv": [
+        "/opt/v81-runtime/cohort.i8xmfN8X/venv/bin/python",
+        "/workspace/v81-release159-source-cohort1/certificates/d7_r83_principal_v55.py",
+        "--masks",
+        "1"
+      ],
+      "backend": "primary",
+      "family": "R83",
+      "key": "r83-0-01",
+      "mask": 1,
+      "original_index": 48,
+      "status": "PENDING"
+    },
+    {
+      "argv": [
+        "/opt/v81-runtime/cohort.i8xmfN8X/venv/bin/python",
+        "/workspace/v81-release159-source-cohort1/independent/d7_r83_principal_sturm_v55.py",
+        "--masks",
+        "1",
+        "--mode",
+        "enumerate"
+      ],
+      "backend": "sturm",
+      "family": "R83",
+      "key": "r83-1-01",
+      "mask": 1,
+      "original_index": 52,
+      "status": "PENDING"
+    },
+    {
+      "argv": [
+        "/opt/v81-runtime/cohort.i8xmfN8X/venv/bin/python",
+        "/workspace/v81-release159-source-cohort1/certificates/d7_r83_principal_v55.py",
+        "--masks",
+        "2"
+      ],
+      "backend": "primary",
+      "family": "R83",
+      "key": "r83-0-02",
+      "mask": 2,
+      "original_index": 48,
+      "status": "PENDING"
+    },
+    {
+      "argv": [
+        "/opt/v81-runtime/cohort.i8xmfN8X/venv/bin/python",
+        "/workspace/v81-release159-source-cohort1/independent/d7_r83_principal_sturm_v55.py",
+        "--masks",
+        "2",
+        "--mode",
+        "enumerate"
+      ],
+      "backend": "sturm",
+      "family": "R83",
+      "key": "r83-1-02",
+      "mask": 2,
+      "original_index": 52,
+      "status": "PENDING"
+    },
+    {
+      "argv": [
+        "/opt/v81-runtime/cohort.i8xmfN8X/venv/bin/python",
+        "/workspace/v81-release159-source-cohort1/certificates/d7_r83_principal_v55.py",
+        "--masks",
+        "3"
+      ],
+      "backend": "primary",
+      "family": "R83",
+      "key": "r83-0-03",
+      "mask": 3,
+      "original_index": 48,
+      "status": "PENDING"
+    },
+    {
+      "argv": [
+        "/opt/v81-runtime/cohort.i8xmfN8X/venv/bin/python",
+        "/workspace/v81-release159-source-cohort1/independent/d7_r83_principal_sturm_v55.py",
+        "--masks",
+        "3",
+        "--mode",
+        "enumerate"
+      ],
+      "backend": "sturm",
+      "family": "R83",
+      "key": "r83-1-03",
+      "mask": 3,
+      "original_index": 52,
+      "status": "PENDING"
+    },
+    {
+      "argv": [
+        "/opt/v81-runtime/cohort.i8xmfN8X/venv/bin/python",
+        "/workspace/v81-release159-source-cohort1/certificates/d7_r83_principal_v55.py",
+        "--masks",
+        "4"
+      ],
+      "backend": "primary",
+      "family": "R83",
+      "key": "r83-0-04",
+      "mask": 4,
+      "original_index": 48,
+      "status": "PENDING"
+    },
+    {
+      "argv": [
+        "/opt/v81-runtime/cohort.i8xmfN8X/venv/bin/python",
+        "/workspace/v81-release159-source-cohort1/independent/d7_r83_principal_sturm_v55.py",
+        "--masks",
+        "4",
+        "--mode",
+        "enumerate"
+      ],
+      "backend": "sturm",
+      "family": "R83",
+      "key": "r83-1-04",
+      "mask": 4,
+      "original_index": 52,
+      "status": "PENDING"
+    },
+    {
+      "argv": [
+        "/opt/v81-runtime/cohort.i8xmfN8X/venv/bin/python",
+        "/workspace/v81-release159-source-cohort1/certificates/d7_r83_principal_v55.py",
+        "--masks",
+        "5"
+      ],
+      "backend": "primary",
+      "family": "R83",
+      "key": "r83-0-05",
+      "mask": 5,
+      "original_index": 48,
+      "status": "PENDING"
+    },
+    {
+      "argv": [
+        "/opt/v81-runtime/cohort.i8xmfN8X/venv/bin/python",
+        "/workspace/v81-release159-source-cohort1/independent/d7_r83_principal_sturm_v55.py",
+        "--masks",
+        "5",
+        "--mode",
+        "enumerate"
+      ],
+      "backend": "sturm",
+      "family": "R83",
+      "key": "r83-1-05",
+      "mask": 5,
+      "original_index": 52,
+      "status": "PENDING"
+    },
+    {
+      "argv": [
+        "/opt/v81-runtime/cohort.i8xmfN8X/venv/bin/python",
+        "/workspace/v81-release159-source-cohort1/certificates/d7_r83_principal_v55.py",
+        "--masks",
+        "6"
+      ],
+      "backend": "primary",
+      "family": "R83",
+      "key": "r83-0-06",
+      "mask": 6,
+      "original_index": 48,
+      "status": "PENDING"
+    },
+    {
+      "argv": [
+        "/opt/v81-runtime/cohort.i8xmfN8X/venv/bin/python",
+        "/workspace/v81-release159-source-cohort1/independent/d7_r83_principal_sturm_v55.py",
+        "--masks",
+        "6",
+        "--mode",
+        "enumerate"
+      ],
+      "backend": "sturm",
+      "family": "R83",
+      "key": "r83-1-06",
+      "mask": 6,
+      "original_index": 52,
+      "status": "PENDING"
+    },
+    {
+      "argv": [
+        "/opt/v81-runtime/cohort.i8xmfN8X/venv/bin/python",
+        "/workspace/v81-release159-source-cohort1/certificates/d7_r83_principal_v55.py",
+        "--masks",
+        "7"
+      ],
+      "backend": "primary",
+      "family": "R83",
+      "key": "r83-0-07",
+      "mask": 7,
+      "original_index": 48,
+      "status": "PENDING"
+    },
+    {
+      "argv": [
+        "/opt/v81-runtime/cohort.i8xmfN8X/venv/bin/python",
+        "/workspace/v81-release159-source-cohort1/independent/d7_r83_principal_sturm_v55.py",
+        "--masks",
+        "7",
+        "--mode",
+        "enumerate"
+      ],
+      "backend": "sturm",
+      "family": "R83",
+      "key": "r83-1-07",
+      "mask": 7,
+      "original_index": 52,
+      "status": "PENDING"
+    },
+    {
+      "argv": [
+        "/opt/v81-runtime/cohort.i8xmfN8X/venv/bin/python",
+        "/workspace/v81-release159-source-cohort1/certificates/d7_r83_principal_v55.py",
+        "--masks",
+        "8"
+      ],
+      "backend": "primary",
+      "family": "R83",
+      "key": "r83-0-08",
+      "mask": 8,
+      "original_index": 49,
+      "status": "PENDING"
+    },
+    {
+      "argv": [
+        "/opt/v81-runtime/cohort.i8xmfN8X/venv/bin/python",
+        "/workspace/v81-release159-source-cohort1/independent/d7_r83_principal_sturm_v55.py",
+        "--masks",
+        "8",
+        "--mode",
+        "enumerate"
+      ],
+      "backend": "sturm",
+      "family": "R83",
+      "key": "r83-1-08",
+      "mask": 8,
+      "original_index": 53,
+      "status": "PENDING"
+    },
+    {
+      "argv": [
+        "/opt/v81-runtime/cohort.i8xmfN8X/venv/bin/python",
+        "/workspace/v81-release159-source-cohort1/certificates/d7_r83_principal_v55.py",
+        "--masks",
+        "9"
+      ],
+      "backend": "primary",
+      "family": "R83",
+      "key": "r83-0-09",
+      "mask": 9,
+      "original_index": 49,
+      "status": "PENDING"
+    },
+    {
+      "argv": [
+        "/opt/v81-runtime/cohort.i8xmfN8X/venv/bin/python",
+        "/workspace/v81-release159-source-cohort1/independent/d7_r83_principal_sturm_v55.py",
+        "--masks",
+        "9",
+        "--mode",
+        "enumerate"
+      ],
+      "backend": "sturm",
+      "family": "R83",
+      "key": "r83-1-09",
+      "mask": 9,
+      "original_index": 53,
+      "status": "PENDING"
+    },
+    {
+      "argv": [
+        "/opt/v81-runtime/cohort.i8xmfN8X/venv/bin/python",
+        "/workspace/v81-release159-source-cohort1/certificates/d7_r83_principal_v55.py",
+        "--masks",
+        "10"
+      ],
+      "backend": "primary",
+      "family": "R83",
+      "key": "r83-0-10",
+      "mask": 10,
+      "original_index": 49,
+      "status": "PENDING"
+    },
+    {
+      "argv": [
+        "/opt/v81-runtime/cohort.i8xmfN8X/venv/bin/python",
+        "/workspace/v81-release159-source-cohort1/independent/d7_r83_principal_sturm_v55.py",
+        "--masks",
+        "10",
+        "--mode",
+        "enumerate"
+      ],
+      "backend": "sturm",
+      "family": "R83",
+      "key": "r83-1-10",
+      "mask": 10,
+      "original_index": 53,
+      "status": "PENDING"
+    },
+    {
+      "argv": [
+        "/opt/v81-runtime/cohort.i8xmfN8X/venv/bin/python",
+        "/workspace/v81-release159-source-cohort1/certificates/d7_r83_principal_v55.py",
+        "--masks",
+        "11"
+      ],
+      "backend": "primary",
+      "family": "R83",
+      "key": "r83-0-11",
+      "mask": 11,
+      "original_index": 49,
+      "status": "PENDING"
+    },
+    {
+      "argv": [
+        "/opt/v81-runtime/cohort.i8xmfN8X/venv/bin/python",
+        "/workspace/v81-release159-source-cohort1/independent/d7_r83_principal_sturm_v55.py",
+        "--masks",
+        "11",
+        "--mode",
+        "enumerate"
+      ],
+      "backend": "sturm",
+      "family": "R83",
+      "key": "r83-1-11",
+      "mask": 11,
+      "original_index": 53,
+      "status": "PENDING"
+    },
+    {
+      "argv": [
+        "/opt/v81-runtime/cohort.i8xmfN8X/venv/bin/python",
+        "/workspace/v81-release159-source-cohort1/certificates/d7_r83_principal_v55.py",
+        "--masks",
+        "12"
+      ],
+      "backend": "primary",
+      "family": "R83",
+      "key": "r83-0-12",
+      "mask": 12,
+      "original_index": 49,
+      "status": "PENDING"
+    },
+    {
+      "argv": [
+        "/opt/v81-runtime/cohort.i8xmfN8X/venv/bin/python",
+        "/workspace/v81-release159-source-cohort1/independent/d7_r83_principal_sturm_v55.py",
+        "--masks",
+        "12",
+        "--mode",
+        "enumerate"
+      ],
+      "backend": "sturm",
+      "family": "R83",
+      "key": "r83-1-12",
+      "mask": 12,
+      "original_index": 53,
+      "status": "PENDING"
+    },
+    {
+      "argv": [
+        "/opt/v81-runtime/cohort.i8xmfN8X/venv/bin/python",
+        "/workspace/v81-release159-source-cohort1/certificates/d7_r83_principal_v55.py",
+        "--masks",
+        "13"
+      ],
+      "backend": "primary",
+      "family": "R83",
+      "key": "r83-0-13",
+      "mask": 13,
+      "original_index": 49,
+      "status": "PENDING"
+    },
+    {
+      "argv": [
+        "/opt/v81-runtime/cohort.i8xmfN8X/venv/bin/python",
+        "/workspace/v81-release159-source-cohort1/independent/d7_r83_principal_sturm_v55.py",
+        "--masks",
+        "13",
+        "--mode",
+        "enumerate"
+      ],
+      "backend": "sturm",
+      "family": "R83",
+      "key": "r83-1-13",
+      "mask": 13,
+      "original_index": 53,
+      "status": "PENDING"
+    },
+    {
+      "argv": [
+        "/opt/v81-runtime/cohort.i8xmfN8X/venv/bin/python",
+        "/workspace/v81-release159-source-cohort1/certificates/d7_r83_principal_v55.py",
+        "--masks",
+        "14"
+      ],
+      "backend": "primary",
+      "family": "R83",
+      "key": "r83-0-14",
+      "mask": 14,
+      "original_index": 49,
+      "status": "PENDING"
+    },
+    {
+      "argv": [
+        "/opt/v81-runtime/cohort.i8xmfN8X/venv/bin/python",
+        "/workspace/v81-release159-source-cohort1/independent/d7_r83_principal_sturm_v55.py",
+        "--masks",
+        "14",
+        "--mode",
+        "enumerate"
+      ],
+      "backend": "sturm",
+      "family": "R83",
+      "key": "r83-1-14",
+      "mask": 14,
+      "original_index": 53,
+      "status": "PENDING"
+    },
+    {
+      "argv": [
+        "/opt/v81-runtime/cohort.i8xmfN8X/venv/bin/python",
+        "/workspace/v81-release159-source-cohort1/certificates/d7_r83_principal_v55.py",
+        "--masks",
+        "15"
+      ],
+      "backend": "primary",
+      "family": "R83",
+      "key": "r83-0-15",
+      "mask": 15,
+      "original_index": 49,
+      "status": "PENDING"
+    },
+    {
+      "argv": [
+        "/opt/v81-runtime/cohort.i8xmfN8X/venv/bin/python",
+        "/workspace/v81-release159-source-cohort1/independent/d7_r83_principal_sturm_v55.py",
+        "--masks",
+        "15",
+        "--mode",
+        "enumerate"
+      ],
+      "backend": "sturm",
+      "family": "R83",
+      "key": "r83-1-15",
+      "mask": 15,
+      "original_index": 53,
+      "status": "PENDING"
+    },
+    {
+      "argv": [
+        "/opt/v81-runtime/cohort.i8xmfN8X/venv/bin/python",
+        "/workspace/v81-release159-source-cohort1/certificates/d7_r83_principal_v55.py",
+        "--masks",
+        "32"
+      ],
+      "backend": "primary",
+      "family": "R83",
+      "key": "r83-0-32",
+      "mask": 32,
+      "original_index": 50,
+      "status": "PENDING"
+    },
+    {
+      "argv": [
+        "/opt/v81-runtime/cohort.i8xmfN8X/venv/bin/python",
+        "/workspace/v81-release159-source-cohort1/independent/d7_r83_principal_sturm_v55.py",
+        "--masks",
+        "32",
+        "--mode",
+        "enumerate"
+      ],
+      "backend": "sturm",
+      "family": "R83",
+      "key": "r83-1-32",
+      "mask": 32,
+      "original_index": 54,
+      "status": "PENDING"
+    },
+    {
+      "argv": [
+        "/opt/v81-runtime/cohort.i8xmfN8X/venv/bin/python",
+        "/workspace/v81-release159-source-cohort1/certificates/d7_r83_principal_v55.py",
+        "--masks",
+        "33"
+      ],
+      "backend": "primary",
+      "family": "R83",
+      "key": "r83-0-33",
+      "mask": 33,
+      "original_index": 50,
+      "status": "PENDING"
+    },
+    {
+      "argv": [
+        "/opt/v81-runtime/cohort.i8xmfN8X/venv/bin/python",
+        "/workspace/v81-release159-source-cohort1/independent/d7_r83_principal_sturm_v55.py",
+        "--masks",
+        "33",
+        "--mode",
+        "enumerate"
+      ],
+      "backend": "sturm",
+      "family": "R83",
+      "key": "r83-1-33",
+      "mask": 33,
+      "original_index": 54,
+      "status": "PENDING"
+    },
+    {
+      "argv": [
+        "/opt/v81-runtime/cohort.i8xmfN8X/venv/bin/python",
+        "/workspace/v81-release159-source-cohort1/certificates/d7_r83_principal_v55.py",
+        "--masks",
+        "34"
+      ],
+      "backend": "primary",
+      "family": "R83",
+      "key": "r83-0-34",
+      "mask": 34,
+      "original_index": 50,
+      "status": "PENDING"
+    },
+    {
+      "argv": [
+        "/opt/v81-runtime/cohort.i8xmfN8X/venv/bin/python",
+        "/workspace/v81-release159-source-cohort1/independent/d7_r83_principal_sturm_v55.py",
+        "--masks",
+        "34",
+        "--mode",
+        "enumerate"
+      ],
+      "backend": "sturm",
+      "family": "R83",
+      "key": "r83-1-34",
+      "mask": 34,
+      "original_index": 54,
+      "status": "PENDING"
+    },
+    {
+      "argv": [
+        "/opt/v81-runtime/cohort.i8xmfN8X/venv/bin/python",
+        "/workspace/v81-release159-source-cohort1/certificates/d7_r83_principal_v55.py",
+        "--masks",
+        "35"
+      ],
+      "backend": "primary",
+      "family": "R83",
+      "key": "r83-0-35",
+      "mask": 35,
+      "original_index": 50,
+      "status": "PENDING"
+    },
+    {
+      "argv": [
+        "/opt/v81-runtime/cohort.i8xmfN8X/venv/bin/python",
+        "/workspace/v81-release159-source-cohort1/independent/d7_r83_principal_sturm_v55.py",
+        "--masks",
+        "35",
+        "--mode",
+        "enumerate"
+      ],
+      "backend": "sturm",
+      "family": "R83",
+      "key": "r83-1-35",
+      "mask": 35,
+      "original_index": 54,
+      "status": "PENDING"
+    },
+    {
+      "argv": [
+        "/opt/v81-runtime/cohort.i8xmfN8X/venv/bin/python",
+        "/workspace/v81-release159-source-cohort1/certificates/d7_r83_principal_v55.py",
+        "--masks",
+        "36"
+      ],
+      "backend": "primary",
+      "family": "R83",
+      "key": "r83-0-36",
+      "mask": 36,
+      "original_index": 50,
+      "status": "PENDING"
+    },
+    {
+      "argv": [
+        "/opt/v81-runtime/cohort.i8xmfN8X/venv/bin/python",
+        "/workspace/v81-release159-source-cohort1/independent/d7_r83_principal_sturm_v55.py",
+        "--masks",
+        "36",
+        "--mode",
+        "enumerate"
+      ],
+      "backend": "sturm",
+      "family": "R83",
+      "key": "r83-1-36",
+      "mask": 36,
+      "original_index": 54,
+      "status": "PENDING"
+    },
+    {
+      "argv": [
+        "/opt/v81-runtime/cohort.i8xmfN8X/venv/bin/python",
+        "/workspace/v81-release159-source-cohort1/certificates/d7_r83_principal_v55.py",
+        "--masks",
+        "37"
+      ],
+      "backend": "primary",
+      "family": "R83",
+      "key": "r83-0-37",
+      "mask": 37,
+      "original_index": 50,
+      "status": "PENDING"
+    },
+    {
+      "argv": [
+        "/opt/v81-runtime/cohort.i8xmfN8X/venv/bin/python",
+        "/workspace/v81-release159-source-cohort1/independent/d7_r83_principal_sturm_v55.py",
+        "--masks",
+        "37",
+        "--mode",
+        "enumerate"
+      ],
+      "backend": "sturm",
+      "family": "R83",
+      "key": "r83-1-37",
+      "mask": 37,
+      "original_index": 54,
+      "status": "PENDING"
+    },
+    {
+      "argv": [
+        "/opt/v81-runtime/cohort.i8xmfN8X/venv/bin/python",
+        "/workspace/v81-release159-source-cohort1/certificates/d7_r83_principal_v55.py",
+        "--masks",
+        "38"
+      ],
+      "backend": "primary",
+      "family": "R83",
+      "key": "r83-0-38",
+      "mask": 38,
+      "original_index": 50,
+      "status": "PENDING"
+    },
+    {
+      "argv": [
+        "/opt/v81-runtime/cohort.i8xmfN8X/venv/bin/python",
+        "/workspace/v81-release159-source-cohort1/independent/d7_r83_principal_sturm_v55.py",
+        "--masks",
+        "38",
+        "--mode",
+        "enumerate"
+      ],
+      "backend": "sturm",
+      "family": "R83",
+      "key": "r83-1-38",
+      "mask": 38,
+      "original_index": 54,
+      "status": "PENDING"
+    },
+    {
+      "argv": [
+        "/opt/v81-runtime/cohort.i8xmfN8X/venv/bin/python",
+        "/workspace/v81-release159-source-cohort1/certificates/d7_r83_principal_v55.py",
+        "--masks",
+        "39"
+      ],
+      "backend": "primary",
+      "family": "R83",
+      "key": "r83-0-39",
+      "mask": 39,
+      "original_index": 50,
+      "status": "PENDING"
+    },
+    {
+      "argv": [
+        "/opt/v81-runtime/cohort.i8xmfN8X/venv/bin/python",
+        "/workspace/v81-release159-source-cohort1/independent/d7_r83_principal_sturm_v55.py",
+        "--masks",
+        "39",
+        "--mode",
+        "enumerate"
+      ],
+      "backend": "sturm",
+      "family": "R83",
+      "key": "r83-1-39",
+      "mask": 39,
+      "original_index": 54,
+      "status": "PENDING"
+    },
+    {
+      "argv": [
+        "/opt/v81-runtime/cohort.i8xmfN8X/venv/bin/python",
+        "/workspace/v81-release159-source-cohort1/certificates/d7_r83_principal_v55.py",
+        "--masks",
+        "40"
+      ],
+      "backend": "primary",
+      "family": "R83",
+      "key": "r83-0-40",
+      "mask": 40,
+      "original_index": 51,
+      "status": "PENDING"
+    },
+    {
+      "argv": [
+        "/opt/v81-runtime/cohort.i8xmfN8X/venv/bin/python",
+        "/workspace/v81-release159-source-cohort1/independent/d7_r83_principal_sturm_v55.py",
+        "--masks",
+        "40",
+        "--mode",
+        "enumerate"
+      ],
+      "backend": "sturm",
+      "family": "R83",
+      "key": "r83-1-40",
+      "mask": 40,
+      "original_index": 55,
+      "status": "PENDING"
+    },
+    {
+      "argv": [
+        "/opt/v81-runtime/cohort.i8xmfN8X/venv/bin/python",
+        "/workspace/v81-release159-source-cohort1/certificates/d7_r83_principal_v55.py",
+        "--masks",
+        "41"
+      ],
+      "backend": "primary",
+      "family": "R83",
+      "key": "r83-0-41",
+      "mask": 41,
+      "original_index": 51,
+      "status": "PENDING"
+    },
+    {
+      "argv": [
+        "/opt/v81-runtime/cohort.i8xmfN8X/venv/bin/python",
+        "/workspace/v81-release159-source-cohort1/independent/d7_r83_principal_sturm_v55.py",
+        "--masks",
+        "41",
+        "--mode",
+        "enumerate"
+      ],
+      "backend": "sturm",
+      "family": "R83",
+      "key": "r83-1-41",
+      "mask": 41,
+      "original_index": 55,
+      "status": "PENDING"
+    },
+    {
+      "argv": [
+        "/opt/v81-runtime/cohort.i8xmfN8X/venv/bin/python",
+        "/workspace/v81-release159-source-cohort1/certificates/d7_r83_principal_v55.py",
+        "--masks",
+        "42"
+      ],
+      "backend": "primary",
+      "family": "R83",
+      "key": "r83-0-42",
+      "mask": 42,
+      "original_index": 51,
+      "status": "PENDING"
+    },
+    {
+      "argv": [
+        "/opt/v81-runtime/cohort.i8xmfN8X/venv/bin/python",
+        "/workspace/v81-release159-source-cohort1/independent/d7_r83_principal_sturm_v55.py",
+        "--masks",
+        "42",
+        "--mode",
+        "enumerate"
+      ],
+      "backend": "sturm",
+      "family": "R83",
+      "key": "r83-1-42",
+      "mask": 42,
+      "original_index": 55,
+      "status": "PENDING"
+    },
+    {
+      "argv": [
+        "/opt/v81-runtime/cohort.i8xmfN8X/venv/bin/python",
+        "/workspace/v81-release159-source-cohort1/certificates/d7_r83_principal_v55.py",
+        "--masks",
+        "43"
+      ],
+      "backend": "primary",
+      "family": "R83",
+      "key": "r83-0-43",
+      "mask": 43,
+      "original_index": 51,
+      "status": "PENDING"
+    },
+    {
+      "argv": [
+        "/opt/v81-runtime/cohort.i8xmfN8X/venv/bin/python",
+        "/workspace/v81-release159-source-cohort1/independent/d7_r83_principal_sturm_v55.py",
+        "--masks",
+        "43",
+        "--mode",
+        "enumerate"
+      ],
+      "backend": "sturm",
+      "family": "R83",
+      "key": "r83-1-43",
+      "mask": 43,
+      "original_index": 55,
+      "status": "PENDING"
+    },
+    {
+      "argv": [
+        "/opt/v81-runtime/cohort.i8xmfN8X/venv/bin/python",
+        "/workspace/v81-release159-source-cohort1/certificates/d7_r83_principal_v55.py",
+        "--masks",
+        "44"
+      ],
+      "backend": "primary",
+      "family": "R83",
+      "key": "r83-0-44",
+      "mask": 44,
+      "original_index": 51,
+      "status": "PENDING"
+    },
+    {
+      "argv": [
+        "/opt/v81-runtime/cohort.i8xmfN8X/venv/bin/python",
+        "/workspace/v81-release159-source-cohort1/independent/d7_r83_principal_sturm_v55.py",
+        "--masks",
+        "44",
+        "--mode",
+        "enumerate"
+      ],
+      "backend": "sturm",
+      "family": "R83",
+      "key": "r83-1-44",
+      "mask": 44,
+      "original_index": 55,
+      "status": "PENDING"
+    },
+    {
+      "argv": [
+        "/opt/v81-runtime/cohort.i8xmfN8X/venv/bin/python",
+        "/workspace/v81-release159-source-cohort1/certificates/d7_r83_principal_v55.py",
+        "--masks",
+        "45"
+      ],
+      "backend": "primary",
+      "family": "R83",
+      "key": "r83-0-45",
+      "mask": 45,
+      "original_index": 51,
+      "status": "PENDING"
+    },
+    {
+      "argv": [
+        "/opt/v81-runtime/cohort.i8xmfN8X/venv/bin/python",
+        "/workspace/v81-release159-source-cohort1/independent/d7_r83_principal_sturm_v55.py",
+        "--masks",
+        "45",
+        "--mode",
+        "enumerate"
+      ],
+      "backend": "sturm",
+      "family": "R83",
+      "key": "r83-1-45",
+      "mask": 45,
+      "original_index": 55,
+      "status": "PENDING"
+    },
+    {
+      "argv": [
+        "/opt/v81-runtime/cohort.i8xmfN8X/venv/bin/python",
+        "/workspace/v81-release159-source-cohort1/certificates/d7_r83_principal_v55.py",
+        "--masks",
+        "46"
+      ],
+      "backend": "primary",
+      "family": "R83",
+      "key": "r83-0-46",
+      "mask": 46,
+      "original_index": 51,
+      "status": "PENDING"
+    },
+    {
+      "argv": [
+        "/opt/v81-runtime/cohort.i8xmfN8X/venv/bin/python",
+        "/workspace/v81-release159-source-cohort1/independent/d7_r83_principal_sturm_v55.py",
+        "--masks",
+        "46",
+        "--mode",
+        "enumerate"
+      ],
+      "backend": "sturm",
+      "family": "R83",
+      "key": "r83-1-46",
+      "mask": 46,
+      "original_index": 55,
+      "status": "PENDING"
+    },
+    {
+      "argv": [
+        "/opt/v81-runtime/cohort.i8xmfN8X/venv/bin/python",
+        "/workspace/v81-release159-source-cohort1/certificates/d7_r83_principal_v55.py",
+        "--masks",
+        "47"
+      ],
+      "backend": "primary",
+      "family": "R83",
+      "key": "r83-0-47",
+      "mask": 47,
+      "original_index": 51,
+      "status": "PENDING"
+    },
+    {
+      "argv": [
+        "/opt/v81-runtime/cohort.i8xmfN8X/venv/bin/python",
+        "/workspace/v81-release159-source-cohort1/independent/d7_r83_principal_sturm_v55.py",
+        "--masks",
+        "47",
+        "--mode",
+        "enumerate"
+      ],
+      "backend": "sturm",
+      "family": "R83",
+      "key": "r83-1-47",
+      "mask": 47,
+      "original_index": 55,
+      "status": "PENDING"
+    }
+  ],
+  "runner_sha256": "87197a98259240701d8f8cb63181dfd99941baaf66f17f0aa22b56d5c74cba22",
+  "runtime_sha256": "b53a5cffa60a7313ebc7dee1f28461b42968e58db0d99cc51f0c70b612fbdccd",
+  "source_manifest_sha256": "d5cc8cdcab982e930c46e523aad544362f2f66cb293d13996fb304e4e9e19606",
+  "status": "RECOVERY_RUNNING",
+  "theorem_promotion": false
+}

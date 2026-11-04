@@ -1,0 +1,8 @@
+{
+  "after_sha256": "97853c93fe549ae5292349450c243670d8de73dd75afb1df7ba6716102aede6e",
+  "before_sha256": "026973fa6ccae9ff9e1e72ac90d3914ace95cd0996e6fca14edbd6e16157ca85",
+  "new": "types. Theorem~\\ref{eight:thm:all} below further covers arbitrary mixed\nproducts of all eight rank-one $M$ types. These fixed-field conclusions\ndo not cover every fiber of the family or arbitrary abelian sixfolds.",
+  "old": "types. These conclusions do not cover every fiber of the family, arbitrary\nmixtures of all eight types, or arbitrary abelian sixfolds.",
+  "reason": "Independent applied-source review found one stale paper-wide all-eight exclusion; replaced by exact forward reference while preserving family/arbitrary-sixfold limits.",
+  "utc": "2026-10-13T20:23:41.343237+00:00"
+}

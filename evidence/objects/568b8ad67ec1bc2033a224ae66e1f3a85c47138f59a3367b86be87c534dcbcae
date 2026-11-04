@@ -1,0 +1,288 @@
+{
+  "adoption_record_schema": {
+    "prohibited_claims": [
+      "Portable copy was executed for a label when only original executed source evidence exists",
+      "Complete verify_all/release passed",
+      "Positive controls prove absence for unexecuted labels",
+      "The current3 known hits and116 provisional exclusions equal119 unqualified certified full-curve decisions"
+    ],
+    "required_payloads": {
+      "executed_jobs": "730 target/point/backend records retaining original driver/source/result/artifact/plan/target/runtime/cap/command/lease seals",
+      "labels": "exact sorted365 canonical labels",
+      "portable_controls": "12 full positive and32 representative full outcomes; representative label list frozen independently of outputs",
+      "promotion_status": "REQUIRES_SEPARATE_FINAL_CLAIM_AND_REGISTRATION_REVIEW",
+      "source_mapping": "all16 mathematical/data files, old/new path and hash; complete19 executed campaign closure separately retained"
+    },
+    "required_sha256_fields": [
+      "terminal_audit",
+      "captured_manifest",
+      "captured_state",
+      "captured_runtime",
+      "executed_source_manifest",
+      "executed_archive_inventory",
+      "portable_package",
+      "whole_source_isomorphism_proof",
+      "positive_control_audit",
+      "representative_control_audit",
+      "adversarial_review",
+      "first_target_reconciliation"
+    ],
+    "schema_version": 1,
+    "scope": "REFLECTED_AB_V1_EXACT365_LABELS_NO_AUTOMATIC_FULL_CURVE_PROMOTION",
+    "status": "ACCEPTED_EXECUTED_EVIDENCE_UNDER_SOURCE_ISOMORPHISM"
+  },
+  "aggregate_contract": {
+    "identity_key": "target_id/point_label/backend",
+    "join_rules": [
+      "Exactly365 nonhit labels in each target, two independent complete backends per label, no target or source-plan substitutions.",
+      "First-target116 evidence may use historical per-certificate formats; require a reviewed per-certificate parser/label/transport bridge. Do not fabricate8-file formats or demand equal candidate sets across different targets/plans.",
+      "Compare all8/count9/target across backends within an identical V83 target/plan; preserve source/runtime hashes distinguishing each execution.",
+      "For every nonhit require empty necessary-region survivors in BOTH targets; nonempty or incomplete rows remain unresolved.",
+      "Bind all report hashes to immutable archived bytes, not newer live states; enforce exact files/no aliases and actual auditor source hash."
+    ],
+    "required_inputs": [
+      "Exact terminal campaign source snapshot, source gate, manifest, state, runtime and operational acceptance; captured together and individually hashed.",
+      "Both backend complete result.json and full declared output inventories, target/preparation/plan data, all8 canonical sets/classification, ninefields and normalized per-row journals.",
+      "Child intent/lease/command/log evidence, all retries/incomplete attempts retained, fixed deadline and cap records.",
+      "V82 accepted504-job aggregate and archived source/runtime/package, exact first-target116 legacy evidence/bridges.",
+      "Portable package and whole-source-isomorphism report, adopted-execution policy approval, full portable positive/representative controls, final adversarial review.",
+      "Adoption record with explicit executed-versus-portable distinction and root-authorized policy rationale, reviewed without changing mathematical claims."
+    ],
+    "status": "BOTH_TARGET_EVIDENCE_ACCEPTED_NOT_AUTOMATIC_THEOREM"
+  },
+  "antecedents": [
+    "Complete immutable V83 terminal audit covering every365 label in both backends, exact target-aware plans, accepted paired preparations, full artifacts, counts, row journals, runtime/source/lease/cap seals. No accepted survivor for an excluded label.",
+    "Complete original-target evidence join:109 d7 +6 C42 +1 C43 +249 V82 =365 distinct canonical C39 nonhit labels. No double counting controls or root partners.",
+    "Explicit adversarial approval of execution-evidence adoption instead of automatically rerunning every relocated job; original executed and new portable hashes are recorded separately.",
+    "Whole-executable source-isomorphism review; clean portable runtime/import/data closure; actual full portable controls; strict full replay frontends and regression registration.",
+    "Final human review assembles both simultaneous target implications for the fixed marked normalized SL2 packet."
+  ],
+  "authorization": {
+    "adoption_policy_accepted": false,
+    "cloud_launch": false,
+    "math_execution": false,
+    "promotion": false,
+    "registry_edit": false
+  },
+  "created_date": "2026-10-12",
+  "dependencies": {
+    "domain_inventory": "domain_inventory.json",
+    "finite_domain_human_bridge": "experiments/continuous_v82_review/two_chamber_bridge_verdict.json",
+    "source_requirements": "source_requirements.json"
+  },
+  "efficiency": {
+    "all730_replay_commands_remain_available": true,
+    "already_executed_full_reflected_jobs_when_terminal": 730,
+    "automatic_duplicate_reflected_jobs_recommended": 0,
+    "controls_are_not_a_statistical_proof": true,
+    "force_affected_full_replay_if": [
+      "Any unapproved mathematical AST/constant/data/library change.",
+      "Source-isomorphism cannot account for executable/import/global behavior.",
+      "Lost or unauthenticated terminal artifacts, plans, runtime or job identities.",
+      "Portable positive or representative controls differ.",
+      "Final referee rejects evidence-adoption route."
+    ],
+    "fresh_replay_adds": [
+      "Verifies actual relocated imports/path closure, virtual-environment invocation, target installation and strict frontend contracts.",
+      "Binds expected artifacts to a clean portable runtime and exercises successful full-stage output handling."
+    ],
+    "fresh_replay_does_not_add": [
+      "A third independent arithmetic argument when mathematical code and libraries are unchanged.",
+      "The missing human two-chamber implication or actual curve membership of a polygon survivor."
+    ],
+    "new_full_positive_jobs": 12,
+    "proposed_full_negative_control_jobs": 32,
+    "proposed_full_negative_control_labels": [
+      "OM:pic0:01",
+      "R127:pic0:00",
+      "R127:pic1:00",
+      "R127:pic1:16",
+      "R127:pic1:32",
+      "R127:pic1:63",
+      "R41_12:pic0:00",
+      "R41_22:pic0:00",
+      "R43_20:pic0:00",
+      "R43_31:pic0:00",
+      "R7:pic0:00",
+      "R7:pic0:32",
+      "R7sq:pic0:00",
+      "R83:pic0:00",
+      "R83:pic1:00",
+      "R83:pic1:16"
+    ]
+  },
+  "irreducible_obligations": [
+    "C39 completeness and exact raw representative/mask/root-partner correspondence at all six marked embeddings.",
+    "L01-L12 finite search completeness: outward bounds, unit bijections, all primitive/nonprimitive and sign/c0 branches, exact closed boundary decisions, no stale globals.",
+    "L13-L14 human two-chamber implication for the orientation-preserving group and simultaneously labelled embeddings; no independent64 chamber choices.",
+    "Both-target empty necessary-region sets for every365 label, genuine separate arithmetic implementations and exact executed evidence.",
+    "Known A/B/C orbit witnesses and existing actual CM/K-signature/discriminant/Hodge and polarization distinctions retained.",
+    "No full-curve theorem for a partial subset advertised as the whole packet; survivors require further orbit geometry."
+  ],
+  "portable_package": {
+    "allow_stdlib_and_pinned_packages": true,
+    "expected_schema": {
+      "each_value": {
+        "accepted_execution_evidence_sha256": "64hex",
+        "canonical_artifact_sha256": "all8 exact filenames and64hex",
+        "counts": "all9 V83 fields",
+        "plan_sha256": "64hex",
+        "required_positive_witnesses": "canonical matrices for positive controls; empty for nonhits",
+        "role": "NONHIT_EXCLUSION or KNOWN_POSITIVE_CONTROL",
+        "target_geometry_sha256": "64hex"
+      },
+      "points": "dictionary keyed target_id/point_label",
+      "schema_version": 1
+    },
+    "forbid_runtime_reads": [
+      "experiments/",
+      "build/",
+      "campaign outputs or expected counts before complete enumeration"
+    ],
+    "frontend_contract": [
+      "Required explicit --target-id and --point; no generic kernel accepted as registered certificate.",
+      "Optional fresh --output, otherwise retain or archive full outputs; always preserve structured certificate result.",
+      "--check-sources and --prepare-only have distinct nongeometry statuses.",
+      "Install label-specific CPU defaults only if both inherited soft/hard limits unrestricted; never relax an inherited finite bound. Keep wall/memory/file/globaldeadline in supervisor.",
+      "Invoke actual venv sys.executable, record invocation path separately from resolved binary/hash/prefix/base_prefix.",
+      "Expected data is read only after full fresh enumeration. Nonhit TARGET_EXCLUSION_PASS requires empty survivors; POSITIVE_CONTROL_PASS requires verified known witnesses. Neither alone is a full-curve exclusion.",
+      "Rehash all sources/plans/output seals after execution; reject aliasing, duplicate labels, symlinks, unknown target, bool-as-int schemas or malformed caps."
+    ],
+    "layout": {
+      "data": "certificates/reflected_packet_v83/",
+      "primary_frontend": "certificates/reflected_primary_v83.py",
+      "sturm_frontend": "independent/reflected_sturm_v83.py"
+    },
+    "plan_schema": {
+      "entry_units": {
+        "A": "five exact ints in [-2,2]",
+        "C": "five exact ints in [-2,2]",
+        "DEN": "five exact ints in [-2,2]",
+        "NUM": "five exact ints in [-2,2]"
+      },
+      "point_label": "strict frozen manifest member",
+      "schema_version": 2,
+      "target_id": "explicit and bound in every job",
+      "transport": {
+        "inversion_first": "bool",
+        "unit_exponents": "five exact ints in [-2,2]"
+      }
+    },
+    "runtime_allowlist": [
+      "certificates/",
+      "independent/"
+    ]
+  },
+  "positive_controls": {
+    "backends": [
+      "primary",
+      "sturm"
+    ],
+    "full_jobs": 12,
+    "labels": {
+      "A": "OM:pic0:07",
+      "B": "OM:pic0:15",
+      "C": "OM:pic0:00"
+    },
+    "missing_witness_work": [
+      "Durably extract/verify actual C39 A and C SL2 source-to-vertex witnesses; current V83 boundary harness fully checks the B source witness only.",
+      "Nominate exact schema2 plans for all six target/label pairs, reverify independently, and freeze bytes before complete positive runs."
+    ],
+    "requirements": [
+      "Use full fresh entry/bottom/nonzero/c0/polygon pipeline, not prepare-only or synthetic classifier calls.",
+      "Independently verify C39 raw-to-vertex integral determinant-one bridge H_raw, then use H_selected=H_raw*G^-1 with the exact stored plan.",
+      "A and B are fixed by AB reflection; reflected C is B_t*C under the retained exact bridge. Verify actual action, integral determinant-one maps and all six invariants separately.",
+      "Require each certified bridge and its negative in bounded candidates AND survivors; exact nonempty paired complete outputs are expected. Additional survivors are retained and must not be declared additional curve points.",
+      "Freeze positive expected counts/artifacts only after exact paired complete outcomes and review; these are not exclusion frontends.",
+      "Existing paired boundary gate is necessary prior evidence but has not completed these12 full enumeration jobs."
+    ],
+    "targets": [
+      "ORIGINAL_Q_V1",
+      "REFLECTED_AB_V1"
+    ]
+  },
+  "proposed_evidence_route": "ADOPT_AUTHENTICATED_EXECUTION_UNDER_REVIEWED_SOURCE_ISOMORPHISM",
+  "registration": {
+    "additional_positive_jobs": 12,
+    "additional_reflected_nonhit_jobs": 730,
+    "adoption_does_not_mean_full_suite_passed": true,
+    "default_workers": 4,
+    "first_target_v82_jobs": 504,
+    "future_release": "A future full verify_all math phase reruns all registered commands once. Authenticated adopted computations do not masquerade as that later run.",
+    "not_installed": true,
+    "phases": [
+      "Existing159 exact commands unchanged.",
+      "V82 original-target6 controls; if all succeed, its498 selected jobs.",
+      "V83 full12 positive controls; any failed/incomplete/missing witness blocks reflected negative phase.",
+      "V83 representative reflected jobs first, then remaining reflected jobs, with each target/label/backend executed exactly once within the full suite. Representative phase is a subset of730, not additional730.",
+      "Metadata-only both-target coverage join and final review/release gates, separately accounted from math command count."
+    ],
+    "preserve_legacy_exact_argv_count": 159,
+    "prospective_full_registered_command_count": 1405,
+    "single_theorem_batch": "When every gate passes, one explicit batch ledger/dependency/manuscript/registration update; no per-point manual patch cadence."
+  },
+  "remaining_beyond_packet": [
+    "Literal principally polarized moduli identification/Mostaed locus remains separate.",
+    "Priority/novelty and full citation-hypothesis audit remain open work.",
+    "Rendered manuscript, immutable complete regression release and external publication/human approval remain separate.",
+    "No conclusion about broader CM families, all abelian sixfolds, general Hodge conjecture, or PQC."
+  ],
+  "schema_version": 1,
+  "source_isomorphism_contract": {
+    "allowed_driver_edits": [
+      {
+        "after": "Path(__file__).resolve().parents[1]",
+        "before": "Path(__file__).resolve().parents[2]",
+        "node": "ROOT assignment"
+      },
+      {
+        "after": "certificates/reflected_packet_v83/primary_target.py",
+        "before": "experiments/continuous_v83/primary_target.py",
+        "node": "Primary TARGET_HELPER literal and its SOURCE_PINS key"
+      },
+      {
+        "after": "independent/reflected_packet_v83/sturm_target.py",
+        "before": "experiments/continuous_v83/sturm_target.py",
+        "node": "Sturm load_foundation target_path literal and its SOURCE_PINS key"
+      }
+    ],
+    "forbid_other_changes": [
+      "All arithmetic function bodies, global constants, target formulas, predicates, finite-domain bounds, cache installation/invalidation and branch ordering",
+      "Point labels, raw orientation matrices, root partners or signature normalizations",
+      "Output serialization or candidate ordering",
+      "Dependencies or actual imported module identities without separate review"
+    ],
+    "required_evidence": [
+      "Byte-identical foundations and target helpers with every transitive runtime read pinned",
+      "Whole-module AST equality after reversing ONLY the three exact administrative edit classes",
+      "Dynamic import identity/closure audit under clean portable root, preserving primary_target/sturm_target aliases and basename guards",
+      "Actual venv invocation identity, resolved binary and library bytes; approved operational runtime; current-platform AS/PDEATHSIG where relevant",
+      "Full positive/representative replay equality; stage/plan/source checks before and after all jobs",
+      "Reviewer proof binds all original and portable file hashes and both final package/frontends, not merely a path map"
+    ],
+    "scope": "ENTIRE_EXECUTABLE_CLOSURE"
+  },
+  "status": "CONDITIONAL_DESIGN_NOT_STAGING_OR_PROMOTION",
+  "target_id": "REFLECTED_AB_V1",
+  "unfilled_final_evidence": {
+    "V82_final_aggregate_sha256": null,
+    "V83_terminal_audit_sha256": null,
+    "adoption_policy_review_sha256": null,
+    "final_registration_review_sha256": null,
+    "legacy116_join_sha256": null,
+    "portable_positive_controls_sha256": null,
+    "portable_representative_controls_sha256": null,
+    "portable_source_isomorphism_sha256": null
+  },
+  "workflow_authorization": {
+    "basis": "Necessary research workflow changes are within existing user authorization; no additional user permission gate.",
+    "does_not_approve": [
+      "Mathematical source equivalence before proof",
+      "Unexecuted controls",
+      "Incomplete outcomes",
+      "Theorem promotion",
+      "New cloud resources or computation"
+    ],
+    "route_authorized_by_root": true
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "status": "REFEREE_FIXTURE_ERROR_CORRECTED",
+  "error": "KeyError blobs",
+  "cause": "Probe passed outer job_manifest instead of its transport object to unchanged Job constructor",
+  "producer_failure": false,
+  "second_fixture_error": "Synthetic provider price .1 violated unchanged decimal syntax and stopped at PRICE_VALIDATION; fixed to 0.1 to reach WORKLOAD callback"
+}

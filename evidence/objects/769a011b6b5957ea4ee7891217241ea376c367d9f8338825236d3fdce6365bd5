@@ -1,0 +1,40 @@
+"""Independent-path regressions for finite mixed Hodge dimensions."""
+from pathlib import Path
+import importlib.util
+import unittest
+
+ROOT = Path(__file__).resolve().parents[1]
+
+
+def module(name, relative):
+    spec = importlib.util.spec_from_file_location(name, ROOT / relative)
+    result = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(result)
+    return result
+
+
+class MixedProducts(unittest.TestCase):
+    def test_subset_census_against_crt_difference_polynomials(self):
+        primary = module("mixed_primary", "experiments/mixed_products_v100/pair_census.py").check()
+        separate = module("mixed_separate", "independent/mixed_pair_v100.py").check()
+        self.assertEqual(len(primary["pairs"]), 36)
+        for p, q in zip(primary["pairs"], separate["pairs"]):
+            for key in ("pair", "hodge_dimensions_by_codimension",
+                        "separate_factor_algebra_dimensions", "additional_mixed_dimensions",
+                        "mixed_counts_by_bidegree"):
+                self.assertEqual(p[key], q[key], (p["pair"], key))
+        by_pair = {tuple(r["pair"]): r for r in primary["pairs"]}
+        self.assertEqual(by_pair[0,4]["additional_mixed_dimensions"][2], 48)
+        self.assertEqual(by_pair[0,2]["additional_mixed_dimensions"][2], 12)
+
+    def test_unimodular_configuration_against_independent_determinants(self):
+        p = module("ab_primary", "experiments/mixed_products_v100/ab_unimodular.py").check()
+        q = module("ab_separate", "independent/ab_unimodular_v100.py").check()
+        self.assertEqual(p["maximal_minors"], q["maximal_minors"])
+        self.assertEqual(sorted(p["circuits_up_to_sign"]), sorted(q["circuits_up_to_sign"]))
+        self.assertEqual(q["rank"], 5)
+        self.assertEqual(q["normalized_square_minor_histogram"], {"-1":257,"0":1346,"1":398})
+
+
+if __name__ == "__main__":
+    unittest.main()

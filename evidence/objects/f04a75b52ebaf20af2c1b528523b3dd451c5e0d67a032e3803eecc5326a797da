@@ -1,0 +1,466 @@
+[
+  {
+    "binding": "PINS",
+    "consumer": "experiments/continuous_v83/continuation/crosscohort/fixed730-revision01/audit.py",
+    "dependency": "experiments/continuous_v83/terminal_audit/audit.py",
+    "kind": "STATIC_PIN_TABLE",
+    "logical_path": "experiments/continuous_v83/terminal_audit/audit.py",
+    "sha256": "b785ac6745741b8af511cf488aa4e348c0da4bd790cc327345471042f13e53c3"
+  },
+  {
+    "binding": "PINS",
+    "consumer": "experiments/continuous_v83/continuation/crosscohort/fixed730-revision01/audit.py",
+    "dependency": "experiments/continuous_v83/continuation/controller.py",
+    "kind": "STATIC_PIN_TABLE",
+    "logical_path": "experiments/continuous_v83/continuation/controller.py",
+    "sha256": "b13300caf9dc7c7c31abcdd0861c18912d2eda6749b1f9770a12a52d1d2a686c"
+  },
+  {
+    "binding": "PINS",
+    "consumer": "experiments/continuous_v83/continuation/crosscohort/fixed730-revision01/audit.py",
+    "dependency": "experiments/continuous_v83/continuation/authenticate_origin.py",
+    "kind": "STATIC_PIN_TABLE",
+    "logical_path": "experiments/continuous_v83/continuation/authenticate_origin.py",
+    "sha256": "c0cd8b68a6a8d403cd2ee98915868e8ac469dcbd54a91202e687afc6b0a8b705"
+  },
+  {
+    "binding": "PINS",
+    "consumer": "experiments/continuous_v83/continuation/crosscohort/fixed730-revision01/audit.py",
+    "dependency": "experiments/continuous_v83/runner.py",
+    "kind": "STATIC_PIN_TABLE",
+    "logical_path": "experiments/continuous_v83/runner.py",
+    "sha256": "3acda0f59005ad92ae832760e4c614c524eed078e84b571698f8209ff5614449"
+  },
+  {
+    "binding": "PINS",
+    "consumer": "experiments/continuous_v83/terminal_audit/audit.py",
+    "dependency": "certificates/d7_ambient_points_v45.py",
+    "kind": "STATIC_PIN_TABLE",
+    "logical_path": "certificates/d7_ambient_points_v45.py",
+    "sha256": "34cb35db91b953162b595fb61e031f551e6df0a0d7b5192dc15a6c00c39274a2"
+  },
+  {
+    "binding": "PINS",
+    "consumer": "experiments/continuous_v83/terminal_audit/audit.py",
+    "dependency": "certificates/d7_r83_mask14_v46.py",
+    "kind": "STATIC_PIN_TABLE",
+    "logical_path": "certificates/d7_r83_mask14_v46.py",
+    "sha256": "70e9c7114adea2b319c3e430046ae3e917717142e7a78e4d43a043950f1147f3"
+  },
+  {
+    "binding": "PINS",
+    "consumer": "experiments/continuous_v83/terminal_audit/audit.py",
+    "dependency": "certificates/d7_r83_masks14_30_v47.py",
+    "kind": "STATIC_PIN_TABLE",
+    "logical_path": "certificates/d7_r83_masks14_30_v47.py",
+    "sha256": "e78ba5e793134f28d8113d8129809421a5a7754c439afcd64ba0385543799941"
+  },
+  {
+    "binding": "PINS",
+    "consumer": "experiments/continuous_v83/terminal_audit/audit.py",
+    "dependency": "certificates/d7_r83_principal_expected_v55.py",
+    "kind": "STATIC_PIN_TABLE",
+    "logical_path": "certificates/d7_r83_principal_expected_v55.py",
+    "sha256": "0fd36a67b004e6a250188aa8731a207456b5e49faa955005d6b12cd36665bea7"
+  },
+  {
+    "binding": "PINS",
+    "consumer": "experiments/continuous_v83/terminal_audit/audit.py",
+    "dependency": "certificates/d7_r83_principal_v55.py",
+    "kind": "STATIC_PIN_TABLE",
+    "logical_path": "certificates/d7_r83_principal_v55.py",
+    "sha256": "a937b69037b5d53f40a600aefb177bf89766d3529b22f73529b2b861ec9238cc"
+  },
+  {
+    "binding": "PINS",
+    "consumer": "experiments/continuous_v83/terminal_audit/audit.py",
+    "dependency": "certificates/full_packet_v62/ambient_points.json",
+    "kind": "STATIC_PIN_TABLE",
+    "logical_path": "certificates/full_packet_v62/ambient_points.json",
+    "sha256": "c0e84da6c266c087cbce65a6e8aca8e3f30350ce56b5a1089c4ae4978a381f36"
+  },
+  {
+    "binding": "PINS",
+    "consumer": "experiments/continuous_v83/terminal_audit/audit.py",
+    "dependency": "certificates/full_packet_v62/module_templates.json",
+    "kind": "STATIC_PIN_TABLE",
+    "logical_path": "certificates/full_packet_v62/module_templates.json",
+    "sha256": "09ccff217511a67e946567135f9ffb74da020843621d0895ecce8746d25c245d"
+  },
+  {
+    "binding": "PINS",
+    "consumer": "experiments/continuous_v83/terminal_audit/audit.py",
+    "dependency": "certificates/residual_orbit_k17_k38_v42.py",
+    "kind": "STATIC_PIN_TABLE",
+    "logical_path": "certificates/residual_orbit_k17_k38_v42.py",
+    "sha256": "5186066f21a2f840ffc71936a54372d7ad51eb6cc919bf7812bb1bec258cd59d"
+  },
+  {
+    "binding": "PINS",
+    "consumer": "experiments/continuous_v83/terminal_audit/audit.py",
+    "dependency": "experiments/continuous_v83/child.py",
+    "kind": "STATIC_PIN_TABLE",
+    "logical_path": "experiments/continuous_v83/child.py",
+    "sha256": "e593f070efa845a05d9f7d4ab7d1efd2566ebc275bad8a9e02621a56f0548360"
+  },
+  {
+    "binding": "PINS",
+    "consumer": "experiments/continuous_v83/terminal_audit/audit.py",
+    "dependency": "build/research-v81/v83-live-backup-2026-10-12-attempt2/unsealed-campaign/source/experiments/continuous_v83/nominate.py",
+    "kind": "STATIC_PIN_TABLE",
+    "logical_path": "experiments/continuous_v83/nominate.py",
+    "sha256": "2b91049e3e37609d4c1a94edd230c8f2fb5730a9ab49ad4c9018b5aa87fe8f89"
+  },
+  {
+    "binding": "PINS",
+    "consumer": "experiments/continuous_v83/terminal_audit/audit.py",
+    "dependency": "experiments/continuous_v83/primary.py",
+    "kind": "STATIC_PIN_TABLE",
+    "logical_path": "experiments/continuous_v83/primary.py",
+    "sha256": "c167a51e6881923319576897ea07a8d05998f935bc0f6884eef529928c4d6313"
+  },
+  {
+    "binding": "PINS",
+    "consumer": "experiments/continuous_v83/terminal_audit/audit.py",
+    "dependency": "experiments/continuous_v83/primary_target.py",
+    "kind": "STATIC_PIN_TABLE",
+    "logical_path": "experiments/continuous_v83/primary_target.py",
+    "sha256": "b94aca2bc29fc612fbecaadf83430ebd0a9e09f462876c1dc41fe0aa51422bd3"
+  },
+  {
+    "binding": "PINS",
+    "consumer": "experiments/continuous_v83/terminal_audit/audit.py",
+    "dependency": "experiments/continuous_v83/runner.py",
+    "kind": "STATIC_PIN_TABLE",
+    "logical_path": "experiments/continuous_v83/runner.py",
+    "sha256": "3acda0f59005ad92ae832760e4c614c524eed078e84b571698f8209ff5614449"
+  },
+  {
+    "binding": "PINS",
+    "consumer": "experiments/continuous_v83/terminal_audit/audit.py",
+    "dependency": "experiments/continuous_v83/sturm.py",
+    "kind": "STATIC_PIN_TABLE",
+    "logical_path": "experiments/continuous_v83/sturm.py",
+    "sha256": "9d83a1bcaa79ebbbd4fed557cd7845de57e3955e6f55516ee7119a425f45d2ca"
+  },
+  {
+    "binding": "PINS",
+    "consumer": "experiments/continuous_v83/terminal_audit/audit.py",
+    "dependency": "experiments/continuous_v83/sturm_target.py",
+    "kind": "STATIC_PIN_TABLE",
+    "logical_path": "experiments/continuous_v83/sturm_target.py",
+    "sha256": "6a0aae7a310a091719721b08654574da87f0c105e716988e932ceedacd5886e6"
+  },
+  {
+    "binding": "PINS",
+    "consumer": "experiments/continuous_v83/terminal_audit/audit.py",
+    "dependency": "independent/d7_ambient_points_sturm_v45.py",
+    "kind": "STATIC_PIN_TABLE",
+    "logical_path": "independent/d7_ambient_points_sturm_v45.py",
+    "sha256": "3eb68f57e6d0d88b2e548f605742d434c8714b25eb1404b3c27d32415b61f42a"
+  },
+  {
+    "binding": "PINS",
+    "consumer": "experiments/continuous_v83/terminal_audit/audit.py",
+    "dependency": "independent/d7_r83_principal_sturm_v55.py",
+    "kind": "STATIC_PIN_TABLE",
+    "logical_path": "independent/d7_r83_principal_sturm_v55.py",
+    "sha256": "894339e82389ff651bf25b04693821c4dfeedc427dec2fa4fd8993f195bb663f"
+  },
+  {
+    "binding": "PINS",
+    "consumer": "experiments/continuous_v83/terminal_audit/audit.py",
+    "dependency": "independent/quadrilateral_k17_stdlib_v41.py",
+    "kind": "STATIC_PIN_TABLE",
+    "logical_path": "independent/quadrilateral_k17_stdlib_v41.py",
+    "sha256": "c5bd45f334a028820a071b5c758acfb8e48afc1e8454b18a3174dd04ca58a38c"
+  },
+  {
+    "binding": "PINS",
+    "consumer": "experiments/continuous_v83/terminal_audit/audit.py",
+    "dependency": "independent/residual_orbit_k17_k38_sturm_v42.py",
+    "kind": "STATIC_PIN_TABLE",
+    "logical_path": "independent/residual_orbit_k17_k38_sturm_v42.py",
+    "sha256": "12a0d875e2715fe2c2ae123d2dc5202f4d7ce4e024f114ad163126654219fc13"
+  },
+  {
+    "binding": "SOURCE_PINS",
+    "consumer": "experiments/continuous_v83/sturm.py",
+    "dependency": "experiments/continuous_v83/sturm_target.py",
+    "kind": "STATIC_PIN_TABLE",
+    "logical_path": "experiments/continuous_v83/sturm_target.py",
+    "sha256": "6a0aae7a310a091719721b08654574da87f0c105e716988e932ceedacd5886e6"
+  },
+  {
+    "binding": "SOURCE_PINS",
+    "consumer": "experiments/continuous_v83/sturm.py",
+    "dependency": "certificates/d7_r83_principal_expected_v55.py",
+    "kind": "STATIC_PIN_TABLE",
+    "logical_path": "certificates/d7_r83_principal_expected_v55.py",
+    "sha256": "0fd36a67b004e6a250188aa8731a207456b5e49faa955005d6b12cd36665bea7"
+  },
+  {
+    "binding": "SOURCE_PINS",
+    "consumer": "experiments/continuous_v83/sturm.py",
+    "dependency": "certificates/full_packet_v62/ambient_points.json",
+    "kind": "STATIC_PIN_TABLE",
+    "logical_path": "certificates/full_packet_v62/ambient_points.json",
+    "sha256": "c0e84da6c266c087cbce65a6e8aca8e3f30350ce56b5a1089c4ae4978a381f36"
+  },
+  {
+    "binding": "SOURCE_PINS",
+    "consumer": "experiments/continuous_v83/sturm.py",
+    "dependency": "certificates/full_packet_v62/module_templates.json",
+    "kind": "STATIC_PIN_TABLE",
+    "logical_path": "certificates/full_packet_v62/module_templates.json",
+    "sha256": "09ccff217511a67e946567135f9ffb74da020843621d0895ecce8746d25c245d"
+  },
+  {
+    "binding": "SOURCE_PINS",
+    "consumer": "experiments/continuous_v83/sturm.py",
+    "dependency": "independent/d7_ambient_points_sturm_v45.py",
+    "kind": "STATIC_PIN_TABLE",
+    "logical_path": "independent/d7_ambient_points_sturm_v45.py",
+    "sha256": "3eb68f57e6d0d88b2e548f605742d434c8714b25eb1404b3c27d32415b61f42a"
+  },
+  {
+    "binding": "SOURCE_PINS",
+    "consumer": "experiments/continuous_v83/sturm.py",
+    "dependency": "independent/d7_r83_principal_sturm_v55.py",
+    "kind": "STATIC_PIN_TABLE",
+    "logical_path": "independent/d7_r83_principal_sturm_v55.py",
+    "sha256": "894339e82389ff651bf25b04693821c4dfeedc427dec2fa4fd8993f195bb663f"
+  },
+  {
+    "binding": "SOURCE_PINS",
+    "consumer": "experiments/continuous_v83/sturm.py",
+    "dependency": "independent/quadrilateral_k17_stdlib_v41.py",
+    "kind": "STATIC_PIN_TABLE",
+    "logical_path": "independent/quadrilateral_k17_stdlib_v41.py",
+    "sha256": "c5bd45f334a028820a071b5c758acfb8e48afc1e8454b18a3174dd04ca58a38c"
+  },
+  {
+    "binding": "SOURCE_PINS",
+    "consumer": "experiments/continuous_v83/sturm.py",
+    "dependency": "independent/residual_orbit_k17_k38_sturm_v42.py",
+    "kind": "STATIC_PIN_TABLE",
+    "logical_path": "independent/residual_orbit_k17_k38_sturm_v42.py",
+    "sha256": "12a0d875e2715fe2c2ae123d2dc5202f4d7ce4e024f114ad163126654219fc13"
+  },
+  {
+    "binding": "SOURCE_PINS",
+    "consumer": "experiments/continuous_v83/primary.py",
+    "dependency": "certificates/d7_ambient_points_v45.py",
+    "kind": "STATIC_PIN_TABLE",
+    "logical_path": "certificates/d7_ambient_points_v45.py",
+    "sha256": "34cb35db91b953162b595fb61e031f551e6df0a0d7b5192dc15a6c00c39274a2"
+  },
+  {
+    "binding": "SOURCE_PINS",
+    "consumer": "experiments/continuous_v83/primary.py",
+    "dependency": "certificates/d7_r83_mask14_v46.py",
+    "kind": "STATIC_PIN_TABLE",
+    "logical_path": "certificates/d7_r83_mask14_v46.py",
+    "sha256": "70e9c7114adea2b319c3e430046ae3e917717142e7a78e4d43a043950f1147f3"
+  },
+  {
+    "binding": "SOURCE_PINS",
+    "consumer": "experiments/continuous_v83/primary.py",
+    "dependency": "certificates/d7_r83_masks14_30_v47.py",
+    "kind": "STATIC_PIN_TABLE",
+    "logical_path": "certificates/d7_r83_masks14_30_v47.py",
+    "sha256": "e78ba5e793134f28d8113d8129809421a5a7754c439afcd64ba0385543799941"
+  },
+  {
+    "binding": "SOURCE_PINS",
+    "consumer": "experiments/continuous_v83/primary.py",
+    "dependency": "certificates/d7_r83_principal_expected_v55.py",
+    "kind": "STATIC_PIN_TABLE",
+    "logical_path": "certificates/d7_r83_principal_expected_v55.py",
+    "sha256": "0fd36a67b004e6a250188aa8731a207456b5e49faa955005d6b12cd36665bea7"
+  },
+  {
+    "binding": "SOURCE_PINS",
+    "consumer": "experiments/continuous_v83/primary.py",
+    "dependency": "certificates/d7_r83_principal_v55.py",
+    "kind": "STATIC_PIN_TABLE",
+    "logical_path": "certificates/d7_r83_principal_v55.py",
+    "sha256": "a937b69037b5d53f40a600aefb177bf89766d3529b22f73529b2b861ec9238cc"
+  },
+  {
+    "binding": "SOURCE_PINS",
+    "consumer": "experiments/continuous_v83/primary.py",
+    "dependency": "certificates/residual_orbit_k17_k38_v42.py",
+    "kind": "STATIC_PIN_TABLE",
+    "logical_path": "certificates/residual_orbit_k17_k38_v42.py",
+    "sha256": "5186066f21a2f840ffc71936a54372d7ad51eb6cc919bf7812bb1bec258cd59d"
+  },
+  {
+    "binding": "SOURCE_PINS",
+    "consumer": "experiments/continuous_v83/primary.py",
+    "dependency": "certificates/full_packet_v62/ambient_points.json",
+    "kind": "STATIC_PIN_TABLE",
+    "logical_path": "certificates/full_packet_v62/ambient_points.json",
+    "sha256": "c0e84da6c266c087cbce65a6e8aca8e3f30350ce56b5a1089c4ae4978a381f36"
+  },
+  {
+    "binding": "SOURCE_PINS",
+    "consumer": "experiments/continuous_v83/primary.py",
+    "dependency": "certificates/full_packet_v62/module_templates.json",
+    "kind": "STATIC_PIN_TABLE",
+    "logical_path": "certificates/full_packet_v62/module_templates.json",
+    "sha256": "09ccff217511a67e946567135f9ffb74da020843621d0895ecce8746d25c245d"
+  },
+  {
+    "binding": "SOURCE_PINS",
+    "consumer": "experiments/continuous_v83/primary.py",
+    "dependency": "experiments/continuous_v83/primary_target.py",
+    "kind": "STATIC_PIN_TABLE",
+    "logical_path": "experiments/continuous_v83/primary_target.py",
+    "sha256": "b94aca2bc29fc612fbecaadf83430ebd0a9e09f462876c1dc41fe0aa51422bd3"
+  },
+  {
+    "binding": "HELPER_PINS",
+    "consumer": "experiments/continuous_v83/final_join/configuration_serialization_cpu7200_cache34/join.py",
+    "dependency": "experiments/continuous_v83/final_join/revision03-source/join.py",
+    "kind": "STATIC_PIN_TABLE",
+    "logical_path": "experiments/continuous_v83/final_join/revision03-source/join.py",
+    "sha256": "fdc1e81775454f4e1bf9d1e09905b30b4f43b98f6732c600a01355d0dd577349"
+  },
+  {
+    "binding": "HELPER_PINS",
+    "consumer": "experiments/continuous_v83/final_join/configuration_serialization_cpu7200_cache34/join.py",
+    "dependency": "experiments/continuous_v83/legacy_recovery_two/conjunction/join.py",
+    "kind": "STATIC_PIN_TABLE",
+    "logical_path": "experiments/continuous_v83/legacy_recovery_two/conjunction/join.py",
+    "sha256": "8f8b3ebb051518b8aa9ded690b2c7ea251a925572be8330787a35358eef31f43"
+  },
+  {
+    "binding": "HELPER_PINS",
+    "consumer": "experiments/continuous_v83/final_join/configuration_serialization_cpu7200_cache34/join.py",
+    "dependency": "experiments/continuous_v83/legacy_recovery_two/conjunction/common.py",
+    "kind": "STATIC_PIN_TABLE",
+    "logical_path": "experiments/continuous_v83/legacy_recovery_two/conjunction/common.py",
+    "sha256": "521d5756438ba1b8faa569777fd90376eadd323b27c4e7314b7aa76a54adff13"
+  },
+  {
+    "binding": "HELPER_PINS",
+    "consumer": "experiments/continuous_v83/final_join/configuration_serialization_cpu7200_cache34/join.py",
+    "dependency": "experiments/continuous_v83/legacy_recovery/recover.py",
+    "kind": "STATIC_PIN_TABLE",
+    "logical_path": "experiments/continuous_v83/legacy_recovery/recover.py",
+    "sha256": "87197a98259240701d8f8cb63181dfd99941baaf66f17f0aa22b56d5c74cba22"
+  },
+  {
+    "binding": "HELPER_PINS",
+    "consumer": "experiments/continuous_v83/final_join/configuration_serialization_cpu7200_cache34/join.py",
+    "dependency": "experiments/continuous_v83/continuation/fanout/structural_cache_candidate/cpu7200/audit.py",
+    "kind": "STATIC_PIN_TABLE",
+    "logical_path": "experiments/continuous_v83/continuation/fanout/structural_cache_candidate/cpu7200/audit.py",
+    "sha256": "6c12e07b0cce9b6fff4512c932f5b834acc9e32b071f4e54f3dd38ce27e5ffc5"
+  },
+  {
+    "binding": "HELPER_PINS",
+    "consumer": "experiments/continuous_v83/final_join/configuration_serialization_cpu7200_cache34/join.py",
+    "dependency": "experiments/continuous_v83/continuation/representative_remaining/v86_partial_admission/canonical_configuration/cpu7200_cache/den_identity_pair/common.py",
+    "kind": "STATIC_PIN_TABLE",
+    "logical_path": "experiments/continuous_v83/continuation/representative_remaining/v86_partial_admission/canonical_configuration/cpu7200_cache/den_identity_pair/common.py",
+    "sha256": "6e5770522d55fecd9c8b3ecd6ed06dd1fb6905fa757f18272366269e3f20bf69"
+  },
+  {
+    "binding": "HELPER_PINS",
+    "consumer": "experiments/continuous_v83/final_join/configuration_serialization_cpu7200_cache34/join.py",
+    "dependency": "experiments/continuous_v83/continuation/representative_remaining/v86_partial_admission/canonical_configuration/cpu7200_cache/den_identity_pair/conditional.py",
+    "kind": "STATIC_PIN_TABLE",
+    "logical_path": "experiments/continuous_v83/continuation/representative_remaining/v86_partial_admission/canonical_configuration/cpu7200_cache/den_identity_pair/conditional.py",
+    "sha256": "eca050d1478efad4702e7df8527205986cf8c7d8da535a62d991884a63bc9503"
+  },
+  {
+    "binding": "HELPER_PINS",
+    "consumer": "experiments/continuous_v83/final_join/configuration_serialization_cpu7200_cache34/join.py",
+    "dependency": "experiments/continuous_v83/continuation/fanout/structural_cache_candidate/cache.py",
+    "kind": "STATIC_PIN_TABLE",
+    "logical_path": "experiments/continuous_v83/continuation/fanout/structural_cache_candidate/cache.py",
+    "sha256": "3786473b04b0eea4d5b74f6489ca45d0c3f5530ef01db7a5de4aae8df8d3ec47"
+  },
+  {
+    "binding": "HELPER_PINS",
+    "consumer": "experiments/continuous_v83/final_join/configuration_serialization_cpu7200_cache34/join.py",
+    "dependency": "experiments/continuous_v83/final_join/crosscohort/join.py",
+    "kind": "STATIC_PIN_TABLE",
+    "logical_path": "experiments/continuous_v83/final_join/crosscohort/join.py",
+    "sha256": "f619ae12fd1782ef0499e12f5e8eda4dbfedd2ab061e50344bb21e1ec855d3c2"
+  },
+  {
+    "binding": "HELPER_PINS",
+    "consumer": "experiments/continuous_v83/final_join/configuration_serialization_cpu7200_cache34/join.py",
+    "dependency": "experiments/continuous_v83/continuation/fanout/structural_cache_candidate/cpu7200/conditional.py",
+    "kind": "STATIC_PIN_TABLE",
+    "logical_path": "experiments/continuous_v83/continuation/fanout/structural_cache_candidate/cpu7200/conditional.py",
+    "sha256": "b2db9e7784f0e2ed6fbdc164ba244db0c8dd7da358276b7bd83bcccb1f66e51c"
+  },
+  {
+    "binding": "HELPER_PINS",
+    "consumer": "experiments/continuous_v83/final_join/configuration_serialization_cpu7200_cache34/join.py",
+    "dependency": "experiments/continuous_v83/continuation/representative_remaining/v86_partial_admission/canonical_configuration/cpu7200_cache/den_identity_pair/join34.py",
+    "kind": "STATIC_PIN_TABLE",
+    "logical_path": "experiments/continuous_v83/continuation/representative_remaining/v86_partial_admission/canonical_configuration/cpu7200_cache/den_identity_pair/join34.py",
+    "sha256": "97e4b7af3c073ac08905fede52135a0221c9484e2fcfee07482bc97ef492cf8c"
+  },
+  {
+    "binding": "HELPER_PINS",
+    "consumer": "experiments/continuous_v83/final_join/configuration_serialization_cpu7200_cache34/join.py",
+    "dependency": "experiments/continuous_v83/continuation/representative_remaining/v86_partial_admission/canonical_configuration/conditional.py",
+    "kind": "STATIC_PIN_TABLE",
+    "logical_path": "experiments/continuous_v83/continuation/representative_remaining/v86_partial_admission/canonical_configuration/conditional.py",
+    "sha256": "eca050d1478efad4702e7df8527205986cf8c7d8da535a62d991884a63bc9503"
+  },
+  {
+    "binding": "HELPER_PINS",
+    "consumer": "experiments/continuous_v83/final_join/configuration_serialization_cpu7200_cache34/join.py",
+    "dependency": "experiments/continuous_v83/continuation/representative_remaining/v86_partial_admission/canonical_configuration/common.py",
+    "kind": "STATIC_PIN_TABLE",
+    "logical_path": "experiments/continuous_v83/continuation/representative_remaining/v86_partial_admission/canonical_configuration/common.py",
+    "sha256": "6e5770522d55fecd9c8b3ecd6ed06dd1fb6905fa757f18272366269e3f20bf69"
+  },
+  {
+    "binding": "HELPER_PINS",
+    "consumer": "experiments/continuous_v83/final_join/crosscohort/join.py",
+    "dependency": "experiments/continuous_v83/final_join/revision03-source/join.py",
+    "kind": "STATIC_PIN_TABLE",
+    "logical_path": "experiments/continuous_v83/final_join/revision03-source/join.py",
+    "sha256": "fdc1e81775454f4e1bf9d1e09905b30b4f43b98f6732c600a01355d0dd577349"
+  },
+  {
+    "binding": "HELPER_PINS",
+    "consumer": "experiments/continuous_v83/final_join/crosscohort/join.py",
+    "dependency": "experiments/continuous_v83/legacy_recovery_two/conjunction/join.py",
+    "kind": "STATIC_PIN_TABLE",
+    "logical_path": "experiments/continuous_v83/legacy_recovery_two/conjunction/join.py",
+    "sha256": "8f8b3ebb051518b8aa9ded690b2c7ea251a925572be8330787a35358eef31f43"
+  },
+  {
+    "binding": "HELPER_PINS",
+    "consumer": "experiments/continuous_v83/final_join/crosscohort/join.py",
+    "dependency": "experiments/continuous_v83/legacy_recovery_two/conjunction/common.py",
+    "kind": "STATIC_PIN_TABLE",
+    "logical_path": "experiments/continuous_v83/legacy_recovery_two/conjunction/common.py",
+    "sha256": "521d5756438ba1b8faa569777fd90376eadd323b27c4e7314b7aa76a54adff13"
+  },
+  {
+    "binding": "HELPER_PINS",
+    "consumer": "experiments/continuous_v83/final_join/crosscohort/join.py",
+    "dependency": "experiments/continuous_v83/legacy_recovery/recover.py",
+    "kind": "STATIC_PIN_TABLE",
+    "logical_path": "experiments/continuous_v83/legacy_recovery/recover.py",
+    "sha256": "87197a98259240701d8f8cb63181dfd99941baaf66f17f0aa22b56d5c74cba22"
+  },
+  {
+    "binding": "HELPER_PINS",
+    "consumer": "experiments/continuous_v83/final_join/crosscohort/join.py",
+    "dependency": "experiments/continuous_v83/continuation/fanout/v89_audit/audit.py",
+    "kind": "STATIC_PIN_TABLE",
+    "logical_path": "experiments/continuous_v83/continuation/fanout/v89_audit/audit.py",
+    "sha256": "48913399f00e9c22d99364fa5f16a7acbb040a234be0e10e154b75ca988e37bf"
+  }
+]

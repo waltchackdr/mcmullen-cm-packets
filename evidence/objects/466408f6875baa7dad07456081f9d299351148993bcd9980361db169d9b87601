@@ -1,0 +1,19 @@
+"""Bounded regression for exact fixed-fiber weights (not theta evaluations)."""
+import json
+from pathlib import Path
+import subprocess
+import sys
+import unittest
+
+
+class FixedWeightsRegression(unittest.TestCase):
+    def test_exact_replay(self):
+        root = Path(__file__).resolve().parents[1]
+        base = root/'experiments/bc_jacobian_v147'
+        run = subprocess.run([sys.executable, str(base/'fixed_weights.py')],
+                             capture_output=True, text=True, timeout=30, check=True)
+        self.assertEqual(json.loads(run.stdout), json.loads((base/'fixed_weights_exact.json').read_text()))
+
+
+if __name__ == '__main__':
+    unittest.main()

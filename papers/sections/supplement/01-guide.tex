@@ -1,0 +1,47 @@
+% !TeX root = ../../arithmetic-and-computation.tex
+\section{How to use this supplement}
+This supplement contains the detailed packet arithmetic, historical
+exclusion records, auxiliary lattice arguments and execution provenance
+used by Papers I and II and the supporting Hodge note. It is organized by
+mathematical role. The historical partial computations are explicitly
+separated from the final complete packet theorem in Paper I.
+
+Notation in packet sections is $M=\mathbb Q(\zeta_{42})$, $L=M^+$,
+$t=\zeta_{42}+\zeta_{42}^{-1}$ and
+$\pi=t^4+t^3-4t^2-2t+5$ of norm $43$. In quotient-family material,
+$\pi$ instead denotes $1-z^{14}$, the generator over $3$ specified in
+Paper II; these symbols must not be identified. Embeddings are ordered
+$1,5,11,13,17,19$; $K=\mathbb Q(\sqrt{-3})$.
+
+The roles of evidence are distinct: a finite-domain proof establishes
+exhaustiveness; exact arithmetic or outward enclosures justify decisions;
+source/runtime and retained-output records describe the execution to which
+the claim is bound. A hash establishes file identity, not mathematical
+correctness or absence of a historical transient replacement.
+
+\subsection{Result-to-evidence guide}
+\begin{description}[leftmargin=1em]
+\item[Packet domain.] Paper I, Theorem~\externalref{packet}{thm:fullpacketarithmetic},
+uses the order and module calculations below and the full-packet arithmetic
+sources in Section~\ref{app:computer}.
+\item[Curve intersection.] Paper I, Theorem~\externalref{packet}{thm:fullpacketgeometry},
+uses its two-region lemma, positive vertex realizations and both complete
+negative populations. The final receipt is
+\path{experiments/continuous_v83/whole_packet_assessment/final-adoption.json}.
+The historical execution premise in Paper I remains required.
+\item[Principal geometry.] The common-lattice, stabilizer and map proofs
+are in Paper I. Their named exact regressions and the supplementary
+individual-lattice arguments below do not replace those proofs.
+\item[Finite quotients and descent.] Paper II names the adopted exact
+finite tables within its proofs. Subgroup, underlying, polarized, orbit
+and field counts are different assertions, with different proof inputs.
+\item[Jacobian exclusion.] Paper II, Theorem~\externalref{quotients}{pp:thm:jacobiancomplete},
+retains its model, theta-enclosure and execution contract. Counts cannot be
+pooled across the four models. The $156$ smaller-order cases remain open.
+\item[Hodge tensors.] The Hodge note gives the algebraic constructions and
+integral relation arguments; source identity alone does not prove either.
+\end{description}
+This is a navigation guide, not a newly completed transitive evidence
+archive. The repository remains private. Historical source paths are
+relative to its root; a release must provide the complete dependencies
+and accurate access instructions before claiming reproducibility.

@@ -1,0 +1,54 @@
+"""Exact experimental fixed-fiber weights; no theta nonvanishing assertion."""
+import hashlib
+import itertools
+import json
+from pathlib import Path
+import resource
+import signal
+
+
+def main():
+    source = Path(__file__).with_name('period_setup.json')
+    models = json.loads(source.read_text())['models']
+    result = {}
+    for name, data in models.items():
+        F = [[int(x) for x in row] for row in data['delta_in_symplectic_basis']]
+        chi = data['invariant_quadratic_refinement_chi']
+        basis = data['fixed_3torsion_basis_numerators']
+
+        def weight(v):
+            diff = [sum(F[i][j]*v[j] for j in range(12))-v[i] for i in range(12)]
+            assert all(x % 3 == 0 for x in diff)
+            k = [x//3 for x in diff]
+            q = sum(k[i]*k[i+6] for i in range(6))+sum(chi[i]*k[i] for i in range(12))
+            pairing = sum(v[i]*k[i+6]-v[i+6]*k[i] for i in range(6))
+            return (3*q+pairing) % 6
+
+        points = {tuple(sum(c*b[i] for c,b in zip(coeff,basis)) % 3 for i in range(12))
+                  for coeff in itertools.product(range(3), repeat=6)}
+        assert len(points) == 729
+        counts = {i:0 for i in range(6)}
+        eligible = set()
+        for v in sorted(points):
+            w = weight(v)
+            counts[w] += 1
+            assert weight(tuple(-x for x in v)) == w
+            # Check representative invariance under all basis lattice shifts.
+            for j in range(12):
+                shifted = list(v)
+                shifted[j] += 3
+                assert weight(shifted) == w
+            if w == 0 and any(v):
+                eligible.add(min(v, tuple((-x) % 3 for x in v)))
+        assert counts == {0:261,1:0,2:234,3:0,4:234,5:0}
+        assert len(eligible) == 130
+        result[name] = {'counts_mod6':counts, 'weight_zero_nonzero_pairs':sorted(eligible)}
+    print(json.dumps({'status':'EXPERIMENTAL_EXACT_WEIGHTS_NOT_THETA_VALUES',
+                      'input_sha256':hashlib.sha256(source.read_bytes()).hexdigest(),
+                      'models':result}, indent=2))
+
+
+if __name__ == '__main__':
+    resource.setrlimit(resource.RLIMIT_CPU, (20,20))
+    signal.alarm(30)
+    main()

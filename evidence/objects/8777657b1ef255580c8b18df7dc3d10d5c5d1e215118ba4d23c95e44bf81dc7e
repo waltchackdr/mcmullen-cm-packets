@@ -1,0 +1,27 @@
+"""Exact retained-data replay for disjoint S-order pairs8..23."""
+import importlib.util
+from pathlib import Path
+import unittest
+
+ROOT = Path(__file__).resolve().parents[1]
+SPEC = importlib.util.spec_from_file_location(
+    "theta164_independent_audit02",
+    ROOT / "experiments/s_order_theta_v164/referee_actual_data02.py",
+)
+AUDIT = importlib.util.module_from_spec(SPEC)
+SPEC.loader.exec_module(AUDIT)
+
+
+class SOrderExtension02(unittest.TestCase):
+    def test_actual_raw_evidence_and_disjoint_cumulative_count(self):
+        result = AUDIT.run()
+        self.assertEqual(len(result["observations"]), 160)
+        self.assertTrue(result["prior_pairs_disjoint"])
+        self.assertEqual(set(result["cumulative_nonzero_pairs"].values()), {24})
+        for counts in result["counts"].values():
+            self.assertEqual(counts, {"observations":16, "finite":16, "nonzero":16})
+        self.assertTrue(result["nonfinite_and_zero_containing_not_counted"])
+
+
+if __name__ == "__main__":
+    unittest.main()

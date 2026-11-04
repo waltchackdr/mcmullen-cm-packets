@@ -1,0 +1,79 @@
+#!/usr/bin/env python3
+"""Bounded exact preparation; no claim promotion. Does not import old producers."""
+import argparse, hashlib, json, resource, signal, sys, time
+from pathlib import Path
+if not __debug__ or sys.flags.optimize:
+    raise RuntimeError('Assertions must be enabled')
+resource.setrlimit(resource.RLIMIT_CPU,(20,20))
+signal.signal(signal.SIGALRM,lambda *_: (_ for _ in ()).throw(TimeoutError('30-second bound')))
+signal.alarm(30)
+import sympy as s
+x=s.symbols('t'); f=x**6+x**5-6*x**4-6*x**3+8*x**2+8*x+1
+u=x-1; beta=-x**5+x**4+6*x**3-2*x**2-8*x-2; d=s.diff(f,x)
+def red(z): return s.rem(s.Poly(s.expand(z),x,domain=s.QQ),s.Poly(f,x,domain=s.QQ)).as_expr()
+def inv(z): return s.invert(red(z),f,x)
+def coeff(z): return [str(s.Poly(red(z),x).nth(i)) for i in range(6)]
+def integral(z): return all(v.q==1 for v in s.Poly(red(z),x).all_coeffs())
+def mat(z): return z.applyfunc(red)
+def mult(z): return s.Matrix(6,6,lambda i,j:s.Poly(red(z*x**j),x).nth(i))
+def norm(z): return int(mult(z).det())
+def interval_poly(poly,ab):
+    lo=hi=s.Rational(0); a,b=ab
+    for c in s.Poly(red(poly),x).all_coeffs():
+        v=[lo*a,lo*b,hi*a,hi*b];lo=min(v)+c;hi=max(v)+c
+    return lo,hi
+
+def check():
+    start=time.perf_counter()
+    assert norm(u)==7 and norm(beta)==-27
+    assert s.rem(beta,x**3-x**2+x+1,x,domain=s.GF(3))==0
+    eps=red(d*inv(beta*u**5))
+    assert integral(eps) and abs(norm(eps))==1
+    a=inv(beta*u**2); b=inv(u**3); delta=red(a*b)
+    T=s.Matrix([[a,3*b],[0,b]])
+    Tinv=mat(s.Matrix([[inv(a),-3*inv(a)],[0,inv(b)]]))
+    assert mat(T*Tinv)==s.eye(2)
+    assert all(integral(z) for z in Tinv) # O^2 subset T O^2
+    assert mat(d*T)==mat(eps*s.Matrix([[u**3,3*beta*u**2],[0,beta*u**2]]))
+    assert red(delta*d)==eps
+    assert s.cancel(mult(delta).det())==s.Rational(-1,453789)
+    # Unimodularity of actual trace form in the explicit twelve-vector basis.
+    gram=s.Matrix(6,6,lambda i,j:s.trace(mult(red(delta*x**(i+j)))))
+    assert all(v.q==1 for v in gram) and abs(gram.det())==1
+    E=s.BlockMatrix([[s.zeros(6),-gram],[gram,s.zeros(6)]]).as_explicit()
+    assert E.det()==1 and E.T==-E
+    S=T.T; R=s.diag(delta,1); W=s.Matrix([[red(a*a),0],[3,1]])
+    assert mat(R*S)==mat(b*W)
+    assert red(W.det()-a*a)==0
+    # Clear rational denominators in each coefficient to obtain exact roots.
+    intervals=s.Poly(f,x).intervals(eps=s.Rational(1,10**8))
+    assert len(intervals)==6 and all(m==1 for _,m in intervals)
+    rows=[]
+    for label,(ab,m) in zip([1,5,11,13,17,19],reversed(intervals)):
+        v=interval_poly(delta,ab)
+        assert v[0]>0 or v[1]<0
+        rows.append({'embedding_k':label,'root_interval':[str(q) for q in ab],
+                     'delta_interval':[str(q) for q in v],
+                     'delta_sign':1 if v[0]>0 else -1})
+    return {'schema':'explicit-principal-basis-v111-1','status':'EXACT_PREPARATION_PENDING_REVIEW',
+      'coefficient_order':'1,t,...,t^5; rational strings',
+      'f_coefficients':[str(s.Poly(f,x).nth(i)) for i in range(7)],'defining_polynomial':str(f),'u':coeff(u),'beta':coeff(beta),'d':coeff(d),
+      'unit_epsilon_d_over_beta_u5':coeff(eps),'epsilon_norm':norm(eps),
+      'a':coeff(a),'b':coeff(b),'delta':coeff(delta),
+      'basis_matrix_T':[[coeff(T[i,j]) for j in range(2)] for i in range(2)],
+      'basis_inverse_integral':[[coeff(Tinv[i,j]) for j in range(2)] for i in range(2)],
+      'trace_delta_matrix':[[int(gram[i,j]) for j in range(6)] for i in range(6)],
+      'trace_delta_determinant':int(gram.det()),'alternating_determinant':int(E.det()),
+      'lattice_index':453789,'delta_norm':'-1/453789','embedding_intervals':rows,
+      'positive_period_matrix_W':[[coeff(W[i,j]) for j in range(2)] for i in range(2)],
+      'positive_determinant_reason':'det(W)=a^2 at every real embedding',
+      'principal_standard_module':'O_L e1 + delta O_L e2',
+      'target_group':'{[[r,delta*s],[v/delta,w]]: r,s,v,w in O_L, r*w-s*v=1}',
+      'scope':'Explicit basis/trace form and period identities, not a literal Mostaed-image comparison',
+      'elapsed_seconds':time.perf_counter()-start,'sympy_version':s.__version__,
+      'source_sha256':hashlib.sha256(Path(__file__).read_bytes()).hexdigest()}
+if __name__=='__main__':
+    p=argparse.ArgumentParser();p.add_argument('--output',required=True);args=p.parse_args()
+    result=check()
+    with Path(args.output).open('x') as h:json.dump(result,h,indent=2,sort_keys=True);h.write('\n')
+    print('EXPLICIT PRINCIPAL BASIS: PASS')

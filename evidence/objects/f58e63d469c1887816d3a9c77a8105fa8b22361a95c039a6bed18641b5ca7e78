@@ -1,0 +1,26 @@
+{
+  "delta": "Exact promotion copies except tests add one full primary reconstruction plus genuinely separate companion-matrix/full-box subprocess method. No active source files changed.",
+  "files": {
+    "PROOF_FOR_MANUSCRIPT.txt": {
+      "bytes": 4204,
+      "sha256": "d840dc9fbc066fffb48ce959689d395129c602ead55a25c41bcf6ae956a2d227"
+    },
+    "certificates/principal_unmarked_bc_data.json": {
+      "bytes": 22180,
+      "sha256": "b9792b7ebe38ab8235d8b7b603a2596768d182b7863c6ca975eac56f9cb0437f"
+    },
+    "certificates/principal_unmarked_bc_v122.py": {
+      "bytes": 7515,
+      "sha256": "a73582098061839d7405a1fe00576b8bc50b703d0d830bb7d3977ecad446fdd3"
+    },
+    "independent/principal_unmarked_bc_v122.py": {
+      "bytes": 4501,
+      "sha256": "523ee7003b1e84a7c1fbd3afdf00f0465acd9271d3dba8c7214c9d3002797592"
+    },
+    "tests/test_principal_unmarked_bc_v122.py": {
+      "bytes": 2504,
+      "sha256": "83900148348bab8db56b4c3792e91d18d833b1bea3a12f569f44b46d37cda6f6"
+    }
+  },
+  "status": "INTEGRATION_CANDIDATE_PENDING_REVIEW"
+}

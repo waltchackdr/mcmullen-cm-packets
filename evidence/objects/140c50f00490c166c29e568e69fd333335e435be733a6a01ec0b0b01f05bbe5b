@@ -1,0 +1,87 @@
+"""Retain/check postprocess provenance and exact output shape; no adoption."""
+import argparse
+import hashlib
+import json
+from pathlib import Path
+import resource
+import signal
+import sys
+from inspect_retained_candidate import checked, read_json, ROOT
+sys.path.insert(0,str(ROOT/'experiments/bc_jacobian_v147'))
+from exact_ball_candidate import component
+
+
+def inspect(authority, expected, controller, output):
+    approval = read_json(authority,expected)
+    assert approval['status'] == 'INDEPENDENTLY_ACCEPTED_V150_SESSION'
+    for p,pin in approval['pins'].items():checked(ROOT/p,pin)
+    outcome=read_json(controller/'outcome.json');cleanup=read_json(controller/'cleanup.json')
+    assert outcome['status']=='SESSION_QUEUE_ENDED' and len(outcome['jobs'])==2
+    assert cleanup['provider_absence_verified'] is True
+    compact=read_json(ROOT/'build/s-order-v162/models01/compact_inventory.json')
+    output.mkdir(parents=True,exist_ok=False)
+    records=[];runtimes=[]
+    for job,packetref in enumerate(approval['jobs']):
+        packet=read_json(ROOT/packetref['path'],packetref['sha256'])
+        source=read_json(ROOT/packet['uploads']['source_manifest']['path'],packet['uploads']['source_manifest']['sha256'])
+        manifest=read_json(ROOT/packet['code']['job_manifest.json']['path'],packet['code']['job_manifest.json']['sha256'])
+        root=controller/f'jobs/job{job}/controller'
+        jobout=read_json(root/'outcome.json');assert jobout==outcome['jobs'][job]
+        assert jobout['remote_stage']=='PIPELINE_ENDED' and jobout['returncode']==0
+        ref=jobout['retention'];receiptpath=Path(ref['receipt']).resolve()
+        assert receiptpath.is_relative_to(root.resolve()/'retained')
+        receipt=read_json(receiptpath,ref['sha256'])
+        assert not receipt['rejected'] and set(receipt['missing'])<={'guard_delete.json'}
+        blobs={name:checked(root/'retained/blobs'/(r['sha256']+'.blob'),r['sha256'],r['bytes']) for name,r in receipt['artifacts'].items()}
+        plan=read_json(ROOT/packet['source_mapping'].get('experiments/bc_jacobian_v147/certificate_plan_candidate.json',
+                    str(Path(packetref['path']).parent/'certificate_plan_candidate.json')))
+        assert hashlib.sha256((ROOT/str(Path(packetref['path']).parent/'certificate_plan_candidate.json')).read_bytes()).hexdigest()==source['plan_sha256']
+        started=json.loads(blobs['benchmark/started.json']);summary=json.loads(blobs['benchmark/summary.json']);pipeline=json.loads(blobs['pipeline.json'])
+        assert started['plan_sha256']==summary['plan_sha256']==source['plan_sha256']==manifest['transport']['plan_sha256']
+        assert started['worker_sha256']==source['files']['experiments/bc_jacobian_v147/certificate_worker_candidate.py']['sha256']
+        assert summary['status']=='MODEL_AUDIT_PERIOD_BATCH_REVIEW_REQUIRED' and summary['complete_model_count']==80
+        assert pipeline['status']=='ATTEMPT_ENDED_NO_THEOREM' and pipeline['benchmark_returncode']==pipeline['setup_returncode']==0
+        runtime=blobs['setup/runtime.json'];setup=json.loads(blobs['setup/setup_complete.json'])
+        assert hashlib.sha256(runtime).hexdigest()==setup['runtime_sha256']==pipeline['runtime_sha256']
+        runtimes.append({'job':job,'sha256':hashlib.sha256(runtime).hexdigest(),'runtime':json.loads(runtime)})
+        for task in range(8):
+            result=json.loads(blobs[f'benchmark/task{task:02d}/result.json']);assert result==summary['results'][task]
+            start=80*job+10*task
+            assert result['status']=='EXITED' and result['returncode']==0 and result['task']['start']==start and result['task']['count']==10
+            raw=blobs[f'benchmark/task{task:02d}/stdout.jsonl'];lines=raw.splitlines();assert len(lines)==10
+            for offset,line in enumerate(lines):
+                index=start+offset;d=json.loads(line);item=compact['models'][index]
+                assert d['status']=='EXACT_MODEL_AUDIT_AND_PERIOD_CANDIDATES' and d['catalog_index']==index and d['theta_evaluations']==0
+                assert d['input_model_sha256']==item['sha256'] and d['original_stdout_sha256']==item['stdout_sha256'] and d['original_line']==item['line']
+                assert d['source_pins']==plan['pins']
+                for p,h in d['source_pins'].items():assert source['files'][p]['sha256']==h
+                audit=d['exact_audit'];transport=d['transport'];period=d['interval_period']
+                for obj,status in [(audit,'EXACT_SERIALIZED_MODEL_CHECK_PASS'),(transport,'EXACT_TRANSPORT_WITH_NONCERTIFIED_PERIOD_RECONNAISSANCE'),(period,'INTERVAL_PERIOD_CANDIDATE_REVIEW_REQUIRED')]:
+                    assert obj['status']==status and obj['catalog_index']==index and obj['theta_evaluations']==0
+                assert audit['model_sha256']==item['sha256'] and audit['raw_provenance']=={k:item[k] for k in ['job','task','stdout_sha256','line']}
+                assert audit['fixed_points_checked']==729 and audit['fiber_counts']==[261,234,234] and audit['all_130_pairs_match'] is True
+                assert len(transport['eligible_nonzero_pairs'])==130 and transport['actual_tangent_type']==[1,5,11,13,17,19]
+                assert period['precision_bits']==512 and len(period['positive_ldl_pivots'])==6
+                assert all(component(v)[0]>0 for v in period['positive_ldl_pivots'])
+                rect=period['period_rectangles'];assert len(rect)==6 and all(len(row)==6 for row in rect)
+                for row in rect:
+                    for value in row:
+                        assert set(value)=={'real','imag'}
+                        component(value['real']);component(value['imag'])
+                assert all(rect[i][k]==rect[k][i] for i in range(6) for k in range(6))
+                path=output/f'model{index:03d}.json';path.write_bytes(line+b'\n')
+                records.append({'index':index,'path':str(path),'sha256':hashlib.sha256(line+b'\n').hexdigest(),'job':job,'task':task,'stdout_sha256':hashlib.sha256(raw).hexdigest(),'line':offset+1,'input_model_sha256':item['sha256']})
+    assert [r['index'] for r in records]==list(range(160))
+    result={'status':'RETAINED160_MODEL_AUDIT_PERIOD_CANDIDATES_NOT_ADOPTED','authority_sha256':expected,'records':records,'runtime_observations':runtimes,
+            'provider_absence_verified':True,'theta_evaluations':0,'mathematical_adoption':False,
+            'scope':'Byte/source/plan/runtime/task coverage, nested audit metadata and rational interval shape/positive stored pivots only. Independent model/transport/period/runtime/geometric review remains required.'}
+    (output/'inspection.json').write_text(json.dumps(result,indent=2)+'\n')
+    return {'status':result['status'],'records':len(records),'output':str(output)}
+
+
+if __name__=='__main__':
+    resource.setrlimit(resource.RLIMIT_CPU,(20,20));signal.alarm(30)
+    p=argparse.ArgumentParser()
+    p.add_argument('--authority',type=Path,required=True);p.add_argument('--authority-sha256',required=True)
+    p.add_argument('--controller',type=Path,required=True);p.add_argument('--output',type=Path,required=True)
+    a=p.parse_args();print(json.dumps(inspect(a.authority,a.authority_sha256,a.controller,a.output)))

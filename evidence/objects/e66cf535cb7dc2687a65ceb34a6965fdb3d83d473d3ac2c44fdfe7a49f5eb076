@@ -1,0 +1,13 @@
+{
+  "legacy_prefix_entire_bytes_preserved": true,
+  "prior663_source_sha256": "1a62f336a3db3659ee7d521b4293f685771748b85c5d7538e3db04fd7e97b79b",
+  "repository_modified": false,
+  "sha256": {
+    "scripts/certificate_execution.py": "02e516a9058c1d966e191ed8640dc6317e15c23006bc0d79a9934a75bc69d83a",
+    "scripts/run_certificates.py": "0048bd470cefd7a7b597bf122fe62202d08e0917060223c75aef31e56eefacbb",
+    "tests/registration/legacy159.json": "a7eae21c1225c4e9e95c858537ea533b55de54f03b2de53cb8a02764996112db",
+    "tests/registration/om13-installation.json": "b888d8b3b62ff8c4b8c51c841f7cd2b52cf0190834a804f5762af0d15f9182e3",
+    "tests/test_certificate_registration.py": "a21271b700e9a81b613f8ee61a087662f9a5dbc7b0e7d295720e9e7581a515a6",
+    "verify_all.sh": "c36753f360dcf2cecb6911c11bb964253b92b02329d6bba9faa84f32fcc71325"
+  }
+}

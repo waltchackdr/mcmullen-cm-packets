@@ -1,0 +1,60 @@
+"""Explicit V86-only historical assumption; no mathematical or closure waiver."""
+import hashlib,importlib.util
+from pathlib import Path
+COMMON_SHA='6e5770522d55fecd9c8b3ecd6ed06dd1fb6905fa757f18272366269e3f20bf69'
+p=Path(__file__).with_name('common.py')
+if hashlib.sha256(p.read_bytes()).hexdigest()!=COMMON_SHA:raise ValueError('Common source changed')
+s=importlib.util.spec_from_file_location('conditional_remaining_common',p);q=importlib.util.module_from_spec(s);s.loader.exec_module(q)
+HELPER='experiments/continuous_v83/continuation/fanout/v86_halted/audit.py'
+HELPER_SHA='a25b502c3a9ef7525a90360e114ab2e6f8016e4af815c08776398ebca5bab4e2'
+EID='v86-continuation-cohort1/woqi0t1lpjuqq3'
+ASSUMPTION='ORDINARY_IMMUTABLE_HISTORICAL_SOURCE_AND_RUNTIME_WITH_INDIVIDUAL_DRIVER_POSTGUARDS'
+ADMISSION_STATUS='EXACT_V8678_DRIVER_GUARDS_CHECKED_PENDING_CROSSCOHORT_COMPARISON'
+TERMINAL_STATUS='CONDITIONAL_COMPLETE_730_UNDER_REVIEWED_V86_DRIVER_GUARDS'
+JOIN_STATUS='CONDITIONAL_PORTABLE_SAME_PLAN_REPRESENTATIVE_AUDIT_PASS'
+ASSESSMENT='experiments/continuous_v82_review/v86_halted_selected26_policy_assessment.json'
+ASSESSMENT_SHA='ea32dd6885fc0dd2f3ec226cfc4670ae8a58aab99aaa657e1f3363a87e155c16'
+
+def digest(value):return type(value)is str and len(value)==64 and all(c in '0123456789abcdef'for c in value)
+def helper(root):
+ path=q.regular(Path(root)/HELPER);q.need(q.sha(path)==HELPER_SHA,'Exact reviewed V86 admission helper required');return q.load(path,'remaining_v86_admission')
+
+def validate_admission(record):
+ q.need(type(record['schema_version'])is int and record['schema_version']==1 and record['status']==ADMISSION_STATUS and record['execution_id']==EID,'V86-only admission identity')
+ for name,value in {'complete_paths':78,'selected_paths':26,'additional_complete_paths':52,'interrupted_attempts':26,'pending_tasks':69,'complete_duplicates_still_require_comparison':52}.items():
+  q.need(type(record[name])is int and record[name]==value,'Full78 admission count '+name)
+ for name in ('coordinator_normal_closure','global_source_runtime_postguards','global_endguards_reconstructed','whole730_audited','theorem_promotion'):q.need(record[name]is False,'No invented coordinator/whole730 closure')
+ q.need(record['ordinary_immutable_source_runtime_assumption']==ASSUMPTION,'Historical assumption must remain explicit')
+ keys=record['selected_keys'];guards=record['driver_guard_records']
+ q.need(type(keys)is list and keys==sorted(set(keys))and len(keys)==26 and type(guards)is dict and len(guards)==78 and set(keys)<=set(guards),'Exact full78/selected26 records')
+ q.need(digest(record['policy_record_sha256'])and all(digest(v)for v in record['actual_capture_bindings'].values()),'Policy and capture seals')
+ for row in guards.values():
+  q.need(digest(row['result_sha256'])and digest(row['attempt_record_sha256'])and type(row['output_sha256'])is dict and row['output_sha256']and all(digest(v)for v in row['output_sha256'].values()),'Every driver/result/output seal retained')
+  q.need(all(row[k]is True for k in ('assertions_enabled','sources_unchanged','executable_unchanged','witness_plan_unchanged')),'Every completed driver guard required')
+ return record
+
+def descriptor(record,relative,pin,policy_sha):
+ validate_admission(record);q.need(digest(pin)and digest(policy_sha),'Admission/raw policy seals')
+ return {'schema_version':1,'execution_id':EID,'admission_helper_sha256':HELPER_SHA,'assessment_sha256':ASSESSMENT_SHA,
+         'policy_sha256':policy_sha,'admission_record':{'path':relative,'sha256':pin},
+         'conditional_historical_execution_assumption_required':True,'ordinary_immutable_source_runtime_assumption':ASSUMPTION,
+         'coordinator_normal_closure':False,'coordinator_endguards_reconstructed':False,
+         'all78_driver_records_revalidated':True,'all52_duplicates_compared_by_this_capture':False,
+         'conditional_whole730_reconciliation_required':True,'theorem_promotion':False}
+
+def validate_descriptor(value):
+ q.need(type(value)is dict and set(value)=={'schema_version','execution_id','admission_helper_sha256','assessment_sha256','policy_sha256','admission_record','conditional_historical_execution_assumption_required','ordinary_immutable_source_runtime_assumption','coordinator_normal_closure','coordinator_endguards_reconstructed','all78_driver_records_revalidated','all52_duplicates_compared_by_this_capture','conditional_whole730_reconciliation_required','theorem_promotion'},'Exact conditional provenance schema')
+ q.need(type(value['schema_version'])is int and value['schema_version']==1 and value['execution_id']==EID and value['admission_helper_sha256']==HELPER_SHA and value['assessment_sha256']==ASSESSMENT_SHA,'Exact helper/V86 scope')
+ q.need(digest(value['policy_sha256'])and set(value['admission_record'])=={'path','sha256'}and digest(value['admission_record']['sha256']),'Conditional policy/record binding')
+ for k in ('conditional_historical_execution_assumption_required','all78_driver_records_revalidated','conditional_whole730_reconciliation_required'):q.need(value[k]is True,'Conditional requirement absent')
+ for k in ('coordinator_normal_closure','coordinator_endguards_reconstructed','all52_duplicates_compared_by_this_capture','theorem_promotion'):q.need(value[k]is False,'Conditional provenance overclaim')
+ q.need(value['ordinary_immutable_source_runtime_assumption']==ASSUMPTION,'Required historical assumption')
+ return value
+
+def capture_admission(report,root,review):
+ value=validate_descriptor(report['v86_conditional_source_admission']);r=value['admission_record'];p=q.beneath(root,r['path']);q.need(q.sha(p)==r['sha256'],'Full78 admission seal')
+ record=validate_admission(q.read(p));q.need(descriptor(record,r['path'],r['sha256'],value['policy_sha256'])==value,'Exact admission descriptor')
+ policy=q.read(q.beneath(root,'provenance/inputs/v86_halted_review.json'));q.need(q.sha(q.beneath(root,'provenance/inputs/v86_halted_review.json'))==value['policy_sha256']and q.object_sha(policy)==record['policy_record_sha256'],'Raw/canonical policy distinct bindings')
+ q.need(review['v86_conditional_source_admission']==value and review['full78_driver_revalidation_accepted']is True and review['historical_immutability_assumption_accepted']is True,'External conditional capture/admission acceptance')
+ row=report['cohorts'][EID];q.need(row['actual_end_guards_present']is False and row['failed_predecessor']is False,'V86 remains a halted mixed cohort')
+ return value

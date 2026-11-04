@@ -1,0 +1,2916 @@
+{
+  "checks": {
+    "literal_pinned_dependencies_checked": {
+      "certificates/broader_principal_v75/expected.json": "b24a5f7819947d6655d2b30c702ed106c6bc31731e4819d86d185f5415714579",
+      "certificates/broader_principal_v75/pilot_inputs.json": "0eb217f70238f79308f589cc15a6de7c317e6962a712bd5598b2b6aaa638c386",
+      "certificates/broader_principal_v75/unit_witnesses.json": "040ddafb120f5144ecc31ccb3e532121c9f8d588e58bd3483522659e52c43977",
+      "certificates/d3_completeness_v60.py": "7341c4dddc68e06e3288cda31372e6ad3a7617074a01cb2292526eba17baaf17",
+      "certificates/d3_matrix_manifest_v60.jsonl": "fc87260544e8d8418e7bc6fe3ca80ef7d9715a82fcdaea9b2a9716016e00004e",
+      "certificates/d3_points_v60/foundation_inputs.json": "378559344333a813c4b94e721bafbf44581232a489a0cd16f24751a15569adf1",
+      "certificates/d3_points_v60/trace_order_inputs.json": "2aef609b6ce72dfb8b6a9017b31674995f0a3cb2cd3ce80aaf7b763e3edfdcd2",
+      "certificates/d7_ambient_points_v45.py": "34cb35db91b953162b595fb61e031f551e6df0a0d7b5192dc15a6c00c39274a2",
+      "certificates/d7_r83_mask14_v46.py": "70e9c7114adea2b319c3e430046ae3e917717142e7a78e4d43a043950f1147f3",
+      "certificates/d7_r83_masks14_30_v47.py": "e78ba5e793134f28d8113d8129809421a5a7754c439afcd64ba0385543799941",
+      "certificates/d7_r83_principal_expected_v55.py": "0fd36a67b004e6a250188aa8731a207456b5e49faa955005d6b12cd36665bea7",
+      "certificates/d7_r83_principal_v55.py": "a937b69037b5d53f40a600aefb177bf89766d3529b22f73529b2b861ec9238cc",
+      "certificates/full_packet_v62/ambient_points.json": "c0e84da6c266c087cbce65a6e8aca8e3f30350ce56b5a1089c4ae4978a381f36",
+      "certificates/full_packet_v62/module_templates.json": "09ccff217511a67e946567135f9ffb74da020843621d0895ecce8746d25c245d",
+      "certificates/r127_pic1_v80/entry_unit_witnesses.json": "9899ce81e27f2aadbf8bf41ef5ef435e0e92ec9ad5e099378326e07f220f37f5",
+      "certificates/r127_pic1_v80/expected.json": "19a23cd3a229dc8c71825166f9e83d13f09d6ece389d3859df49755e9e317cfc",
+      "certificates/residual_orbit_k17_k38_v42.py": "5186066f21a2f840ffc71936a54372d7ad51eb6cc919bf7812bb1bec258cd59d",
+      "independent/d3_completeness_quadratic_v60.py": "7b34e8c676a0045b8c02d1ae065b395003bb48191d1cddf8d085a458db4f0363",
+      "independent/d7_ambient_points_sturm_v45.py": "3eb68f57e6d0d88b2e548f605742d434c8714b25eb1404b3c27d32415b61f42a",
+      "independent/d7_r83_principal_sturm_v55.py": "894339e82389ff651bf25b04693821c4dfeedc427dec2fa4fd8993f195bb663f",
+      "independent/packet_order_coverage_stdlib_v58.py": "ed328d11d87d2cc9e93322bddb2b3207b1edf8c5d8dc66dea2026f0a07ea07c3",
+      "independent/quadrilateral_k17_stdlib_v41.py": "c5bd45f334a028820a071b5c758acfb8e48afc1e8454b18a3174dd04ca58a38c",
+      "independent/residual_orbit_k17_k38_sturm_v42.py": "12a0d875e2715fe2c2ae123d2dc5202f4d7ce4e024f114ad163126654219fc13"
+    },
+    "manuscript_path_references": 77,
+    "node_commands": 2,
+    "python_commands": 157,
+    "registered_commands": 159,
+    "registered_sage_or_magma_commands": 0,
+    "scope": "STATIC_SOURCE_AND_CAPTURED_REGISTRATION_ONLY_NO_MATH_IMPORTS"
+  },
+  "exclusions": [
+    "original .git",
+    ".codex",
+    ".aws",
+    ".agents",
+    "credentials",
+    "build",
+    "local runtimes",
+    "private files",
+    "old PDFs",
+    "unneeded experiments"
+  ],
+  "execution_policy": {
+    "adaptive_math_workers": {
+      "after_v82_terminal_and_process_absence": 26,
+      "initial": 4,
+      "math_child_as_mib": 2048,
+      "post_v82_admin_as_mib": 4096,
+      "v82_concurrent_workers_max": 24
+    },
+    "common_per_job_cpu_limit": null,
+    "common_per_job_wall_limit": null,
+    "full_run_command": [
+      "python",
+      "scripts/verify_release.py",
+      "--output-dir",
+      "NEW_EVIDENCE_DIR"
+    ],
+    "math_only_scope": "Exact existing159 argv only; separate reviewed adaptive4-to26 executor; not full verify_all or source/PDF release",
+    "math_only_wrapper": "experiments/continuous_v81/cloud/legacy_math.py",
+    "maximum_registered_workers": 4,
+    "preflight_command": [
+      "python",
+      "scripts/verify_release.py",
+      "--output-dir",
+      "NEW_PREFLIGHT_DIR",
+      "--preflight-only"
+    ],
+    "start_automatically": false
+  },
+  "files": {
+    ".gitignore": {
+      "bytes": 114,
+      "mode": 420,
+      "sha256": "af35a93ce0f2566f4b4b9f7f9a39f75c09a839bcca60f3de56ab151e1fe4d7ef"
+    },
+    "AGENTS.md": {
+      "bytes": 5840,
+      "mode": 420,
+      "sha256": "41f318e18a87fcec26592d34b62c12306c9cff9213d7eefacf03c4c2887f9a3a"
+    },
+    "CODEX_START_HERE.md": {
+      "bytes": 6340,
+      "mode": 420,
+      "sha256": "0535d9b1f73f8889b3961ac9645720de3f94ab1c8b765772c28d3e7c21615925"
+    },
+    "README.md": {
+      "bytes": 6550,
+      "mode": 420,
+      "sha256": "9131614491503bc70a5e77a5e2e0dae6a61c83d2d203567dc051493cddcc4267"
+    },
+    "certificates/a_principal_local_v33.py": {
+      "bytes": 4405,
+      "mode": 420,
+      "sha256": "c3724fd933ca7ba69172da8eb4a0f2b8d6db48b1c9ae2567f1e135e50591b5aa"
+    },
+    "certificates/a_vertex_certificate_v31.py": {
+      "bytes": 3947,
+      "mode": 420,
+      "sha256": "86d24c4f9dec607154cfa65943b52e65a2a710d1550b1ae37e6a05c92349a50d"
+    },
+    "certificates/a_vertex_orbits_k20_k41_v44.py": {
+      "bytes": 9250,
+      "mode": 420,
+      "sha256": "a77f5a2a0ce9060cbeff98241354109e74d29c4119c85253395b47d4b5f79855"
+    },
+    "certificates/broader_principal_v75.py": {
+      "bytes": 38536,
+      "mode": 420,
+      "sha256": "648c969f41e67dc02ab72fb59f15f746f188b65d091fed4870ffa64e3d25003c"
+    },
+    "certificates/broader_principal_v75/expected.json": {
+      "bytes": 9064,
+      "mode": 420,
+      "sha256": "b24a5f7819947d6655d2b30c702ed106c6bc31731e4819d86d185f5415714579"
+    },
+    "certificates/broader_principal_v75/pilot_inputs.json": {
+      "bytes": 167429,
+      "mode": 420,
+      "sha256": "0eb217f70238f79308f589cc15a6de7c317e6962a712bd5598b2b6aaa638c386"
+    },
+    "certificates/broader_principal_v75/primary_notes.md": {
+      "bytes": 8241,
+      "mode": 420,
+      "sha256": "28585fc3c53fa2ac8c70b036c0aefa5b347e36c2b6db05cace271896cabe9ec6"
+    },
+    "certificates/broader_principal_v75/unit_witnesses.json": {
+      "bytes": 1982636,
+      "mode": 420,
+      "sha256": "040ddafb120f5144ecc31ccb3e532121c9f8d588e58bd3483522659e52c43977"
+    },
+    "certificates/d3_completeness_v60.py": {
+      "bytes": 17637,
+      "mode": 420,
+      "sha256": "7341c4dddc68e06e3288cda31372e6ad3a7617074a01cb2292526eba17baaf17"
+    },
+    "certificates/d3_matrix_manifest_v60.jsonl": {
+      "bytes": 309088,
+      "mode": 420,
+      "sha256": "fc87260544e8d8418e7bc6fe3ca80ef7d9715a82fcdaea9b2a9716016e00004e"
+    },
+    "certificates/d3_points_v60.py": {
+      "bytes": 13473,
+      "mode": 420,
+      "sha256": "38ab5785adb573924c65334a4a9d6810fca549190e200c625b855e47b1f045c0"
+    },
+    "certificates/d3_points_v60/basis_unit_witnesses_v59.json": {
+      "bytes": 9176,
+      "mode": 420,
+      "sha256": "0714e540d49551a16782699f77fc91c6fc2992b5b446828f570f66bf3b1d90d9"
+    },
+    "certificates/d3_points_v60/canonical_points_v59.json": {
+      "bytes": 223918,
+      "mode": 420,
+      "sha256": "05a08fc7a7b4d78194209ac6836a2a4b63c8654100f2b2f5612cfbca25d1d415"
+    },
+    "certificates/d3_points_v60/foundation_inputs.json": {
+      "bytes": 4041,
+      "mode": 420,
+      "sha256": "378559344333a813c4b94e721bafbf44581232a489a0cd16f24751a15569adf1"
+    },
+    "certificates/d3_points_v60/matrix_to_point_bridges_v59.jsonl": {
+      "bytes": 608124,
+      "mode": 420,
+      "sha256": "33ea6723a2c08a2aec9bf0315d6d13299ecf43808308e63d7222bdde4058c197"
+    },
+    "certificates/d3_points_v60/trace_order_inputs.json": {
+      "bytes": 95249,
+      "mode": 420,
+      "sha256": "2aef609b6ce72dfb8b6a9017b31674995f0a3cb2cd3ce80aaf7b763e3edfdcd2"
+    },
+    "certificates/d7_ambient_points_v45.py": {
+      "bytes": 22195,
+      "mode": 420,
+      "sha256": "34cb35db91b953162b595fb61e031f551e6df0a0d7b5192dc15a6c00c39274a2"
+    },
+    "certificates/d7_nonmaximal_classes_v29.py": {
+      "bytes": 6147,
+      "mode": 420,
+      "sha256": "cf13e1c2ae486863de9dcb7d325d21f261e1c6903cfb04a7dbdc26e37ff0f321"
+    },
+    "certificates/d7_r41_expected_v63.py": {
+      "bytes": 62688,
+      "mode": 420,
+      "sha256": "a03439a83c74a16585aa94051c2540e62e0ce57ab45443174bcbbfdf75e6d4c9"
+    },
+    "certificates/d7_r41_v63.py": {
+      "bytes": 13605,
+      "mode": 420,
+      "sha256": "2dc075634c52d9bc4174da646fe561e9eb5954bd10902ce124ec1ec6b3822043"
+    },
+    "certificates/d7_r83_batch10_v51.py": {
+      "bytes": 35673,
+      "mode": 420,
+      "sha256": "cabdc2f66164188e261f3e4aa33131a14d40b6080bad1f134f26123d33c2c7cf"
+    },
+    "certificates/d7_r83_mask14_v46.py": {
+      "bytes": 7850,
+      "mode": 420,
+      "sha256": "70e9c7114adea2b319c3e430046ae3e917717142e7a78e4d43a043950f1147f3"
+    },
+    "certificates/d7_r83_masks13_29_v52.py": {
+      "bytes": 17097,
+      "mode": 420,
+      "sha256": "510a9d3c04caf7440e953c2c41dc6ccb63ae578179d7d043fa2f0d1f381fab8f"
+    },
+    "certificates/d7_r83_masks14_30_v47.py": {
+      "bytes": 13443,
+      "mode": 420,
+      "sha256": "e78ba5e793134f28d8113d8129809421a5a7754c439afcd64ba0385543799941"
+    },
+    "certificates/d7_r83_masks15_31_v48.py": {
+      "bytes": 9635,
+      "mode": 420,
+      "sha256": "b104d2f654c3242b04bb2657b6ef7441b2cfc4a0604a710637fdf59d29f7fa6c"
+    },
+    "certificates/d7_r83_masks1_17_v50.py": {
+      "bytes": 13867,
+      "mode": 420,
+      "sha256": "29d3043f798a18c2495d9147ea30b57672a68ee28566a718f026edbeeb3ef602"
+    },
+    "certificates/d7_r83_masks6_22_v49.py": {
+      "bytes": 13268,
+      "mode": 420,
+      "sha256": "03789154e9de9281a2afa924e82c6cc5ac9c1dfadde69d6edc79cc61b651b62b"
+    },
+    "certificates/d7_r83_masks7_23_v53.py": {
+      "bytes": 18391,
+      "mode": 420,
+      "sha256": "25224a69e5d19eb188d648e021e8f6968d22f1c64ec919a7ac95486db211febb"
+    },
+    "certificates/d7_r83_principal_expected_v55.py": {
+      "bytes": 10110,
+      "mode": 420,
+      "sha256": "0fd36a67b004e6a250188aa8731a207456b5e49faa955005d6b12cd36665bea7"
+    },
+    "certificates/d7_r83_principal_v55.py": {
+      "bytes": 10271,
+      "mode": 420,
+      "sha256": "a937b69037b5d53f40a600aefb177bf89766d3529b22f73529b2b861ec9238cc"
+    },
+    "certificates/d7_remaining_maximal_expected_v61.py": {
+      "bytes": 20268,
+      "mode": 420,
+      "sha256": "58c7968d8561f89d8880f52369ffbeb9a3beb205255371895ed210098451ebca"
+    },
+    "certificates/d7_remaining_maximal_v61.py": {
+      "bytes": 13166,
+      "mode": 493,
+      "sha256": "6d6b0c85ea05ff019967c03d1c43f9bae92ef95be924f13905f4ea19eafadaa8"
+    },
+    "certificates/four_vertex_audit_v40.py": {
+      "bytes": 2841,
+      "mode": 420,
+      "sha256": "e7a9973c73405f0ebd7cb626595809a2987d5fc32d293576e56c9d9651922070"
+    },
+    "certificates/full_packet_arithmetic_v62.py": {
+      "bytes": 16307,
+      "mode": 420,
+      "sha256": "6804ac1923d6e669b09510fa9c75813d2f070b65992e7434411e0f4c69c41e98"
+    },
+    "certificates/full_packet_v62/all_42_matrix_classes.jsonl": {
+      "bytes": 811972,
+      "mode": 420,
+      "sha256": "08492a608ce13b99b6e9470241379a1a01746e78539b126aeb785a15af9b9761"
+    },
+    "certificates/full_packet_v62/ambient_points.json": {
+      "bytes": 397259,
+      "mode": 420,
+      "sha256": "c0e84da6c266c087cbce65a6e8aca8e3f30350ce56b5a1089c4ae4978a381f36"
+    },
+    "certificates/full_packet_v62/local_quotients.json": {
+      "bytes": 3299,
+      "mode": 420,
+      "sha256": "9ef01be9df80366e398b75a7aad39b4705ea06c9a84ff884d6b4a08b69f05613"
+    },
+    "certificates/full_packet_v62/module_templates.json": {
+      "bytes": 16877,
+      "mode": 420,
+      "sha256": "09ccff217511a67e946567135f9ffb74da020843621d0895ecce8746d25c245d"
+    },
+    "certificates/full_packet_v62/promotion_adaptation.diff": {
+      "bytes": 4967,
+      "mode": 420,
+      "sha256": "b492064de1e22d384d45bce86ec277028ebb3b66d9532956915f2c15cad536f4"
+    },
+    "certificates/full_packet_v62/root_bridges.jsonl": {
+      "bytes": 163026,
+      "mode": 420,
+      "sha256": "13dcf16cd44e5359659b307dc9f0eb45d8d0864b8dda9c3aabb4291bb620ece6"
+    },
+    "certificates/full_packet_v62/summary.json": {
+      "bytes": 3840,
+      "mode": 420,
+      "sha256": "839341e7b52f3d8726fe9f64d16685327315aa4bb24b3e4f3fc5d3ae3f2a956c"
+    },
+    "certificates/full_packet_v62/targeted_replay.json": {
+      "bytes": 3836,
+      "mode": 420,
+      "sha256": "aa120505a32a14681745b7e8c10ec3a9e9427bc0c1622c1304c81a177d6bb718"
+    },
+    "certificates/k11_vertex_bridge_v60.py": {
+      "bytes": 6764,
+      "mode": 420,
+      "sha256": "ce16955b93c17d744b1d36039f199a243dc4f631537a60018a61da3bf4c64311"
+    },
+    "certificates/known_cm_comparison_v58.py": {
+      "bytes": 6311,
+      "mode": 420,
+      "sha256": "1f26599e13dec36d7375ded2167b0e1147d9515eaf5df02b4375fb0c619fe421"
+    },
+    "certificates/maximal_vertex_orbits_v38.py": {
+      "bytes": 3555,
+      "mode": 420,
+      "sha256": "c94407612b689db46f53bcb61a54d2109b2b53b5017ce84e90faaa629c588fba"
+    },
+    "certificates/packet_hodge_v39.py": {
+      "bytes": 4440,
+      "mode": 420,
+      "sha256": "d86418a11ede1f7b6705b9e1f63be6cfea0bb6df41da10e8c162f7eefb59bdd1"
+    },
+    "certificates/packet_order_coverage_v58.py": {
+      "bytes": 5048,
+      "mode": 420,
+      "sha256": "26a4982ef8173cd6c308e18c357a0f6214ff9c696adee3f838db15150b942ae3"
+    },
+    "certificates/principal_descent_v57.py": {
+      "bytes": 4340,
+      "mode": 420,
+      "sha256": "b9e68a813bc9715b2749135287ae49e211486187900277b91fae4707c7169e7f"
+    },
+    "certificates/principal_homology_v56.py": {
+      "bytes": 7997,
+      "mode": 420,
+      "sha256": "657eebc2676649085428ef7a9b49cdba0cd4c943d352295305bcac8b0e830d77"
+    },
+    "certificates/r127_pic1_v80.py": {
+      "bytes": 57439,
+      "mode": 420,
+      "sha256": "b9a8bc1995626c7e2deb72239e5e0a636432e9f4cf97accabad4617aa172f067"
+    },
+    "certificates/r127_pic1_v80/entry_unit_witnesses.json": {
+      "bytes": 1943820,
+      "mode": 420,
+      "sha256": "9899ce81e27f2aadbf8bf41ef5ef435e0e92ec9ad5e099378326e07f220f37f5"
+    },
+    "certificates/r127_pic1_v80/expected.json": {
+      "bytes": 3284,
+      "mode": 420,
+      "sha256": "19a23cd3a229dc8c71825166f9e83d13f09d6ece389d3859df49755e9e317cfc"
+    },
+    "certificates/residual_orbit_k17_k38_v42.py": {
+      "bytes": 28063,
+      "mode": 420,
+      "sha256": "5186066f21a2f840ffc71936a54372d7ad51eb6cc919bf7812bb1bec258cd59d"
+    },
+    "certificates/residual_orbit_k1_k22_v43.py": {
+      "bytes": 6386,
+      "mode": 420,
+      "sha256": "7d631b146196923e5af17e2a83eeb8931f0f0c61a7a73bc26fc3bf0107b1ba49"
+    },
+    "certificates/three_vertex_level_v37.py": {
+      "bytes": 2847,
+      "mode": 420,
+      "sha256": "00230d852764d15d133aa270e48fbea5cd8a9f36dada36978217c84c23690194"
+    },
+    "certificates/vertex_saturation_v35.py": {
+      "bytes": 4807,
+      "mode": 420,
+      "sha256": "b5cd4bfd5e6579562c3c9e7180c4581eaad65ee99f0cf5882f1c4179a78bd732"
+    },
+    "codex/tasks/01-residual-orbits.md": {
+      "bytes": 2210,
+      "mode": 420,
+      "sha256": "629a389496f926a25af4e83cec2a9c0f70c7fb981c7ce49c3b830ef60244df20"
+    },
+    "codex/tasks/02-conceptual-hodge.md": {
+      "bytes": 1448,
+      "mode": 420,
+      "sha256": "d414df7c7e0763508c227f98b52121f853315cd1c8ef7e541f8ec6f4f27db190"
+    },
+    "codex/tasks/03-principal-moduli.md": {
+      "bytes": 1641,
+      "mode": 420,
+      "sha256": "70760768c1858554e842f8a8999f6116df9630979dfbc73b7cbad1345e53d198"
+    },
+    "codex/tasks/04-independent-verification.md": {
+      "bytes": 1126,
+      "mode": 420,
+      "sha256": "ee09b02c6b961dde926ca3c99335e867517f16c8b0f1e0f6003234be5f88eabb"
+    },
+    "codex/tasks/05-hostile-referee.md": {
+      "bytes": 1066,
+      "mode": 420,
+      "sha256": "5b932c9d00acf388cf24d123b14b8d340c61d065e94c3239c138339ec06cbd7a"
+    },
+    "codex/tasks/06-manuscript-integration.md": {
+      "bytes": 1052,
+      "mode": 420,
+      "sha256": "bc3e73599f38e39f3c8b772e149be8319ed6409bbe3a86999b54b4ee7a149492"
+    },
+    "codex/tasks/07-nonmaximal-packet.md": {
+      "bytes": 10391,
+      "mode": 420,
+      "sha256": "5cd967bc89485a9f33cbe21f0d72472c5e1dc4157d0e8c5a1b92863d8a6110d8"
+    },
+    "codex/tasks/README.md": {
+      "bytes": 1520,
+      "mode": 420,
+      "sha256": "4fe9a520f2451504282c19022c200248420e320bacfadb45d800730b6e8ab950"
+    },
+    "dashboard/index.html": {
+      "bytes": 14168,
+      "mode": 420,
+      "sha256": "383e99692c56313ca9dbb15f4f132a452f4c47974bcad1f126c3dc8271d0dad9"
+    },
+    "docs/BROADER_BOTTOM_V74.md": {
+      "bytes": 6156,
+      "mode": 420,
+      "sha256": "d77f17866b7957df2d50357fce175d949727e3567106c4bc801013d3f90aa8e7"
+    },
+    "docs/BROADER_DEN_REPAIR_V72.md": {
+      "bytes": 4739,
+      "mode": 420,
+      "sha256": "71d2e0700e0d1e1574c790aecb9635ecc118ead60333183c92c8be2c859d124a"
+    },
+    "docs/BROADER_ENTRIES_V73.md": {
+      "bytes": 7161,
+      "mode": 420,
+      "sha256": "79560e9fe0ddcf2374cd2afd828d4e6d266f165dd6906bb4decb60c2f6f59c51"
+    },
+    "docs/BROADER_ENTRY_MEASUREMENT_V65.md": {
+      "bytes": 7820,
+      "mode": 420,
+      "sha256": "ddabdd881a76dc8ebdeeb66e45e9ff686d67798a1666370ed4d294e45bf228cf"
+    },
+    "docs/BROADER_FULL_OPTIMIZATION_V70.md": {
+      "bytes": 4389,
+      "mode": 420,
+      "sha256": "49ece2a02635f277bd78cfbbe7a2895d70bd0df3557c94998b52eef654322632"
+    },
+    "docs/BROADER_FULL_PILOT_V67.md": {
+      "bytes": 6094,
+      "mode": 420,
+      "sha256": "8da51a4d7102a291670e1e6ce7426cfb2bee59a40deeae00f7c4ee6b77630290"
+    },
+    "docs/BROADER_GEOMETRY_PREPARATION_V65.md": {
+      "bytes": 13208,
+      "mode": 420,
+      "sha256": "b735e630951decb3048d8931068253dc65bad634358e7a35e8221c16e07d42dd"
+    },
+    "docs/BROADER_PILOTS_V71.md": {
+      "bytes": 6959,
+      "mode": 420,
+      "sha256": "c44b3aa766067f619bcfab4389ac5caa121d294ed535e1818ce6f0468b42427c"
+    },
+    "docs/BROADER_PRINCIPAL_PROMOTION_V75.md": {
+      "bytes": 6380,
+      "mode": 420,
+      "sha256": "be4f2d3b5be1f61cf5212da62960bb7245e575526d52134b97dca17a0f42c2f0"
+    },
+    "docs/BROADER_TRACE_REFINEMENT_V68.md": {
+      "bytes": 5433,
+      "mode": 420,
+      "sha256": "2bfbd2fbd9a700f273309f876fbf2be17fec8546b50d4a0f1b14802aa232291c"
+    },
+    "docs/CLAIM_LEDGER.md": {
+      "bytes": 59928,
+      "mode": 420,
+      "sha256": "f7f437eb53f60b13d5dda9d0d3b85ab5eafbd93ed4fdec517b1f7f9488076016"
+    },
+    "docs/COMPUTE_AND_THROUGHPUT_2026-10-10.md": {
+      "bytes": 6704,
+      "mode": 420,
+      "sha256": "0984a95c0236d0ceba702e10679c39d86ad897e27acddaed5f4dcf1615eb09a0"
+    },
+    "docs/CONTINUOUS_CAMPAIGN_V81.md": {
+      "bytes": 13786,
+      "mode": 420,
+      "sha256": "e6fc3ae5804a1332cfe22fa6efa111898d796d1124eff4f6ac64831c38e437d0"
+    },
+    "docs/CURRENT_STATE.md": {
+      "bytes": 53021,
+      "mode": 420,
+      "sha256": "a571d3f390dc9da4394531424daf78b3b6c32efc067cb093101ef3c941932a05"
+    },
+    "docs/D3_ARITHMETIC_PROMOTION_V60.md": {
+      "bytes": 2463,
+      "mode": 420,
+      "sha256": "2bdb41e2edf258a5d208c045df4f66b0a543f0717b36ce442a33f0e7103a2b6c"
+    },
+    "docs/D3_COMPLETENESS_AUDIT_2026-09-18.md": {
+      "bytes": 24042,
+      "mode": 420,
+      "sha256": "060aeb94dd9d53c346a29d98c876d2ba57d929533c9d93cc0dc8473e0f91abd5"
+    },
+    "docs/D3_POINT_DEDUPLICATION_V59.md": {
+      "bytes": 15608,
+      "mode": 420,
+      "sha256": "f54e27580e22fbee3a0e75b12a82b5e483db5f48f060b6aaf551f24e6624c4eb"
+    },
+    "docs/D3_POINT_PROMOTION_V60.md": {
+      "bytes": 3210,
+      "mode": 420,
+      "sha256": "0d0c4c731005b85c2cf2859e39f64b3e0c27509ca47622d36b3f3ec9f7e6e765"
+    },
+    "docs/D7_AMBIENT_CM_POINTS.md": {
+      "bytes": 15147,
+      "mode": 420,
+      "sha256": "2f973c0b7ec0905b539ad9afc11780f4e3871f92d2e5245bfcf1c91b53571bed"
+    },
+    "docs/D7_MAXIMAL_COMPLETION_V61.md": {
+      "bytes": 12170,
+      "mode": 420,
+      "sha256": "0ede73a240821858430d5321ec3650a4a8a7329441eaf1616978aa0c54f258e5"
+    },
+    "docs/D7_MAXIMAL_PROMOTION_V61.md": {
+      "bytes": 3256,
+      "mode": 420,
+      "sha256": "f6f7572dd8f09c51f68f3f3129cc31c6de44fde601d184ef2d8bc333144981c7"
+    },
+    "docs/D7_PILOT_COMPARISON_V58.md": {
+      "bytes": 2603,
+      "mode": 420,
+      "sha256": "eb88ba5a431939ace235afde58f13fae8e984f59908ad2f257bf725170a223a4"
+    },
+    "docs/D7_R41_COMPLETION_V63.md": {
+      "bytes": 18410,
+      "mode": 420,
+      "sha256": "21a15864111212fb77e48205ce62d3cb3bcbb90521db3700efe31dea7c381160"
+    },
+    "docs/D7_R41_PROMOTION_V63.md": {
+      "bytes": 3997,
+      "mode": 420,
+      "sha256": "72955df9207fa507bb50ba9ce6bc2af71ec09cf55ae022fc34bc1627eb2640c1"
+    },
+    "docs/D7_R83_BATCH10_EXCLUSION.md": {
+      "bytes": 16269,
+      "mode": 420,
+      "sha256": "7a7024a392fe051090ec59b1e92031263dc4eee4ff3803b6f8ce36a57969d23e"
+    },
+    "docs/D7_R83_MASK13_29_EXCLUSION.md": {
+      "bytes": 11351,
+      "mode": 420,
+      "sha256": "35c0ea425267bed93c59907d84df09063d5282714b3b39e57a4f3dd59c16d893"
+    },
+    "docs/D7_R83_MASK14_30_EXCLUSION.md": {
+      "bytes": 4466,
+      "mode": 420,
+      "sha256": "abea6ed390a8f0508841b55ef7ab4b42f9d31308501c19c9a7291acdc6ab2b80"
+    },
+    "docs/D7_R83_MASK14_EXCLUSION.md": {
+      "bytes": 5409,
+      "mode": 420,
+      "sha256": "256424c75576d0ba6cd52a5300b1d270c661becc9b49f3bd70b18c4ac3775877"
+    },
+    "docs/D7_R83_MASK15_31_EXCLUSION.md": {
+      "bytes": 6811,
+      "mode": 420,
+      "sha256": "bd59a9601e2efa9d82568cbed029890a6dd32d6c793a2ed034db4b20320429e8"
+    },
+    "docs/D7_R83_MASK1_17_EXCLUSION.md": {
+      "bytes": 5603,
+      "mode": 420,
+      "sha256": "7ea7e5d445d24d7f8d29cda1a433a8751d8f6b1d1251491a489d0ba829625c07"
+    },
+    "docs/D7_R83_MASK6_22_EXCLUSION.md": {
+      "bytes": 5577,
+      "mode": 420,
+      "sha256": "6386e8f0bdf7cdf11d73fec29c8fe0a7855dde96318663a956bd85bb62bc67d8"
+    },
+    "docs/D7_R83_MASK7_23_EXCLUSION.md": {
+      "bytes": 13154,
+      "mode": 420,
+      "sha256": "6fbe759332ee6fb064c5c7243fc84e6b6500485f107ea3c0ae3bc55c81952ff5"
+    },
+    "docs/D7_R83_PRINCIPAL_EXCLUSION_V55.md": {
+      "bytes": 8330,
+      "mode": 420,
+      "sha256": "cc697d5eceb30c6cf772c7652d20f75521d2a4d9d7ea868ccc6c2a179ed1bf2f"
+    },
+    "docs/D7_REMAINING_INDEPENDENT_V58.md": {
+      "bytes": 7402,
+      "mode": 420,
+      "sha256": "10319423efcfbd7ddbf664d6bbe38baa657fc407c2c5abe5e7f98465353b4aa3"
+    },
+    "docs/D7_REMAINING_INDEPENDENT_V59.md": {
+      "bytes": 3920,
+      "mode": 420,
+      "sha256": "349cb0265b09dcd8cb899093e9545a81a6edf1672b5233189c15e2e0e635975a"
+    },
+    "docs/D7_REMAINING_PILOTS_V58.md": {
+      "bytes": 6823,
+      "mode": 420,
+      "sha256": "97422486f4332d0a70f8fedcac797dad7edb267e0cb35a5ef3702853e727b1a9"
+    },
+    "docs/DASHBOARD.md": {
+      "bytes": 12921,
+      "mode": 420,
+      "sha256": "ae9748c70cbdacbe7ee730fb544f08693bbb991bb16613e67707f4139fa5d7eb"
+    },
+    "docs/DELEGATION_PLAN.md": {
+      "bytes": 12105,
+      "mode": 420,
+      "sha256": "72bc822f2bc9ac6dd80e68bdfcd2c92f0c210c48e06dfca54e2ab5ca68dfa353"
+    },
+    "docs/ENTRY_ENUMERATION_OPTIMIZATION_V60.md": {
+      "bytes": 8371,
+      "mode": 420,
+      "sha256": "a6ada50cb5586a615929ffd69d815389100f767656e4189a77f7368ef9961932"
+    },
+    "docs/FULL_GEOMETRY_V79.md": {
+      "bytes": 7491,
+      "mode": 420,
+      "sha256": "d684cb5ea56df90bd6a34f9514db3b1bf553bb282666c218b7fb3392bfbdb3e2"
+    },
+    "docs/FULL_PACKET_ARITHMETIC_V62.md": {
+      "bytes": 15505,
+      "mode": 420,
+      "sha256": "d174cac4d030f3663dd4b33ee914a8e6a30ca36f248dd92a64c84cbdbe0718a8"
+    },
+    "docs/FULL_PACKET_PROMOTION_V62.md": {
+      "bytes": 3539,
+      "mode": 420,
+      "sha256": "27d337a54ae4adfcac3c7f19e84034629ff81e69ee31b432ee4a86fab3caae95"
+    },
+    "docs/K11_VERTEX_BRIDGE_V60.md": {
+      "bytes": 7501,
+      "mode": 420,
+      "sha256": "41ad5dbaf939d6e3b0d4cfb389cf8f4ce4aeb7f09dc693e4f2383eed32f6ef42"
+    },
+    "docs/KNOWN_CM_COMPARISON_2026-09-18.md": {
+      "bytes": 16454,
+      "mode": 420,
+      "sha256": "3f19e9ee5e32674e6fe7e5720062110880d1bed90bc5d2e53957488afd446f26"
+    },
+    "docs/MANUSCRIPT_C42_C43_INTEGRATION_V81.md": {
+      "bytes": 26019,
+      "mode": 420,
+      "sha256": "b4369cea26169f19786399ab8696b4316ace79f266d0a7bd11801e9bf4eb3530"
+    },
+    "docs/OPEN_PROBLEMS.md": {
+      "bytes": 29364,
+      "mode": 420,
+      "sha256": "bd9242b71c44eaa9f4e27486cf922be7dd8bf95e76419a51925638fde6cf05dd"
+    },
+    "docs/PACKET_ORDER_COVERAGE_V58.md": {
+      "bytes": 6375,
+      "mode": 420,
+      "sha256": "75feb30d78f133f2b7f3508ee0f90d41e21a584ccc714a4a65a6082e5705095f"
+    },
+    "docs/PRIMITIVE_ROWS_V76.md": {
+      "bytes": 4816,
+      "mode": 420,
+      "sha256": "7e5fc58b3ddf45b1c6374ddc215f79bfee66efb092a473253b62ab998ed60990"
+    },
+    "docs/PRINCIPAL_DESCENT_V57.md": {
+      "bytes": 11394,
+      "mode": 420,
+      "sha256": "84381e3c3bdae05f0d963b09b3671bdb40ffb0cfab4aa51d84cbef1af97303c0"
+    },
+    "docs/PRINCIPAL_HOMOLOGY_REPAIR_V56.md": {
+      "bytes": 7428,
+      "mode": 420,
+      "sha256": "511fe4fbe2a2278987bb50b6146bdc87bd3feb38d106c05affb5b0ca46d542c9"
+    },
+    "docs/PRIOR_WORK_COMPARISON_2026-09-18.md": {
+      "bytes": 6323,
+      "mode": 420,
+      "sha256": "77580dcfe4bd3c3799d3f0cb76cad21839c5e52e616bca3458c0db4f5c899ef3"
+    },
+    "docs/PROOF_DEPENDENCIES.md": {
+      "bytes": 26660,
+      "mode": 420,
+      "sha256": "aa86f7d8c57e1cf4d553690765e6d890f33b13751f1ebd11546fcab6fcf4b911"
+    },
+    "docs/PUBLISH_TO_GITHUB.md": {
+      "bytes": 1187,
+      "mode": 420,
+      "sha256": "28b12e6796adb57f2687fbd6e34701d4a6119c3a19f67b592376ece9b38703e4"
+    },
+    "docs/R127_PIC1_PROMOTION_V80.md": {
+      "bytes": 7703,
+      "mode": 420,
+      "sha256": "6fcaea7303f28d1fa5a931b9c8873737630661b81e063184f3f1e864de1b92f4"
+    },
+    "docs/REFEREE_AUDIT.md": {
+      "bytes": 969,
+      "mode": 420,
+      "sha256": "b73efa91a3cade41f8fc82a606cb727dd860df358f6dd39dbaa96764f773a807"
+    },
+    "docs/REFEREE_AUDIT_V41_WORKING.md": {
+      "bytes": 26709,
+      "mode": 420,
+      "sha256": "d310cd58a184937189d4fe2b49d16b001e917bf976043a42f36226fe5ee5618e"
+    },
+    "docs/REFEREE_AUDIT_V42.md": {
+      "bytes": 1766,
+      "mode": 420,
+      "sha256": "4af11f5754ba330634bcf11ffeaf2543dec9726056305eedcd8065b715b28391"
+    },
+    "docs/REFEREE_AUDIT_V43.md": {
+      "bytes": 1579,
+      "mode": 420,
+      "sha256": "d048c7df088a5a51bdaf3d01bddf979aca89ca53a4298c2b53aa0ffb8c64c7a3"
+    },
+    "docs/REFEREE_AUDIT_V44.md": {
+      "bytes": 2240,
+      "mode": 420,
+      "sha256": "94033209ad0841af91fad737b738e4d632509358a294b67573c81a9e9b5678aa"
+    },
+    "docs/REFEREE_AUDIT_V45.md": {
+      "bytes": 3052,
+      "mode": 420,
+      "sha256": "1145240060973b46e13816f06e36ed95a8f2496df8122bcb4162cca1e3701d40"
+    },
+    "docs/REFEREE_AUDIT_V46.md": {
+      "bytes": 2145,
+      "mode": 420,
+      "sha256": "a0ab2a7fab7848d402fd19e18d9ade72752696b1c8916689e899708b436f27f8"
+    },
+    "docs/REFEREE_AUDIT_V47.md": {
+      "bytes": 2795,
+      "mode": 420,
+      "sha256": "d13e592f0a22b9ca1fdf180d436f8c4250e002f1dab1af13e4cb6f18688e7e21"
+    },
+    "docs/REFEREE_AUDIT_V48.md": {
+      "bytes": 3504,
+      "mode": 420,
+      "sha256": "a9859dfc8154cacfdbf83848b82e5916c92f8898399b613f578d463fb4a073ed"
+    },
+    "docs/REFEREE_AUDIT_V49.md": {
+      "bytes": 3588,
+      "mode": 420,
+      "sha256": "fffa7943d7de06a81ed9024ff48a8c61b58e6a4a67c6380152f0b1ec6b2b224a"
+    },
+    "docs/REFEREE_AUDIT_V50.md": {
+      "bytes": 3740,
+      "mode": 420,
+      "sha256": "c0b0b4efcd21d37da6abfcb4d4f8b86af1d01bde201caba077bc1fb1fb5d024e"
+    },
+    "docs/REFEREE_AUDIT_V51.md": {
+      "bytes": 9238,
+      "mode": 420,
+      "sha256": "bc70b0d73d2617dd714319eb4c35cf0db97c1217532c41fd986c41fa07929cbb"
+    },
+    "docs/REFEREE_AUDIT_V52.md": {
+      "bytes": 11725,
+      "mode": 420,
+      "sha256": "66eae531dfc958e6315fda38f87a9f5da4ad6eed9be3412807b86ac1daa42a12"
+    },
+    "docs/REFEREE_AUDIT_V53.md": {
+      "bytes": 11636,
+      "mode": 420,
+      "sha256": "f580d452783d3694bf37c182f38169c95807db007d40f733fad1728cd00bdf38"
+    },
+    "docs/REFEREE_AUDIT_V54.md": {
+      "bytes": 23293,
+      "mode": 420,
+      "sha256": "dcea3b5a3bcbb2044d27122d5af877933c6dbf17f529fbaa1d6a1fdde410ea2d"
+    },
+    "docs/REFEREE_AUDIT_V55.md": {
+      "bytes": 4917,
+      "mode": 420,
+      "sha256": "3f2d5210e9c578b469f51ed10677785e02aa7fa6191b54954d50765b111fe3ca"
+    },
+    "docs/REFEREE_AUDIT_V56.md": {
+      "bytes": 4013,
+      "mode": 420,
+      "sha256": "0266c2a78cc0720980a69045867afd06df83b58f8fdcdd1b38165597ede29291"
+    },
+    "docs/REFEREE_AUDIT_V57.md": {
+      "bytes": 5719,
+      "mode": 420,
+      "sha256": "3171ca7d7b8ad013e9a4b3a7c25fb6f14d488744e8df645d18a824d3444db243"
+    },
+    "docs/REFEREE_BROADER_BOTTOM_V74.md": {
+      "bytes": 10692,
+      "mode": 420,
+      "sha256": "f4ae22eafcab174372004ed6c6d57bfa8ae65a3cb99aa01f1eeb5391c7ade3b5"
+    },
+    "docs/REFEREE_BROADER_DEN_V72.md": {
+      "bytes": 14573,
+      "mode": 420,
+      "sha256": "3be34c3f5b0a14241b83d4942aee96e51e3c103e133ea81bae8d284b4c03234f"
+    },
+    "docs/REFEREE_BROADER_ENTRIES_V73.md": {
+      "bytes": 15005,
+      "mode": 420,
+      "sha256": "f53c9988e17a18b4172c18a553d93dbddd79380f1a32398a1c9113dd02188fac"
+    },
+    "docs/REFEREE_BROADER_PILOTS_V71.md": {
+      "bytes": 27324,
+      "mode": 420,
+      "sha256": "a2e51cedb7a3de134b509ea64abb242f4aeeb9104bf57268629fa91ff4f46ca6"
+    },
+    "docs/REFEREE_BROADER_PILOT_V67.md": {
+      "bytes": 15543,
+      "mode": 420,
+      "sha256": "48a7f8b5bd2bbe8f3a9e1007b9cdaee95f75336a96857b89759ac10ec54f3dab"
+    },
+    "docs/REFEREE_BROADER_PILOT_V68.md": {
+      "bytes": 11354,
+      "mode": 420,
+      "sha256": "a5db515de4e43ac8800613ed5cf99cdf501a7f0e564e3c7081a4f9aa14f96d27"
+    },
+    "docs/REFEREE_BROADER_PILOT_V70.md": {
+      "bytes": 8826,
+      "mode": 420,
+      "sha256": "a0d1d12ded5426f9f606a557a0303df4bd76a00b5d326d45761946a4ea588ab8"
+    },
+    "docs/REFEREE_BROADER_PREPARATION_V65.md": {
+      "bytes": 8519,
+      "mode": 420,
+      "sha256": "155f932e04023e02c8bfc19b370cfcaf88a57830fe6d60d27aeb650ed71dcee8"
+    },
+    "docs/REFEREE_BROADER_PROMOTION_V75.md": {
+      "bytes": 13149,
+      "mode": 420,
+      "sha256": "36f100d439070ed576fc5fc78525fb0c6b2696878c265acbafb914dd28b2e4c5"
+    },
+    "docs/REFEREE_CAMPAIGN_AUDITOR_V81.md": {
+      "bytes": 9241,
+      "mode": 420,
+      "sha256": "5eed404a4a971b6c75aa4c5c3889a3c733d37ed4d45f1a561e39b93e032aec2f"
+    },
+    "docs/REFEREE_CLOUD_V81.md": {
+      "bytes": 19911,
+      "mode": 420,
+      "sha256": "d85f3556064c2c97c68b623c3a15b44a0586b6a53a3225a6f35b09bd38ba07be"
+    },
+    "docs/REFEREE_CM_COMPARISON_V58.md": {
+      "bytes": 7504,
+      "mode": 420,
+      "sha256": "e50d5779cf5c23c784ecfcabb759d931a7f86db795b6b424423ce547a7f74362"
+    },
+    "docs/REFEREE_CONTINUOUS_V81.md": {
+      "bytes": 26404,
+      "mode": 420,
+      "sha256": "b54ff3f4b879705d12b6504f27fd680f2d9c54fe4c4a649ea01c7115289dd55d"
+    },
+    "docs/REFEREE_D3_COMPLETENESS_V58.md": {
+      "bytes": 9121,
+      "mode": 420,
+      "sha256": "4c49e832dbbd6a0e48438bfef47b0cb5d6f8458ac760e3fb0d28e588cf2d064a"
+    },
+    "docs/REFEREE_D3_POINTS_V60.md": {
+      "bytes": 10393,
+      "mode": 420,
+      "sha256": "9162bc1f9c5f550ac79225c0158514ccdc555b2a8297c5dadc14b7a666b1a249"
+    },
+    "docs/REFEREE_D7_MAXIMAL_V61.md": {
+      "bytes": 16129,
+      "mode": 420,
+      "sha256": "0203daccc728dfa503eb1cd1bbe89d58459b246352623046be76263b0100f001"
+    },
+    "docs/REFEREE_D7_PILOTS_V58.md": {
+      "bytes": 8499,
+      "mode": 420,
+      "sha256": "c0ab8cbb9c872219688f7decd3da25f6b1f465a5099c446e94d22d8601e1fd9b"
+    },
+    "docs/REFEREE_D7_R41_V63.md": {
+      "bytes": 18013,
+      "mode": 420,
+      "sha256": "923545180cc2fb25d8f12880eef073e950a7fa6c2fb4d463083f087505d1a0f0"
+    },
+    "docs/REFEREE_FULL_GEOMETRY_V79.md": {
+      "bytes": 14582,
+      "mode": 420,
+      "sha256": "8614fc068fc18dfe7224d30f422e0ef2d45cdee45d58adb3f0423517f6ae4603"
+    },
+    "docs/REFEREE_FULL_PACKET_V62.md": {
+      "bytes": 14748,
+      "mode": 420,
+      "sha256": "fcdd5b2520c8b3b0d04de4a011587b8e1f81bb13a86decf0ff8fbd2ba15367cb"
+    },
+    "docs/REFEREE_MANUSCRIPT_C42_C43_V81.md": {
+      "bytes": 5572,
+      "mode": 420,
+      "sha256": "f34b405c2ba1819d05978a4033aa0565abbdf5537659d2d9f2d20d1fadc37d1e"
+    },
+    "docs/REFEREE_MANUSCRIPT_V64.md": {
+      "bytes": 9086,
+      "mode": 420,
+      "sha256": "bbdda527da7be257f38ff3f3d02b5c5615698933b335e2ff51a4174eb41d1982"
+    },
+    "docs/REFEREE_MANUSCRIPT_V66.md": {
+      "bytes": 6637,
+      "mode": 420,
+      "sha256": "cb539e4181f5879e7e543c24790f46f0a02fcf4bbe7608a60857f8e878a319b5"
+    },
+    "docs/REFEREE_PACKET_ORDER_COVERAGE_V58.md": {
+      "bytes": 3730,
+      "mode": 420,
+      "sha256": "bd15246b55dcfefa7ce1428ef2f785b69fc3bbdabdfe5a99466df71f46da99f6"
+    },
+    "docs/REFEREE_PORTABLE_BATCH_V82.md": {
+      "bytes": 14893,
+      "mode": 420,
+      "sha256": "72af5462edf5c0e643506812c3beab26b9c22e3fe797146fbb18c8c664f017c3"
+    },
+    "docs/REFEREE_PRIMITIVE_ROWS_V76.md": {
+      "bytes": 12736,
+      "mode": 420,
+      "sha256": "c1a2555365aa2d919c3cb2a31fa85c43498e94b1547b3599c3c4fc7bc7108b4c"
+    },
+    "docs/REFEREE_R127_PIC1_V80.md": {
+      "bytes": 14603,
+      "mode": 420,
+      "sha256": "b82bcb1e608d316580e8943df75c180a748239f4a205a6674ee0ee772f5e8582"
+    },
+    "docs/REFEREE_RELEASE_V57.md": {
+      "bytes": 2248,
+      "mode": 420,
+      "sha256": "ad65b1b18954ab9c599d3c319466ca40f746c26d146bd3fa975caa9255f42fbb"
+    },
+    "docs/REFEREE_RESIDUE_ALL_ROWS_V78.md": {
+      "bytes": 14004,
+      "mode": 420,
+      "sha256": "c98a5ee306401f4346853a74713a5950f9797070111a23a9ba37a227f7dacb6d"
+    },
+    "docs/REFEREE_RESIDUE_BUCKETS_V77.md": {
+      "bytes": 11009,
+      "mode": 420,
+      "sha256": "88b959c2c9ed7c232d66a42bcf2dc93e705b079ae07756b7de6eb1f4f72ad101"
+    },
+    "docs/REFEREE_SHIFTED_UNIT_V69.md": {
+      "bytes": 11061,
+      "mode": 420,
+      "sha256": "af31fa7ef6b5454598ea5890e04efc56e51ff3f61e218551dfbfe29705b33d92"
+    },
+    "docs/RELEASE_V57.md": {
+      "bytes": 7693,
+      "mode": 420,
+      "sha256": "a87a3f52751bbeb752b09dc12cc9c53803c22192032996ab95d91b3dc18d2bf6"
+    },
+    "docs/RELEASE_V57_CONSOLIDATED.md": {
+      "bytes": 3609,
+      "mode": 420,
+      "sha256": "ab7a871148f244712fdf9f0e86d901cb30a7f8bf67ea2e8de1f9ca47c1e05cab"
+    },
+    "docs/RESEARCH_ASSESSMENT_2026-09-15.md": {
+      "bytes": 20310,
+      "mode": 420,
+      "sha256": "293c082421871d2b69aa042eb3c5f73c2041cf5815eefb04899f6e36cfc2ca12"
+    },
+    "docs/RESIDUAL_17_38_EXCLUSION.md": {
+      "bytes": 8542,
+      "mode": 420,
+      "sha256": "fd1e96cd027203b0ed2896ba6cf531961b942e66e3ae3458af1175394f72c2bb"
+    },
+    "docs/RESIDUAL_1_22_EXCLUSION.md": {
+      "bytes": 7855,
+      "mode": 420,
+      "sha256": "7014687b09d397050330876d2817bbd336e616ba3ce2e7d0049c859c5fcb5fd6"
+    },
+    "docs/RESIDUAL_20_41_A_VERTEX.md": {
+      "bytes": 6194,
+      "mode": 420,
+      "sha256": "8d5465e0936900f5decb06ed134e3c3402af342d85a20bfd63dc34418f947c50"
+    },
+    "docs/RESIDUE_ALL_ROWS_V78.md": {
+      "bytes": 7238,
+      "mode": 420,
+      "sha256": "73937e65bf41cf1292f5e3eafe2973488e1b15d08203c3716eb6c9bdb7993ffd"
+    },
+    "docs/RESIDUE_BUCKETS_V77.md": {
+      "bytes": 5495,
+      "mode": 420,
+      "sha256": "29eef0588a921e45db39d24b18bc36895bcb281a3c2dd4e05c03b75a8923f948"
+    },
+    "docs/WHOLE_PROJECT_ROADMAP_2026-09-18.md": {
+      "bytes": 24420,
+      "mode": 420,
+      "sha256": "3898691e7c74317be7ec52f331b4478dafddf19f32c3d279ec4b85405097dfd6"
+    },
+    "experiments/broader_geometry_v67/run_pilot.py": {
+      "bytes": 9759,
+      "mode": 420,
+      "sha256": "77d256e3057f39ccae1be63a94832670d1a6d19a2da504e4e203c27c70cbb642"
+    },
+    "experiments/broader_geometry_v71/compare.py": {
+      "bytes": 9099,
+      "mode": 420,
+      "sha256": "a364cb90d10fa3b840422c95a9b032ad61915277a2a00fd9c8426923d67547e9"
+    },
+    "experiments/broader_geometry_v71/run_pilot.py": {
+      "bytes": 9994,
+      "mode": 420,
+      "sha256": "f4c4da933d9b5c03e20f4d942aebf97166e819605a12c6c8ccc5a36670fc979f"
+    },
+    "experiments/continuous_v81/child.py": {
+      "bytes": 2116,
+      "mode": 420,
+      "sha256": "b78ba5ccdb4fcdec0b568c0ea2502575768f12bb8c04c87714576397dfc3f31e"
+    },
+    "experiments/continuous_v81/cloud/guard_composite.py": {
+      "bytes": 20382,
+      "mode": 420,
+      "sha256": "9bd672d5b53be1982b4342cdcf1bf438925ff9b74138a72c5731957dd32c1d10"
+    },
+    "experiments/continuous_v81/cloud/legacy_math.py": {
+      "bytes": 21596,
+      "mode": 420,
+      "sha256": "11b22137bdd668fba76e8c73c8d56985f47d178c1c495daaa310b9571f66507f"
+    },
+    "experiments/continuous_v81/cloud/prepare_node.py": {
+      "bytes": 4307,
+      "mode": 420,
+      "sha256": "3eabdb24e523c8b16c04ef27ed9e0dd80d2a35d06ffd08d824889672589cd49b"
+    },
+    "experiments/continuous_v81/cloud/release_bundle.py": {
+      "bytes": 11778,
+      "mode": 420,
+      "sha256": "33c4a8ced71474ee9adb7ed2a6fa087f7fa900728fe909afbedba5e4a4c74c59"
+    },
+    "experiments/continuous_v81/cloud/requirements.lock": {
+      "bytes": 344,
+      "mode": 420,
+      "sha256": "4e872f2aa29edfa909409f3fa120609039d2d069bd802a817fcb772cd4c26dda"
+    },
+    "experiments/continuous_v81/cloud/test_legacy_math.py": {
+      "bytes": 9595,
+      "mode": 420,
+      "sha256": "3bf99894682d171c10848d135a2dfe4c0b877b3ab472493caf621971c7320c2f"
+    },
+    "experiments/continuous_v81/runner.py": {
+      "bytes": 23830,
+      "mode": 420,
+      "sha256": "1407099f5073075c104dcb7bebec57eac819d78a3ca5bf5d486c29901a0edb5d"
+    },
+    "experiments/packet_scope/trace_coverage_v58.json": {
+      "bytes": 95249,
+      "mode": 420,
+      "sha256": "2aef609b6ce72dfb8b6a9017b31674995f0a3cb2cd3ce80aaf7b763e3edfdcd2"
+    },
+    "independent/README_a_vertex_orbits_k20_k41_sturm_v44.md": {
+      "bytes": 4402,
+      "mode": 420,
+      "sha256": "24de27fe04dc0fef7fad439ba8a03890e7126ebc187ff00f30e6d50927112cde"
+    },
+    "independent/README_broader_principal_v75.md": {
+      "bytes": 7595,
+      "mode": 420,
+      "sha256": "74251c697872ffebd14b315556ec978a297df1c075908b7b9c05f6c5e8560c5a"
+    },
+    "independent/README_d7_ambient_points_sturm_v45.md": {
+      "bytes": 2242,
+      "mode": 420,
+      "sha256": "76e5f33f0ec406b9f7e11a96b7175adbf0641d07456c3babe3bbb5146be37c84"
+    },
+    "independent/README_d7_r83_batch10_sturm_v51.md": {
+      "bytes": 3095,
+      "mode": 420,
+      "sha256": "4a29e54f8a34d750abf375571622b735cfceb2e2a28d9d99dcd3abea46e5930e"
+    },
+    "independent/README_d7_r83_mask14_sturm_v46.md": {
+      "bytes": 2116,
+      "mode": 420,
+      "sha256": "e8ac491fe559eb3fad4f84e70a3186cf34e2000bf26b2a1841a982fc65b3ac9f"
+    },
+    "independent/README_d7_r83_masks13_29_sturm_v52.md": {
+      "bytes": 3817,
+      "mode": 420,
+      "sha256": "1b098d56cffa2ab0e25e1247650bfce2af121dac4d2e838de8b10dcf22fd4efe"
+    },
+    "independent/README_d7_r83_masks14_30_sturm_v47.md": {
+      "bytes": 3080,
+      "mode": 420,
+      "sha256": "dca38510bc2b624679c6b333368639f980ea32d3a6e52586cb86f750738c00ce"
+    },
+    "independent/README_d7_r83_masks15_31_sturm_v48.md": {
+      "bytes": 2733,
+      "mode": 420,
+      "sha256": "dfaf49cbc66df6ca93d5f473f7c60c86d4eaa9e5cfd94cfcfd542dab374f24dd"
+    },
+    "independent/README_d7_r83_masks1_17_sturm_v50.md": {
+      "bytes": 4112,
+      "mode": 420,
+      "sha256": "839d014ac84e3cae1ecf8fa27c7377a84a4ff5fd69c85e217cbb08e2c484472d"
+    },
+    "independent/README_d7_r83_masks6_22_sturm_v49.md": {
+      "bytes": 2705,
+      "mode": 420,
+      "sha256": "46a7d1b9b63cdfa667f75f21cbd801095d8e9de86c81fb472ef61ce439bc692a"
+    },
+    "independent/README_d7_r83_masks7_23_sturm_v53.md": {
+      "bytes": 4473,
+      "mode": 420,
+      "sha256": "b52ec630378d223f84efea2b079d690179eee3322b0541c8be0cb7e1b5d4f007"
+    },
+    "independent/README_packet_cm_hodge_sturm_v41.md": {
+      "bytes": 2388,
+      "mode": 420,
+      "sha256": "a047f64fa42b654dbe0a1a8c47d0caaaef7b8a52efb54336017600ab782fab5f"
+    },
+    "independent/README_packet_order_coverage_v58.md": {
+      "bytes": 3490,
+      "mode": 420,
+      "sha256": "a3ea0bb1b4f920eff81f45d0d44ca8d20670fd068493f612d6748ee21b8034ba"
+    },
+    "independent/README_principal_descent_v57.md": {
+      "bytes": 9684,
+      "mode": 420,
+      "sha256": "2bdb1edd90fc0bd089e24a8bb4b6a79b8a96f3588f9bd2965b58a1db5c59cdd0"
+    },
+    "independent/README_principal_homology_v56.md": {
+      "bytes": 7685,
+      "mode": 420,
+      "sha256": "42aa05c4e8a49d4c79b6a6dffa24c91290b4547d79aa7cc4e145154202fa8910"
+    },
+    "independent/README_quadrilateral_k17_stdlib_v41.md": {
+      "bytes": 2971,
+      "mode": 420,
+      "sha256": "4124d1bd49815afe1fca1761dd7113ca49de91dbf69380398227e6b53722bf99"
+    },
+    "independent/README_residual_orbit_k17_k38_sturm_v42.md": {
+      "bytes": 3419,
+      "mode": 420,
+      "sha256": "0350c77e1afcf5ad51fff8fdbbc056ef3d0ba09ce7e6b4eb9aa87a7d5d0be79b"
+    },
+    "independent/README_residual_orbit_k1_k22_sturm_v43.md": {
+      "bytes": 3634,
+      "mode": 420,
+      "sha256": "086bcb9e29ce0ce6749af71beff45d04bc6f73207d727d72235552997cc6a4dc"
+    },
+    "independent/a_vertex_hodge_node_v31.js": {
+      "bytes": 1780,
+      "mode": 420,
+      "sha256": "958ef1d3b15b115e20f95feb2dd6db9193c93a1ee4f956d021bd08c497f36f5d"
+    },
+    "independent/a_vertex_orbits_k20_k41_sturm_v44.py": {
+      "bytes": 13274,
+      "mode": 420,
+      "sha256": "aced8e90b5e1941fbb4d1bdf06557923ddc458b6ef3499abfcadc1c7f4a4bde3"
+    },
+    "independent/broader_principal_sturm_v75.py": {
+      "bytes": 32043,
+      "mode": 420,
+      "sha256": "50b43ae9640c001ca787ea29b8478b23356edb03c45af2cae60946a985184051"
+    },
+    "independent/d3_completeness_quadratic_v60.py": {
+      "bytes": 8922,
+      "mode": 420,
+      "sha256": "7b34e8c676a0045b8c02d1ae065b395003bb48191d1cddf8d085a458db4f0363"
+    },
+    "independent/d3_points_quadratic_v60.py": {
+      "bytes": 9280,
+      "mode": 420,
+      "sha256": "f0d587b192be31db405458d77d68f0c17e9fa5b0dcd81dc3f9b767c3ec970793"
+    },
+    "independent/d7_ambient_points_sturm_v45.py": {
+      "bytes": 19738,
+      "mode": 420,
+      "sha256": "3eb68f57e6d0d88b2e548f605742d434c8714b25eb1404b3c27d32415b61f42a"
+    },
+    "independent/d7_r41_sturm_v63.py": {
+      "bytes": 8976,
+      "mode": 420,
+      "sha256": "3a34b0f111bc5eed7dfcfa6a76c5473bd0dd8389a3c2efbee18098d270fd9cdf"
+    },
+    "independent/d7_r83_batch10_sturm_v51.py": {
+      "bytes": 23511,
+      "mode": 420,
+      "sha256": "f460550ecb5275e35618d38d83246d8bd5cea8f58b552ba2ca1df5a035fd9fb0"
+    },
+    "independent/d7_r83_mask14_sturm_v46.py": {
+      "bytes": 12982,
+      "mode": 420,
+      "sha256": "7f49b02899eec3f008c1388e0df706b59207b0bfc2cc12f527c3c9313bdb7f5e"
+    },
+    "independent/d7_r83_masks13_29_sturm_v52.py": {
+      "bytes": 19346,
+      "mode": 420,
+      "sha256": "3c3c0325e5f67724ec0e7eac372cab7db81004399ab9cf9460ea32cc05dcaedd"
+    },
+    "independent/d7_r83_masks14_30_sturm_v47.py": {
+      "bytes": 20035,
+      "mode": 420,
+      "sha256": "5600d6ffe05c1dbac0b84114b644f05774790e3362906c8904b57b3723fb5310"
+    },
+    "independent/d7_r83_masks15_31_sturm_v48.py": {
+      "bytes": 20305,
+      "mode": 420,
+      "sha256": "25d1c7e631b60910c6847bc0aa4a9260219ebdcac3f4821f03fea959d8683782"
+    },
+    "independent/d7_r83_masks1_17_sturm_v50.py": {
+      "bytes": 21119,
+      "mode": 420,
+      "sha256": "88b28fa7db44035cd18f0dc44113000e7bb2320e0ad1f82995d0a2feb1f73b2d"
+    },
+    "independent/d7_r83_masks6_22_sturm_v49.py": {
+      "bytes": 20365,
+      "mode": 420,
+      "sha256": "d9627ae5c577b6f345c427d7cbfa7fdabac12aaa94ed7fc3df69cfe0036b1eab"
+    },
+    "independent/d7_r83_masks7_23_sturm_v53.py": {
+      "bytes": 20778,
+      "mode": 420,
+      "sha256": "3ade17a2af9540e7809ba154140f4ff9d5785962357d40cf8977a4b3445a1fb3"
+    },
+    "independent/d7_r83_principal_sturm_v55.py": {
+      "bytes": 17653,
+      "mode": 420,
+      "sha256": "894339e82389ff651bf25b04693821c4dfeedc427dec2fa4fd8993f195bb663f"
+    },
+    "independent/d7_remaining_maximal_sturm_v61.py": {
+      "bytes": 8122,
+      "mode": 493,
+      "sha256": "ba28b0c2231f52a42e38b6c665dd9c645b6e67ee06bf8c892e004dbcc608656b"
+    },
+    "independent/full_packet_cyclotomic_v62.py": {
+      "bytes": 14511,
+      "mode": 420,
+      "sha256": "afd432405458e6ba9629989751e2facca8b1bf35fd85888c1abfc97e2f69fd62"
+    },
+    "independent/independent_low_index_node.js": {
+      "bytes": 2674,
+      "mode": 420,
+      "sha256": "27d60835e7ddb6542362ec489c45fba8b56cb4803f796417c1672ef9ec9cb045"
+    },
+    "independent/k11_vertex_bridge_stdlib_v60.py": {
+      "bytes": 5859,
+      "mode": 420,
+      "sha256": "558b536708e0acf073204eee5049205c0bb8a42ac4222858e994470e8a70fb2e"
+    },
+    "independent/packet_cm_hodge_sturm_v41.py": {
+      "bytes": 7944,
+      "mode": 420,
+      "sha256": "ab2629c3fe4c6269ae20b5085240160bd0ef4fa8d56610fe457c511c98c4a0d9"
+    },
+    "independent/packet_hodge_node_v40.js": {
+      "bytes": 2836,
+      "mode": 420,
+      "sha256": "0d3d603d5f5ca1b71082080df23920af62fc09eee45b449880a3ff6ddd4b21ed"
+    },
+    "independent/packet_order_coverage_stdlib_v58.py": {
+      "bytes": 14060,
+      "mode": 420,
+      "sha256": "ed328d11d87d2cc9e93322bddb2b3207b1edf8c5d8dc66dea2026f0a07ea07c3"
+    },
+    "independent/principal_descent_stdlib_v57.py": {
+      "bytes": 14884,
+      "mode": 420,
+      "sha256": "783a473e1919516766ec508399ec8812e493d10cb0ebd54db9ce8a5741ac39cd"
+    },
+    "independent/principal_homology_stdlib_v56.py": {
+      "bytes": 18579,
+      "mode": 420,
+      "sha256": "127e1fe82b2a39a7a9ffb10a82e42806d5b53eb632f46e5e523e7ec644001c23"
+    },
+    "independent/quadrilateral_k17_stdlib_v41.py": {
+      "bytes": 23181,
+      "mode": 420,
+      "sha256": "c5bd45f334a028820a071b5c758acfb8e48afc1e8454b18a3174dd04ca58a38c"
+    },
+    "independent/r127_pic1_sturm_v80.py": {
+      "bytes": 48007,
+      "mode": 420,
+      "sha256": "9745e43762b5cb5582dab2e5cebf8c6f7ad9fe2f0eb66a5782dafb02f7d7b964"
+    },
+    "independent/residual_orbit_k17_k38_sturm_v42.py": {
+      "bytes": 23381,
+      "mode": 420,
+      "sha256": "12a0d875e2715fe2c2ae123d2dc5202f4d7ce4e024f114ad163126654219fc13"
+    },
+    "independent/residual_orbit_k1_k22_sturm_v43.py": {
+      "bytes": 23430,
+      "mode": 420,
+      "sha256": "d377b06941320ee3e8f85ac828ef1c4e04cedb58d2b465c41a62aca723688bba"
+    },
+    "logs/RESEARCH_LOG.md": {
+      "bytes": 132194,
+      "mode": 420,
+      "sha256": "458263f5ac8a20e9a9d3299a677bf9a9b80840baca3f0f7664acf1232b9a61ff"
+    },
+    "logs/last_certificate_run.txt": {
+      "bytes": 0,
+      "mode": 420,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "paper/main.tex": {
+      "bytes": 242428,
+      "mode": 420,
+      "sha256": "6652f7647559eaa219aaa96b75245f3c125220023fc153c4e79f0c6ac495708f"
+    },
+    "requirements.txt": {
+      "bytes": 14,
+      "mode": 420,
+      "sha256": "25f9f1fb1988b230147a1d3092d34e09c069eb7a6c6d6df46b3973b9f2d36efc"
+    },
+    "scripts/bootstrap_codex_branches.sh": {
+      "bytes": 331,
+      "mode": 493,
+      "sha256": "18c9ce9786fc4b3c0aa5d4af72228ea03ce99abc38c04c1eb81de6e5e190f70c"
+    },
+    "scripts/certificate_execution.py": {
+      "bytes": 8484,
+      "mode": 420,
+      "sha256": "02e516a9058c1d966e191ed8640dc6317e15c23006bc0d79a9934a75bc69d83a"
+    },
+    "scripts/create_worktrees.sh": {
+      "bytes": 673,
+      "mode": 493,
+      "sha256": "220fc1054ba10e6028f54bf49ba653a354041ee54373d73e592b1d38c6a6a3ad"
+    },
+    "scripts/generate_dashboard.py": {
+      "bytes": 23798,
+      "mode": 493,
+      "sha256": "841cf6af6c01bb735ce9bbfc378b93687dddd21f18eb89871c0acca9ee98f70f"
+    },
+    "scripts/run_certificates.py": {
+      "bytes": 8710,
+      "mode": 493,
+      "sha256": "3b3b7f4f37de42cae534d35cab4a60eec2262b185f6e35567a88834eb5f56237"
+    },
+    "scripts/run_discovery_pilots.py": {
+      "bytes": 4363,
+      "mode": 420,
+      "sha256": "0b555e94e23f062afb0a5520c57e1bdf597dfae0139a5abdec4a90ce1a0f8996"
+    },
+    "scripts/run_maximal_replay_v61.py": {
+      "bytes": 6386,
+      "mode": 420,
+      "sha256": "20d411a4b6df77df2fd939e5fd87f98d89e2c5fcf353d1c73f228a37c0d01403"
+    },
+    "scripts/run_r41_replay_v63.py": {
+      "bytes": 7698,
+      "mode": 420,
+      "sha256": "4ccd42fec102f86c8e8637fc73fe6b95a6be8e5d26984cf9c12591a68b611f44"
+    },
+    "scripts/run_remaining_d7_batch.py": {
+      "bytes": 4716,
+      "mode": 420,
+      "sha256": "a71313dd78809a123aa855ac6eff803853244d46981f9c68836d2ff78a0b9eb4"
+    },
+    "scripts/verify_release.py": {
+      "bytes": 9863,
+      "mode": 420,
+      "sha256": "464f4b5d70f65e047a6795c4cb60d725f05f8074a0693e3aac9260778646513b"
+    },
+    "scripts/write_source_checksums.py": {
+      "bytes": 1069,
+      "mode": 420,
+      "sha256": "32c2c615bacf903400504dbad4734f4694d1e5b69a310402110b5784827bdc0c"
+    },
+    "tests/repo_invariants.py": {
+      "bytes": 5855,
+      "mode": 493,
+      "sha256": "70b582d64766533548fd5d92ccff6f30b20426fcf55df9df48a12a7b4ccfa599"
+    },
+    "tests/test_broader_pilot_limits.py": {
+      "bytes": 3819,
+      "mode": 420,
+      "sha256": "94878e1c7af4a752a4172b5e73275bc3707e019bc1b1e828647ef8f4edde9be9"
+    },
+    "tests/test_broader_v71_limits.py": {
+      "bytes": 1900,
+      "mode": 420,
+      "sha256": "77f46d4c56f0f08eccaa2df1a1ca8b563fe5138b180461a9a404af5e9d8dd25e"
+    },
+    "tests/test_certificate_execution.py": {
+      "bytes": 9018,
+      "mode": 420,
+      "sha256": "2f90c8ccb3add127a43396240f0888f42caa89441f1ac4fcd96318ed60f70a7c"
+    },
+    "tests/test_certificate_registration.py": {
+      "bytes": 3592,
+      "mode": 420,
+      "sha256": "ab2dbce688da21419c8298a49b8a5a61ed90b7d33d2d299911d3e383ae75e695"
+    },
+    "tests/test_continuous_v81_runner.py": {
+      "bytes": 22747,
+      "mode": 420,
+      "sha256": "d75ba47a5079b0d6e7c1c1e8d7b7df4ec8737e9c3b5b08a8bfaeebf7ea0d824e"
+    },
+    "tests/test_r41_replay.py": {
+      "bytes": 3781,
+      "mode": 420,
+      "sha256": "c082b65f54e1478adc7970fe0b86e15dfca39147610140f95c1519a53f54b33a"
+    },
+    "tests/test_verify_release.py": {
+      "bytes": 8867,
+      "mode": 420,
+      "sha256": "ae9a0cde05e5ea615acdb7c3e25aa3f875323699bcb7902ecaaa6b8c2278fe7a"
+    },
+    "verify_all.sh": {
+      "bytes": 2142,
+      "mode": 493,
+      "sha256": "c36753f360dcf2cecb6911c11bb964253b92b02329d6bba9faa84f32fcc71325"
+    }
+  },
+  "origin_is_dirty_working_source_snapshot": true,
+  "origin_parent_commit": "fefacfdf909d54a04a6d0031f1fbc98f9bd50c5f",
+  "registered_commands": [
+    {
+      "command": [
+        "python",
+        "certificates/full_packet_arithmetic_v62.py"
+      ],
+      "index": 1,
+      "label": "certificates/full_packet_arithmetic_v62.py"
+    },
+    {
+      "command": [
+        "python",
+        "independent/full_packet_cyclotomic_v62.py"
+      ],
+      "index": 2,
+      "label": "independent/full_packet_cyclotomic_v62.py"
+    },
+    {
+      "command": [
+        "python",
+        "certificates/d3_points_v60.py"
+      ],
+      "index": 3,
+      "label": "certificates/d3_points_v60.py"
+    },
+    {
+      "command": [
+        "python",
+        "independent/d3_points_quadratic_v60.py"
+      ],
+      "index": 4,
+      "label": "independent/d3_points_quadratic_v60.py"
+    },
+    {
+      "command": [
+        "python",
+        "certificates/d3_completeness_v60.py"
+      ],
+      "index": 5,
+      "label": "certificates/d3_completeness_v60.py"
+    },
+    {
+      "command": [
+        "python",
+        "independent/d3_completeness_quadratic_v60.py"
+      ],
+      "index": 6,
+      "label": "independent/d3_completeness_quadratic_v60.py"
+    },
+    {
+      "command": [
+        "python",
+        "certificates/k11_vertex_bridge_v60.py"
+      ],
+      "index": 7,
+      "label": "certificates/k11_vertex_bridge_v60.py"
+    },
+    {
+      "command": [
+        "python",
+        "independent/k11_vertex_bridge_stdlib_v60.py"
+      ],
+      "index": 8,
+      "label": "independent/k11_vertex_bridge_stdlib_v60.py"
+    },
+    {
+      "command": [
+        "python",
+        "certificates/packet_order_coverage_v58.py"
+      ],
+      "index": 9,
+      "label": "certificates/packet_order_coverage_v58.py"
+    },
+    {
+      "command": [
+        "python",
+        "independent/packet_order_coverage_stdlib_v58.py"
+      ],
+      "index": 10,
+      "label": "independent/packet_order_coverage_stdlib_v58.py"
+    },
+    {
+      "command": [
+        "python",
+        "certificates/known_cm_comparison_v58.py"
+      ],
+      "index": 11,
+      "label": "certificates/known_cm_comparison_v58.py"
+    },
+    {
+      "command": [
+        "python",
+        "certificates/principal_descent_v57.py"
+      ],
+      "index": 12,
+      "label": "certificates/principal_descent_v57.py"
+    },
+    {
+      "command": [
+        "python",
+        "independent/principal_descent_stdlib_v57.py"
+      ],
+      "index": 13,
+      "label": "independent/principal_descent_stdlib_v57.py"
+    },
+    {
+      "command": [
+        "python",
+        "certificates/principal_homology_v56.py"
+      ],
+      "index": 14,
+      "label": "certificates/principal_homology_v56.py"
+    },
+    {
+      "command": [
+        "python",
+        "independent/principal_homology_stdlib_v56.py"
+      ],
+      "index": 15,
+      "label": "independent/principal_homology_stdlib_v56.py"
+    },
+    {
+      "command": [
+        "python",
+        "certificates/a_vertex_certificate_v31.py"
+      ],
+      "index": 16,
+      "label": "certificates/a_vertex_certificate_v31.py"
+    },
+    {
+      "command": [
+        "python",
+        "certificates/d7_nonmaximal_classes_v29.py"
+      ],
+      "index": 17,
+      "label": "certificates/d7_nonmaximal_classes_v29.py"
+    },
+    {
+      "command": [
+        "python",
+        "certificates/d7_ambient_points_v45.py"
+      ],
+      "index": 18,
+      "label": "certificates/d7_ambient_points_v45.py"
+    },
+    {
+      "command": [
+        "python",
+        "certificates/vertex_saturation_v35.py"
+      ],
+      "index": 19,
+      "label": "certificates/vertex_saturation_v35.py"
+    },
+    {
+      "command": [
+        "python",
+        "certificates/a_principal_local_v33.py"
+      ],
+      "index": 20,
+      "label": "certificates/a_principal_local_v33.py"
+    },
+    {
+      "command": [
+        "python",
+        "certificates/three_vertex_level_v37.py"
+      ],
+      "index": 21,
+      "label": "certificates/three_vertex_level_v37.py"
+    },
+    {
+      "command": [
+        "python",
+        "certificates/maximal_vertex_orbits_v38.py"
+      ],
+      "index": 22,
+      "label": "certificates/maximal_vertex_orbits_v38.py"
+    },
+    {
+      "command": [
+        "python",
+        "certificates/packet_hodge_v39.py"
+      ],
+      "index": 23,
+      "label": "certificates/packet_hodge_v39.py"
+    },
+    {
+      "command": [
+        "python",
+        "certificates/four_vertex_audit_v40.py"
+      ],
+      "index": 24,
+      "label": "certificates/four_vertex_audit_v40.py"
+    },
+    {
+      "command": [
+        "python",
+        "certificates/residual_orbit_k17_k38_v42.py"
+      ],
+      "index": 25,
+      "label": "certificates/residual_orbit_k17_k38_v42.py"
+    },
+    {
+      "command": [
+        "python",
+        "certificates/residual_orbit_k1_k22_v43.py"
+      ],
+      "index": 26,
+      "label": "certificates/residual_orbit_k1_k22_v43.py"
+    },
+    {
+      "command": [
+        "python",
+        "certificates/a_vertex_orbits_k20_k41_v44.py"
+      ],
+      "index": 27,
+      "label": "certificates/a_vertex_orbits_k20_k41_v44.py"
+    },
+    {
+      "command": [
+        "python",
+        "certificates/d7_r83_masks14_30_v47.py"
+      ],
+      "index": 28,
+      "label": "certificates/d7_r83_masks14_30_v47.py"
+    },
+    {
+      "command": [
+        "python",
+        "certificates/d7_r83_masks15_31_v48.py"
+      ],
+      "index": 29,
+      "label": "certificates/d7_r83_masks15_31_v48.py"
+    },
+    {
+      "command": [
+        "python",
+        "certificates/d7_r83_masks6_22_v49.py"
+      ],
+      "index": 30,
+      "label": "certificates/d7_r83_masks6_22_v49.py"
+    },
+    {
+      "command": [
+        "python",
+        "certificates/d7_r83_masks1_17_v50.py"
+      ],
+      "index": 31,
+      "label": "certificates/d7_r83_masks1_17_v50.py"
+    },
+    {
+      "command": [
+        "python",
+        "certificates/d7_r83_batch10_v51.py"
+      ],
+      "index": 32,
+      "label": "certificates/d7_r83_batch10_v51.py"
+    },
+    {
+      "command": [
+        "python",
+        "certificates/d7_r83_masks13_29_v52.py"
+      ],
+      "index": 33,
+      "label": "certificates/d7_r83_masks13_29_v52.py"
+    },
+    {
+      "command": [
+        "python",
+        "certificates/d7_r83_masks7_23_v53.py"
+      ],
+      "index": 34,
+      "label": "certificates/d7_r83_masks7_23_v53.py"
+    },
+    {
+      "command": [
+        "python",
+        "independent/quadrilateral_k17_stdlib_v41.py"
+      ],
+      "index": 35,
+      "label": "independent/quadrilateral_k17_stdlib_v41.py"
+    },
+    {
+      "command": [
+        "python",
+        "independent/packet_cm_hodge_sturm_v41.py"
+      ],
+      "index": 36,
+      "label": "independent/packet_cm_hodge_sturm_v41.py"
+    },
+    {
+      "command": [
+        "python",
+        "independent/residual_orbit_k17_k38_sturm_v42.py"
+      ],
+      "index": 37,
+      "label": "independent/residual_orbit_k17_k38_sturm_v42.py"
+    },
+    {
+      "command": [
+        "python",
+        "independent/residual_orbit_k1_k22_sturm_v43.py"
+      ],
+      "index": 38,
+      "label": "independent/residual_orbit_k1_k22_sturm_v43.py"
+    },
+    {
+      "command": [
+        "python",
+        "independent/a_vertex_orbits_k20_k41_sturm_v44.py"
+      ],
+      "index": 39,
+      "label": "independent/a_vertex_orbits_k20_k41_sturm_v44.py"
+    },
+    {
+      "command": [
+        "python",
+        "independent/d7_ambient_points_sturm_v45.py"
+      ],
+      "index": 40,
+      "label": "independent/d7_ambient_points_sturm_v45.py"
+    },
+    {
+      "command": [
+        "python",
+        "independent/d7_r83_masks14_30_sturm_v47.py"
+      ],
+      "index": 41,
+      "label": "independent/d7_r83_masks14_30_sturm_v47.py"
+    },
+    {
+      "command": [
+        "python",
+        "independent/d7_r83_masks15_31_sturm_v48.py"
+      ],
+      "index": 42,
+      "label": "independent/d7_r83_masks15_31_sturm_v48.py"
+    },
+    {
+      "command": [
+        "python",
+        "independent/d7_r83_masks6_22_sturm_v49.py"
+      ],
+      "index": 43,
+      "label": "independent/d7_r83_masks6_22_sturm_v49.py"
+    },
+    {
+      "command": [
+        "python",
+        "independent/d7_r83_masks1_17_sturm_v50.py"
+      ],
+      "index": 44,
+      "label": "independent/d7_r83_masks1_17_sturm_v50.py"
+    },
+    {
+      "command": [
+        "python",
+        "independent/d7_r83_batch10_sturm_v51.py"
+      ],
+      "index": 45,
+      "label": "independent/d7_r83_batch10_sturm_v51.py"
+    },
+    {
+      "command": [
+        "python",
+        "independent/d7_r83_masks13_29_sturm_v52.py"
+      ],
+      "index": 46,
+      "label": "independent/d7_r83_masks13_29_sturm_v52.py"
+    },
+    {
+      "command": [
+        "python",
+        "independent/d7_r83_masks7_23_sturm_v53.py"
+      ],
+      "index": 47,
+      "label": "independent/d7_r83_masks7_23_sturm_v53.py"
+    },
+    {
+      "command": [
+        "python",
+        "certificates/d7_r83_principal_v55.py",
+        "--masks",
+        "0,1,2,3,4,5,6,7"
+      ],
+      "index": 48,
+      "label": "certificates/d7_r83_principal_v55.py --masks 0,1,2,3,4,5,6,7"
+    },
+    {
+      "command": [
+        "python",
+        "certificates/d7_r83_principal_v55.py",
+        "--masks",
+        "8,9,10,11,12,13,14,15"
+      ],
+      "index": 49,
+      "label": "certificates/d7_r83_principal_v55.py --masks 8,9,10,11,12,13,14,15"
+    },
+    {
+      "command": [
+        "python",
+        "certificates/d7_r83_principal_v55.py",
+        "--masks",
+        "32,33,34,35,36,37,38,39"
+      ],
+      "index": 50,
+      "label": "certificates/d7_r83_principal_v55.py --masks 32,33,34,35,36,37,38,39"
+    },
+    {
+      "command": [
+        "python",
+        "certificates/d7_r83_principal_v55.py",
+        "--masks",
+        "40,41,42,43,44,45,46,47"
+      ],
+      "index": 51,
+      "label": "certificates/d7_r83_principal_v55.py --masks 40,41,42,43,44,45,46,47"
+    },
+    {
+      "command": [
+        "python",
+        "independent/d7_r83_principal_sturm_v55.py",
+        "--masks",
+        "0,1,2,3,4,5,6,7",
+        "--mode",
+        "enumerate"
+      ],
+      "index": 52,
+      "label": "independent/d7_r83_principal_sturm_v55.py --masks 0,1,2,3,4,5,6,7"
+    },
+    {
+      "command": [
+        "python",
+        "independent/d7_r83_principal_sturm_v55.py",
+        "--masks",
+        "8,9,10,11,12,13,14,15",
+        "--mode",
+        "enumerate"
+      ],
+      "index": 53,
+      "label": "independent/d7_r83_principal_sturm_v55.py --masks 8,9,10,11,12,13,14,15"
+    },
+    {
+      "command": [
+        "python",
+        "independent/d7_r83_principal_sturm_v55.py",
+        "--masks",
+        "32,33,34,35,36,37,38,39",
+        "--mode",
+        "enumerate"
+      ],
+      "index": 54,
+      "label": "independent/d7_r83_principal_sturm_v55.py --masks 32,33,34,35,36,37,38,39"
+    },
+    {
+      "command": [
+        "python",
+        "independent/d7_r83_principal_sturm_v55.py",
+        "--masks",
+        "40,41,42,43,44,45,46,47",
+        "--mode",
+        "enumerate"
+      ],
+      "index": 55,
+      "label": "independent/d7_r83_principal_sturm_v55.py --masks 40,41,42,43,44,45,46,47"
+    },
+    {
+      "command": [
+        "python",
+        "certificates/d7_remaining_maximal_v61.py",
+        "--masks",
+        "1"
+      ],
+      "index": 56,
+      "label": "certificates/d7_remaining_maximal_v61.py --masks 1"
+    },
+    {
+      "command": [
+        "python",
+        "certificates/d7_remaining_maximal_v61.py",
+        "--masks",
+        "3"
+      ],
+      "index": 57,
+      "label": "certificates/d7_remaining_maximal_v61.py --masks 3"
+    },
+    {
+      "command": [
+        "python",
+        "certificates/d7_remaining_maximal_v61.py",
+        "--masks",
+        "4"
+      ],
+      "index": 58,
+      "label": "certificates/d7_remaining_maximal_v61.py --masks 4"
+    },
+    {
+      "command": [
+        "python",
+        "certificates/d7_remaining_maximal_v61.py",
+        "--masks",
+        "5"
+      ],
+      "index": 59,
+      "label": "certificates/d7_remaining_maximal_v61.py --masks 5"
+    },
+    {
+      "command": [
+        "python",
+        "certificates/d7_remaining_maximal_v61.py",
+        "--masks",
+        "6"
+      ],
+      "index": 60,
+      "label": "certificates/d7_remaining_maximal_v61.py --masks 6"
+    },
+    {
+      "command": [
+        "python",
+        "certificates/d7_remaining_maximal_v61.py",
+        "--masks",
+        "8"
+      ],
+      "index": 61,
+      "label": "certificates/d7_remaining_maximal_v61.py --masks 8"
+    },
+    {
+      "command": [
+        "python",
+        "certificates/d7_remaining_maximal_v61.py",
+        "--masks",
+        "9"
+      ],
+      "index": 62,
+      "label": "certificates/d7_remaining_maximal_v61.py --masks 9"
+    },
+    {
+      "command": [
+        "python",
+        "certificates/d7_remaining_maximal_v61.py",
+        "--masks",
+        "10"
+      ],
+      "index": 63,
+      "label": "certificates/d7_remaining_maximal_v61.py --masks 10"
+    },
+    {
+      "command": [
+        "python",
+        "certificates/d7_remaining_maximal_v61.py",
+        "--masks",
+        "11"
+      ],
+      "index": 64,
+      "label": "certificates/d7_remaining_maximal_v61.py --masks 11"
+    },
+    {
+      "command": [
+        "python",
+        "certificates/d7_remaining_maximal_v61.py",
+        "--masks",
+        "12"
+      ],
+      "index": 65,
+      "label": "certificates/d7_remaining_maximal_v61.py --masks 12"
+    },
+    {
+      "command": [
+        "python",
+        "certificates/d7_remaining_maximal_v61.py",
+        "--masks",
+        "14"
+      ],
+      "index": 66,
+      "label": "certificates/d7_remaining_maximal_v61.py --masks 14"
+    },
+    {
+      "command": [
+        "python",
+        "independent/d7_remaining_maximal_sturm_v61.py",
+        "--masks",
+        "1"
+      ],
+      "index": 67,
+      "label": "independent/d7_remaining_maximal_sturm_v61.py --masks 1"
+    },
+    {
+      "command": [
+        "python",
+        "independent/d7_remaining_maximal_sturm_v61.py",
+        "--masks",
+        "3"
+      ],
+      "index": 68,
+      "label": "independent/d7_remaining_maximal_sturm_v61.py --masks 3"
+    },
+    {
+      "command": [
+        "python",
+        "independent/d7_remaining_maximal_sturm_v61.py",
+        "--masks",
+        "4"
+      ],
+      "index": 69,
+      "label": "independent/d7_remaining_maximal_sturm_v61.py --masks 4"
+    },
+    {
+      "command": [
+        "python",
+        "independent/d7_remaining_maximal_sturm_v61.py",
+        "--masks",
+        "5"
+      ],
+      "index": 70,
+      "label": "independent/d7_remaining_maximal_sturm_v61.py --masks 5"
+    },
+    {
+      "command": [
+        "python",
+        "independent/d7_remaining_maximal_sturm_v61.py",
+        "--masks",
+        "6"
+      ],
+      "index": 71,
+      "label": "independent/d7_remaining_maximal_sturm_v61.py --masks 6"
+    },
+    {
+      "command": [
+        "python",
+        "independent/d7_remaining_maximal_sturm_v61.py",
+        "--masks",
+        "8"
+      ],
+      "index": 72,
+      "label": "independent/d7_remaining_maximal_sturm_v61.py --masks 8"
+    },
+    {
+      "command": [
+        "python",
+        "independent/d7_remaining_maximal_sturm_v61.py",
+        "--masks",
+        "9"
+      ],
+      "index": 73,
+      "label": "independent/d7_remaining_maximal_sturm_v61.py --masks 9"
+    },
+    {
+      "command": [
+        "python",
+        "independent/d7_remaining_maximal_sturm_v61.py",
+        "--masks",
+        "10"
+      ],
+      "index": 74,
+      "label": "independent/d7_remaining_maximal_sturm_v61.py --masks 10"
+    },
+    {
+      "command": [
+        "python",
+        "independent/d7_remaining_maximal_sturm_v61.py",
+        "--masks",
+        "11"
+      ],
+      "index": 75,
+      "label": "independent/d7_remaining_maximal_sturm_v61.py --masks 11"
+    },
+    {
+      "command": [
+        "python",
+        "independent/d7_remaining_maximal_sturm_v61.py",
+        "--masks",
+        "12"
+      ],
+      "index": 76,
+      "label": "independent/d7_remaining_maximal_sturm_v61.py --masks 12"
+    },
+    {
+      "command": [
+        "python",
+        "independent/d7_remaining_maximal_sturm_v61.py",
+        "--masks",
+        "14"
+      ],
+      "index": 77,
+      "label": "independent/d7_remaining_maximal_sturm_v61.py --masks 14"
+    },
+    {
+      "command": [
+        "python",
+        "certificates/d7_r41_v63.py",
+        "--masks",
+        "0"
+      ],
+      "index": 78,
+      "label": "certificates/d7_r41_v63.py --masks 0"
+    },
+    {
+      "command": [
+        "python",
+        "certificates/d7_r41_v63.py",
+        "--masks",
+        "1"
+      ],
+      "index": 79,
+      "label": "certificates/d7_r41_v63.py --masks 1"
+    },
+    {
+      "command": [
+        "python",
+        "certificates/d7_r41_v63.py",
+        "--masks",
+        "2"
+      ],
+      "index": 80,
+      "label": "certificates/d7_r41_v63.py --masks 2"
+    },
+    {
+      "command": [
+        "python",
+        "certificates/d7_r41_v63.py",
+        "--masks",
+        "3"
+      ],
+      "index": 81,
+      "label": "certificates/d7_r41_v63.py --masks 3"
+    },
+    {
+      "command": [
+        "python",
+        "certificates/d7_r41_v63.py",
+        "--masks",
+        "4"
+      ],
+      "index": 82,
+      "label": "certificates/d7_r41_v63.py --masks 4"
+    },
+    {
+      "command": [
+        "python",
+        "certificates/d7_r41_v63.py",
+        "--masks",
+        "5"
+      ],
+      "index": 83,
+      "label": "certificates/d7_r41_v63.py --masks 5"
+    },
+    {
+      "command": [
+        "python",
+        "certificates/d7_r41_v63.py",
+        "--masks",
+        "6"
+      ],
+      "index": 84,
+      "label": "certificates/d7_r41_v63.py --masks 6"
+    },
+    {
+      "command": [
+        "python",
+        "certificates/d7_r41_v63.py",
+        "--masks",
+        "7"
+      ],
+      "index": 85,
+      "label": "certificates/d7_r41_v63.py --masks 7"
+    },
+    {
+      "command": [
+        "python",
+        "certificates/d7_r41_v63.py",
+        "--masks",
+        "8"
+      ],
+      "index": 86,
+      "label": "certificates/d7_r41_v63.py --masks 8"
+    },
+    {
+      "command": [
+        "python",
+        "certificates/d7_r41_v63.py",
+        "--masks",
+        "9"
+      ],
+      "index": 87,
+      "label": "certificates/d7_r41_v63.py --masks 9"
+    },
+    {
+      "command": [
+        "python",
+        "certificates/d7_r41_v63.py",
+        "--masks",
+        "10"
+      ],
+      "index": 88,
+      "label": "certificates/d7_r41_v63.py --masks 10"
+    },
+    {
+      "command": [
+        "python",
+        "certificates/d7_r41_v63.py",
+        "--masks",
+        "11"
+      ],
+      "index": 89,
+      "label": "certificates/d7_r41_v63.py --masks 11"
+    },
+    {
+      "command": [
+        "python",
+        "certificates/d7_r41_v63.py",
+        "--masks",
+        "12"
+      ],
+      "index": 90,
+      "label": "certificates/d7_r41_v63.py --masks 12"
+    },
+    {
+      "command": [
+        "python",
+        "certificates/d7_r41_v63.py",
+        "--masks",
+        "13"
+      ],
+      "index": 91,
+      "label": "certificates/d7_r41_v63.py --masks 13"
+    },
+    {
+      "command": [
+        "python",
+        "certificates/d7_r41_v63.py",
+        "--masks",
+        "14"
+      ],
+      "index": 92,
+      "label": "certificates/d7_r41_v63.py --masks 14"
+    },
+    {
+      "command": [
+        "python",
+        "certificates/d7_r41_v63.py",
+        "--masks",
+        "15"
+      ],
+      "index": 93,
+      "label": "certificates/d7_r41_v63.py --masks 15"
+    },
+    {
+      "command": [
+        "python",
+        "certificates/d7_r41_v63.py",
+        "--masks",
+        "32"
+      ],
+      "index": 94,
+      "label": "certificates/d7_r41_v63.py --masks 32"
+    },
+    {
+      "command": [
+        "python",
+        "certificates/d7_r41_v63.py",
+        "--masks",
+        "33"
+      ],
+      "index": 95,
+      "label": "certificates/d7_r41_v63.py --masks 33"
+    },
+    {
+      "command": [
+        "python",
+        "certificates/d7_r41_v63.py",
+        "--masks",
+        "34"
+      ],
+      "index": 96,
+      "label": "certificates/d7_r41_v63.py --masks 34"
+    },
+    {
+      "command": [
+        "python",
+        "certificates/d7_r41_v63.py",
+        "--masks",
+        "35"
+      ],
+      "index": 97,
+      "label": "certificates/d7_r41_v63.py --masks 35"
+    },
+    {
+      "command": [
+        "python",
+        "certificates/d7_r41_v63.py",
+        "--masks",
+        "36"
+      ],
+      "index": 98,
+      "label": "certificates/d7_r41_v63.py --masks 36"
+    },
+    {
+      "command": [
+        "python",
+        "certificates/d7_r41_v63.py",
+        "--masks",
+        "37"
+      ],
+      "index": 99,
+      "label": "certificates/d7_r41_v63.py --masks 37"
+    },
+    {
+      "command": [
+        "python",
+        "certificates/d7_r41_v63.py",
+        "--masks",
+        "38"
+      ],
+      "index": 100,
+      "label": "certificates/d7_r41_v63.py --masks 38"
+    },
+    {
+      "command": [
+        "python",
+        "certificates/d7_r41_v63.py",
+        "--masks",
+        "39"
+      ],
+      "index": 101,
+      "label": "certificates/d7_r41_v63.py --masks 39"
+    },
+    {
+      "command": [
+        "python",
+        "certificates/d7_r41_v63.py",
+        "--masks",
+        "40"
+      ],
+      "index": 102,
+      "label": "certificates/d7_r41_v63.py --masks 40"
+    },
+    {
+      "command": [
+        "python",
+        "certificates/d7_r41_v63.py",
+        "--masks",
+        "41"
+      ],
+      "index": 103,
+      "label": "certificates/d7_r41_v63.py --masks 41"
+    },
+    {
+      "command": [
+        "python",
+        "certificates/d7_r41_v63.py",
+        "--masks",
+        "42"
+      ],
+      "index": 104,
+      "label": "certificates/d7_r41_v63.py --masks 42"
+    },
+    {
+      "command": [
+        "python",
+        "certificates/d7_r41_v63.py",
+        "--masks",
+        "43"
+      ],
+      "index": 105,
+      "label": "certificates/d7_r41_v63.py --masks 43"
+    },
+    {
+      "command": [
+        "python",
+        "certificates/d7_r41_v63.py",
+        "--masks",
+        "44"
+      ],
+      "index": 106,
+      "label": "certificates/d7_r41_v63.py --masks 44"
+    },
+    {
+      "command": [
+        "python",
+        "certificates/d7_r41_v63.py",
+        "--masks",
+        "45"
+      ],
+      "index": 107,
+      "label": "certificates/d7_r41_v63.py --masks 45"
+    },
+    {
+      "command": [
+        "python",
+        "certificates/d7_r41_v63.py",
+        "--masks",
+        "46"
+      ],
+      "index": 108,
+      "label": "certificates/d7_r41_v63.py --masks 46"
+    },
+    {
+      "command": [
+        "python",
+        "certificates/d7_r41_v63.py",
+        "--masks",
+        "47"
+      ],
+      "index": 109,
+      "label": "certificates/d7_r41_v63.py --masks 47"
+    },
+    {
+      "command": [
+        "python",
+        "independent/d7_r41_sturm_v63.py",
+        "--masks",
+        "0"
+      ],
+      "index": 110,
+      "label": "independent/d7_r41_sturm_v63.py --masks 0"
+    },
+    {
+      "command": [
+        "python",
+        "independent/d7_r41_sturm_v63.py",
+        "--masks",
+        "1"
+      ],
+      "index": 111,
+      "label": "independent/d7_r41_sturm_v63.py --masks 1"
+    },
+    {
+      "command": [
+        "python",
+        "independent/d7_r41_sturm_v63.py",
+        "--masks",
+        "2"
+      ],
+      "index": 112,
+      "label": "independent/d7_r41_sturm_v63.py --masks 2"
+    },
+    {
+      "command": [
+        "python",
+        "independent/d7_r41_sturm_v63.py",
+        "--masks",
+        "3"
+      ],
+      "index": 113,
+      "label": "independent/d7_r41_sturm_v63.py --masks 3"
+    },
+    {
+      "command": [
+        "python",
+        "independent/d7_r41_sturm_v63.py",
+        "--masks",
+        "4"
+      ],
+      "index": 114,
+      "label": "independent/d7_r41_sturm_v63.py --masks 4"
+    },
+    {
+      "command": [
+        "python",
+        "independent/d7_r41_sturm_v63.py",
+        "--masks",
+        "5"
+      ],
+      "index": 115,
+      "label": "independent/d7_r41_sturm_v63.py --masks 5"
+    },
+    {
+      "command": [
+        "python",
+        "independent/d7_r41_sturm_v63.py",
+        "--masks",
+        "6"
+      ],
+      "index": 116,
+      "label": "independent/d7_r41_sturm_v63.py --masks 6"
+    },
+    {
+      "command": [
+        "python",
+        "independent/d7_r41_sturm_v63.py",
+        "--masks",
+        "7"
+      ],
+      "index": 117,
+      "label": "independent/d7_r41_sturm_v63.py --masks 7"
+    },
+    {
+      "command": [
+        "python",
+        "independent/d7_r41_sturm_v63.py",
+        "--masks",
+        "8"
+      ],
+      "index": 118,
+      "label": "independent/d7_r41_sturm_v63.py --masks 8"
+    },
+    {
+      "command": [
+        "python",
+        "independent/d7_r41_sturm_v63.py",
+        "--masks",
+        "9"
+      ],
+      "index": 119,
+      "label": "independent/d7_r41_sturm_v63.py --masks 9"
+    },
+    {
+      "command": [
+        "python",
+        "independent/d7_r41_sturm_v63.py",
+        "--masks",
+        "10"
+      ],
+      "index": 120,
+      "label": "independent/d7_r41_sturm_v63.py --masks 10"
+    },
+    {
+      "command": [
+        "python",
+        "independent/d7_r41_sturm_v63.py",
+        "--masks",
+        "11"
+      ],
+      "index": 121,
+      "label": "independent/d7_r41_sturm_v63.py --masks 11"
+    },
+    {
+      "command": [
+        "python",
+        "independent/d7_r41_sturm_v63.py",
+        "--masks",
+        "12"
+      ],
+      "index": 122,
+      "label": "independent/d7_r41_sturm_v63.py --masks 12"
+    },
+    {
+      "command": [
+        "python",
+        "independent/d7_r41_sturm_v63.py",
+        "--masks",
+        "13"
+      ],
+      "index": 123,
+      "label": "independent/d7_r41_sturm_v63.py --masks 13"
+    },
+    {
+      "command": [
+        "python",
+        "independent/d7_r41_sturm_v63.py",
+        "--masks",
+        "14"
+      ],
+      "index": 124,
+      "label": "independent/d7_r41_sturm_v63.py --masks 14"
+    },
+    {
+      "command": [
+        "python",
+        "independent/d7_r41_sturm_v63.py",
+        "--masks",
+        "15"
+      ],
+      "index": 125,
+      "label": "independent/d7_r41_sturm_v63.py --masks 15"
+    },
+    {
+      "command": [
+        "python",
+        "independent/d7_r41_sturm_v63.py",
+        "--masks",
+        "32"
+      ],
+      "index": 126,
+      "label": "independent/d7_r41_sturm_v63.py --masks 32"
+    },
+    {
+      "command": [
+        "python",
+        "independent/d7_r41_sturm_v63.py",
+        "--masks",
+        "33"
+      ],
+      "index": 127,
+      "label": "independent/d7_r41_sturm_v63.py --masks 33"
+    },
+    {
+      "command": [
+        "python",
+        "independent/d7_r41_sturm_v63.py",
+        "--masks",
+        "34"
+      ],
+      "index": 128,
+      "label": "independent/d7_r41_sturm_v63.py --masks 34"
+    },
+    {
+      "command": [
+        "python",
+        "independent/d7_r41_sturm_v63.py",
+        "--masks",
+        "35"
+      ],
+      "index": 129,
+      "label": "independent/d7_r41_sturm_v63.py --masks 35"
+    },
+    {
+      "command": [
+        "python",
+        "independent/d7_r41_sturm_v63.py",
+        "--masks",
+        "36"
+      ],
+      "index": 130,
+      "label": "independent/d7_r41_sturm_v63.py --masks 36"
+    },
+    {
+      "command": [
+        "python",
+        "independent/d7_r41_sturm_v63.py",
+        "--masks",
+        "37"
+      ],
+      "index": 131,
+      "label": "independent/d7_r41_sturm_v63.py --masks 37"
+    },
+    {
+      "command": [
+        "python",
+        "independent/d7_r41_sturm_v63.py",
+        "--masks",
+        "38"
+      ],
+      "index": 132,
+      "label": "independent/d7_r41_sturm_v63.py --masks 38"
+    },
+    {
+      "command": [
+        "python",
+        "independent/d7_r41_sturm_v63.py",
+        "--masks",
+        "39"
+      ],
+      "index": 133,
+      "label": "independent/d7_r41_sturm_v63.py --masks 39"
+    },
+    {
+      "command": [
+        "python",
+        "independent/d7_r41_sturm_v63.py",
+        "--masks",
+        "40"
+      ],
+      "index": 134,
+      "label": "independent/d7_r41_sturm_v63.py --masks 40"
+    },
+    {
+      "command": [
+        "python",
+        "independent/d7_r41_sturm_v63.py",
+        "--masks",
+        "41"
+      ],
+      "index": 135,
+      "label": "independent/d7_r41_sturm_v63.py --masks 41"
+    },
+    {
+      "command": [
+        "python",
+        "independent/d7_r41_sturm_v63.py",
+        "--masks",
+        "42"
+      ],
+      "index": 136,
+      "label": "independent/d7_r41_sturm_v63.py --masks 42"
+    },
+    {
+      "command": [
+        "python",
+        "independent/d7_r41_sturm_v63.py",
+        "--masks",
+        "43"
+      ],
+      "index": 137,
+      "label": "independent/d7_r41_sturm_v63.py --masks 43"
+    },
+    {
+      "command": [
+        "python",
+        "independent/d7_r41_sturm_v63.py",
+        "--masks",
+        "44"
+      ],
+      "index": 138,
+      "label": "independent/d7_r41_sturm_v63.py --masks 44"
+    },
+    {
+      "command": [
+        "python",
+        "independent/d7_r41_sturm_v63.py",
+        "--masks",
+        "45"
+      ],
+      "index": 139,
+      "label": "independent/d7_r41_sturm_v63.py --masks 45"
+    },
+    {
+      "command": [
+        "python",
+        "independent/d7_r41_sturm_v63.py",
+        "--masks",
+        "46"
+      ],
+      "index": 140,
+      "label": "independent/d7_r41_sturm_v63.py --masks 46"
+    },
+    {
+      "command": [
+        "python",
+        "independent/d7_r41_sturm_v63.py",
+        "--masks",
+        "47"
+      ],
+      "index": 141,
+      "label": "independent/d7_r41_sturm_v63.py --masks 47"
+    },
+    {
+      "command": [
+        "python",
+        "certificates/broader_principal_v75.py",
+        "--point",
+        "R127:pic0:00"
+      ],
+      "index": 142,
+      "label": "certificates/broader_principal_v75.py --point R127:pic0:00"
+    },
+    {
+      "command": [
+        "python",
+        "certificates/broader_principal_v75.py",
+        "--point",
+        "R43_20:pic0:00"
+      ],
+      "index": 143,
+      "label": "certificates/broader_principal_v75.py --point R43_20:pic0:00"
+    },
+    {
+      "command": [
+        "python",
+        "certificates/broader_principal_v75.py",
+        "--point",
+        "R7sq:pic0:00"
+      ],
+      "index": 144,
+      "label": "certificates/broader_principal_v75.py --point R7sq:pic0:00"
+    },
+    {
+      "command": [
+        "python",
+        "certificates/broader_principal_v75.py",
+        "--point",
+        "R41_22:pic0:00"
+      ],
+      "index": 145,
+      "label": "certificates/broader_principal_v75.py --point R41_22:pic0:00"
+    },
+    {
+      "command": [
+        "python",
+        "certificates/broader_principal_v75.py",
+        "--point",
+        "R43_31:pic0:00"
+      ],
+      "index": 146,
+      "label": "certificates/broader_principal_v75.py --point R43_31:pic0:00"
+    },
+    {
+      "command": [
+        "python",
+        "certificates/broader_principal_v75.py",
+        "--point",
+        "R7:pic0:00"
+      ],
+      "index": 147,
+      "label": "certificates/broader_principal_v75.py --point R7:pic0:00"
+    },
+    {
+      "command": [
+        "python",
+        "independent/broader_principal_sturm_v75.py",
+        "--point",
+        "R127:pic0:00"
+      ],
+      "index": 148,
+      "label": "independent/broader_principal_sturm_v75.py --point R127:pic0:00"
+    },
+    {
+      "command": [
+        "python",
+        "independent/broader_principal_sturm_v75.py",
+        "--point",
+        "R43_20:pic0:00"
+      ],
+      "index": 149,
+      "label": "independent/broader_principal_sturm_v75.py --point R43_20:pic0:00"
+    },
+    {
+      "command": [
+        "python",
+        "independent/broader_principal_sturm_v75.py",
+        "--point",
+        "R7sq:pic0:00"
+      ],
+      "index": 150,
+      "label": "independent/broader_principal_sturm_v75.py --point R7sq:pic0:00"
+    },
+    {
+      "command": [
+        "python",
+        "independent/broader_principal_sturm_v75.py",
+        "--point",
+        "R41_22:pic0:00"
+      ],
+      "index": 151,
+      "label": "independent/broader_principal_sturm_v75.py --point R41_22:pic0:00"
+    },
+    {
+      "command": [
+        "python",
+        "independent/broader_principal_sturm_v75.py",
+        "--point",
+        "R43_31:pic0:00"
+      ],
+      "index": 152,
+      "label": "independent/broader_principal_sturm_v75.py --point R43_31:pic0:00"
+    },
+    {
+      "command": [
+        "python",
+        "independent/broader_principal_sturm_v75.py",
+        "--point",
+        "R7:pic0:00"
+      ],
+      "index": 153,
+      "label": "independent/broader_principal_sturm_v75.py --point R7:pic0:00"
+    },
+    {
+      "command": [
+        "python",
+        "certificates/r127_pic1_v80.py",
+        "--point",
+        "R127:pic0:00"
+      ],
+      "index": 154,
+      "label": "certificates/r127_pic1_v80.py --point R127:pic0:00"
+    },
+    {
+      "command": [
+        "python",
+        "certificates/r127_pic1_v80.py",
+        "--point",
+        "R127:pic1:00"
+      ],
+      "index": 155,
+      "label": "certificates/r127_pic1_v80.py --point R127:pic1:00"
+    },
+    {
+      "command": [
+        "python",
+        "independent/r127_pic1_sturm_v80.py",
+        "--point",
+        "R127:pic0:00"
+      ],
+      "index": 156,
+      "label": "independent/r127_pic1_sturm_v80.py --point R127:pic0:00"
+    },
+    {
+      "command": [
+        "python",
+        "independent/r127_pic1_sturm_v80.py",
+        "--point",
+        "R127:pic1:00"
+      ],
+      "index": 157,
+      "label": "independent/r127_pic1_sturm_v80.py --point R127:pic1:00"
+    },
+    {
+      "command": [
+        "node",
+        "independent/a_vertex_hodge_node_v31.js"
+      ],
+      "index": 158,
+      "label": "independent/a_vertex_hodge_node_v31.js"
+    },
+    {
+      "command": [
+        "node",
+        "independent/packet_hodge_node_v40.js"
+      ],
+      "index": 159,
+      "label": "independent/packet_hodge_node_v40.js"
+    }
+  ],
+  "requires_new_isolated_git_commit": true,
+  "runtime_requirements": {
+    "mpmath": "1.3.0",
+    "node": "required; record version/binary; no npm modules",
+    "python": "3.14.x recommended to match cloud campaign; record actual binary",
+    "sage": "not registered; no baseline Sage command omitted",
+    "sympy": "1.14.0",
+    "system": [
+      "bash",
+      "git",
+      "LaTeX engine and manuscript packages"
+    ]
+  },
+  "schema_version": 1,
+  "scope": "ALLOWLISTED_159_COMMAND_RELEASE_CANDIDATE_NOT_EXECUTED"
+}

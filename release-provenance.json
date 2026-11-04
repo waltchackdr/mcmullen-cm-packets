@@ -1,0 +1,42 @@
+{
+  "scope": "Licensing, reviewer navigation and ordinary Git checkout support only; no mathematical source/data or PDF changes.",
+  "parent_manifest_sha256": "1133eb2a2675d441f2c3b4ee0aa16b0dae08ff92668824310408de15c72aeb43",
+  "changed_files": [
+    {
+      "path": "CONTRIBUTING.md",
+      "before_sha256": "3b078f5582ca03a24b30288d54cd983149e87aa27cd7e502deb04639609a92bd",
+      "after_sha256": "c9108e179aab37b191679cbd2884630e88baf6e49f0848f80371de858af36158"
+    },
+    {
+      "path": "README.md",
+      "before_sha256": "70159e3d35ed45be69dce17104f80cf0f9136f77c6c36fc645fbd62154397902",
+      "after_sha256": "811f3f252531c59759c8dcd75cb123409ccd35a4056a72b78588ef51c033eb2c"
+    },
+    {
+      "path": "docs/limitations.md",
+      "before_sha256": "45beb6cc27b8cc12774e02bbe1d7155d68656fe6cac12e736de19545ac3a8d3d",
+      "after_sha256": "bdca45da8714938c0daf71c6b09b391ed45366cbade3660d786786be79362870"
+    },
+    {
+      "path": "docs/reproducing-results.md",
+      "before_sha256": "5ffb84de4f180a32bb1ff1d8d578bab3248b26a100d3571e7e3349c7c4646d7a",
+      "after_sha256": "22c17d0330d16441e2aab64e55c7cc1f34eb37aaad0a4b250c52be2128098261"
+    },
+    {
+      "path": "src/public_package.py",
+      "before_sha256": "53b7536f826b7d2434d45863b6c6b99ebbfd442d3c2748c73d6a8a868665d9d4",
+      "after_sha256": "1939ef3a1c9eb9121698018bc31cf58a96cf3a5896d1d1ba459ebaae660c106f"
+    }
+  ],
+  "new_files": [
+    "LICENSE.md",
+    "LICENSES/AMS-OFL.txt",
+    "LICENSES/CC-BY-4.0.txt",
+    "LICENSES/GUST-FONT-LICENSE.txt",
+    "LICENSES/LPPL-1.3c.txt",
+    "LICENSES/MIT.txt",
+    "THIRD-PARTY-NOTICES.md",
+    "docs/specialist-review.md"
+  ],
+  "all_mathematical_sources_data_and_pdfs_unchanged": true
+}

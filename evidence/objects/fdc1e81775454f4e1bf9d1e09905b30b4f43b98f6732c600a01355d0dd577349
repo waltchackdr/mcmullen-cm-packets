@@ -1,0 +1,595 @@
+#!/usr/bin/env python3
+"""Conditional metadata join, never a certificate or automatic promotion.
+
+Actual producer reports are consumed as sealed evidence. Separate outcome and
+retention reviews remain mandatory. No mathematical module is imported.
+"""
+from __future__ import annotations
+import argparse
+from collections import Counter
+import hashlib
+import json
+from pathlib import Path
+import re
+
+HITS = {"OM:pic0:00": "C", "OM:pic0:07": "A", "OM:pic0:15": "B"}
+BACKENDS = ("primary", "sturm")
+TARGETS = ("ORIGINAL_Q_V1", "REFLECTED_AB_V1")
+CANONICAL = ("preparation.json", "A-entries.json", "C-entries.json", "bottom-rows.json",
+             "candidates-nonzero.json", "candidates-zero.json", "classification.json", "survivors.json")
+COUNTS = ("a_count", "c_count", "bottom_rows", "nonzero_candidates", "zero_candidates",
+          "candidate_count", "survivor_count", "classification_digest", "c_zero_audit")
+PRODUCERS = {
+    "legacy_audit": "a9dc18cb3b774deb28cb0cc23c6d2bd25daf75ecb174b18039d7fc47dcb53d6e",
+    "legacy_recovery_audit": "1e699a5be7010527bf482da25faa8fb44d15462e9445fde120e3a0ff2cbfa0d2",
+    "v82_aggregate": "e7c362135c68fc41612f8aec32455866cf68f7401075c81af67779ee2411ce97",
+    "v83_audit": "b785ac6745741b8af511cf488aa4e348c0da4bd790cc327345471042f13e53c3",
+}
+STATIC_PINS = {
+    "legacy_audit": "fe6a4a7266d3e8b40b0e6edd858da9d5b1f48a3c62d60a056316fd32c505d2ce",
+    "legacy_150_review": "69c0955f2d7ddc9191019c8c9bf0e042d5e7413633f8cd1cc88c756f0ccf348b",
+    "legacy_conjunction_policy": "f90c022957b4e33d60b56d29c9132b5cdc48b474861dc9a34ff900c8c4ff1dba",
+    "legacy_eight_review": "1a6ade13b3fb3f58797144f9ff4b7f78b366183756cfe8f7ff7245b68edc7b69",
+    "ambient": "c0e84da6c266c087cbce65a6e8aca8e3f30350ce56b5a1089c4ae4978a381f36",
+    "coverage": "cac499e1d40ed498e0d8e2c3f08d34a52ef726856bac4606332d483c72d024b6",
+    "coverage_review": "3879881003484d43773e8112935a85baf2849486c3f801f27e4e660d57b2b386",
+    "two_chamber_data": "56b4674ee90cb1838ad161fe72ee4b1443c2228b4b17f2c929810af681406ca3",
+    "two_chamber_review": "942ecc5125e5eccea6b9faf3d815ccbc8d9e531613d346cb150b6f829869a4a4",
+}
+REVIEW_DEPENDENCIES = {
+    "legacy_outcome_review": ("legacy_audit", "legacy_state", "legacy_source_manifest", "legacy_snapshot",
+                              "legacy_150_review", "legacy_conjunction_policy", "legacy_eight_review",
+                              "legacy_recovery_audit", "legacy_recovery_state", "legacy_recovery_runtime"),
+    "v82_outcome_review": ("v82_aggregate", "v82_package", "v82_manifest", "v82_supervisor_result", "v82_runtime"),
+    "v83_outcome_review": ("v83_audit", "v83_inventory", "v83_state", "v83_runtime"),
+    "positive_control_review": ("positive_control_audit",),
+    "representative_control_review": ("representative_control_audit", "v83_audit"),
+    "portable_adoption_review": ("portable_adoption_record", "v83_audit", "positive_control_audit",
+                                 "representative_control_audit", "source_isomorphism_review", "coverage", "coverage_review", "two_chamber_review"),
+}
+REQUIRED = tuple(dict.fromkeys((*STATIC_PINS,
+    *(name for values in REVIEW_DEPENDENCIES.values() for name in values), *REVIEW_DEPENDENCIES)))
+
+
+def require(condition, message):
+    if not condition:
+        raise ValueError(message)
+
+
+def valid_hash(value):
+    return type(value) is str and re.fullmatch("[0-9a-f]{64}", value) is not None
+
+
+def canonical(value):
+    return (json.dumps(value, sort_keys=True, separators=(",", ":"), allow_nan=False) + "\n").encode()
+
+
+def sha(path):
+    h = hashlib.sha256()
+    with path.open("rb") as stream:
+        for chunk in iter(lambda: stream.read(1024 * 1024), b""):
+            h.update(chunk)
+    return h.hexdigest()
+
+
+def decode(raw):
+    def pairs(items):
+        result = {}
+        for key, value in items:
+            require(key not in result, "Duplicate JSON key")
+            result[key] = value
+        return result
+    return json.loads(raw, object_pairs_hook=pairs,
+                      parse_constant=lambda value: (_ for _ in ()).throw(ValueError(value)))
+
+
+class Evidence:
+    def __init__(self, root, references):
+        self.root, self.references = root.resolve(), references
+        self.objects, self.paths, self.hashes = {}, {}, {}
+        seen = set()
+        for name, reference in references.items():
+            if reference is None:
+                continue
+            require(type(reference) is dict and set(reference) == {"path", "sha256"}, "Reference schema: " + name)
+            relative = reference["path"]
+            require(type(relative) is str and relative and not relative.startswith("/") and
+                    all(part not in ("", ".", "..") for part in relative.split("/")), "Unsafe evidence path")
+            path = self.root / relative
+            require(not any(p.is_symlink() for p in (path, *path.parents)), "Symlink evidence")
+            require(path.is_file() and path.stat().st_nlink == 1, "Regular single-link evidence required")
+            require(path.resolve().is_relative_to(self.root), "Evidence outside root")
+            identity = (path.stat().st_dev, path.stat().st_ino)
+            require(identity not in seen, "Aliased evidence references")
+            seen.add(identity)
+            raw = path.read_bytes()
+            require(valid_hash(reference["sha256"]) and hashlib.sha256(raw).hexdigest() == reference["sha256"], "Evidence SHA mismatch: " + name)
+            self.paths[name], self.hashes[name] = path, reference["sha256"]
+            self.objects[name] = decode(raw)
+
+    def recheck(self):
+        require(all(sha(path) == self.hashes[name] for name, path in self.paths.items()), "Evidence changed during join")
+
+
+def hashes(value, keys):
+    require(type(value) is dict and set(value) == set(keys) and all(valid_hash(x) for x in value.values()), "Exact hash inventory")
+
+
+def counts(value):
+    require(type(value) is dict and set(value) == set(COUNTS), "Nine complete fields required")
+    require(all(type(value[k]) is int and value[k] >= 0 for k in COUNTS[:7]), "Invalid geometry count")
+    require(value["candidate_count"] == value["nonzero_candidates"] + value["zero_candidates"], "Candidate total")
+    require(value["survivor_count"] <= value["candidate_count"], "Survivor total")
+    require(valid_hash(value["classification_digest"]), "Classification digest")
+    audit = value["c_zero_audit"]
+    require(type(audit) is list and len(audit) == 5 and all(type(x) is int and x >= 0 for x in audit), "c=0 audit")
+    require(audit[1] == 1 and audit[1] + audit[2] <= audit[0] and audit[3] <= audit[2] and
+            audit[4] == value["zero_candidates"], "c=0 audit arithmetic")
+
+
+def interface_list(value):
+    require(type(value) is list and value and all(type(item) is str and item for item in value) and
+            value == sorted(set(value)), "Nonempty sorted unique execution-interface list")
+    return set(value)
+
+
+def coverage_partition(ambient, coverage, review):
+    domain = {row["point_label"]: row for row in ambient}
+    require(len(ambient) == len(domain) == 368, "C39 exact368 domain")
+    require(coverage["status"] == "SOURCE_AND_SET_AUDIT_PASS_WITH_EXPLICIT_COLLECTIVE_MAPPING", "Coverage status")
+    require(review["status"] == "PASS_HUMAN_FIRST_TARGET_POPULATION_BRIDGE_AND_SET_MAP", "Human first-target bridge")
+    require(review["individual_r83_pic1_mask_permutation_proved"] is False and review["collective_r83_pic1_bindings"] == 32, "Collective Pic1 bridge")
+    historical = {row["point_label"]: row for row in coverage["historical_116"]}
+    complement = {row["point_label"]: row for row in coverage["v82_complement_249"]}
+    require(len(coverage["historical_116"]) == len(historical) == 116, "Historical116 identity")
+    require(len(coverage["v82_complement_249"]) == len(complement) == 249, "Complement249 identity")
+    require(not set(historical) & set(complement) and set(historical) | set(complement) | set(HITS) == set(domain), "368 partition")
+    require(not (set(historical) | set(complement)) & set(HITS), "Known hits excluded from negative domain")
+    require(coverage["positive_controls"] == HITS, "Known positive identity")
+    require(all(row["target_id"] == TARGETS[0] for row in list(historical.values()) + list(complement.values())), "First target only")
+    require(all(row["c39_row"] == domain[label] for label, row in historical.items()), "Historical C39 input identity")
+    families = coverage["legacy_pic1_full_stratum_families"]
+    require(len(families) == 7 and sorted(m for family in families for m in family["legacy_masks"]) == list(range(32)), "Exact old Pic1 mask families")
+    collective = {command["index"] for family in families for command in family["commands"]}
+    require(len(collective) == 14, "Exact14 collective commands")
+    pic1 = {f"R83:pic1:{mask:02d}" for mask in range(32)}
+    for label, row in historical.items():
+        if label in pic1:
+            require(row["transfer"] == "R83_PIC1_COLLECTIVE_POPULATION" and
+                    {c["index"] for c in row["commands"]} == collective and
+                    row.get("legacy_identifier", {}).get("mask") is None and
+                    row["individual_legacy_command_unknown"] is True, "Do not invent old/new Pic1 permutation")
+        else:
+            require(row["transfer"] != "R83_PIC1_COLLECTIVE_POPULATION", "Unexpected collective row")
+    require(len(coverage["legacy_geometry_commands"]) == 128 and
+            len({c["index"] for c in coverage["legacy_geometry_commands"]}) == 128, "128 distinct mapped geometry commands")
+    return domain, historical, complement
+
+
+def legacy_join(report, state, manifest, snapshot, seals, historical, coverage):
+    require(report["status"] == "LEGACY159_METADATA_AND_FULL_LOG_AUDIT_PASS_NOT_RELEASE" and
+            report["registered_commands"] == 159 and report["source_runtime_rechecked"] is True, "Legacy actual outcome audit")
+    require(report["state_sha256"] == seals["legacy_state"] and report["source_manifest_sha256"] == seals["legacy_source_manifest"] and
+            report["snapshot_sha256"] == seals["legacy_snapshot"], "Legacy audit anchors")
+    require(snapshot["manifest_sha256"] == state["source_manifest_sha256"] == seals["legacy_source_manifest"] and
+            snapshot["commands"] == 159 and snapshot["commit"] == state["source_commit"], "Legacy source snapshot identity")
+    require(state["status"] == "MATH_PHASE_159_PASS_NOT_RELEASE" and state["all159_pass"] is True and
+            state["sources_unchanged"] is True and state["runtime_unchanged"] is True and type(state["returncode"]) is int and state["returncode"] == 0, "Legacy actual full state")
+    registered = manifest["registered_commands"]; rows = state["rows"]
+    require(len(registered) == len(rows) == 159 and rows == state["registered_command_vectors"], "Exact159 registered rows")
+    require([r["index"] for r in registered] == [r["index"] for r in rows] == list(range(1, 160)), "Legacy indices")
+    for expected, actual in zip(registered, rows, strict=True):
+        require(actual["status"] == "COMPLETE" and type(actual["returncode"]) is int and actual["returncode"] == 0, "Incomplete legacy command")
+        require(actual["argv"][1].endswith("/" + expected["command"][1]) and actual["argv"][2:] == expected["command"][2:] and
+                actual["label"] == expected["label"], "Legacy exact normalized argv")
+        require(valid_hash(actual["log_sha256"]), "Legacy log seal")
+    for command in coverage["legacy_geometry_commands"]:
+        actual = registered[command["index"] - 1]
+        require(all(actual[key] == command[key] for key in ("index", "label", "command")), "Coverage command registration")
+        require(manifest["files"][command["command"][1]]["sha256"] == command["script_sha256"], "Executed script differs from mapped script")
+    return {label: {"kind": "COLLECTIVE32" if row["transfer"] == "R83_PIC1_COLLECTIVE_POPULATION" else "POINTWISE",
+                    "legacy_audit_sha256": seals["legacy_audit"],
+                    "legacy_command_indices": [c["index"] for c in row["commands"]],
+                    "legacy_log_sha256": {str(c["index"]): rows[c["index"] - 1]["log_sha256"] for c in row["commands"]}}
+            for label, row in historical.items()}
+
+
+def legacy_conjunction_join(objects, seals, historical, coverage):
+    """Join the actual failed pool with complete replacements, never erase failure.
+
+    The fixed retrospective report has an independently reproduced outcome
+    review. The new recovery audit checks every full singleton log and its own
+    final guards. Final archival/operational-policy acceptance is a separate
+    legacy_outcome_review gate; hashes alone do not grant that acceptance.
+    """
+    report = objects['legacy_audit']; state = objects['legacy_state']
+    manifest = objects['legacy_source_manifest']; snapshot = objects['legacy_snapshot']
+    recovery = objects['legacy_recovery_audit']; recovered = objects['legacy_recovery_state']
+    review = objects['legacy_150_review']; policy = objects['legacy_conjunction_policy']
+    eight = objects['legacy_eight_review']
+    failed = set(range(48, 56)) | {118}
+    require(report['status'] == '150_ORIGINAL_SUCCESSFUL_EXECUTIONS_AUTHENTICATED_NO_GLOBAL_END_GUARD'
+            and report['auditor_sha256'] == PRODUCERS['legacy_audit'], 'Actual150 retrospective audit')
+    require(review['status'] == 'PASS_FIXED_150_EXECUTION_EVIDENCE_REPORT_NOT_LEGACY_ADOPTION'
+            and review['actual_report_independently_reproduced'] is True
+            and review['report_sha256'] == seals['legacy_audit']
+            and review['policy_sha256'] == seals['legacy_conjunction_policy'], 'Fixed150 outcome review')
+    require(policy['status'] == 'CONDITIONAL_LEGACY_CONJUNCTION_EVIDENCE_POLICY_NOT_OUTCOME_ADOPTION'
+            and policy['old_pool_end_guard_reconstructed'] is False, 'Explicit alternate-evidence policy')
+    require(state['status'] == 'MATH_PHASE_FAILED_OR_INCOMPLETE'
+            and report['old_pool_end_guard_status'] == 'NOT_EXECUTED_AFTER_FAILURE', 'Keep original failure')
+    require(report['original159_pass'] is False and report['old_source_unchanged_proved'] is False
+            and report['old_runtime_unchanged_proved'] is False, 'No reconstructed old global guards')
+    require(report['prior_state_sha256'] == seals['legacy_state']
+            and report['coverage_sha256'] == seals['coverage'], 'Actual old state and coverage seals')
+    require(snapshot['manifest_sha256'] == state['source_manifest_sha256'] == seals['legacy_source_manifest']
+            and snapshot['commands'] == 159 and snapshot['commit'] == state['source_commit']
+            and state['snapshot_sha256'] == seals['legacy_snapshot'], 'Immutable old source identity')
+    registered = manifest['registered_commands']; rows = state['rows']
+    require(len(registered) == len(rows) == 159
+            and [r['index'] for r in registered] == [r['index'] for r in rows] == list(range(1, 160)), '159 original commands')
+    require({r['index'] for r in rows if r['status'] != 'COMPLETE'} == failed, 'Exact nine old incomplete commands')
+    original = {r['index']: r for r in report['records']}
+    require(len(report['records']) == len(original) == 150 and set(original) == set(range(1, 160)) - failed,
+            'All150 distinct successes required')
+    command_bindings = {}
+    for expected, actual in zip(registered, rows, strict=True):
+        require(actual['argv'][1].endswith('/' + expected['command'][1])
+                and actual['argv'][2:] == expected['command'][2:]
+                and actual['label'] == expected['label'], 'Exact original command vector')
+        if actual['index'] in failed:
+            continue
+        item = original[actual['index']]
+        require(type(actual['returncode']) is int and actual['returncode'] == 0
+                and item['argv'] == actual['argv'] and item['log_sha256'] == actual['log_sha256']
+                and item['driver'] == expected['command'][1]
+                and item['driver_sha256'] == manifest['files'][item['driver']]['sha256'], 'Original success lineage')
+        command_bindings[item['index']] = {'kind': 'RETAINED_ORIGINAL_SUCCESS',
+            'log_sha256': item['log_sha256'], 'own_source_guard_status': item['own_source_guard_status']}
+    require(recovery['status'] == 'RECOVERY65_FULL_LOG_AUDIT_PASS_NOT_LEGACY_ADOPTION'
+            and recovery['auditor_sha256'] == PRODUCERS['legacy_recovery_audit']
+            and recovery['state_sha256'] == seals['legacy_recovery_state']
+            and recovery['runtime_sha256'] == seals['legacy_recovery_runtime']
+            and recovery['prior_state_sha256'] == seals['legacy_state']
+            and recovery['source_archive_sha256'] == report['source_archive_sha256'], 'Actual65 audit lineage')
+    require(recovery['recovered_jobs'] == 65 and recovery['original159_pass'] is False
+            and recovery['old_pool_end_guard_reconstructed'] is False
+            and recovery['old_failed_or_interrupted_commands'] == sorted(failed), 'Recovery scope and provenance')
+    require(recovered['status'] == 'RECOVERY_65_FULL_JOBS_COMPLETE_REQUIRES_REVIEW'
+            and recovered['completed_recovery_jobs'] == recovered['required_recovery_jobs'] == 65
+            and all(recovered[k] is True for k in ('sources_unchanged', 'runtime_unchanged', 'original_evidence_unchanged'))
+            and recovered['legacy159_pass'] is False, 'New recovery guards only')
+    require(recovered['approval_sha256'] == recovery['approval_sha256']
+            and recovered['runner_sha256'] == recovery['runner_sha256']
+            and recovered['runtime_sha256'] == seals['legacy_recovery_runtime']
+            and recovered['prior_state_sha256'] == seals['legacy_state']
+            and recovered['source_manifest_sha256'] == seals['legacy_source_manifest'], 'Recovery state anchors')
+    fresh = {r['key']: r for r in recovered['rows']}
+    require(len(recovered['rows']) == len(fresh) == len(recovery['records']) == 65, 'All65 distinct recovery rows')
+    seen = set()
+    masks = list(range(16)) + list(range(32, 48))
+    for item in recovery['records']:
+        key = item['key']; require(key in fresh and key not in seen, 'Unique audited recovery key'); seen.add(key)
+        row = fresh[key]
+        for field in ('original_index', 'family', 'mask', 'backend', 'log_sha256', 'completed_mask_sha256'):
+            require(row[field] == item[field], 'Recovery audit/state field: ' + field)
+        require(row['status'] == 'COMPLETE' and type(row['returncode']) is int and row['returncode'] == 0,
+                'Whole recovery job complete')
+        if item['family'] == 'R83':
+            require(item['mask'] in masks and item['backend'] in BACKENDS, 'R83 exact mask/backend')
+            backend = BACKENDS.index(item['backend']); index = 48 + 4 * backend + masks.index(item['mask']) // 8
+            require(key == f'r83-{backend}-{item["mask"]:02d}', 'R83 exact key')
+        else:
+            require(item['family'] == 'R41' and item['mask'] == 8 and item['backend'] == 'sturm'
+                    and key == 'r41-sturm-08', 'Only R41 independent mask8 replacement')
+            index = 118
+        require(item['original_index'] == index, 'Exact original-command recovery mapping')
+        binding = command_bindings.setdefault(index, {'kind': 'COMPLETE_GUARDED_SINGLETON_REPLACEMENTS', 'jobs': []})
+        binding['jobs'].append(item)
+    require(set(command_bindings) == set(range(1, 160)), 'Complete conjunction of registered checks')
+    require(all(len(command_bindings[i]['jobs']) == (1 if i == 118 else 8) for i in failed), 'No partial old batch adoption')
+    require(eight['status'] == 'PASS_EIGHT_INDIVIDUAL_COMPLETE_EXECUTIONS_WITH_SEPARATE_PRIOR_RAW_EVIDENCE'
+            and eight['state_sha256'] == seals['legacy_state'] and eight['prior_raw_canonical_files_rehashed'] == 64
+            and eight['current_cloud_raw_artifacts_retained'] is False and eight['pool_final_source_runtime_guard_claimed'] is False,
+            'Separate prior raw evidence and current logs')
+    require(len(eight['records']) == 8 and {r['index'] for r in eight['records']} == set(range(148, 154)) | {156, 157}, 'Eight exact lost raw executions')
+    for item in eight['records']:
+        require(item['log_sha256'] == original[item['index']]['log_sha256'], 'Eight execution log binding')
+    for command in coverage['legacy_geometry_commands']:
+        actual = registered[command['index'] - 1]
+        require(all(actual[k] == command[k] for k in ('index', 'label', 'command'))
+                and manifest['files'][command['command'][1]]['sha256'] == command['script_sha256'], 'Historical proof command source')
+    mapped = {r['point_label']: r for r in report['first_target_historical_116']}
+    require(len(report['first_target_historical_116']) == len(mapped) == 116 and set(mapped) == set(historical), 'Actual116 proof map')
+    result = {}
+    for label, row in historical.items():
+        require(mapped[label]['transfer'] == row['transfer']
+                and {r['index'] for r in mapped[label]['certificate_bindings']} == {c['index'] for c in row['commands']}, 'Actual mapped command set')
+        result[label] = {'kind': 'COLLECTIVE32' if row['transfer'] == 'R83_PIC1_COLLECTIVE_POPULATION' else 'POINTWISE',
+            'legacy_audit_sha256': seals['legacy_audit'], 'recovery_audit_sha256': seals['legacy_recovery_audit'],
+            'legacy_command_indices': [c['index'] for c in row['commands']],
+            'command_evidence': {str(c['index']): command_bindings[c['index']] for c in row['commands']},
+            'original159_pass': False, 'old_pool_end_guard_reconstructed': False,
+            'current_raw_retention_complete': False}
+    return result
+
+
+def v82_join(report, package, seals, complement, coverage):
+    require(report["status"] == "PORTABLE_REPLAY_AGGREGATE_PASS_PENDING_FINAL_REVIEW_AND_REGISTRATION" and
+            report["all_full_jobs_pass"] is True, "V82 actual504 aggregate")
+    for key, name in (("package_sha256", "v82_package"), ("replay_manifest_sha256", "v82_manifest"),
+                      ("supervisor_result_sha256", "v82_supervisor_result"), ("runtime_manifest_sha256", "v82_runtime")):
+        require(report[key] == seals[name], "V82 bound artifact: " + name)
+    require(report["aggregate_sha256"] == PRODUCERS["v82_aggregate"], "V82 actual auditor source")
+    require(report["package_sha256"] == coverage["v82_frozen_deployment"]["package_sha256"] and
+            report["replay_manifest_sha256"] == coverage["v82_frozen_deployment"]["manifest_sha256"], "V82 repaired cohort identity")
+    require(set(report["labels"]) == set(package["labels"]) == set(complement) and len(report["labels"]) == 249, "V82 exact249 labels")
+    controls = ("R127:pic0:00", "R127:pic1:00", "R43_31:pic0:00")
+    require(sorted(report["controls"]) == sorted(package["controls"]) == sorted(controls), "V82 historical controls")
+    require(set(report["jobs"]) == {label + "/" + backend for label in (*controls, *complement) for backend in BACKENDS}, "V82 exact504 full jobs")
+    for label in (*controls, *complement):
+        pair = [report["jobs"][label + "/" + backend] for backend in BACKENDS]
+        for row in pair:
+            counts(row["counts"]); hashes(row["canonical_artifact_sha256"], CANONICAL)
+            require(row["counts"]["survivor_count"] == 0, "V82 survivor unresolved")
+            require(valid_hash(row["result_sha256"]) and valid_hash(row["certificate_result_sha256"]), "V82 full result seals")
+        require(pair[0]["counts"] == pair[1]["counts"] and pair[0]["canonical_artifact_sha256"] == pair[1]["canonical_artifact_sha256"], "V82 paired disagreement")
+
+
+def v83_join(report, inventory, state, seals, nonhits):
+    require(type(report["schema_version"]) is int and report["schema_version"] == 1, "Reflected report schema")
+    require(report["status"] == "TERMINAL_REFLECTED_DISCOVERY_AUDIT_PASS" and report["target_id"] == TARGETS[1], "Actual reflected terminal audit")
+    require(len(nonhits) == report["domain_size"] == 365 and set(report["points"]) == nonhits, "Reflected exact365 domain")
+    require(report["state_sha256"] == seals["v83_state"] and report["runtime_sha256"] == seals["v83_runtime"] and
+            report["campaign_file_inventory"]["sha256"] == seals["v83_inventory"], "Reflected anchor seals")
+    require(all(report[k] is True for k in ("sources_unchanged", "runtime_unchanged", "campaign_unchanged")), "Reflected unchanged guards")
+    require(state["status"] == "ALL_TARGET_DISCOVERIES_COMPLETE_REQUIRES_REVIEW" and not report["incomplete_labels"], "Reflected incomplete state")
+    require(inventory["state.json"]["sha256"] == seals["v83_state"], "Closed state inventory")
+    unresolved, attempts = [], set()
+    for label, point in report["points"].items():
+        require(point["point_label"] == label and point["target_id"] == TARGETS[1], "Reflected point identity")
+        counts(point["counts"]); hashes(point["canonical_artifact_sha256"], CANONICAL)
+        expected = "PAIRED_EMPTY_DISCOVERY" if point["counts"]["survivor_count"] == 0 else "PAIRED_SURVIVORS_REQUIRE_GEOMETRY"
+        require(point["outcome"] == expected, "Survivor/outcome disagreement")
+        if point["counts"]["survivor_count"]:
+            unresolved.append(label)
+        require(point["target_geometry_sha256"] == report["target_geometry_sha256"] and
+                point["preparation_sha256"] == point["canonical_artifact_sha256"]["preparation.json"], "Reflected target/preparation seal")
+        plan = point["witness_plan"]
+        require(inventory[plan["path"]]["sha256"] == plan["input_sha256"], "Reflected frozen plan inventory")
+        require(set(point["accepted"]) == {"prep", "full"}, "Both reflected stages")
+        for stage in ("prep", "full"):
+            require(set(point["accepted"][stage]) == set(BACKENDS), "Both independent paths")
+            for backend, row in point["accepted"][stage].items():
+                directory = row["attempt_directory"]
+                require(type(directory) is str and directory and not directory.startswith("/") and
+                        all(part not in ("", ".", "..") for part in directory.split("/")) and directory not in attempts,
+                        "Unique contained accepted attempt")
+                attempts.add(directory)
+                require(inventory[directory + "/output/result.json"]["sha256"] == row["result_sha256"] and
+                        inventory[directory + "/child.log"]["sha256"] == row["log_sha256"], "Reflected result/log inventory")
+                require(row["emitted_plan_sha256"] == row["output_sha256"]["witness-plan.json"], "Emitted plan seal")
+                for name, checksum in row["output_sha256"].items():
+                    require(inventory[directory + "/output/" + name]["sha256"] == checksum, "Reflected output inventory")
+                if stage == "full":
+                    require(row["input_plan_sha256"] == plan["input_sha256"] and
+                            all(row["output_sha256"][name] == point["canonical_artifact_sha256"][name] for name in CANONICAL), "Reflected full plan/artifacts")
+        require(point["row_evidence"]["sha256"] == point["row_evidence"]["normalized_object_sha256"] and
+                valid_hash(point["row_evidence"]["sha256"]), "Paired row evidence")
+    require(report["summary"] == dict(Counter(point["outcome"] for point in report["points"].values())), "Reflected summary")
+    require(len(attempts) == 1460, "Exactly1460 accepted preparation/full backend references")
+    return sorted(unresolved)
+
+
+def positive_join(report):
+    require(type(report["schema_version"]) is int and report["schema_version"] == 1, "Positive audit schema")
+    expected_keys = {target + "/" + label for target in TARGETS for label in HITS}
+    require(set(report["points"]) == expected_keys and report["required_jobs"] == 12, "All six positive target/label cases")
+    if report["status"] == "POSITIVE_CONTROLS_INCOMPLETE_NO_PASS":
+        return sorted(key for key, row in report["points"].items() if row["status"] != "PAIRED_KNOWN_POSITIVE_DISCOVERY_COMPLETE") or ["COHORT_NOT_COMPLETE"]
+    require(report["status"] == "TWELVE_KNOWN_POSITIVE_CONTROL_DISCOVERY_COMPLETE" and report["completed_jobs"] == 12 and
+            not report["failed_or_limited_attempts"] and report["strict_expected_replay"] is False and
+            report["theorem_promotion"] is False, "Twelve actual full positive controls")
+    for key, point in report["points"].items():
+        require(point["status"] == "PAIRED_KNOWN_POSITIVE_DISCOVERY_COMPLETE" and set(point["accepted"]) == set(BACKENDS), "Paired full positive status")
+        counts(point["counts"]); hashes(point["canonical_artifact_sha256"], CANONICAL)
+        require(point["counts"]["survivor_count"] >= 2, "Signed positive witnesses required")
+        for backend, row in point["accepted"].items():
+            require(row["both_signed_witnesses_present"] is True and valid_hash(row["kernel_result_sha256"]), "Actual signed witness/full-result evidence")
+            for field in ("counts", "canonical_artifact_sha256", "target_geometry_sha256", "plan_sha256", "witness_record_sha256", "row_coverage"):
+                require(row[field] == point[field], "Positive pair data mismatch")
+            inventory = row["output_inventory"]
+            require(all(inventory[name]["sha256"] == point["canonical_artifact_sha256"][name] for name in CANONICAL) and
+                    inventory["result.json"]["sha256"] == row["kernel_result_sha256"] and
+                    inventory["target-geometry.json"]["sha256"] == point["target_geometry_sha256"] and
+                    inventory["witness-plan.json"]["sha256"] == point["plan_sha256"], "Positive complete output inventory")
+    return []
+
+
+def representative_join(report, terminal, seals):
+    """Future report interface; no current source/design review has this status."""
+    require(type(report["schema_version"]) is int and report["schema_version"] == 1 and
+            report["status"] == "PORTABLE_SAME_PLAN_REPRESENTATIVE_AUDIT_PASS", "Actual representative outcome audit")
+    require(report["terminal_audit_sha256"] == seals["v83_audit"] and report["target_id"] == TARGETS[1], "Representative terminal/target binding")
+    required = {"OM:pic0:01", "R127:pic0:00", "R127:pic1:00", "R127:pic1:16", "R127:pic1:32", "R127:pic1:63",
+                "R41_12:pic0:00", "R41_22:pic0:00", "R43_20:pic0:00", "R43_31:pic0:00", "R7:pic0:00",
+                "R7:pic0:32", "R7sq:pic0:00", "R83:pic0:00", "R83:pic1:00", "R83:pic1:16"}
+    labels = report["labels"]
+    require(len(labels) == len(set(labels)) and required <= set(labels) <= set(terminal["points"]), "Representative source-family controls")
+    require(set(report["jobs"]) == {label + "/" + backend for label in labels for backend in BACKENDS}, "Representative exact paired jobs")
+    for label in labels:
+        expected = terminal["points"][label]
+        for backend in BACKENDS:
+            row = report["jobs"][label + "/" + backend]
+            require(row["status"] == "FULL_PORTABLE_REPLAY_VERIFIED" and row["target_id"] == TARGETS[1] and
+                    row["plan_sha256"] == expected["witness_plan"]["input_sha256"], "Same executed plan required")
+            require(row["counts"] == expected["counts"] and row["canonical_artifact_sha256"] == expected["canonical_artifact_sha256"] and
+                    row["target_geometry_sha256"] == expected["target_geometry_sha256"] and
+                    row["normalized_row_evidence_sha256"] == expected["row_evidence"]["sha256"], "Representative replay equality")
+            require(valid_hash(row["result_sha256"]) and row["source_runtime_unchanged"] is True, "Representative complete provenance")
+    inventory = report["branch_interface_inventory"]
+    require(inventory["terminal_audit_sha256"] == seals["v83_audit"] and inventory["actual_executed_plans_and_rows_used"] is True and
+            interface_list(inventory["terminal_interfaces"]) <= interface_list(inventory["control_interfaces"]), "Terminal plan/branch interface coverage")
+    require(valid_hash(report["approved_runtime_sha256"]), "Representative approved runtime identity")
+
+
+def adoption_join(record, source_review, terminal, seals):
+    """Future actual adoption record, distinct from accepted design policy."""
+    require(type(record["schema_version"]) is int and record["schema_version"] == 1 and
+            record["status"] == "ACCEPTED_EXECUTED_EVIDENCE_UNDER_SOURCE_ISOMORPHISM", "Actual evidence adoption record")
+    require(record["labels"] == sorted(terminal["points"]) and len(record["labels"]) == 365, "Adopted exact365 labels")
+    dependencies = ("v83_audit", "positive_control_audit", "representative_control_audit", "source_isomorphism_review")
+    require(record["binds"] == {key: seals[key] for key in dependencies}, "Adoption exact evidence anchors")
+    require(type(source_review["schema_version"]) is int and source_review["schema_version"] == 1 and
+            source_review["status"] == "PASS_COMPLETE_PORTABLE_SOURCE_SEMANTICS_AND_RUNTIME" and
+            source_review["whole_executable_closure_reviewed"] is True and source_review["actual_dynamic_import_controls_pass"] is True and
+            source_review["historical_expected_module_inert_for_active_geometry_verified"] is True,
+            "Complete source semantics/runtime review, not static design only")
+    require(source_review["executed_runtime_sha256"] == terminal["runtime_sha256"] and
+            source_review["runtime_semantics_equivalence_reviewed"] is True, "Executed-to-portable runtime semantics review")
+    approved = source_review["approved_portable_runtime_sha256"]
+    require(type(approved) is list and approved and all(valid_hash(value) for value in approved) and approved == sorted(set(approved)),
+            "Explicit approved portable runtime profiles")
+    require(set(source_review["runtime_acceptance_review_sha256"]) == set(approved) and
+            all(valid_hash(value) for value in source_review["runtime_acceptance_review_sha256"].values()), "Actual portable runtime approval seals")
+    require(record["executed_source_sha256"] == source_review["executed_source_sha256"] == terminal["source_sha256"] and
+            len(record["executed_source_sha256"]) == 19, "Original executed19 closure")
+    portable = source_review["portable_source_sha256"]
+    require(record["portable_source_sha256"] == portable and len(portable) == 16 and all(valid_hash(h) for h in portable.values()), "Portable16 closure")
+    expected = {label + "/" + backend: point["accepted"]["full"][backend]["result_sha256"]
+                for label, point in terminal["points"].items() for backend in BACKENDS}
+    require(record["adopted_full_result_sha256"] == expected and len(expected) == 730, "All730 actual full executions adopted")
+    require(record["adopted_jobs_claimed_as_fresh_portable_executions"] is False and
+            record["regression_command_count"] == 730 and record["all730_full_replay_commands_supplied"] is True,
+            "Adoption must retain provenance and all runnable regressions")
+
+
+def final_review(name, record, seals):
+    require(type(record["schema_version"]) is int and record["schema_version"] == 1, "Final review schema")
+    require(record["status"] == "PASS_REVIEWED_CLOSED_EVIDENCE_FOR_CONDITIONAL_JOIN" and record["gate"] == name, "Actual outcome review required: " + name)
+    require(record["binds"] == {key: seals[key] for key in REVIEW_DEPENDENCIES[name]}, "Exact final review dependencies: " + name)
+    require(record["actual_execution_or_proof_reviewed"] is True and record["source_runtime_identity_reviewed"] is True and
+            record["archive_retention_and_retrieval_verified"] is True and record["promotion_authorized"] is False, "Unfilled final review obligations")
+    if name in ("legacy_outcome_review", "v82_outcome_review", "v83_outcome_review"):
+        producer = {"legacy_outcome_review": "legacy_audit", "v82_outcome_review": "v82_aggregate", "v83_outcome_review": "v83_audit"}[name]
+        require(record["producer_sha256"] == PRODUCERS[producer], "Unreviewed actual producer")
+    if name == 'legacy_outcome_review':
+        require(record['recovery_auditor_sha256'] == PRODUCERS['legacy_recovery_audit']
+                and record['alternate_evidence_conjunction_accepted'] is True
+                and record['immutable_source_operational_assumption_acknowledged'] is True
+                and record['old_pool_end_guard_reconstructed'] is False
+                and record['original159_pass'] is False
+                and record['current_tmp_raw_retention_complete'] is False
+                and record['prior_raw_and_current_execution_provenance_distinguished'] is True,
+                'Explicit final legacy conjunction and retention policy acceptance')
+    require(type(record["retention_evidence_sha256"]) is dict and record["retention_evidence_sha256"] and
+            all(valid_hash(v) for v in record["retention_evidence_sha256"].values()), "No archival evidence bindings")
+
+
+def evaluate(objects, seals):
+    missing = sorted(set(REQUIRED) - set(objects))
+    checks, unresolved, bindings = {}, [], {}
+    def available(*names):
+        return all(name in objects for name in names)
+    if available("ambient", "coverage", "coverage_review"):
+        domain, historical, complement = coverage_partition(objects["ambient"], objects["coverage"], objects["coverage_review"])
+        require(objects["coverage_review"]["coverage_sha256"] == seals["coverage"], "Reviewed coverage bytes")
+        checks["368_partition"] = True
+    else:
+        domain, historical, complement = {}, {}, {}
+    if available("two_chamber_review", "two_chamber_data"):
+        record = objects["two_chamber_review"]
+        require(record["status"] == "HUMAN_TWO_CHAMBER_IMPLICATION_ACCEPTED_CONDITIONAL_ON_BOTH_TARGET_OUTCOMES" and
+                record["bridge_sha256"] == seals["two_chamber_data"] and record["required_second_target_nonhit_count"] == 365, "Two-chamber human implication")
+        checks["human_two_chamber_implication"] = True
+    if historical and available(*REVIEW_DEPENDENCIES['legacy_outcome_review']):
+        bindings = legacy_conjunction_join(objects, seals, historical, objects['coverage'])
+        checks['actual_legacy150_plus_recovery65'] = True
+    if complement and available("v82_aggregate", "v82_package", "v82_manifest", "v82_supervisor_result", "v82_runtime"):
+        v82_join(objects["v82_aggregate"], objects["v82_package"], seals, complement, objects["coverage"])
+        checks["actual_v82_504"] = True
+        for label in complement:
+            bindings[label] = {"kind": "PAIRED_POINTWISE_V82", "v82_aggregate_sha256": seals["v82_aggregate"],
+                               "full_result_sha256": {backend: objects["v82_aggregate"]["jobs"][label + "/" + backend]["result_sha256"] for backend in BACKENDS}}
+    if historical and available("v83_audit", "v83_inventory", "v83_state", "v83_runtime"):
+        unresolved = v83_join(objects["v83_audit"], objects["v83_inventory"], objects["v83_state"], seals, set(historical) | set(complement))
+        checks["actual_v83_365_paired"] = True
+    for name, dependencies in REVIEW_DEPENDENCIES.items():
+        if available(name, *dependencies):
+            final_review(name, objects[name], seals); checks[name] = True
+    incomplete_positive = []
+    if available("positive_control_audit"):
+        incomplete_positive = positive_join(objects["positive_control_audit"])
+        checks["actual_twelve_positive_controls"] = not incomplete_positive
+    if available("representative_control_audit", "v83_audit"):
+        representative_join(objects["representative_control_audit"], objects["v83_audit"], seals)
+        checks["actual_same_plan_representative_controls"] = True
+    if available("portable_adoption_record", "source_isomorphism_review", "v83_audit", "positive_control_audit", "representative_control_audit"):
+        adoption_join(objects["portable_adoption_record"], objects["source_isomorphism_review"], objects["v83_audit"], seals)
+        portable = objects["portable_adoption_record"]["portable_source_sha256"]
+        require(objects["positive_control_audit"]["source_state"]["portable_math_sha256"] ==
+                objects["representative_control_audit"]["portable_source_sha256"] == portable, "Both control cohorts use the adopted portable source")
+        require(set(objects["source_isomorphism_review"]["approved_portable_runtime_sha256"]) ==
+                {objects["positive_control_audit"]["approved_runtime_sha256"], objects["representative_control_audit"]["approved_runtime_sha256"]},
+                "Actual positive/representative runtime profiles covered by final source-semantics review")
+        checks["actual_portable_evidence_adoption"] = True
+    rows = [{"point_label": label, "first_target_family": "LEGACY116" if label in historical else "V82_249",
+             "first_target_binding": bindings.get(label, {"status": "UNBOUND"}),
+             "reflected_status": (objects["v83_audit"]["points"][label]["outcome"] if checks.get("actual_v83_365_paired") else "NOT_AUDITED"),
+             "reflected_full_result_sha256": ({backend: objects["v83_audit"]["points"][label]["accepted"]["full"][backend]["result_sha256"] for backend in BACKENDS}
+                                               if checks.get("actual_v83_365_paired") else None),
+             "new_curve_hit_claimed": False} for label in sorted(set(historical) | set(complement))]
+    ready = not missing and not unresolved and not incomplete_positive
+    return {"schema_version": 1, "status": ("CONDITIONAL_EVIDENCE_JOIN_READY_FOR_FINAL_THEOREM_REVIEW" if ready
+            else "CONDITIONAL_JOIN_BLOCKED_MISSING_EVIDENCE_OR_UNRESOLVED_OUTCOME"),
+            "scope": "FIXED_MARKED_NORM_PI_C39_PACKET_NORMALIZED_TRACE_POLARIZED_SL2_QUOTIENT",
+            "checks_passed": checks, "missing_evidence": missing, "incomplete_positive_controls": incomplete_positive,
+            "survivor_labels_unresolved": unresolved, "known_positive_labels": HITS,
+            "nonhit_rows": rows, "nonhit_count": len(rows), "ambient_count": len(domain),
+            "reference_counts": {"historical_labels": len(historical), "v82_labels": len(complement),
+                                 "distinct_legacy_geometry_commands": 128 if historical else None,
+                                 "v82_full_jobs": 504 if checks.get("actual_v82_504") else None,
+                                 "v83_accepted_prep_and_full_backend_records": 1460 if checks.get("actual_v83_365_paired") else None,
+                                 "v83_adopted_full_jobs": 730 if checks.get("actual_portable_evidence_adoption") else None},
+            "collective_r83_pic1_is_not_individual_mask_permutation": True,
+            "certified_coverage_changed": False, "C44_complete": False, "theorem_promotion": False,
+            "registration_applied": False, "full_release": False,
+            "input_sha256": seals,
+            "limits": ["Hashes identify supplied evidence, not independent approval authority.",
+                       "Source/design gates never replace actual outcome and archival review.",
+                       "Necessary-polygon survivors remain unresolved and are not new curve points.",
+                       "First-target collective Pic1 coverage transfers a universal statement, not per-mask digests."]}
+
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--evidence-root", type=Path, required=True)
+    parser.add_argument("--manifest", type=Path, required=True)
+    parser.add_argument("--manifest-sha256", required=True)
+    parser.add_argument("--output", type=Path, required=True)
+    args = parser.parse_args()
+    own_hash = sha(Path(__file__))
+    require(__debug__ and not args.output.exists(), "Assertions enabled and fresh output required")
+    require(sha(args.manifest) == args.manifest_sha256, "External input manifest binding")
+    manifest = decode(args.manifest.read_bytes())
+    require(type(manifest["schema_version"]) is int and manifest["schema_version"] == 1 and
+            manifest["status"] == "CONDITIONAL_JOIN_INPUTS_NO_PROMOTION", "Join manifest schema")
+    require(set(manifest["references"]) == set(REQUIRED), "Exact named gate inventory")
+    evidence = Evidence(args.evidence_root, manifest["references"])
+    for name, checksum in STATIC_PINS.items():
+        if name in evidence.hashes:
+            require(evidence.hashes[name] == checksum, "Unreviewed static anchor: " + name)
+    report = evaluate(evidence.objects, evidence.hashes)
+    evidence.recheck()
+    require(sha(args.manifest) == args.manifest_sha256, "Input manifest changed")
+    require(sha(Path(__file__)) == own_hash, "Join source changed")
+    report.update(join_source_sha256=own_hash, input_manifest_sha256=args.manifest_sha256)
+    with args.output.open("xb") as stream:
+        stream.write(canonical(report))
+    print(json.dumps({"status": report["status"], "missing_evidence": report["missing_evidence"],
+                      "survivor_labels_unresolved": report["survivor_labels_unresolved"],
+                      "output_sha256": sha(args.output)}, sort_keys=True))
+
+
+if __name__ == "__main__":
+    main()

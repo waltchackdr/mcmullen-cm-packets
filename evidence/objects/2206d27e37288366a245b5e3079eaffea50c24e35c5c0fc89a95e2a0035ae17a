@@ -1,0 +1,21 @@
+"""Exact discovery of all integral B/C maps as a normalized rank12 ideal."""
+import json,resource,signal,importlib.util,time
+from pathlib import Path
+import sympy as s
+from sympy.matrices.normalforms import hermite_normal_form
+resource.setrlimit(resource.RLIMIT_CPU,(20,20));signal.alarm(30);start=time.monotonic();root=Path(__file__).resolve().parents[2];spec=importlib.util.spec_from_file_location('c58',root/'certificates/principal_unmarked_bc_v122.py');b=importlib.util.module_from_spec(spec);spec.loader.exec_module(b);K=b.K;z=K([0,1]);zp=[z**i for i in range(12)];mat=lambda vs:s.Matrix.hstack(*(s.Matrix(v.c) for v in vs));auto=lambda v,g:sum((c*z**((g*i)%42) for i,c in enumerate(v.c)),K());basis=lambda A:[K(list(A[:,j])) for j in range(12)]
+def lattice(vs):
+ A=mat(vs);den=s.ilcm(*[x.q for x in A]);return hermite_normal_form((den*A).applyfunc(int))/den
+def same(A,B):
+ T=A.inv()*B;return all(v.q==1 for v in T) and abs(T.det())==1
+d=json.loads(b.DATA.read_bytes())['data'];c59=json.loads((root/'certificates/principal_bc_isogeny_data.json').read_text());c60=json.loads((root/'certificates/principal_bc_unpolarized_data.json').read_text());IB=[K(v) for v in d['I_B_basis']];IC=[K(v) for v in d['I_C_basis']];CI=mat(IC).inv();m0=K(c59['witness_m']);alpha=K(c60['alpha']);factor=m0*alpha.inverse();sb=[auto(v,31) for v in IB]
+# All normalized eta satisfying the144 integral-map constraints, with no search bound.
+A=s.Matrix.hstack(*(s.Matrix(list(CI*mat([factor*q*v for v in sb]))) for q in zp));den=s.ilcm(*[q.q for q in A]);row=hermite_normal_form((den*A).applyfunc(int).T);Hom=den*row.T.inv()
+t=z+z**41;pi=1-z**14;J=lattice([alpha*t**i for i in range(6)]+[pi*v for v in zp]);R=s.Matrix(c60['R_C_basis']);need=lambda x:None
+assert same(Hom,J) and abs(J.det())==27 and all(q.q==1 for q in J)
+assert all(q.q==1 for q in A*J)
+# Multiplication closure and square-class relation.
+Jv=basis(J);Rv=basis(R);assert all(q.q==1 for q in J.inv()*mat([a*v for a in Rv for v in Jv]))
+gamma=z**6*(1-z**2);JJ=lattice([a*v for a in Jv for v in Jv]);gammaR=mat([gamma*v for v in Rv]);assert same(JJ,gammaR);assert mat([gamma*v for v in zp]).det()==1
+r=K(d['relative_norm_target_r']);assert factor*auto(factor,41)==r
+out={'status':'PROVISIONAL_COMPLETE_NORMALIZED_HOM_IDEAL','normalized_Hom_equals_alpha_OL_plus_pi_OM':True,'J_index_OM':27,'J_basis':[[str(q) for q in row] for row in J.tolist()],'constraint_denominator':int(den),'constraint_shape':list(A.shape),'square_identity':'J^2=z^6*(1-z^2)*R','square_generator':[str(q) for q in gamma.c],'square_generator_norm':1,'pullback_factor_identity':'(m0/alpha)*bar(m0/alpha)=r','seconds':time.monotonic()-start,'scope':'All maps eta inJ via m=(m0/alpha)eta; nonzero maps isogenies. Invertibility/nonprincipality/polarization interpretation need human independent review.'};print(json.dumps(out,indent=2,sort_keys=True))

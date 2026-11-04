@@ -1,0 +1,141 @@
+% !TeX root = ../../arithmetic-and-computation.tex
+\section{Individual self-dual models and lost automorphisms}
+These constructions establish the local obstructions and special-fiber
+alternatives. Paper I uses one common nonfree subgroup for its global
+family; an arbitrary individual choice is not silently substituted for it.
+
+\begin{proposition}[Principally polarized model at the $C$-vertex]\label{prop:Cppisogenous}
+The normalized $C$-vertex admits an $\OL$- and $\mathcal O_K$-stable
+self-dual overlattice of index
+\[
+ \operatorname{disc}(L)=453789
+\]
+for $K=\Ql(\sqrt{-3})$.  Hence it is $\OL$-linearly isogenous of degree
+$453789$ to a principally polarized sixfold $A_C^{\mathrm{pp}}$ with the same
+rational CM Hodge structure, signature, discriminant, and Hodge-conjecture
+conclusion.
+\end{proposition}
+\begin{proof}
+Write $\Sigma_C=(I+2C_t^{14})^{\mathsf T}$.  On the discriminant module
+\[
+ \Lambda^\#/\Lambda\cong
+ (\OL/\mathfrak p_3)^2\oplus(\OL/\mathfrak p_7^5)^2
+\]
+one has $\Sigma_C\equiv0\pmod{\mathfrak p_3}$.  Choose any residue line on that
+part.  On the $\mathfrak p_7^5$-part, $\Sigma_C^2=4I$ and
+$\operatorname{tr}(\Sigma_C)=0$, so the idempotents
+\[
+ \frac{\Sigma_C+2I}{4},\qquad \frac{2I-\Sigma_C}{4}
+\]
+give rank-one eigensummands.  Either is isotropic because
+$\Sigma_C^\dagger=-\Sigma_C$.  The CRT product has order $3^3 7^5$ and is therefore
+maximal isotropic.  The same argument as for $A$ and $B$ proves
+$\mathcal O_K$-stability, self-duality, preservation of all rational Hodge
+data.
+\end{proof}
+
+\begin{corollary}[The principal $C$-model loses the full vertex automorphism]\label{cor:noCstablepp}
+No principally polarized self-dual overlattice of the standard lattice can
+retain the full integral automorphism acting as $C_t^{\mathsf T}$ on homology.
+\end{corollary}
+\begin{proof}
+Stability under $C_t^{\mathsf T}$ and its inverse implies stability under
+$tI$, so the order-$27$ subgroup is an $\mathbb F_{27}$-line. Modulo
+$\mathfrak p_3$, the characteristic discriminant of $C_t^{\mathsf T}$ is
+$t^2-1$, and exact arithmetic in
+$\mathbb F_{27}=\mathbb F_3[t]/(t^3-t^2+t+1)$ gives
+\[
+ (t^2-1)^{13}=-1.
+\]
+Thus the characteristic polynomial is irreducible over $\mathbb F_{27}$ and
+$C_t$ has no invariant residue-field line.
+\end{proof}
+
+\begin{proposition}[Principally polarized model at the $A$-vertex]\label{prop:Appisogenous}
+Let $\Lambda=\mathcal O_L^2$ be the homology lattice at the normalized $A$-vertex and
+$\Lambda^\#=\mathfrak D_L^{-1}\Lambda$ its dual for $E_1$.  There is an
+$\mathcal O_L$- and $\mathcal O_K$-stable maximal isotropic subgroup
+\[
+ H_A\subset\Lambda^\#/\Lambda,\qquad K=\mathbb Q(\sqrt{-3}),
+\]
+whose inverse image $\Lambda_A^{\mathrm{pp}}$ is self-dual for $E_1$.  Hence
+\[
+ [\Lambda_A^{\mathrm{pp}}:\Lambda]=\operatorname{disc}(L)=453789
+\]
+and the normalized $A$-vertex sixfold is $\mathcal O_L$-linearly isogenous of degree
+$453789$ to a principally polarized abelian sixfold $A_A^{\mathrm{pp}}$.
+The rational CM Hodge structure, the $K$-signature $(3,3)$, the Hermitian
+discriminant class $-1$, and the divisor-generation of the Hodge algebra are unchanged.
+In particular the Hodge conjecture holds for $A_A^{\mathrm{pp}}$ in every codimension.
+\end{proposition}
+\begin{proof}
+As in Proposition~\externalref{packet}{prop:ppisogenous},
+\[
+ \Lambda^\#/\Lambda\cong
+ (\mathcal O_L/\mathfrak p_3)^2\oplus
+ (\mathcal O_L/\mathfrak p_7^5)^2,
+ \qquad
+ \mathfrak D_L=\mathfrak p_3\mathfrak p_7^5.
+\]
+Let $\Sigma_A$ be the integral operator representing $\sqrt{-3}$ in the proof of
+Theorem~\externalref{packet}{thm:Ahodge}.  Exact reduction gives
+\[
+ \Sigma_A\equiv0\pmod{\mathfrak p_3}.
+\]
+Thus any one-dimensional $\mathbb F_{27}$-subspace of the $\mathfrak p_3$-part is
+$\Sigma_A$-stable; fix one and call it $H_{A,3}$.
+
+On the $\mathfrak p_7^5$-part one has $\Sigma_A^2=-3I=4I$ and
+$\operatorname{tr}(\Sigma_A)=0$.  Since $4$ is a unit, the idempotents
+\[
+ e_{A,+}=\frac{\Sigma_A+2I}{4},\qquad
+ e_{A,-}=\frac{2I-\Sigma_A}{4}
+\]
+split the rank-two local module into two rank-one direct summands.  Put
+$H_{A,7}=\operatorname{im}(e_{A,+})$.  The relation
+$\Sigma_A^\dagger=-\Sigma_A$ gives, for $v,w\in H_{A,7}$,
+\[
+ 0=E_1(\Sigma_Av,w)+E_1(v,\Sigma_Aw)=4E_1(v,w),
+\]
+so $H_{A,7}$ is isotropic.  Therefore
+\[
+ H_A=H_{A,3}\oplus H_{A,7}
+\]
+is isotropic and has order
+\[
+ |H_A|=3^3 7^5=\sqrt{|\Lambda^\#/\Lambda|},
+\]
+hence is maximal isotropic.  Its inverse image is self-dual.
+
+Exact power-basis reduction verifies $U_A=(\Sigma_A-I)/2\in M_2(\OL)$; one has $U_A^2+U_A+I=0$ and
+$\mathcal O_K=\mathbb Z[U_A]$.  On the $\mathfrak p_3$-part,
+$U_A\equiv1$, while on the $\mathfrak p_7^5$-part it is a polynomial in
+$\Sigma_A$; hence $H_A$ is $\mathcal O_K$-stable.  The rational vector space,
+complex structure, $K$-action, and alternating form $E_1$ are unchanged by the
+lattice enlargement, so the stated Hodge-theoretic invariants are unchanged.
+\end{proof}
+
+\begin{corollary}[The principal $A$-model loses the full vertex automorphism]\label{cor:noAstablepp}
+No principally polarized self-dual overlattice
+\[
+ \Lambda\subset\Lambda'\subset\Lambda^\#
+\]
+can be stable under the full normalized projective order-$7$ automorphism acting as $A_t^{\mathsf T}$ on homology.
+\end{corollary}
+\begin{proof}
+On the $\mathfrak p_3$-part the subgroup has order $27$. Stability under
+$A_t^{\mathsf T}$ and its inverse implies stability under their sum
+$(t^3-3t)I=t^3I$ in characteristic $3$. Since $(t^3)^9=t$ in
+$\mathbb F_{27}$, the subgroup is an $\mathbb F_{27}$-line.  The characteristic polynomial of $A_t$ is
+\[
+ X^2-(t^3-3t)X+1.
+\]
+Its discriminant reduces to $1-t$ modulo
+$\mathfrak p_3=(3,t^3-t^2+t+1)$, and exact finite-field arithmetic gives
+\[
+ (1-t)^{13}=-1\in\mathbb F_{27}.
+\]
+Thus the discriminant is a nonsquare, the characteristic polynomial is irreducible, and
+$A_t$ has no invariant residue-field line.
+\end{proof}
+

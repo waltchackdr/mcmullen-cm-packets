@@ -1,0 +1,24 @@
+{
+  "status": "PASS",
+  "model_sha256": "1803891819609ee4c8ecb84222a898a2574207f06bfdf08c48fca95ef27f8184",
+  "producer_imports": false,
+  "construction_replay": false,
+  "actual_C_form_transport": "EXACT",
+  "source_and_target_lattice_indices": [
+    729,
+    27
+  ],
+  "residue_multiplier_field_order": 3,
+  "full_order": "S = Z + P, using common-saturation multiplier bridge",
+  "binary_refinement_inputs_checked": 4096,
+  "fixed_numerators_checked": 729,
+  "fiber_counts_by_exponent_mod6": {
+    "0": 261,
+    "2": 234,
+    "4": 234
+  },
+  "all_130_pairs_match": true,
+  "attempt03_to_final_symplectic_transport": "EXACT",
+  "theta_evaluations": 0,
+  "scope": "Serialized rational/integral model and labels; actual CM identity and positivity inherited from pinned accepted inputs."
+}

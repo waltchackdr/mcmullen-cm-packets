@@ -1,0 +1,583 @@
+"""Reproducible editorial extraction. Does not run or promote mathematics."""
+from pathlib import Path
+import re,json,hashlib
+D=Path(__file__).resolve().parent
+s=(D/'source_snapshot.tex').read_text(); lines=s.splitlines(True)
+assert hashlib.sha256(s.encode()).hexdigest()=='d133537d9967f476768dda92c3193efe116de2e0918c9b30afe1660cebfabbda'
+def cut(a,b): return ''.join(lines[a-1:b-1])
+def env(label,proof=False):
+ pos=s.index('\\label{'+label+'}')
+ beg=s.rfind('\\begin{',0,pos); typ=re.match(r'\\begin\{([^}]+)\}',s[beg:])[1]
+ end=s.index('\\end{'+typ+'}',pos)+len('\\end{'+typ+'}')
+ if proof:
+  q=s.index('\\begin{proof}',end); end=s.index('\\end{proof}',q)+len('\\end{proof}')
+ return s[beg:end]+'\n\n'
+def clean(x):
+ # Retain mathematical content; remove historical integration-status comments.
+ return re.sub(r'^%[^\n]*\n','',x,flags=re.M)
+parts={}; titles={
+'packet':('I','A Fixed CM Packet on McMullen\'s Curve\\\\and Its Principal Models'),
+'quotients':('II','Polarizations and Descent\\\\in a Finite Family of CM Sixfolds'),
+'hodge':('H','Explicit Hodge Classes for a Fixed CM Field'),
+'supplement':('S','Arithmetic Certificates and Computational Evidence\\\\for the CM Packet and Quotient Papers')}
+def add(doc,name,text): parts.setdefault(doc,[]).append((name,clean(text)))
+intro=r'''\section{Introduction}\label{sec:intro}
+A rational CM Hodge structure does not determine an integral polarized
+abelian variety, and neither determines its location on a specified curve.
+This paper separates these three questions for one finite packet on
+McMullen's curve. We first determine its intersection with the normalized
+curve. We then construct principal models of the three surviving fibers
+and distinguish their integral maps and polarizations.
+
+The packet is fixed by the extension $M/L$, the ordered embeddings and the
+norm generator below. All conjugacy counts use $\SL_2(\mathcal O_L)$.
+Replacing this group by $\GL_2(\mathcal O_L)$ or forgetting a field marking
+changes the classification problem. No assertion concerns every CM point
+of the curve or every Hecke packet of level $43$.
+
+\subsection{The three questions and their answers}
+The finite packet has $3520$ trace-labelled matrix classes and $368$
+quotient points. Its intersection with the normalized curve is exactly
+$A,B,C$, subject to the execution premise stated below. The original
+fibers have polarization type $(1,7,7,21,21,21)$, not principal type.
+A common self-dual lattice gives isogenous principal models on a connected
+finite cover. For the B/C principal models the minimum unrestricted
+isogeny degree is $7$, whereas the minimum scalar-polarized degree is $64$.
+These two minima measure different requirements on a map.
+
+The table in Theorem~\ref{thm:A} presents all three geometric fibers
+together. The main statements distinguish the finite intersection, the
+Hodge consequences and the integral principal geometry. The supporting
+Hodge note treats powers and mixed products; none of those extensions is
+needed to prove the finite intersection.
+
+\subsection{Fixed data and execution premise}
+Write $z=\zeta_{42}$, $M=\mathbb Q(z)=\mathbb Q(\zeta_{21})$,
+$L=M^+$ and $t=z+z^{-1}$. Order the real embeddings by
+$1,5,11,13,17,19$ and put
+\[
+ \pi=t^4+t^3-4t^2-2t+5,\qquad \alpha_0=1+z+z^4,
+ \qquad \alpha_k=z^k\alpha_0,\quad c_k=\alpha_k+\bar\alpha_k.
+\]
+Then $N_{M/L}(\alpha_0)=\pi$ and $N_{L/\mathbb Q}(\pi)=43$.
+The symbols $A,B,C$ denote normalized vertex classes; $A_X$ denotes the
+trace-polarized sixfold at $X$, and $B_X$ its specified principal model.
+Let $F_t:\mathbb H\to\mathbb H^6$ be McMullen's modular embedding
+with the component normalization of Supplement, Section~\ref{app:components}.
+The normalized curve image is the image of $F_t$ in
+$\SL_2(\mathcal O_L)\backslash\mathbb H^6$. Its quadrilateral
+monodromy is the integral, orientation-preserving group used below.
+The normalized generators are $X_t=h_tXh_t^{-1}$ with
+$h_t=\operatorname{diag}(t,1)$. The fourth quadrilateral vertex is treated
+in Proposition~\ref{prop:DBsame}; it is not a fourth quotient class.
+
+'''
+intro+=env('hyp:packetexecution')+env('thm:packetintro',True)+env('thm:A')
+intro+=r'''\noindent\emph{Proof locator for Theorem A.}
+The trace polarization is computed in Proposition~\ref{prop:E1type}.
+The B calculation is in Sections~\ref{sec:actualcmtype}--\ref{sec:fullhodge};
+Theorem~\ref{thm:Ahodge} and Proposition~\ref{prop:Cvertex} give A and C.
+Proposition~\ref{prop:commonprincipal} and
+Theorem~\ref{thm:principalfamily} supply the common principal family.
+
+'''+env('pp:thm:introgeometry',True)
+intro+=r'''\begin{remark}[Principal-moduli normalization]\label{rem:WKnormalization}
+The original lattice $\mathcal O_L^2$ with its trace form is not a
+principally polarized model. The self-dual modification changes the lattice
+through an isogeny; passage to a finite cover alone would not do so.
+The resulting principal family lies in the component determined by that
+self-dual module. Its identification with Mostaed's named principally
+polarized locus remains open. The Hodge conclusions at the three special
+fibers do not require that further identification, and no global
+$K$-action on the family is asserted.
+\end{remark}
+
+\subsection{Proof strategy and relation to prior work}
+The arithmetic classification includes every module overorder and
+orientation, then identifies the two characteristic roots at the level of
+quotient points. For geometry, two simultaneous target regions reduce curve
+membership to finite exact searches. Both regions are needed: separate
+choices of a reflected chamber in different coordinates are not allowed.
+The positive vertex realizations and exhaustive empty searches prove the
+intersection theorem.
+
+The principal construction instead uses the discriminant module of the
+trace lattice. A common nonfree maximal isotropic subgroup is stable under
+the three specialized quadratic actions. Its stabilizer gives the finite
+cover on which the lattice modification descends. Integral lattice and
+unit calculations then distinguish the models, maps and twists.
+
+The Hodge consequences use divisor classes and the split-Weil input of
+Schoen and Markman \cite{Schoen1998,Markman2025}. OpenAI's general CM
+manuscript \cite{OpenAICM2026}, if valid, implies the rational algebraicity
+conclusions; it is not a proof input here. Goodson's factor comparison and
+Saller's related discussion \cite{Goodson2024,Saller2026} also precede any
+claim of novelty for the rational CM types. The contribution examined here
+is the fixed packet and its integral geometry, not new abstract isogeny
+classes. Precise historical priority remains a separate literature question.
+The reported Aoki route in Saller is not used as a substitute proof.
+
+The constructed principal family is not identified with Mostaed's named
+principal normalization \cite{Mostaed2026}. It has a different integral
+lattice. Corrections relevant to that distinction are recorded in the
+supplement; they are secondary to the positive results of this paper.
+'''
+add('packet','01-introduction',intro)
+add('packet','02-fixed-data',cut(334,355))
+add('packet','03-packet-proof',r'''\section{The complete packet: arithmetic and geometry}
+The proof separates the finite arithmetic domain from curve membership.
+The supplementary order calculations feed into the following full census;
+its proof includes noninvertible modules over the originally generated order.
+Historical partial exclusion totals are kept in the supplement and play no
+role as substitutes for the final two-target cover.
+
+'''+cut(3289,3636)+r'''\subsection{From two regions to the full curve}
+'''+cut(4156,4257))
+add('packet','04-geometric-fibers',r'''\section{The three geometric fibers}
+We now supply the positive realizations and Hodge data used above. The B
+companion bridge fixes the geometric marking explicitly. The A and C
+calculations below use their actual vertex actions; their CM types are not
+inferred from an arithmetic companion signature.
+
+'''+cut(355,461).replace('\\section{','\\subsection{')+cut(695,1007).replace('\\section{','\\subsection{')+r'''\subsection{The A and C realizations and the fourth vertex}
+'''+cut(4766,4964)+r'''\subsection{Comparison of the underlying isogeny classes}
+'''+env('prop:knownCM',True))
+# Polarization is placed before the Hodge-discriminant arguments in the document order below.
+add('packet','05-trace-polarization',cut(461,695))
+add('packet','06-principal-family',r'''\section{A common principal lattice and family}
+The construction is a change of integral lattice, not a declaration that
+the original trace polarization is principal. The subgroup at $7$ is
+nonfree; requiring a common free line would incorrectly rule it out.
+The special-fiber K-actions need not extend to a single global K-action.
+
+'''+cut(5099,5298)+cut(9055,9100))
+add('packet','07-integral-models',r'''\section{Integral models, polarizations and maps}
+We first give coordinates for the common principal component. We then
+separate marked, polarized and unpolarized equivalence. The ideal and unit
+calculations are also the explicitly cited arithmetic inputs to Paper II.
+
+'''+cut(5298,6296))
+# Add navigational subsections at genuine changes of question.
+for doc,name in [('packet','07-integral-models')]:
+ x=parts[doc][-1][1]
+ for label,title in [('pp:prop:markeddistinct','Marked and unmarked distinctions'),('pp:prop:bcisogeny','Scalar-polarized maps'),('pp:prop:unpolarizeddistinct','Unpolarized isomorphisms and minimum degree'),('pp:prop:homideal','The integral Hom ideal'),('pp:prop:picardorder','Ideal classes and principal polarizations')]:
+  p=x.index('\\label{'+label+'}');b=x.rfind('\\begin{proposition}',0,p);x=x[:b]+'\\subsection{'+title+'}\n'+x[b:]
+ parts[doc][-1]=(name,x)
+add('packet','08-unit-twist',cut(8648,9055).replace('\\subsection{The global unit twist and principal curve image}','\\section{The unit twist and the principal curve image}'))
+add('packet','09-questions',r'''\section{Scope and questions for further research}\label{sec:conclusion}
+Under the execution premise, the fixed marked packet meets the normalized
+curve at precisely three quotient points. The common lattice construction
+and the unit twist give the stated principal models and six Weil points.
+These conclusions keep the integral lattice, polarization and field marking
+visible; they do not identify Mostaed's literal principal locus.
+
+There are two natural continuations. First, determine whether the same
+finite-domain method handles other norm generators and levels. Such an
+extension needs a new arithmetic domain and new geometric certificates.
+Second, identify the constructed principal family with a specified moduli
+normalization, or prove that the integral data obstruct that identification.
+The latter question must fix the lattice, level and polarization module.
+
+The finite quotient family of Paper II starts from a primitive Fermat
+factor, not from further points of this packet. Its Jacobian and descent
+questions therefore do not constitute unfinished cases of the three-point
+intersection theorem. The supporting Hodge note likewise concerns abstract
+fixed-field types and does not add points to this curve.
+''')
+# Restore logical order: trace form before its discriminant and Hodge uses.
+parts['packet']=[parts['packet'][i] for i in [0,1,2,4,3,5,6,7,8]]
+qintro=r'''\section{Introduction}
+This paper asks an integral question within one complex CM isogeny class:
+which quotients of a fixed sixfold admit principal polarizations, and over
+which fields can the quotients and their polarizations be defined? A
+rational Hodge-algebraicity theorem does not answer either question.
+The starting variety is defined from a curve, independently of any
+Hilbert-modular packet.
+
+Let $H$ be the smooth projective model of $y^2=x^{21}-1$. Its primitive
+$\Phi_{21}$ factor $A\subset J(H)$ is six-dimensional and has full
+endomorphism ring $\mathcal O_M$, where $M=\mathbb Q(\zeta_{21})$.
+We keep this actual embedded factor distinct from isogenous principal
+models. Its restricted Jacobian polarization has degree $35721$, whereas
+its minimum polarization has degree $729$ and type $(1,1,1,3,3,3)$.
+
+\subsection{The finite family and the equivalence relations}
+Fix the minimum polarization $\lambda_{\min}$ and write its kernel as
+$A[\pi]\simeq\mathbb F_3^6$, with the notation made explicit below.
+The family consists of $A$ and all quotients $A/H_0$ for subgroups
+$H_0\subset A[\pi]$ of order $27$. All isomorphisms preserve the origin.
+An underlying class forgets the polarization; a polarized class retains
+it but forgets CM and RM markings. A kernel is a subgroup of the fixed
+source, not a target isomorphism class. These distinctions account for the
+different counts in the following summary.
+
+\begin{center}
+\begin{tabular}{lr}
+\toprule
+Object being counted & Number\\\midrule
+Order-$27$ subgroups of the fixed source kernel & $33880$\\
+Underlying quotient classes (excluding $A$) & $188$\\
+Underlying classes including $A$ & $189$\\
+Principalizable underlying quotients & $80$\\
+Principal polarized quotient classes & $160$\\
+Nonprincipalizable underlying quotients & $108$\\
+Minimum polarized classes including $A$ & $2969$\\\bottomrule
+\end{tabular}
+\end{center}
+The last number is $1+160+108\cdot26$. The source contributes its unique
+minimum polarization, and each obstructed quotient contributes $26$.
+Fixing the pullback form gives $1120$ principal-target kernels; allowing
+all minimum pullback forms gives $14224$. Neither number counts all
+$33880$ order-$27$ subgroups as principal-target kernels.
+
+\subsection{Main results and proof route}
+Theorem~\ref{pp:thm:fermatallquotients} classifies the principal targets;
+Theorem~\ref{pp:thm:fermatunderlying} forgets the polarizations and identifies
+the obstruction; Theorem~\ref{pp:thm:obstructedminimum} determines the
+minimum forms on the remaining $108$ varieties. Their proofs pass from
+integral lattices to finite residue subspaces and distinguish the relevant
+unit actions before taking orbits.
+
+The Galois action then determines fields of moduli, but a fixed isomorphism
+class need not descend. Put
+\[
+ \mathcal E=M\bigl(\sqrt{(3+\sqrt{21})/2}\bigr).
+\]
+Theorem~\ref{pp:thm:quotientdefinitionfield} proves that for number fields $M\subseteq F\subset\overline{\mathbb Q}$, any one of the $188$ quotient classes has an $F$-model
+exactly when $F$ contains $\mathcal E$. A single twist makes all subgroup
+kernels and quotient maps available over $\mathcal E$. Thus the common
+field-of-moduli computation and the actual defining-field construction
+are distinct stages of the argument.
+Theorem~\ref{pp:thm:definitiondegrees} gives sharp absolute degrees for
+$168$ quotient classes and lower bounds for the other $20$.
+
+The final geometric section treats Jacobians. It distinguishes the
+restricted ten-class principal census with $R$-containment from the $156$
+principal classes with smaller endomorphism order $S$. The former has
+exactly one canonical Jacobian under the stated enclosure and execution
+contract. The latter $156$ statuses remain open.
+
+\subsection{Arithmetic inputs and relation to other work}
+Write $z=\zeta_{42}=-\zeta_{21}^{11}$, $t=z+z^{-1}$, $L=M^+$ and
+\[
+ f(T)=T^6+T^5-6T^4-6T^3+8T^2+8T+1,\qquad
+ \mathfrak P=(1-z^{14})\mathcal O_M,
+ \quad R=\mathcal O_L+\mathfrak P,\quad S=\mathbb Z+\mathfrak P.
+\]
+Here $\mathfrak P$ is the prime over $3$; its residue field is
+$\mathbb F_{729}$ and $R/\mathfrak P=\mathbb F_{27}$. The letter $\pi$
+below is $1-z^{14}$, a generator of $\mathfrak P$ in $M$. It is \emph{not} the norm-$43$ generator of
+Paper I. We use $K=\mathbb Q(\sqrt{-3})$ for the Weil action.
+Write $E_L=\mathcal O_L^\times$ and let $E_L^+$ denote its subgroup
+of totally positive units.
+
+The imported arithmetic inputs are the ideal classification and marked
+polarization classification of Paper I, Propositions~\ref{pp:prop:picardorder},
+\ref{pp:prop:idealclassmonoid} and~\ref{pp:prop:markedpolarizations},
+and the unit-norm theorem in the supplement. They are established without
+using this quotient family. The notations $B_0,B_1,C_0,C_1$ mean the two
+principal-polarization classes on each of the two $R$-ideal models in the
+B/C CM-type orbit; Paper I identifies them with its principal curve fibers.
+The quotient construction here needs their arithmetic classification, not
+that curve placement. The type representatives are
+$\Phi_B=\{1,5,23,25,29,31\}$ and
+$\Phi_C=\{1,5,11,13,17,19\}$; $\Phi_0=\Phi_C$.
+
+Goodson and Saller discuss the rational CM-type/Fermat comparison
+\cite{Goodson2024,Saller2026}. The general CM Hodge assertion in
+\cite{OpenAICM2026}, if valid, concerns algebraicity of rational classes;
+it does not itself provide the integral census or descent data here.
+The existence of individual models must also be compared with classical
+CM descent, including Milne's correction and addendum
+\cite{MilneModuli1972,MilneModuli1974}. Our explicit simultaneous twist,
+field obstruction and finite tables are distinguished from that existence
+question. These comparisons are not a certification of historical priority.
+'''
+add('quotients','01-introduction',qintro)
+q=cut(6588,8648).replace('\\subsection{A Fermat factor and its integral polarization obstruction}','\\section{The source factor and its polarization}')
+# Replace archive-oriented opening with a forward statement and local setup.
+q=q.replace('principal polarizations classified above.','principal polarizations classified in Section~\\ref{q:jacobians}.')
+q=q.replace('It uses the complete order-and-type census of Theorem~\\ref{pp:thm:tenprincipal}.','The order-and-type census used here is proved in Theorem~\\ref{pp:thm:tenprincipal}; its proof uses only the imported order arithmetic, not the quotient or descent conclusions.')
+# Split at semantic milestones into independently readable sections.
+for label,title in [('pp:prop:fermatbcminimum','Minimum isogenies and the minimum source polarization'),('pp:thm:fermatallquotients','Principal and underlying quotient classifications'),('pp:thm:obstructedminimum','Minimum forms on nonprincipalizable quotients'),('pp:thm:quotientrayfield','Galois action fields and orbit classification'),('pp:thm:quotientrealmodels','Real models and actual descent'),('pp:thm:quotientdefinitionfield','A common field of definition'),('pp:thm:definitiondegrees','Minimum degrees and the remaining cases'),('pp:cor:quotientweilhodge','Weil structures and maps from obstructed quotients'),('pp:prop:twoprimefermat','A structural two-prime comparison')]:
+ p=q.index('\\label{'+label+'}');b=q.rfind('\\begin{',0,p);q=q[:b]+'\\section{'+title+'}\n'+q[b:]
+add('quotients','02-family-and-descent',q)
+add('quotients','03-jacobians',r'''\section{The restricted principal census and Jacobian question}\label{q:jacobians}
+This section supplies the order-and-type result invoked for the source
+factor. Its arithmetic proof is independent of the quotient and descent
+sections. The theta step has an additional execution and enclosure
+contract; the exact conditional statement is retained below.
+
+'''+cut(6296,6588))
+# Move the smaller-order theta discussion after the ten-class geometry.
+x=parts['quotients'][1][1]
+p=x.index('\\begin{proposition}[',x.index('\\label{pp:thm:obstructedisogenies}')) if False else 0
+start=x.rfind('\\begin{proposition}',0,x.index('\\label{pp:prop:balancedtheta}'))
+stop=x.index('\\section{A structural two-prime comparison}')
+smaller=x[start:stop]; parts['quotients'][1]=(parts['quotients'][1][0],x[:start]+x[stop:])
+add('quotients','04-smaller-order-theta',r'''\section{The smaller-order Jacobian cases}
+The following criterion describes what a Jacobian in the $S$-order
+family would have to satisfy. Partial nonvanishing computations do not
+settle its $156$ polarized classes.
+
+'''+smaller)
+add('quotients','05-open-questions',r'''\section{Questions left by the classification}
+Three finite questions remain particularly concrete.
+\begin{enumerate}[leftmargin=*]
+\item Which of the $156$ full-$S$ principal classes are canonical Jacobians?
+The ten-class $R$-containing theorem does not answer this question.
+A partial theta count is evidence only until the required threshold and
+all model, enclosure and execution hypotheses have been met.
+\item Are the definition-degree lower bounds $8$ and $4$ sharp for the
+remaining $16$ and $4$ underlying classes, respectively? A minimum degree
+is different from a unique smallest embedded field of definition.
+\item For each of the $108$ obstructed varieties, what is the union of
+principal-target kernels over its $26$ minimum polarization forms?
+The fixed-form count cannot simply be multiplied by $26$, since kernels
+may recur and target classes may coincide.
+\end{enumerate}
+These questions extend the proved classification and do not enter its
+proofs. The construction supplies a finite testing ground for integral
+CM geometry and descent; it asserts neither new points on McMullen's
+curve nor a general classification of abelian sixfolds.
+''')
+hintro=r'''\section{Purpose and notation}
+This supporting note records explicit Hodge-algebraicity arguments for the
+fixed field $M=\mathbb Q(\zeta_{42})$. The strongest statement is
+Theorem~\ref{eight:thm:all}: arbitrary finite mixed products of the eight
+rank-one $M$ CM-type orbits. The earlier mixed-power and six-orbit results
+are retained as proof stages, rather than presented as separate novelty
+claims. They supply source tensors used in the final argument.
+
+A rank-one $M$ sixfold means a complex abelian sixfold whose rational first
+cohomology has dimension one over $M$. Embeddings are labelled by units
+modulo $42$. We use $K=\mathbb Q(\sqrt{-3})$, $L=M^+$ and
+$\Phi_B=\{1,5,23,25,29,31\}$. The symbols $A_A,A_B,A_C$ in the packet
+corollary refer to the geometric fibers of Paper I, Theorem~\ref{thm:A}.
+That application uses only their stated isogeny classes; the abstract
+mixed-product theorem does not rely on the packet intersection search.
+
+The route is: explicit algebraic input cycles, a saturated integral
+character-relation lattice, tensor products and contractions, and rational
+descent. A rational relation basis alone would not justify the integral
+step. Computational relation checks supplement the arguments; they do
+not by themselves prove cycle algebraicity.
+
+OpenAI's proposed general CM theorem \cite{OpenAICM2026}, if valid,
+implies the conclusions here. Andr\'e's reduction and the split-Weil
+literature \cite{Andre1992,MilneHodge2020,Markman2025,Schoen1998}, and the
+Fermat antecedents discussed by Saller \cite{Saller2026}, must be included
+in assessing novelty. This note claims neither a new general CM range
+nor an independent verification of the OpenAI theorem. The reported Aoki
+route is not an adopted proof input. Its role is to document the explicit
+fixed-field construction supporting the two arithmetic-geometric papers.
+
+Theorem~\ref{ext:thm:mixed} is proved by the algebraic input construction
+and the synchronized relation calculation of
+Sections~\ref{ext:sec:inputs}--\ref{ext:sec:lattice}.
+The individual-powers statement follows from the eight-type analysis
+following that calculation; the last section proves the full mixed result.
+'''
+add('hodge','01-introduction',hintro)
+add('hodge','02-hodge-proofs',cut(1166,2165).replace('Theorem~A','Theorem~\\ref{thm:A}').replace('the geometric types $\\Phi$ above','the geometric types $\\Phi$ of Paper I').replace('the geometric type fixed earlier','the geometric type $\\Phi_B$ just specified'))
+add('hodge','03-boundaries',r'''\section{Scope and further questions}
+The field is fixed throughout. No additional CM point on a curve is
+constructed, and isogeny invariance does not identify principal
+polarizations. The useful continuation is a precise comparison of the
+explicit source cycles and saturated relation presentations with the
+classical Fermat results and broader CM constructions. A future general
+statement would require its own algebraic inputs and integral generation
+proof, rather than extrapolation from this finite character census.
+''')
+sintro=r'''\section{How to use this supplement}
+This supplement contains the detailed packet arithmetic, historical
+exclusion records, auxiliary lattice arguments and execution provenance
+used by Papers I and II and the supporting Hodge note. It is organized by
+mathematical role. The historical partial computations are explicitly
+separated from the final complete packet theorem in Paper I.
+
+Notation in packet sections is $M=\mathbb Q(\zeta_{42})$, $L=M^+$,
+$t=\zeta_{42}+\zeta_{42}^{-1}$ and
+$\pi=t^4+t^3-4t^2-2t+5$ of norm $43$. In quotient-family material,
+$\pi$ instead denotes $1-z^{14}$, the generator over $3$ specified in
+Paper II; these symbols must not be identified. Embeddings are ordered
+$1,5,11,13,17,19$; $K=\mathbb Q(\sqrt{-3})$.
+
+The roles of evidence are distinct: a finite-domain proof establishes
+exhaustiveness; exact arithmetic or outward enclosures justify decisions;
+source/runtime and retained-output records describe the execution to which
+the claim is bound. A hash establishes file identity, not mathematical
+correctness or absence of a historical transient replacement.
+
+\subsection{Result-to-evidence guide}
+\begin{description}[leftmargin=1em]
+\item[Packet domain.] Paper I, Theorem~\ref{thm:fullpacketarithmetic},
+uses the order and module calculations below and the full-packet arithmetic
+sources in Section~\ref{app:computer}.
+\item[Curve intersection.] Paper I, Theorem~\ref{thm:fullpacketgeometry},
+uses its two-region lemma, positive vertex realizations and both complete
+negative populations. The final receipt is
+\path{experiments/continuous_v83/whole_packet_assessment/final-adoption.json}.
+The historical execution premise in Paper I remains required.
+\item[Principal geometry.] The common-lattice, stabilizer and map proofs
+are in Paper I. Their named exact regressions and the supplementary
+individual-lattice arguments below do not replace those proofs.
+\item[Finite quotients and descent.] Paper II names the adopted exact
+finite tables within its proofs. Subgroup, underlying, polarized, orbit
+and field counts are different assertions, with different proof inputs.
+\item[Jacobian exclusion.] Paper II, Theorem~\ref{pp:thm:jacobiancomplete},
+retains its model, theta-enclosure and execution contract. Counts cannot be
+pooled across the four models. The $156$ smaller-order cases remain open.
+\item[Hodge tensors.] The Hodge note gives the algebraic constructions and
+integral relation arguments; source identity alone does not prove either.
+\end{description}
+This is a navigation guide, not a newly completed transitive evidence
+archive. The repository remains private. Historical source paths are
+relative to its root; a release must provide the complete dependencies
+and accurate access instructions before claiming reproducibility.
+'''
+add('supplement','01-guide',sintro)
+add('supplement','02-arithmetic',cut(2482,3289))
+add('supplement','03-historical-exclusions',r'''\section{Historical exclusion batches and their exact scope}
+The following records retain their original target populations and counts.
+Only the complete two-region theorem of Paper I supplies the full-curve
+conclusion for the whole packet. In every statement below that concludes
+curve exclusion, the packet execution premise of Paper I is inherited;
+no local summary removes that premise.
+
+'''+cut(3636,4156)+cut(4257,4766))
+add('supplement','04-local-lattices',r'''\section{Individual self-dual models and lost automorphisms}
+These constructions establish the local obstructions and special-fiber
+alternatives. Paper I uses one common nonfree subgroup for its global
+family; an arbitrary individual choice is not silently substituted for it.
+
+'''+cut(4964,5099))
+add('supplement','05-units-and-maximal-packet',r'''\section{Units, orientations and the maximal subpacket}
+The class-number and unit-norm arguments are also inputs to the integral
+geometry of both papers. Maximal-subpacket curve conclusions retain the
+packet execution premise; arithmetic orientation statements do not acquire
+an unrelated geometric-search assumption.
+
+'''+cut(9100,9512))
+add('supplement','06-comparison',r'''\section{Comparison with the proposed Hecke reduction}
+The comparison is subsidiary to the positive results. The following
+summary is proved by the detailed arguments in this section and the
+polarization computation in Paper I. It does not identify the constructed
+principal family with a different moduli normalization.
+
+'''+env('thm:B')+cut(2165,2481).replace('\\part{Audit of the published Hecke reduction}','').replace('\\section{','\\subsection{').replace('\\subsection{The exact polarization-adjoint','\\subsubsection{The exact polarization-adjoint'))
+add('supplement','07-execution',cut(9606,9937).split('\\begin{thebibliography}')[0].replace('packet execution hypothesis stated in the introduction','packet execution hypothesis stated in Paper I').replace('Appendix','Section'))
+# Resolve hard-coded global theorem and appendix wording after reassignment.
+for doc in parts:
+ for k,(name,x) in enumerate(parts[doc]):
+  x=x.replace('Theorem~A','Theorem~\\ref{thm:A}').replace('Theorem A','Theorem~\\ref{thm:A}')
+  x=x.replace('Part~II','the comparison section of the supplement')
+  x=x.replace('This appendix contains','This supplement contains').replace('paths in this appendix','paths in this supplement')
+  if doc!='packet':x=x.replace('the normalized vertices in this paper','the normalized vertices of Paper I')
+  parts[doc][k]=(name,x)
+# Ownership by labels and all statement preservation. Unlabelled statements are
+# also located by normalized bytes in the saved receipt.
+owner={}
+for doc,ps in parts.items():
+ for name,x in ps:
+  for lab in re.findall(r'\\label\{([^}]+)\}',x):
+   if lab in owner: raise ValueError(('duplicate label',lab,owner[lab],doc))
+   owner[lab]=doc
+# Global references to a removed editorial discussion get a precise companion locator.
+# All mathematical statements, including unlabelled ones, remain in the split.
+aliases={'sec:novelty':'sec:intro','rem:vertexfirst':'thm:A','rem:WKnormalization':'rem:WKnormalization'}
+for doc in parts:
+ for k,(name,x) in enumerate(parts[doc]):
+  for old,new in aliases.items(): x=x.replace('{'+old+'}','{'+new+'}')
+  parts[doc][k]=(name,x)
+# Bibliography: each document contains only its own cited sources.
+entries=dict(re.findall(r'\\bibitem\{([^}]+)\}(.*?)(?=\\bibitem|\\end\{thebibliography\})',s,re.S))
+common=s[:s.index('\\title{')]
+common=common.replace('\\setcounter{tocdepth}{1}','\\setcounter{tocdepth}{1}')
+common+=r'''
+\newcommand{\externalref}[2]{\textnormal{\csname doccode@#1\endcsname.\ifcsname xnumber@#2\endcsname\csname xnumber@#2\endcsname\else ?\fi}}
+\input{external-numbers.tex}
+'''
+for doc,(code,title) in titles.items(): common+='\\expandafter\\def\\csname doccode@'+doc+'\\endcsname{'+code+'}\n'
+(D/'preamble.tex').write_text(common)
+abses={
+'packet':r'''We determine the intersection of a fixed marked CM norm packet with
+McMullen's normalized curve. Its arithmetic census has $3520$
+trace-labelled integral matrix classes and $368$ quotient points.
+Under explicitly stated historical execution assumptions, exactly three
+quotient points occur on the curve. We distinguish their nonprincipal
+trace polarizations from a common self-dual lattice modification, which
+gives principal models on a connected finite-cover RM family. The three
+principal models remain distinct after forgetting polarizations and
+markings. For the B/C models, the minimum unrestricted isogeny degree is
+$7$, while the minimum scalar-polarized degree is $64$. A unit twist
+preserves the principal curve image and gives six distinct principal Weil
+points. The Hodge consequences concern the specified fibers; identification
+with a differently normalized principal moduli locus remains open.''',
+'quotients':r'''Starting from the primitive six-dimensional factor of the Jacobian
+of $y^2=x^{21}-1$, we classify a finite family of integral quotients and
+minimum polarizations. The source and its order-$27$ quotients give $189$
+underlying complex isomorphism classes and $2969$ minimum polarized
+classes. Of the $188$ quotient classes, $80$ are principalizable and $108$
+are not; we determine their minimum forms and distinguish target counts
+from kernel counts. We compute the Galois action and fields of moduli,
+then prove a descent obstruction and construct a common field of
+definition of degree $24$. Minimum absolute definition degrees are sharp
+for $168$ quotient classes, with $20$ cases left as lower bounds.
+A restricted ten-class Jacobian classification is stated under its
+explicit enclosure and execution assumptions; $156$ smaller-order
+principal Jacobian questions remain open.''',
+'hodge':r'''We present explicit algebraic-cycle and character-lattice arguments
+for products of CM abelian varieties attached to the fixed field
+$\mathbb Q(\zeta_{42})$. Integral relation generation, algebraic source
+tensors and contractions yield the stated mixed-product algebraicity
+results for its eight rank-one sixfold type orbits. The note records the
+proof inputs used by the packet and quotient papers and distinguishes
+rational Hodge conclusions from integral polarizations and curve
+placement. It is a fixed-field supporting calculation, not a claim of a
+new general CM Hodge theorem or a verification of a proposed general one.''',
+'supplement':r'''This supplement records the arithmetic domain, orientation and
+module calculations, retained geometric exclusion batches, auxiliary
+lattice constructions and execution provenance for two papers on a fixed
+CM packet and a finite quotient family. It separates mathematical
+exhaustiveness, exact decision procedures and historical execution
+assumptions. A subsidiary comparison explains the normalization and
+Hecke-search issues relevant to prior work. The document provides an
+evidence guide for the private research workspace; it does not claim a
+new full-suite replay or a complete public evidence archive.'''}
+for doc,ps in parts.items():
+ alltext='\n'.join(x for _,x in ps)
+ missing=set(re.findall(r'\\(?:eqref|ref|pageref|autoref)\{([^}]+)\}',alltext))-set(owner)
+ if missing: raise ValueError((doc,'missing owners',missing))
+ code,title=titles[doc]
+ cover='\\input{preamble.tex}\n\\title{'+title+'}\n\\author{Rollins Waltchack}\n\\date{3 November 2026 --- private revised draft}\n\\begin{document}\n\\maketitle\n\\begin{abstract}\n'+abses[doc]+'\n\\end{abstract}\n'
+ cover+=r'''\paragraph{Companion references.}
+Result numbers prefixed I, II, H and S refer respectively to the packet
+paper, quotient paper, supporting Hodge note and computational supplement.
+Each document has its own numbering and bibliography. The present text is
+a private revision; complete independent proof review and evidence-release
+checks remain separate from this editorial restructuring.
+\tableofcontents
+'''
+ for name,x in ps:
+  # No dangling refs: external references are visibly prefixed, not fake local labels.
+  for match in list(re.finditer(r'\\(eqref|ref|pageref|autoref)\{([^}]+)\}',x))[::-1]:
+   typ,lab=match[1],match[2]
+   if owner[lab]!=doc:
+    replacement='\\externalref{'+owner[lab]+'}{'+lab+'}'
+    if typ=='eqref':replacement='('+replacement+')'
+    x=x[:match.start()]+replacement+x[match.end():]
+  # Sections moved out of the old appendix are no longer called appendices.
+  x=x.replace('Appendix~\\externalref','Supplement, Section~\\externalref').replace('Appendix~\\ref','Section~\\ref')
+  directory=D/'sections'/doc;directory.mkdir(parents=True,exist_ok=True)
+  (directory/(name+'.tex')).write_text(x)
+  cover+='\\input{sections/'+doc+'/'+name+'.tex}\n'
+ cited=set(k.strip() for v in re.findall(r'\\cite(?:\[[^\]]*\])?\{([^}]+)\}',alltext) for k in v.split(','))
+ assert not(cited-set(entries)),cited-set(entries)
+ bib='\\begin{thebibliography}{99}\n'+''.join('\\bibitem{'+k+'}'+v for k,v in entries.items() if k in cited)+'\\end{thebibliography}\n'
+ (D/(doc+'-references.tex')).write_text(bib)
+ cover+='\\input{'+doc+'-references.tex}\n\\end{document}\n';(D/(doc+'.tex')).write_text(cover)
+(D/'label_owners.json').write_text(json.dumps(owner,indent=2)+'\n')
+if not (D/'external-numbers.tex').exists():(D/'external-numbers.tex').write_text('% Filled from compiled auxiliary files.\n')
+(D/'extraction_receipt.json').write_text(json.dumps({'source_sha256':hashlib.sha256(s.encode()).hexdigest(),'label_owners':len(owner),'sections':{doc:[name for name,_ in ps] for doc,ps in parts.items()},'scope':'Editorial extraction and rewriting; no theorem promotion; source snapshot retained'},indent=2)+'\n')
+print({doc:sum(x.count('\n') for _,x in ps) for doc,ps in parts.items()})

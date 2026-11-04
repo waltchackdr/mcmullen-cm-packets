@@ -1,0 +1,71 @@
+{
+  "bounds": {
+    "container_disk_gb": 5,
+    "independent_remote_delete_seconds_from_creation": 1500,
+    "local_delete_seconds_from_creation": 1200,
+    "maximum_total_hourly_rate_usd": 0.35,
+    "persistent_volume_gb": 0,
+    "proposed_reservation_usd": 0.5,
+    "vcpu": 2
+  },
+  "code": {
+    "artifact_selection.py": {
+      "bytes": 2065,
+      "path": "experiments/bc_jacobian_v147/runtime/artifact_selection.py",
+      "sha256": "2b9cfc3d89a8f3a8cfd4379fc5e900fc6f2b7f652466a03c906ad8bd1d9dc4b8"
+    },
+    "artifact_store_candidate.py": {
+      "bytes": 3114,
+      "path": "experiments/final_binding_v124/artifact_store_candidate.py",
+      "sha256": "dd5d43b5427e82dc86f4b907c732098edb6d27c77a1084af226d45441746baef"
+    },
+    "guard_candidate.py": {
+      "bytes": 3840,
+      "path": "experiments/bc_jacobian_v147/runtime/guard_candidate.py",
+      "sha256": "e5c6f7f4da26daa5be73707bd4179447e229577519cbe500e432cffede48da87"
+    },
+    "http_server_candidate.py": {
+      "bytes": 8542,
+      "path": "experiments/bc_jacobian_v147/runtime/http_server_candidate.py",
+      "sha256": "c3f8ee5e5ad2792701c6ab85037bc0c03aea88006a5e58aafeb1383b7a326a96"
+    },
+    "job_manifest.json": {
+      "bytes": 816,
+      "path": "build/theta-v147/certificate_preparation04/job_manifest.json",
+      "sha256": "945ed3a821b0b24ed3dbebc2724a24ea9ad788bf9377ca2c8063291e7aa53eaf"
+    },
+    "service_core_candidate.py": {
+      "bytes": 5488,
+      "path": "experiments/bc_jacobian_v147/runtime/service_core_candidate.py",
+      "sha256": "db625f0c7754fdc0c0be328452d0750e5ada7d08fa10cc6d072f9ec13b6c202b"
+    }
+  },
+  "status": "CANDIDATE_NOT_APPROVED",
+  "uploads": {
+    "pipeline": {
+      "bytes": 8124,
+      "path": "experiments/bc_jacobian_v147/runtime/certificate_pipeline_candidate.py",
+      "sha256": "66f56bce87cb64919361f133d5a393b570bddc7be177b4afbd593ce23984579b"
+    },
+    "selector": {
+      "bytes": 2065,
+      "path": "experiments/bc_jacobian_v147/runtime/artifact_selection.py",
+      "sha256": "2b9cfc3d89a8f3a8cfd4379fc5e900fc6f2b7f652466a03c906ad8bd1d9dc4b8"
+    },
+    "setup": {
+      "bytes": 7925,
+      "path": "experiments/bc_jacobian_v147/runtime/setup_candidate.py",
+      "sha256": "9afceb4fbfa8d1f6089a94d2a5a1ac490227f904d280c219fbb670e2457db37b"
+    },
+    "source_manifest": {
+      "bytes": 3040,
+      "path": "build/theta-v147/certificate_preparation04/source_manifest.json",
+      "sha256": "85d83232d88b4cbcd59b5911f4f6aa22d6f6a28227998d0cd5638b3d43ed7ed0"
+    },
+    "source_tar": {
+      "bytes": 409600,
+      "path": "build/theta-v147/certificate_preparation04/source.tar",
+      "sha256": "ec1e0c57edf6e46e7fba362eb496e8459ec6d40e24c40771867acef9df7a17c4"
+    }
+  }
+}

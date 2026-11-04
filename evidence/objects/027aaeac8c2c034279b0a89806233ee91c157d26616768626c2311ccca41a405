@@ -1,0 +1,13 @@
+{
+  "status": "PASS",
+  "candidate_sha256": "a8c5c26fc07808e1247809b4a231e1d0c3f2aed46598e939060d51b3c93dd8e7",
+  "observations": [
+    "seven_missing_wrong_or_duplicate_auth_cases_rejected",
+    "authenticated_index_and_two_manifest_bindings_match",
+    "cross_job_manifest_upload_rejected_then_ten_bound_uploads_accepted",
+    "cross_job_artifact_digest_rejected",
+    "actual_handler_one_shot_order_and_predecessor_success_required",
+    "telemetry_adapter_actual_handler_composition_preserves_job_identity"
+  ],
+  "scope": "Actual unchanged HTTP handler with new actual archive uploads; fake guard and processes; no cloud or model execution."
+}

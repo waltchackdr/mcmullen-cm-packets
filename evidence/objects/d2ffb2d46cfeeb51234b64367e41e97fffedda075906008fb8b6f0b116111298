@@ -1,0 +1,51 @@
+#!/usr/bin/env python3
+"""Exact identities underlying the structural K3,3 proof; stdlib only."""
+from hashlib import sha256
+from pathlib import Path
+from collections import Counter
+import json
+
+ROOT = Path(__file__).resolve().parents[2]
+SOURCE = "experiments/fixed_field_cm_census_v98/primary.json"
+SOURCE_SHA = "2135edfe6a09b1a2c51a254f80e4570a761674e5be3208c15c549087f225917e"
+G = [1,5,11,13,17,19,23,25,29,31,37,41]
+T2 = [[0,-1,0,0,-1],[-1,1,1,0,1],[0,0,-1,1,0],
+      [1,-1,0,0,0],[-1,1,0,-1,1],[1,0,0,0,-1]]
+N = [[-1,0,-1,0,0,0,0,-1,0],[1,0,0,0,0,-1,0,0,-1],
+     [0,-1,1,0,0,0,-1,0,0],[0,1,0,1,0,0,0,0,1],
+     [0,0,0,-1,-1,0,0,1,0],[0,0,0,0,1,1,1,0,0]]
+
+
+def check():
+    raw = (ROOT / SOURCE).read_bytes()
+    assert sha256(raw).hexdigest() == SOURCE_SHA
+    types = json.loads(raw)["orbits"]
+    full_factors = [[tuple(1 if a*g%42 in types[index]["representative"] else -1 for g in G)
+                     for a in G] for index in (0,4)]
+    assert len(set(full_factors[0])) == 12
+    assert Counter(Counter(full_factors[1]).values()) == {2:6}
+    columns = full_factors[0][:6] + full_factors[1][:3]
+    assert len(set(columns + [tuple(-x for x in c) for c in columns])) == 18
+    full = [list(r) for r in zip(*columns)]
+    W = full[:5]
+    coefficients = [-1,1,1,-1,1]
+    assert full[5] == [sum(coefficients[k]*W[k][j] for k in range(5)) for j in range(9)]
+    assert full[6:] == [[-x for x in row] for row in full[5::-1]]
+    assert [[sum(T2[i][k]*W[k][j] for k in range(5)) for j in range(9)] for i in range(6)] == [[2*x for x in row] for row in N]
+    edges = []
+    for col in zip(*N):
+        assert Counter(col) == {-1:1,0:4,1:1}
+        edges.append([col.index(-1),col.index(1)])
+    p,q = {0,3,5},{1,2,4}
+    assert {frozenset(edge) for edge in edges} == {frozenset((a,b)) for a in p for b in q}
+    return {"status":"PASS_EXACT_K33_IDENTITIES_HUMAN_FLOW_PROOF_REQUIRED",
+            "input_sha256":{SOURCE:SOURCE_SHA},"full_weight_matrix":full,"W":W,
+            "twice_T":T2,"N":N,"oriented_edges":edges,
+            "bipartition":[sorted(p),sorted(q)],"sixth_row_coefficients":coefficients,
+            "human_consequence":"Connected incidence rank5 identifies kernels; integral flows decompose into simple4/6cycles. This is the structural argument, not inferred from bounded enumeration.",
+            "new_geometry":False}
+
+
+if __name__ == "__main__":
+    assert __debug__
+    print(json.dumps(check(),indent=2,sort_keys=True))

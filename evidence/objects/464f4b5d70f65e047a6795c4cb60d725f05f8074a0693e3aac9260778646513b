@@ -1,0 +1,216 @@
+#!/usr/bin/env python3
+"""Run the full research gate from a clean immutable Git source candidate.
+
+This wraps verify_all.sh; it never skips certificates or reuses old results.
+Run with the desired Python interpreter, which is passed to every certificate.
+"""
+from pathlib import Path
+import argparse
+import datetime as dt
+import hashlib
+import json
+import os
+import platform
+import shutil
+import subprocess
+import sys
+
+ROOT = Path(__file__).resolve().parents[1]
+GENERATED = frozenset(("dashboard/index.html", "logs/last_certificate_run.txt"))
+EXECUTION_SUFFIXES = frozenset((".py", ".js", ".json", ".jsonl"))
+
+
+def git(root, *args):
+    return subprocess.check_output(["git", "-C", str(root), *args])
+
+
+def source_manifest(root, include_generated=False):
+    """All tracked source/data/proof files, except the two declared outputs."""
+    paths = git(root, "ls-files", "-z").decode().split("\0")
+    manifest = {}
+    for rel in sorted(filter(None, paths)):
+        if rel in GENERATED and not include_generated:
+            continue
+        path = root / rel
+        if path.is_symlink() or not path.is_file():
+            raise RuntimeError(f"Source must be a regular file: {rel}")
+        manifest[rel] = {
+            "sha256": hashlib.sha256(path.read_bytes()).hexdigest(),
+            "executable": bool(path.stat().st_mode & 0o111),
+            "bytes": path.stat().st_size,
+        }
+    return manifest
+
+
+def committed_manifest(root):
+    """Read HEAD blobs and modes, independently of index flags or git status."""
+    manifest = {}
+    for entry in filter(None, git(root, "ls-tree", "-rz", "HEAD").split(b"\0")):
+        metadata, path = entry.split(b"\t", 1)
+        mode, kind, oid = metadata.decode().split()
+        rel = path.decode()
+        if kind != "blob" or mode not in ("100644", "100755"):
+            raise RuntimeError(f"Committed source must be a regular file: {rel}")
+        data = git(root, "cat-file", "blob", oid)
+        manifest[rel] = {
+            "sha256": hashlib.sha256(data).hexdigest(),
+            "executable": mode == "100755",
+            "bytes": len(data),
+        }
+    return manifest
+
+
+def clean_source(root):
+    status = git(root, "status", "--porcelain=v1", "--untracked-files=all").decode()
+    if status:
+        raise RuntimeError("Release requires a clean checkout at start:\n" + status)
+    actual = source_manifest(root, include_generated=True)
+    committed = committed_manifest(root)
+    differences = sorted(p for p in actual.keys() | committed.keys()
+                         if actual.get(p) != committed.get(p))
+    if differences:
+        raise RuntimeError("Checkout differs from committed HEAD blobs/modes: "
+                           + ", ".join(differences))
+    tracked = set(filter(None, git(root, "ls-files", "-z").decode().split("\0")))
+    # Ignored local source can shadow an import while git status stays clean.
+    for directory in ("certificates", "independent", "experiments", "scripts", "tests"):
+        for path in (root / directory).rglob("*"):
+            if path.is_file() and path.suffix in EXECUTION_SUFFIXES:
+                rel = path.relative_to(root).as_posix()
+                if rel not in tracked:
+                    raise RuntimeError(f"Untracked execution input: {rel}")
+    return git(root, "rev-parse", "HEAD").decode().strip()
+
+
+def write_json(path, data):
+    temp = path.with_suffix(path.suffix + ".tmp")
+    temp.write_text(json.dumps(data, indent=2, sort_keys=True) + "\n")
+    temp.replace(path)
+
+
+def checked_version(command, env):
+    result = subprocess.run(command, env=env, capture_output=True, text=True)
+    if result.returncode:
+        raise RuntimeError(f"Runtime probe failed: {command}: {result.stderr}")
+    return result.stdout.strip() or result.stderr.strip()
+
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--output-dir", type=Path, required=True,
+                        help="New ignored build directory or external evidence directory")
+    parser.add_argument("--preflight-only", action="store_true")
+    args = parser.parse_args()
+    if not __debug__:
+        raise RuntimeError("Assertions must be enabled; do not use Python -O/-OO.")
+    commit = clean_source(ROOT)
+    out = args.output_dir.resolve()
+    if out.exists():
+        raise RuntimeError(f"Refusing to replace existing evidence: {out}")
+    # Evidence must not appear as untracked source in the candidate.
+    if out.is_relative_to(ROOT):
+        rel = out.relative_to(ROOT)
+        if not rel.parts or rel.parts[0] != "build":
+            raise RuntimeError("In-checkout evidence must be under ignored build/.")
+    before = source_manifest(ROOT)
+    env = dict(os.environ)
+    env.pop("PYTHONPATH", None)
+    env.pop("PYTHONOPTIMIZE", None)
+    env.update(VERIFY_PYTHON=sys.executable, REQUIRE_LATEX="1",
+               PYTHONUNBUFFERED="1", PYTHONDONTWRITEBYTECODE="1",
+               PYTHONPYCACHEPREFIX=str(out / "pycache"),
+               CERT_RUN_DIR=str(out / "certificates"))
+    workers = int(env.get("CERT_WORKERS", "4"))
+    if not 1 <= workers <= 4:
+        raise RuntimeError("This local release gate permits 1–4 certificate workers.")
+    env["CERT_WORKERS"] = str(workers)
+    runtime = {
+        "python": sys.version,
+        "python_executable": sys.executable,
+        "assertions_enabled": __debug__,
+        "platform": platform.platform(),
+        "sympy": checked_version([sys.executable, "-c",
+                                 "import sympy; print(sympy.__version__)"], env),
+        "node": checked_version(["node", "--version"], env),
+        "node_executable": shutil.which("node"),
+        "certificate_workers": workers,
+    }
+    if runtime["sympy"] != "1.14.0":
+        raise RuntimeError("The release requires the pinned SymPy 1.14.0.")
+    # Match verify_all.sh's engine precedence; a configured binary is used
+    # only if neither pdflatex nor latexmk is on PATH.
+    engine = (shutil.which("pdflatex") or shutil.which("latexmk")
+              or env.get("TECTONIC_BIN") or shutil.which("tectonic"))
+    if not engine:
+        raise RuntimeError("A LaTeX engine is required for the release gate.")
+    runtime["latex_engine"] = engine
+    runtime["latex_version"] = checked_version([engine, "--version"], env)
+    out.mkdir(parents=True, exist_ok=True)
+    manifest_path = out / "source-before.json"
+    write_json(manifest_path, before)
+    record = {
+        "commit": commit, "runtime": runtime, "command": ["bash", "./verify_all.sh"],
+        "source_manifest_sha256": hashlib.sha256(manifest_path.read_bytes()).hexdigest(),
+        "declared_generated_paths": sorted(GENERATED),
+        "started_utc": dt.datetime.now(dt.timezone.utc).isoformat(),
+        "status": "preflight" if args.preflight_only else "running",
+        "preflight_only": args.preflight_only,
+    }
+    write_json(out / "release.json", record)
+    if args.preflight_only:
+        print(f"RELEASE PREFLIGHT: PASS (no certificates executed); commit {commit}")
+        return
+    print(f"RELEASE START: {commit}; evidence {out}", flush=True)
+    with (out / "verification.log").open("wb") as log:
+        result = subprocess.run(record["command"], cwd=ROOT, env=env,
+                                stdout=log, stderr=subprocess.STDOUT)
+    try:
+        after = source_manifest(ROOT)
+        write_json(out / "source-after.json", after)
+        changed = sorted(p for p in before.keys() | after.keys()
+                         if before.get(p) != after.get(p))
+        same_commit = git(ROOT, "rev-parse", "HEAD").decode().strip() == commit
+        # Include new non-ignored source and ignored execution-input files.
+        untracked = git(ROOT, "ls-files", "--others", "--exclude-standard", "-z")
+        extra = list(filter(None, untracked.decode().split("\0")))
+        tracked = set(filter(None, git(ROOT, "ls-files", "-z").decode().split("\0")))
+        for directory in ("certificates", "independent", "experiments", "scripts", "tests"):
+            for path in (ROOT / directory).rglob("*"):
+                rel = path.relative_to(ROOT).as_posix()
+                if path.is_file() and path.suffix in EXECUTION_SUFFIXES and rel not in tracked:
+                    extra.append(rel)
+    except Exception as exc:
+        record.update(status="failed", error=f"Source integrity check: {exc}",
+                      verification_exit_code=result.returncode,
+                      finished_utc=dt.datetime.now(dt.timezone.utc).isoformat())
+        write_json(out / "release.json", record)
+        raise SystemExit(1)
+    record.update(
+        finished_utc=dt.datetime.now(dt.timezone.utc).isoformat(),
+        verification_exit_code=result.returncode, changed_sources=changed,
+        unexpected_untracked=sorted(set(extra)), same_commit=same_commit,
+    )
+    passed = result.returncode == 0 and not changed and not extra and same_commit
+    record["status"] = "passed" if passed else "failed"
+    pdf = ROOT / "build/latest.pdf"
+    if passed:
+        if not pdf.is_file():
+            record["status"] = "failed"
+            record["error"] = "Verifier exited zero without the required PDF."
+        else:
+            shutil.copy2(pdf, out / "manuscript.pdf")
+            record["pdf_sha256"] = hashlib.sha256(pdf.read_bytes()).hexdigest()
+    record["verification_log_sha256"] = hashlib.sha256(
+        (out / "verification.log").read_bytes()).hexdigest()
+    record["certificate_artifacts_sha256"] = {
+        str(path.relative_to(out)): hashlib.sha256(path.read_bytes()).hexdigest()
+        for path in sorted((out / "certificates").glob("*")) if path.is_file()
+    }
+    write_json(out / "release.json", record)
+    print(f"RELEASE GATE: {record['status'].upper()}; evidence {out}", flush=True)
+    if record["status"] != "passed":
+        raise SystemExit(1)
+
+
+if __name__ == "__main__":
+    main()

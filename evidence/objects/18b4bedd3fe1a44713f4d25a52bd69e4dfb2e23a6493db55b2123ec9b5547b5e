@@ -1,0 +1,54 @@
+"""Independent Fraction checks of the loader predicate; no numerical library."""
+import copy,hashlib,importlib.util,json,resource,signal,time
+from fractions import Fraction as Q
+from pathlib import Path
+ROOT=Path(__file__).resolve().parents[2]
+def run():
+ p=ROOT/'experiments/s_order_theta_v164/period_loader_candidate.py'
+ spec=importlib.util.spec_from_file_location('loader_referee05',p);loader=importlib.util.module_from_spec(spec);spec.loader.exec_module(loader)
+ def rational(v):
+  a,e=v
+  return Q(a*2**e) if e>=0 else Q(a,2**(-e))
+ def cell(mid,rad):return {'real':{'mid':mid,'rad':rad},'imag':{'mid':[0,0],'rad':[0,0]}}
+ tried=accepted=0
+ for radius in (0,1,2**28,2**29+1,2**30-1):
+  for exponent in (-512,-1,0,4):
+   original=cell([3,-2],[radius,exponent]);r=rational([radius,exponent])
+   candidates=([radius-1,exponent],[radius,exponent],[radius+1,exponent],
+    [radius*(2**28+1),exponent-28],[radius*(2**28+1)+1,exponent-28])
+   for rad in candidates:
+    for shift in (-1,0,1):
+     actual=cell([3+shift,-2],rad);ar=rational(rad);m=rational(actual['real']['mid']);sm=Q(3,4)
+     expected=(m==sm and ar>=0 and m-ar<=sm-r and m+ar>=sm+r and ar<=r*(1+Q(1,2**28)))
+     try:loader.validate_loaded_rectangle(actual,original);got=True
+     except (ValueError,KeyError,TypeError):got=False
+     assert got==expected,(radius,exponent,rad,shift,expected)
+     tried+=1;accepted+=got
+ extra=[]
+ original=cell([3,-2],[1,-512])
+ for name in ('zero_radius_inflated','boolean_radius','extra_component_field','missing_imag'):
+  actual=copy.deepcopy(original)
+  if name=='zero_radius_inflated':actual['imag']['rad']=[1,-1000]
+  if name=='boolean_radius':actual['real']['rad'][0]=True
+  if name=='extra_component_field':actual['real']['extra']=1
+  if name=='missing_imag':del actual['imag']
+  try:loader.validate_loaded_rectangle(actual,original)
+  except (ValueError,KeyError,TypeError):extra.append(name)
+  else:raise AssertionError(name)
+ prediction=json.loads((ROOT/'experiments/s_order_theta_v164/loader_diagnosis05/source_prediction.json').read_bytes());counts={}
+ for index in loader.REPRESENTATIVES:
+  model=json.loads((ROOT/f'build/s-order-v162/postprocessed01/model{index:03}.json').read_bytes());matrix=model['interval_period']['period_rectangles'];count=0
+  for row in matrix:
+   for source in row:
+    actual=copy.deepcopy(source)
+    for name in ('real','imag'):
+     n,e=source[name]['rad'];assert 0<=n and n.bit_length()<=30
+     if n.bit_length()==30:actual[name]['rad']=[n+1,e];count+=1
+     old=rational(source[name]['rad']);new=rational(actual[name]['rad'])
+     assert old<=new<=old*(1+Q(1,2**28))
+    loader.validate_loaded_rectangle(actual,source)
+  counts[index]=count
+ assert counts=={v['catalog_index']:v['predicted_enlarged_components'] for v in prediction['records']}
+ return {'status':'PASS_EXACT_RATIONAL_PREDICATE_AND_SOURCE_CONDITIONAL_EXAMPLES','predicate_cases':tried,'accepted':accepted,'rejected':tried-accepted,'extra_rejections':extra,'predicted_counts_by_target':counts,'actual_components_checked':720,'source_prediction_is_runtime_proof':False,'flint_imported':False,'theta_calls':0,'provider_calls':0}
+if __name__=='__main__':
+ resource.setrlimit(resource.RLIMIT_CPU,(20,20));signal.alarm(30);t=time.monotonic();result=run();result['wall_seconds']=time.monotonic()-t;print(json.dumps(result,sort_keys=True,indent=2))

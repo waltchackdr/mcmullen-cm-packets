@@ -1,0 +1,152 @@
+#!/usr/bin/env python3
+"""Independent positive witness validation, without importing search code."""
+import argparse
+from collections import Counter
+from fractions import Fraction
+import hashlib
+import json
+import math
+from pathlib import Path
+import resource
+import signal
+
+HERE=Path(__file__).resolve().parent
+ROOT=HERE.parents[1]
+SOURCE='experiments/all_eight_v109/source_manifest.json'
+SOURCE_SHA='e9fef2bb7d815bd62a6cdf6528ea205e080c8313b6121ac871a4ff6d708c4ee7'
+LATTICE='experiments/all_eight_v109/lattice.json'
+LATTICE_SHA='c63a6c8299d240535bf706b13095e8c7ae4292b7b4f7d89dd2c8d06b1294fe03'
+CENSUS='experiments/fixed_field_cm_census_v98/primary.json'
+CENSUS_SHA='2135edfe6a09b1a2c51a254f80e4570a761674e5be3208c15c549087f225917e'
+JOB='experiments/all_eight_v109/cloud/job_manifest.json'
+WORKER='experiments/all_eight_v109/cloud/source_worker.py'
+PARTITION='experiments/all_eight_v109/cloud/partition_search.py'
+G=tuple(g for g in range(1,42) if math.gcd(g,42)==1)
+SEEDS=[[(0,1,-1),(0,17,-1),(1,1,1),(2,1,1)],
+       [(0,1,1),(0,5,-1),(0,13,1),(1,1,-2),(3,1,1)]]
+
+
+def need(ok,msg):
+    if not ok: raise ValueError(msg)
+def digest(raw):return hashlib.sha256(raw).hexdigest()
+def integer(x):return type(x) is int
+
+def read(path,expected=None):
+    p=Path(path)
+    need(p.is_file() and not p.is_symlink(),'Missing or nonregular evidence path')
+    need(p.stat().st_size<=10*1024*1024,'Input size bound')
+    raw=p.read_bytes();h=digest(raw)
+    if expected is not None:need(h==expected,'Input hash mismatch: '+p.name)
+    return raw,h
+
+def cm_type(triple):
+    need(len(triple)==3 and all(integer(a) and 1<=a<=41 for a in triple),'Invalid character coordinates')
+    need(sum(triple)%42==0,'Nonzero character sum')
+    # Fractional ages are a separate direct implementation, not search helpers.
+    return [g for g in G if sum(Fraction(g*a,42)%1 for a in triple)==1]
+
+def balanced(entries):
+    need(all(integer(x) and 0<x<42 for x in entries),'Invalid block residue')
+    return all(sum(Fraction(g*x,42)%1 for x in entries)==Fraction(len(entries),2) for g in G)
+
+def block_check(block):
+    entries=block['entries'];n=len(entries)
+    need(n in (2,4,6),'Block length outside source criterion')
+    need(balanced(entries),'Block not balanced for every Galois embedding')
+    if n<6:
+        need(block['triple_positions'] is None,'Unexpected splitting field on small block')
+        return {'entries':entries,'all_Galois_ages':n//2,'zero_sum_triples':None}
+    positions=block['triple_positions']
+    need(isinstance(positions,list) and len(positions)==3 and all(integer(j) and 0<=j<6 for j in positions) and len(set(positions))==3,'Invalid explicit triple positions')
+    first=[entries[j] for j in positions];other=[entries[j] for j in range(6) if j not in positions]
+    need(sum(first)%42==0 and sum(other)%42==0,'Length6 block does not split into two nonzero zero-sum triples')
+    return {'entries':entries,'all_Galois_ages':3,'zero_sum_triples':[first,other]}
+
+def validate_case(case,copies,types):
+    need(len(case['sources'])==len(copies),'Source copy count mismatch')
+    gamma=[]
+    for source,copy in zip(case['sources'],copies):
+        need(source['copy_id']==copy['copy_id'],'Source label mismatch')
+        need(cm_type(source['triple'])==types[str(copy['orbit'])],'Actual source CM type mismatch')
+        residues=[copy['embedding']*a%42 for a in source['triple']]
+        need(source['residues']==residues,'Actual embedding residue mismatch')
+        gamma.extend(residues)
+    need(gamma==case['concatenated_residues'],'Concatenation mismatch')
+    need(balanced(gamma),'Full tensor is not a Hodge character')
+    return gamma
+
+def validate_record(record,task,job_hash,worker_hash,partition_hash,types):
+    need(record['terminal'] is True,'Nonterminal result is not a witness receipt')
+    for key,expected in [('task_index',task['task_index']),('tensor_degree',task['tensor_degree']),('copies',task['copies']),('case_count',task['case_count']),('manifest_sha256',job_hash),('worker_sha256',worker_hash),('partition_search_sha256',partition_hash)]:
+        need(record[key]==expected,'Result identity mismatch: '+key)
+    attempts=record['attempts']
+    need(isinstance(attempts,list) and len(attempts)<=task['case_count'],'Attempt domain')
+    positives=[]
+    for i,a in enumerate(attempts):
+        case=task['cases'][i]
+        need(all(a[k]==v for k,v in case.items()),'Attempt does not match its exact manifest case')
+        gamma=validate_case(case,task['copies'],types)
+        need(a['status'] in ('FOUND','INCOMPLETE','NO_PARTITION_THIS_PRESENTATION'),'Unknown attempt state')
+        if a['status']=='FOUND':
+            need(isinstance(a['blocks'],list) and a['blocks'],'Missing witness blocks')
+            blocks=[block_check(b) for b in a['blocks']]
+            need(Counter(x for b in blocks for x in b['entries'])==Counter(gamma),'Partition multiset mismatch')
+            positives.append({'case_id':case['case_id'],'source_case':case,'blocks':blocks})
+    if record['status']=='FOUND':
+        need(len(positives)==1 and attempts[-1]['status']=='FOUND','FOUND status lacks exactly one final positive witness')
+        return {'task_index':task['task_index'],'status':'POSITIVE_WITNESS_EXACTLY_VERIFIED','witness':positives[0]}
+    need(not positives,'Nonpositive result contains a positive witness')
+    need(record['status'] in ('NO_PARTITION_IN_LISTED_PRESENTATIONS','PARTIAL_UNRESOLVED','WORKER_ERROR'),'Unknown terminal state')
+    return {'task_index':task['task_index'],'status':'SOURCE_SEARCH_UNRESOLVED','reported_status':record['status'],'attempts_observed':len(attempts),'negative_search_exhaustiveness_independently_verified':False}
+
+def check(job_sha256,results_dir):
+    pins={}
+    def obj(name,expected=None):
+        raw,h=read(ROOT/name,expected);pins[name]=h;return json.loads(raw)
+    source=obj(SOURCE,SOURCE_SHA);lattice=obj(LATTICE,LATTICE_SHA);census=obj(CENSUS,CENSUS_SHA)
+    for path,expected in source['input_sha256'].items():
+        _,h=read(ROOT/path,expected);pins[path]=h
+    producer='experiments/all_eight_v109/prepare_manifest.py'
+    _,h=read(ROOT/producer,source['producer_sha256']);pins[producer]=h
+    job=obj(JOB,job_sha256)
+    extras={'worker_sha256','partition_search_sha256','source_manifest_sha256'}
+    need({k:v for k,v in job.items() if k not in extras}==source,'Cloud manifest differs from frozen source workload')
+    need(job['source_manifest_sha256']==SOURCE_SHA,'Source-manifest binding mismatch')
+    for path,key in [(WORKER,'worker_sha256'),(PARTITION,'partition_search_sha256')]:
+        _,h=read(ROOT/path,job[key]);pins[path]=h
+    need(job['modulus']==42 and job['units']==list(G),'Wrong character group')
+    need(len(job['tasks'])==2,'Task count mismatch')
+    need(job['canonical_types']=={str(i):census['orbits'][i]['representative'] for i in range(4)},'Canonical marked types mismatch')
+    for task_index,task in enumerate(job['tasks']):
+        expected=[]
+        for factor,a,coefficient in SEEDS[task_index]:
+            for k in range(abs(coefficient)):
+                expected.append({'copy_id':len(expected),'orbit':factor,'embedding':a if coefficient>0 else 42-a,
+                    'source_reduced_embedding':a,'sign':1 if coefficient>0 else -1,'repeated_coefficient_copy':k})
+        need(task['task_index']==task_index and task['copies']==expected,'Task differs from actual signed seed and distinct-copy allocation')
+        vector=[0]*32
+        for factor,a,c in SEEDS[task_index]: vector[lattice['column_order'].index([factor,a])]+=c
+        need(vector==lattice['new_generators'][task_index]['vector'],'Seed lattice mismatch')
+        need(task['tensor_degree']==len(expected) and task['case_count']==len(task['cases'])==[24,144][task_index],'Finite case contract mismatch')
+        for i,case in enumerate(task['cases']):
+            need(case['case_id']==i,'Case order mismatch');validate_case(case,expected,job['canonical_types'])
+    results=[]
+    for i,task in enumerate(job['tasks']):
+        path=Path(results_dir)/('task-%02d.json'%i)
+        if not path.exists():results.append({'task_index':i,'status':'MISSING_OUTPUT_UNRESOLVED'});continue
+        raw,h=read(path);pins[str(path)]=h
+        results.append(validate_record(json.loads(raw),task,job_sha256,job['worker_sha256'],job['partition_search_sha256'],job['canonical_types']))
+    return {'schema_version':1,'status':'INDEPENDENT_POSITIVE_WITNESS_VALIDATION_NOT_CYCLE_TRANSFER',
+       'input_sha256':pins,'tasks':results,'positive_tasks':sum(r['status']=='POSITIVE_WITNESS_EXACTLY_VERIFIED' for r in results),
+       'validator_sha256':digest(Path(__file__).read_bytes()),'new_Hodge_or_geometric_claim':False,
+       'scope':'Exact finite witnesses only; Shioda source transfer, actual endomorphism splitting, degree21 premise and all-powers contractions require their separate human proofs. No failed search disproves algebraicity.'}
+
+if __name__=='__main__':
+    if not __debug__:raise RuntimeError('Assertions must remain enabled')
+    resource.setrlimit(resource.RLIMIT_CPU,(20,20))
+    def timeout(*_):raise TimeoutError('30-second wall bound')
+    signal.signal(signal.SIGALRM,timeout);signal.alarm(30)
+    parser=argparse.ArgumentParser();parser.add_argument('--manifest-sha256',required=True)
+    parser.add_argument('--results-dir',type=Path,default=ROOT/'build/resume-v109/cloud')
+    args=parser.parse_args()
+    print(json.dumps(check(args.manifest_sha256,args.results_dir),sort_keys=True,indent=2))

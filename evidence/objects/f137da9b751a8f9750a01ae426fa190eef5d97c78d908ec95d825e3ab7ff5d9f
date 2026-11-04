@@ -1,0 +1,104 @@
+{
+  "counts": {
+    "J": 4,
+    "O": 2,
+    "R": 4
+  },
+  "orbit_count": 8,
+  "pins": {
+    "experiments/cm_polarization_v135/actual_bc_adoption.json": "756f8b531dbdf90afada30fe75824c861ee358a025d18f7f2df25187a0773cb3",
+    "experiments/cm_polarization_v135/adoption.json": "a0b57b45dc479e7ad8aa0f3d36d7f762476f4d3ad277e210e54d2150c5aaec55",
+    "experiments/fixed_field_cm_census_v98/independent.json": "8d2a5d643e3fca75f06270d9fa5d102d7d7711f1dfebd1dc7184c75445a1d4fe",
+    "experiments/fixed_field_cm_census_v98/primary.json": "2135edfe6a09b1a2c51a254f80e4570a761674e5be3208c15c549087f225917e"
+  },
+  "primitive_orbits": [
+    {
+      "classes_by_order_and_ideal": {
+        "J": 2,
+        "O": 0,
+        "R": 2
+      },
+      "flip_parity": 0,
+      "orbit_size": 12,
+      "representative": [
+        1,
+        5,
+        11,
+        13,
+        17,
+        19
+      ],
+      "stabilizer": [
+        1
+      ]
+    },
+    {
+      "classes_by_order_and_ideal": {
+        "J": 0,
+        "O": 1,
+        "R": 0
+      },
+      "flip_parity": 1,
+      "orbit_size": 12,
+      "representative": [
+        1,
+        5,
+        11,
+        13,
+        19,
+        25
+      ],
+      "stabilizer": [
+        1
+      ]
+    },
+    {
+      "classes_by_order_and_ideal": {
+        "J": 2,
+        "O": 0,
+        "R": 2
+      },
+      "flip_parity": 0,
+      "orbit_size": 12,
+      "representative": [
+        1,
+        5,
+        11,
+        17,
+        23,
+        29
+      ],
+      "stabilizer": [
+        1
+      ]
+    },
+    {
+      "classes_by_order_and_ideal": {
+        "J": 0,
+        "O": 1,
+        "R": 0
+      },
+      "flip_parity": 1,
+      "orbit_size": 12,
+      "representative": [
+        1,
+        5,
+        11,
+        23,
+        25,
+        29
+      ],
+      "stabilizer": [
+        1
+      ]
+    }
+  ],
+  "proof_inputs": [
+    "C64 ideal exhaustion",
+    "C65 marked polarization theorem",
+    "V145 unmarked reduction (pending review)"
+  ],
+  "status": "EXACT_DERIVED_TABLE_NOT_THEOREM_ADOPTION",
+  "type_count": 64,
+  "unmarked_total_conditional_on_proposal": 10
+}

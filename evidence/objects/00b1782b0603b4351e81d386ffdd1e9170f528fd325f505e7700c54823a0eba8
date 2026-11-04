@@ -1,0 +1,242 @@
+"""Candidate bounded remote task runner. No provisioning or deletion authority.
+
+An independently armed provider-deletion guard is still required by dispatch.
+This worker's deadline kills computations only; it cannot stop cloud billing.
+"""
+import argparse
+from concurrent.futures import ThreadPoolExecutor
+import hashlib
+import json
+import os
+from pathlib import Path
+import platform
+import signal
+import stat
+import subprocess
+import sys
+import threading
+import time
+
+BASE = Path(__file__).resolve().parent
+ROOT = BASE.parents[1]
+
+
+class SkipBeforeLaunch(Exception):
+    pass
+
+
+def require(ok, message):
+    if not ok:
+        raise RuntimeError(message)
+
+
+def read_regular(path, maximum=2*1024**2):
+    fd = os.open(path,os.O_RDONLY|os.O_NONBLOCK|os.O_NOFOLLOW)
+    with os.fdopen(fd,'rb') as stream:
+        info = os.fstat(stream.fileno())
+        require(stat.S_ISREG(info.st_mode) and info.st_size <= maximum, 'Invalid input file')
+        raw = stream.read(maximum+1)
+        require(len(raw) <= maximum, 'Input size bound')
+        return raw
+
+
+def digest(path):
+    return hashlib.sha256(read_regular(path)).hexdigest()
+
+
+def save(path, data):
+    temporary = path.with_suffix('.partial')
+    with temporary.open('w') as stream:
+        json.dump(data, stream, indent=2, sort_keys=True)
+        stream.write('\n')
+        stream.flush()
+        os.fsync(stream.fileno())
+    temporary.replace(path)
+
+
+def verify_pins(plan, root=ROOT):
+    root = root.resolve()
+    require(isinstance(plan['pins'],dict) and len(plan['pins']) <= 64, 'Input count bound')
+    total = 0
+    for name, pin in plan['pins'].items():
+        path = (root/name).resolve()
+        require(path.is_relative_to(root), 'Input path escape')
+        raw = read_regular(path)
+        total += len(raw)
+        require(total <= 16*1024**2 and hashlib.sha256(raw).hexdigest() == pin, 'Changed input')
+
+
+def validate_plan(plan, root=ROOT):
+    root = root.resolve()
+    require(plan['concurrency'] == 2 and plan['max_tasks'] == 8, 'Wrong task bounds')
+    tasks = plan['tasks']
+    require(len(tasks) == 8, 'Wrong task count')
+    verify_pins(plan, root)
+    mapped = json.loads(read_regular(root/'experiments/bc_jacobian_v147/reduced_fixed_pairs.json'))['models']
+    seen = set()
+    for model in ('B0','B1','C0','C1'):
+        require(sum(t.get('model') == model for t in tasks) == 2, 'Wrong model grid')
+    for t in tasks:
+        require(t['point'] == 'eligible_batch', 'Wrong point kind')
+        require(t['precision_bits'] == 96 and t['squared_theta'] is True, 'Wrong evaluation')
+        require((t['max_cpu_seconds'],t['child_wall_seconds'],t['parent_kill_seconds'])
+                == (120,150,160), 'Wrong child limits')
+        indices = t['pair_indices']
+        require(isinstance(indices,list) and 1<=len(indices)<=8, 'Batch size')
+        require(all(type(i) is int and 0<=i<130 for i in indices), 'Pair index')
+        require(indices == sorted(set(indices)), 'Duplicate or unordered indices')
+        selected = sorted(mapped[t['model']]['reduced_basis_pairs'])
+        require(t['numerators_mod3'] == [selected[i] for i in indices], 'Wrong pair selection')
+        require(t['characteristic_index'] == mapped[t['model']]['characteristic_index'],
+                'Wrong characteristic')
+        for i in indices:
+            key=(t['model'],i)
+            require(key not in seen, 'Duplicate pair across tasks')
+            seen.add(key)
+    return tasks
+
+
+def snapshot(plan, plan_bytes, target, root=ROOT):
+    """Copy only hash-verified bytes, then remove ordinary write permissions."""
+    root, target = root.resolve(), target.resolve()
+    target.mkdir(mode=0o700)
+    require(len(plan['pins']) <= 64, 'Snapshot count bound')
+    total = 0
+    for name, expected in plan['pins'].items():
+        source = (root/name).resolve()
+        require(source.is_relative_to(root), 'Snapshot path escape')
+        raw = read_regular(source)
+        total += len(raw)
+        require(total <= 16*1024**2 and hashlib.sha256(raw).hexdigest() == expected, 'Snapshot input drift')
+        dest = target/name
+        dest.parent.mkdir(parents=True,exist_ok=True)
+        with dest.open('xb') as stream:
+            stream.write(raw); stream.flush(); os.fsync(stream.fileno())
+        dest.chmod(0o444)
+    dest = target/'experiments/bc_jacobian_v147/certificate_plan_candidate.json'
+    with dest.open('xb') as stream:
+        stream.write(plan_bytes); stream.flush(); os.fsync(stream.fileno())
+    dest.chmod(0o444)
+    validate_plan(plan,target)
+    for path in sorted(target.rglob('*'),key=lambda p:len(p.parts),reverse=True):
+        if path.is_dir(): path.chmod(0o555)
+    target.chmod(0o555)
+
+
+def run_one(command, directory, deadline, env, task=None, timeout_cap=160,
+            check=None, cancel=None, monotonic_deadline=None):
+    """Retain both streams and reap the process group, including on timeout."""
+    directory.mkdir()
+    started = time.time()
+    process = None
+    cancel = cancel if cancel is not None else threading.Event()
+    end = min(time.monotonic()+timeout_cap,
+              monotonic_deadline if monotonic_deadline is not None
+              else time.monotonic()+max(0,deadline-time.time()))
+    result = {'started_epoch':started, 'status':'NOT_STARTED', 'task':task}
+    with (directory/'stdout.jsonl').open('wb') as out, (directory/'stderr.txt').open('wb') as err:
+        try:
+            remaining = end-time.monotonic()
+            if cancel.is_set():
+                result['status'] = 'CANCELLED'
+            elif remaining <= 0:
+                result['status'] = 'SKIPPED_DEADLINE'
+            else:
+                if check is not None: check()
+                if cancel.is_set():
+                    result['status'] = 'CANCELLED'
+                    raise SkipBeforeLaunch()
+                if time.monotonic() >= end:
+                    result['status'] = 'SKIPPED_DEADLINE'
+                    raise SkipBeforeLaunch()
+                process = subprocess.Popen(command, stdout=out, stderr=err, env=env,
+                                           cwd=ROOT, start_new_session=True)
+                while True:
+                    if cancel.is_set():
+                        result['status'] = 'CANCELLED'; break
+                    remaining = end-time.monotonic()
+                    if remaining <= 0:
+                        result['status'] = 'TIMEOUT'; break
+                    try:
+                        result['returncode'] = process.wait(timeout=min(0.2,remaining))
+                        result['status'] = 'EXITED'; break
+                    except subprocess.TimeoutExpired:
+                        pass
+        except SkipBeforeLaunch:
+            pass
+        except BaseException as error:
+            result['status'] = 'WORKER_EXCEPTION'
+            result['exception_type'] = type(error).__name__
+        finally:
+            if process is not None:
+                # Always kill the group: a reaped leader may have left descendants.
+                try:
+                    os.killpg(process.pid, signal.SIGKILL)
+                except ProcessLookupError:
+                    pass
+                result['returncode'] = process.wait()
+                if check is not None:
+                    try:
+                        check()
+                    except BaseException as error:
+                        result['status'] = 'WORKER_EXCEPTION'
+                        result['exception_type'] = type(error).__name__
+            out.flush(); os.fsync(out.fileno())
+            err.flush(); os.fsync(err.fileno())
+    result['ended_epoch'] = time.time()
+    result['artifacts'] = {n:{'sha256':digest(directory/n),'bytes':(directory/n).stat().st_size}
+                           for n in ('stdout.jsonl','stderr.txt')}
+    save(directory/'result.json', result)
+    return result
+
+
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--plan-sha256', required=True)
+    parser.add_argument('--deadline-epoch', type=float, required=True)
+    parser.add_argument('--output', type=Path, required=True)
+    args = parser.parse_args()
+    require(platform.system() == 'Linux' and bool(os.environ.get('RUNPOD_POD_ID')), 'Remote only')
+    require(time.time() < args.deadline_epoch <= time.time()+700, 'Invalid computation deadline')
+    end = time.monotonic()+max(0,args.deadline_epoch-time.time())
+    signal.alarm(30)  # Bound preflight before any children exist.
+    plan_path = BASE/'certificate_plan_candidate.json'
+    require(digest(plan_path) == args.plan_sha256, 'Wrong plan bytes')
+    plan_bytes = read_regular(plan_path)
+    require(hashlib.sha256(plan_bytes).hexdigest() == args.plan_sha256, 'Plan drift')
+    plan = json.loads(plan_bytes)
+    tasks = validate_plan(plan)
+    args.output.mkdir(parents=True, exist_ok=False)
+    execution = args.output.resolve()/'execution'
+    snapshot(plan,plan_bytes,execution)
+    frozen_base = execution/'experiments/bc_jacobian_v147'
+    def check():
+        require(digest(frozen_base/'certificate_plan_candidate.json') == args.plan_sha256, 'Plan drift')
+        verify_pins(plan,execution)
+    # No provider key or HTTP token is inherited by mathematical children.
+    env = {k:os.environ[k] for k in ('PATH','LANG','RUNPOD_POD_ID') if k in os.environ}
+    env.update(OMP_NUM_THREADS='1', OPENBLAS_NUM_THREADS='1', MKL_NUM_THREADS='1',
+               PYTHONUNBUFFERED='1', PYTHONHASHSEED='0')
+    save(args.output/'started.json', {'plan_sha256':args.plan_sha256,
+         'deadline_epoch':args.deadline_epoch, 'worker_sha256':digest(Path(__file__)),
+         'scope':'Computation deadline only; independent resource deletion is external'})
+    cancel = threading.Event()
+    handlers = {sig:signal.getsignal(sig) for sig in (signal.SIGTERM,signal.SIGINT)}
+    for sig in handlers: signal.signal(sig,lambda *_:cancel.set())
+    signal.alarm(0)
+    try:
+        with ThreadPoolExecutor(max_workers=2) as pool:
+            futures = [pool.submit(run_one,
+                [sys.executable,str(frozen_base/'remote_certificate_candidate.py'),'--model',t['model'],
+                 '--point',t['point'],'--plan-sha256',args.plan_sha256,'--task-index',str(i)],
+                args.output/f'task{i:02d}', args.deadline_epoch, env, t,
+                check=check,cancel=cancel,monotonic_deadline=end) for i,t in enumerate(tasks)]
+            results = [f.result() for f in futures]
+    finally:
+        for sig,handler in handlers.items():signal.signal(sig,handler)
+    save(args.output/'summary.json', {'status':'CERTIFICATE_ATTEMPT_FINISHED_REVIEW_REQUIRED',
+                                    'results':results, 'plan_sha256':args.plan_sha256})
+
+
+if __name__ == '__main__':
+    main()

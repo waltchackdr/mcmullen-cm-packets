@@ -1,0 +1,20 @@
+{
+  "status": "FOCUSED_PREPARATION_CHECK_PASS_NO_RENTAL",
+  "candidate_sha256": "b7513d4da4648852285c0e9e4e66ec0352b7eaa09190359396b783190ce7d4fd",
+  "verified_pins": 121,
+  "models": 160,
+  "duplicates": 0,
+  "archives": [
+    {
+      "job": 0,
+      "source_files": 10,
+      "bytes": 593920
+    },
+    {
+      "job": 1,
+      "source_files": 10,
+      "bytes": 593920
+    }
+  ],
+  "scope": "Exact package identity, unpack and immutable snapshot/plan validation only; no cloud,160-model computation or mathematical adoption."
+}

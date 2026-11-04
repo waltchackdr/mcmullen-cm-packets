@@ -1,0 +1,1635 @@
+{
+  "all_powers_conclusion_asserted": false,
+  "conjugate_pairs": [
+    [
+      1,
+      41
+    ],
+    [
+      5,
+      37
+    ],
+    [
+      11,
+      31
+    ],
+    [
+      13,
+      29
+    ],
+    [
+      17,
+      25
+    ],
+    [
+      19,
+      23
+    ]
+  ],
+  "field": "Q(zeta_42)=Q(zeta_21)",
+  "galois_orbit_count": 8,
+  "geometry_or_actual_variety_realization_asserted": false,
+  "mathematical_payload_sha256": "a49b092f68fcde20679402989e3416971c3fbce6cfcbbbb456bea3d6bcf23412",
+  "orbits": [
+    {
+      "actual_divisor_decompositions_sha256": "0ba19631ea2f0e4107b046b770ff6f7f08fbae5afc8d70d5a8c3f2e8f1b544f1",
+      "circle_sign_rows_conjugate_pair_coordinates": [
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        [
+          1,
+          1,
+          1,
+          1,
+          -1,
+          -1
+        ],
+        [
+          1,
+          1,
+          -1,
+          1,
+          1,
+          -1
+        ],
+        [
+          1,
+          1,
+          -1,
+          -1,
+          -1,
+          -1
+        ],
+        [
+          1,
+          -1,
+          1,
+          1,
+          1,
+          -1
+        ],
+        [
+          1,
+          -1,
+          1,
+          -1,
+          1,
+          1
+        ],
+        [
+          -1,
+          1,
+          -1,
+          1,
+          -1,
+          -1
+        ],
+        [
+          -1,
+          1,
+          -1,
+          -1,
+          -1,
+          1
+        ],
+        [
+          -1,
+          -1,
+          1,
+          1,
+          1,
+          1
+        ],
+        [
+          -1,
+          -1,
+          1,
+          -1,
+          -1,
+          1
+        ],
+        [
+          -1,
+          -1,
+          -1,
+          -1,
+          1,
+          1
+        ],
+        [
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1
+        ]
+      ],
+      "divisor_generated": false,
+      "divisor_generated_dimensions_codimensions_0_through_6": [
+        1,
+        6,
+        15,
+        20,
+        15,
+        6,
+        1
+      ],
+      "hodge_dimensions_codimensions_0_through_6": [
+        1,
+        6,
+        15,
+        22,
+        15,
+        6,
+        1
+      ],
+      "indecomposable_counts_codimensions_1_through_6": [
+        6,
+        0,
+        2,
+        0,
+        0,
+        0
+      ],
+      "invariant_split_witnesses_sha256": "1f1d78702478ef290fcf1ea601bce5fb4e1c1249cf7d05142da509bed4ab4a32",
+      "invariant_supports_sha256": "10d5525a46b00e326487ba876241e9fe6360fe47875a086c3a0479a72a22e102",
+      "minimal_higher_degree_invariant_supports": {
+        "3": [
+          [
+            1,
+            13,
+            19,
+            25,
+            31,
+            37
+          ],
+          [
+            5,
+            11,
+            17,
+            23,
+            29,
+            41
+          ]
+        ]
+      },
+      "minimal_inducing_cm_subfield_degree": 12,
+      "orbit": [
+        [
+          1,
+          5,
+          11,
+          13,
+          17,
+          19
+        ],
+        [
+          1,
+          5,
+          11,
+          13,
+          23,
+          25
+        ],
+        [
+          1,
+          5,
+          13,
+          17,
+          23,
+          31
+        ],
+        [
+          1,
+          5,
+          23,
+          25,
+          29,
+          31
+        ],
+        [
+          1,
+          11,
+          13,
+          17,
+          23,
+          37
+        ],
+        [
+          1,
+          11,
+          17,
+          19,
+          29,
+          37
+        ],
+        [
+          5,
+          13,
+          23,
+          25,
+          31,
+          41
+        ],
+        [
+          5,
+          19,
+          25,
+          29,
+          31,
+          41
+        ],
+        [
+          11,
+          13,
+          17,
+          19,
+          37,
+          41
+        ],
+        [
+          11,
+          19,
+          25,
+          29,
+          37,
+          41
+        ],
+        [
+          17,
+          19,
+          29,
+          31,
+          37,
+          41
+        ],
+        [
+          23,
+          25,
+          29,
+          31,
+          37,
+          41
+        ]
+      ],
+      "orbit_size": 12,
+      "primitive": true,
+      "quotient_by_divisor_subalgebra_dimensions": [
+        0,
+        0,
+        0,
+        2,
+        0,
+        0,
+        0
+      ],
+      "rational_hodge_group_rank": 5,
+      "representative": [
+        1,
+        5,
+        11,
+        13,
+        17,
+        19
+      ],
+      "stabilizer": [
+        1
+      ]
+    },
+    {
+      "actual_divisor_decompositions_sha256": "a4127911a0bcb998a01b702af732c5c3ea18a0ad9ba0845f63b4fd3fccb97f79",
+      "circle_sign_rows_conjugate_pair_coordinates": [
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          -1
+        ],
+        [
+          1,
+          1,
+          -1,
+          1,
+          -1,
+          -1
+        ],
+        [
+          1,
+          -1,
+          1,
+          1,
+          1,
+          1
+        ],
+        [
+          -1,
+          1,
+          -1,
+          -1,
+          -1,
+          -1
+        ],
+        [
+          -1,
+          -1,
+          1,
+          -1,
+          1,
+          1
+        ],
+        [
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          1
+        ]
+      ],
+      "divisor_generated": true,
+      "divisor_generated_dimensions_codimensions_0_through_6": [
+        1,
+        12,
+        51,
+        88,
+        51,
+        12,
+        1
+      ],
+      "hodge_dimensions_codimensions_0_through_6": [
+        1,
+        12,
+        51,
+        88,
+        51,
+        12,
+        1
+      ],
+      "indecomposable_counts_codimensions_1_through_6": [
+        12,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "invariant_split_witnesses_sha256": "c75f9120e6f388ad01aca70cf4343e640750152b60b29c2f49010a59cb8de87b",
+      "invariant_supports_sha256": "30695ad11a8f53cfc51631a5597d6b1badc0236ba89efdbd69a4a2461ded2675",
+      "minimal_higher_degree_invariant_supports": {},
+      "minimal_inducing_cm_subfield_degree": 6,
+      "orbit": [
+        [
+          1,
+          5,
+          11,
+          13,
+          17,
+          23
+        ],
+        [
+          1,
+          5,
+          13,
+          23,
+          25,
+          31
+        ],
+        [
+          1,
+          11,
+          13,
+          17,
+          19,
+          37
+        ],
+        [
+          5,
+          23,
+          25,
+          29,
+          31,
+          41
+        ],
+        [
+          11,
+          17,
+          19,
+          29,
+          37,
+          41
+        ],
+        [
+          19,
+          25,
+          29,
+          31,
+          37,
+          41
+        ]
+      ],
+      "orbit_size": 6,
+      "primitive": false,
+      "quotient_by_divisor_subalgebra_dimensions": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "rational_hodge_group_rank": 3,
+      "representative": [
+        1,
+        5,
+        11,
+        13,
+        17,
+        23
+      ],
+      "stabilizer": [
+        1,
+        13
+      ]
+    },
+    {
+      "actual_divisor_decompositions_sha256": "0ba19631ea2f0e4107b046b770ff6f7f08fbae5afc8d70d5a8c3f2e8f1b544f1",
+      "circle_sign_rows_conjugate_pair_coordinates": [
+        [
+          1,
+          1,
+          1,
+          1,
+          -1,
+          1
+        ],
+        [
+          1,
+          1,
+          1,
+          -1,
+          1,
+          1
+        ],
+        [
+          1,
+          1,
+          -1,
+          -1,
+          1,
+          -1
+        ],
+        [
+          1,
+          1,
+          -1,
+          -1,
+          -1,
+          1
+        ],
+        [
+          1,
+          -1,
+          -1,
+          1,
+          1,
+          -1
+        ],
+        [
+          1,
+          -1,
+          -1,
+          -1,
+          1,
+          1
+        ],
+        [
+          -1,
+          1,
+          1,
+          1,
+          -1,
+          -1
+        ],
+        [
+          -1,
+          1,
+          1,
+          -1,
+          -1,
+          1
+        ],
+        [
+          -1,
+          -1,
+          1,
+          1,
+          1,
+          -1
+        ],
+        [
+          -1,
+          -1,
+          1,
+          1,
+          -1,
+          1
+        ],
+        [
+          -1,
+          -1,
+          -1,
+          1,
+          -1,
+          -1
+        ],
+        [
+          -1,
+          -1,
+          -1,
+          -1,
+          1,
+          -1
+        ]
+      ],
+      "divisor_generated": false,
+      "divisor_generated_dimensions_codimensions_0_through_6": [
+        1,
+        6,
+        15,
+        20,
+        15,
+        6,
+        1
+      ],
+      "hodge_dimensions_codimensions_0_through_6": [
+        1,
+        6,
+        15,
+        22,
+        15,
+        6,
+        1
+      ],
+      "indecomposable_counts_codimensions_1_through_6": [
+        6,
+        0,
+        2,
+        0,
+        0,
+        0
+      ],
+      "invariant_split_witnesses_sha256": "1f1d78702478ef290fcf1ea601bce5fb4e1c1249cf7d05142da509bed4ab4a32",
+      "invariant_supports_sha256": "cd9eb771511e829386951e36d7c34419afd6aa7066a7e296d5c831e0a4e4e041",
+      "minimal_higher_degree_invariant_supports": {
+        "3": [
+          [
+            1,
+            11,
+            23,
+            25,
+            29,
+            37
+          ],
+          [
+            5,
+            13,
+            17,
+            19,
+            31,
+            41
+          ]
+        ]
+      },
+      "minimal_inducing_cm_subfield_degree": 12,
+      "orbit": [
+        [
+          1,
+          5,
+          11,
+          13,
+          19,
+          25
+        ],
+        [
+          1,
+          5,
+          11,
+          17,
+          19,
+          29
+        ],
+        [
+          1,
+          5,
+          17,
+          23,
+          29,
+          31
+        ],
+        [
+          1,
+          5,
+          19,
+          25,
+          29,
+          31
+        ],
+        [
+          1,
+          13,
+          17,
+          23,
+          31,
+          37
+        ],
+        [
+          1,
+          17,
+          19,
+          29,
+          31,
+          37
+        ],
+        [
+          5,
+          11,
+          13,
+          23,
+          25,
+          41
+        ],
+        [
+          5,
+          11,
+          19,
+          25,
+          29,
+          41
+        ],
+        [
+          11,
+          13,
+          17,
+          23,
+          37,
+          41
+        ],
+        [
+          11,
+          13,
+          19,
+          25,
+          37,
+          41
+        ],
+        [
+          13,
+          23,
+          25,
+          31,
+          37,
+          41
+        ],
+        [
+          17,
+          23,
+          29,
+          31,
+          37,
+          41
+        ]
+      ],
+      "orbit_size": 12,
+      "primitive": true,
+      "quotient_by_divisor_subalgebra_dimensions": [
+        0,
+        0,
+        0,
+        2,
+        0,
+        0,
+        0
+      ],
+      "rational_hodge_group_rank": 5,
+      "representative": [
+        1,
+        5,
+        11,
+        13,
+        19,
+        25
+      ],
+      "stabilizer": [
+        1
+      ]
+    },
+    {
+      "actual_divisor_decompositions_sha256": "0ba19631ea2f0e4107b046b770ff6f7f08fbae5afc8d70d5a8c3f2e8f1b544f1",
+      "circle_sign_rows_conjugate_pair_coordinates": [
+        [
+          1,
+          1,
+          1,
+          -1,
+          1,
+          -1
+        ],
+        [
+          1,
+          1,
+          -1,
+          1,
+          -1,
+          1
+        ],
+        [
+          1,
+          -1,
+          1,
+          1,
+          -1,
+          1
+        ],
+        [
+          1,
+          -1,
+          -1,
+          1,
+          1,
+          1
+        ],
+        [
+          1,
+          -1,
+          -1,
+          1,
+          -1,
+          -1
+        ],
+        [
+          1,
+          -1,
+          -1,
+          -1,
+          -1,
+          1
+        ],
+        [
+          -1,
+          1,
+          1,
+          1,
+          1,
+          -1
+        ],
+        [
+          -1,
+          1,
+          1,
+          -1,
+          1,
+          1
+        ],
+        [
+          -1,
+          1,
+          1,
+          -1,
+          -1,
+          -1
+        ],
+        [
+          -1,
+          1,
+          -1,
+          -1,
+          1,
+          -1
+        ],
+        [
+          -1,
+          -1,
+          1,
+          -1,
+          1,
+          -1
+        ],
+        [
+          -1,
+          -1,
+          -1,
+          1,
+          -1,
+          1
+        ]
+      ],
+      "divisor_generated": true,
+      "divisor_generated_dimensions_codimensions_0_through_6": [
+        1,
+        6,
+        15,
+        20,
+        15,
+        6,
+        1
+      ],
+      "hodge_dimensions_codimensions_0_through_6": [
+        1,
+        6,
+        15,
+        20,
+        15,
+        6,
+        1
+      ],
+      "indecomposable_counts_codimensions_1_through_6": [
+        6,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "invariant_split_witnesses_sha256": "1f1d78702478ef290fcf1ea601bce5fb4e1c1249cf7d05142da509bed4ab4a32",
+      "invariant_supports_sha256": "95d8ac665205b86631da1bb15c57bd4a543e5fded2c9bcb3339c940f5571c963",
+      "minimal_higher_degree_invariant_supports": {},
+      "minimal_inducing_cm_subfield_degree": 12,
+      "orbit": [
+        [
+          1,
+          5,
+          11,
+          17,
+          23,
+          29
+        ],
+        [
+          1,
+          5,
+          13,
+          19,
+          25,
+          31
+        ],
+        [
+          1,
+          11,
+          13,
+          19,
+          25,
+          37
+        ],
+        [
+          1,
+          13,
+          17,
+          19,
+          31,
+          37
+        ],
+        [
+          1,
+          13,
+          23,
+          25,
+          31,
+          37
+        ],
+        [
+          1,
+          19,
+          25,
+          29,
+          31,
+          37
+        ],
+        [
+          5,
+          11,
+          13,
+          17,
+          23,
+          41
+        ],
+        [
+          5,
+          11,
+          17,
+          19,
+          29,
+          41
+        ],
+        [
+          5,
+          11,
+          23,
+          25,
+          29,
+          41
+        ],
+        [
+          5,
+          17,
+          23,
+          29,
+          31,
+          41
+        ],
+        [
+          11,
+          17,
+          23,
+          29,
+          37,
+          41
+        ],
+        [
+          13,
+          19,
+          25,
+          31,
+          37,
+          41
+        ]
+      ],
+      "orbit_size": 12,
+      "primitive": true,
+      "quotient_by_divisor_subalgebra_dimensions": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "rational_hodge_group_rank": 6,
+      "representative": [
+        1,
+        5,
+        11,
+        17,
+        23,
+        29
+      ],
+      "stabilizer": [
+        1
+      ]
+    },
+    {
+      "actual_divisor_decompositions_sha256": "8364abaaa4f69c5a6d06b89e7b4e2400ea34fd79d20f300ca0604fa39d4fa22f",
+      "circle_sign_rows_conjugate_pair_coordinates": [
+        [
+          1,
+          1,
+          1,
+          -1,
+          -1,
+          1
+        ],
+        [
+          1,
+          1,
+          -1,
+          -1,
+          1,
+          1
+        ],
+        [
+          1,
+          -1,
+          -1,
+          -1,
+          1,
+          -1
+        ],
+        [
+          -1,
+          1,
+          1,
+          1,
+          -1,
+          1
+        ],
+        [
+          -1,
+          -1,
+          1,
+          1,
+          -1,
+          -1
+        ],
+        [
+          -1,
+          -1,
+          -1,
+          1,
+          1,
+          -1
+        ]
+      ],
+      "divisor_generated": true,
+      "divisor_generated_dimensions_codimensions_0_through_6": [
+        1,
+        12,
+        51,
+        88,
+        51,
+        12,
+        1
+      ],
+      "hodge_dimensions_codimensions_0_through_6": [
+        1,
+        12,
+        51,
+        88,
+        51,
+        12,
+        1
+      ],
+      "indecomposable_counts_codimensions_1_through_6": [
+        12,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "invariant_split_witnesses_sha256": "51365ebe6b0c2bf36bf6bde63ab39626301a1fe388a6c118af4275d679fbf263",
+      "invariant_supports_sha256": "639535df2df9c27ac0d062e2f6697d553544bacb543c313241ed7d0ffe3e2006",
+      "minimal_higher_degree_invariant_supports": {},
+      "minimal_inducing_cm_subfield_degree": 6,
+      "orbit": [
+        [
+          1,
+          5,
+          11,
+          19,
+          25,
+          29
+        ],
+        [
+          1,
+          5,
+          17,
+          19,
+          29,
+          31
+        ],
+        [
+          1,
+          17,
+          23,
+          29,
+          31,
+          37
+        ],
+        [
+          5,
+          11,
+          13,
+          19,
+          25,
+          41
+        ],
+        [
+          11,
+          13,
+          23,
+          25,
+          37,
+          41
+        ],
+        [
+          13,
+          17,
+          23,
+          31,
+          37,
+          41
+        ]
+      ],
+      "orbit_size": 6,
+      "primitive": false,
+      "quotient_by_divisor_subalgebra_dimensions": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "rational_hodge_group_rank": 3,
+      "representative": [
+        1,
+        5,
+        11,
+        19,
+        25,
+        29
+      ],
+      "stabilizer": [
+        1,
+        29
+      ]
+    },
+    {
+      "actual_divisor_decompositions_sha256": "0ba19631ea2f0e4107b046b770ff6f7f08fbae5afc8d70d5a8c3f2e8f1b544f1",
+      "circle_sign_rows_conjugate_pair_coordinates": [
+        [
+          1,
+          1,
+          1,
+          -1,
+          -1,
+          -1
+        ],
+        [
+          1,
+          1,
+          -1,
+          1,
+          1,
+          1
+        ],
+        [
+          1,
+          -1,
+          1,
+          1,
+          -1,
+          -1
+        ],
+        [
+          1,
+          -1,
+          1,
+          -1,
+          1,
+          -1
+        ],
+        [
+          1,
+          -1,
+          1,
+          -1,
+          -1,
+          1
+        ],
+        [
+          1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1
+        ],
+        [
+          -1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        [
+          -1,
+          1,
+          -1,
+          1,
+          1,
+          -1
+        ],
+        [
+          -1,
+          1,
+          -1,
+          1,
+          -1,
+          1
+        ],
+        [
+          -1,
+          1,
+          -1,
+          -1,
+          1,
+          1
+        ],
+        [
+          -1,
+          -1,
+          1,
+          -1,
+          -1,
+          -1
+        ],
+        [
+          -1,
+          -1,
+          -1,
+          1,
+          1,
+          1
+        ]
+      ],
+      "divisor_generated": true,
+      "divisor_generated_dimensions_codimensions_0_through_6": [
+        1,
+        6,
+        15,
+        20,
+        15,
+        6,
+        1
+      ],
+      "hodge_dimensions_codimensions_0_through_6": [
+        1,
+        6,
+        15,
+        20,
+        15,
+        6,
+        1
+      ],
+      "indecomposable_counts_codimensions_1_through_6": [
+        6,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "invariant_split_witnesses_sha256": "1f1d78702478ef290fcf1ea601bce5fb4e1c1249cf7d05142da509bed4ab4a32",
+      "invariant_supports_sha256": "95d8ac665205b86631da1bb15c57bd4a543e5fded2c9bcb3339c940f5571c963",
+      "minimal_higher_degree_invariant_supports": {},
+      "minimal_inducing_cm_subfield_degree": 12,
+      "orbit": [
+        [
+          1,
+          5,
+          11,
+          23,
+          25,
+          29
+        ],
+        [
+          1,
+          5,
+          13,
+          17,
+          19,
+          31
+        ],
+        [
+          1,
+          11,
+          13,
+          23,
+          25,
+          37
+        ],
+        [
+          1,
+          11,
+          17,
+          23,
+          29,
+          37
+        ],
+        [
+          1,
+          11,
+          19,
+          25,
+          29,
+          37
+        ],
+        [
+          1,
+          23,
+          25,
+          29,
+          31,
+          37
+        ],
+        [
+          5,
+          11,
+          13,
+          17,
+          19,
+          41
+        ],
+        [
+          5,
+          13,
+          17,
+          23,
+          31,
+          41
+        ],
+        [
+          5,
+          13,
+          19,
+          25,
+          31,
+          41
+        ],
+        [
+          5,
+          17,
+          19,
+          29,
+          31,
+          41
+        ],
+        [
+          11,
+          23,
+          25,
+          29,
+          37,
+          41
+        ],
+        [
+          13,
+          17,
+          19,
+          31,
+          37,
+          41
+        ]
+      ],
+      "orbit_size": 12,
+      "primitive": true,
+      "quotient_by_divisor_subalgebra_dimensions": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "rational_hodge_group_rank": 6,
+      "representative": [
+        1,
+        5,
+        11,
+        23,
+        25,
+        29
+      ],
+      "stabilizer": [
+        1
+      ]
+    },
+    {
+      "actual_divisor_decompositions_sha256": "88bc0e085c5ff407284d95a6b38d8e3ae64bbd56337e7ab775451626149479ea",
+      "circle_sign_rows_conjugate_pair_coordinates": [
+        [
+          1,
+          -1,
+          1,
+          -1,
+          -1,
+          -1
+        ],
+        [
+          -1,
+          1,
+          -1,
+          1,
+          1,
+          1
+        ]
+      ],
+      "divisor_generated": true,
+      "divisor_generated_dimensions_codimensions_0_through_6": [
+        1,
+        36,
+        225,
+        400,
+        225,
+        36,
+        1
+      ],
+      "hodge_dimensions_codimensions_0_through_6": [
+        1,
+        36,
+        225,
+        400,
+        225,
+        36,
+        1
+      ],
+      "indecomposable_counts_codimensions_1_through_6": [
+        36,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "invariant_split_witnesses_sha256": "07be6df08247360d8050e0c4dc86350628e979fe8c79061ac5da63867afa5bf6",
+      "invariant_supports_sha256": "b35d9e76c6731788512ed6e5805f4cbd6a002e0d581c10cbc24db40d38703d47",
+      "minimal_higher_degree_invariant_supports": {},
+      "minimal_inducing_cm_subfield_degree": 2,
+      "orbit": [
+        [
+          1,
+          11,
+          23,
+          25,
+          29,
+          37
+        ],
+        [
+          5,
+          13,
+          17,
+          19,
+          31,
+          41
+        ]
+      ],
+      "orbit_size": 2,
+      "primitive": false,
+      "quotient_by_divisor_subalgebra_dimensions": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "rational_hodge_group_rank": 1,
+      "representative": [
+        1,
+        11,
+        23,
+        25,
+        29,
+        37
+      ],
+      "stabilizer": [
+        1,
+        11,
+        23,
+        25,
+        29,
+        37
+      ]
+    },
+    {
+      "actual_divisor_decompositions_sha256": "13bc43bd153453d89adb571eab29513d3b074b7e529e6416afe08c9c4c7dcf90",
+      "circle_sign_rows_conjugate_pair_coordinates": [
+        [
+          1,
+          -1,
+          -1,
+          1,
+          -1,
+          1
+        ],
+        [
+          -1,
+          1,
+          1,
+          -1,
+          1,
+          -1
+        ]
+      ],
+      "divisor_generated": true,
+      "divisor_generated_dimensions_codimensions_0_through_6": [
+        1,
+        36,
+        225,
+        400,
+        225,
+        36,
+        1
+      ],
+      "hodge_dimensions_codimensions_0_through_6": [
+        1,
+        36,
+        225,
+        400,
+        225,
+        36,
+        1
+      ],
+      "indecomposable_counts_codimensions_1_through_6": [
+        36,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "invariant_split_witnesses_sha256": "c7b26dd37f192644b9abcc968a1a59bec12ad661d93bfdbbd826a88b60da99cb",
+      "invariant_supports_sha256": "9ea02b32dc92ff843909c7f8ffea9eb739e4eaba4b650afe0ca2b687224a3d93",
+      "minimal_higher_degree_invariant_supports": {},
+      "minimal_inducing_cm_subfield_degree": 2,
+      "orbit": [
+        [
+          1,
+          13,
+          19,
+          25,
+          31,
+          37
+        ],
+        [
+          5,
+          11,
+          17,
+          23,
+          29,
+          41
+        ]
+      ],
+      "orbit_size": 2,
+      "primitive": false,
+      "quotient_by_divisor_subalgebra_dimensions": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "rational_hodge_group_rank": 1,
+      "representative": [
+        1,
+        13,
+        19,
+        25,
+        31,
+        37
+      ],
+      "stabilizer": [
+        1,
+        13,
+        19,
+        25,
+        31,
+        37
+      ]
+    }
+  ],
+  "producer": {
+    "cpu_limit_seconds": [
+      20,
+      20
+    ],
+    "measured_cpu_nanoseconds_before_publication": 61474000,
+    "no_mathematical_repository_imports": true,
+    "python_version": "3.14.6",
+    "source_sha256": "2eb526197ca3b5fc5f1d1e300d45c79f7bdd26f506f416f95767297c668aa262"
+  },
+  "schema_version": 1,
+  "scope_and_method": {
+    "divisor_algebra": "Compute actual disjoint decompositions into invariant two-element supports. Their spans are the degree-two-generated subalgebra. The property descends to Q by faithful field extension of each rational multiplication-map cokernel.",
+    "finite_domain": "A CM type selects exactly one of each of six conjugate embedding pairs, giving 2^6=64. All 12 Galois multipliers act explicitly; disjoint orbit union is checked.",
+    "hodge_classes": "For every embedding subset S of even cardinality 2p, require |S intersect g*Phi|=p for every Galois translate. At most 4096 subsets per orbit. The resulting invariant basis over a splitting field counts rational Hodge classes because invariants commute with field extension.",
+    "hodge_rank": "Rank over Q of all Galois conjugates of the circle cocharacter mu-minus-conjugate(mu), with +1 on the type and -1 on its complement. Exact Fraction elimination in both 6 pair coordinates and 12 embedding coordinates agrees.",
+    "hodge_structure": "Weight-one polarizable CM Hodge structure with rational H1 of rank one over M (dimension 12 over Q), hence a hypothetical sixfold cohomology exterior algebra. No curve point, marked lattice, order, polarization, or orbit realization is inferred.",
+    "limitations": "Fixed-field CM-type algebra only; distinct from the fixed marked 368-point geometry. Counts are not a proof about arbitrary CM fields or arbitrary powers. No floating point or repository mathematical imports.",
+    "minimal_supports": "Report invariant supports of cardinality greater than two with no proper nonempty invariant subset. These are algebra indecomposables, not merely failures of one chosen pairing algorithm. Closure under all these supports is checked against the entire invariant set.",
+    "primitivity": "For this abelian Galois CM field, a type is induced from a proper CM subfield iff its multiplication stabilizer is nontrivial. The stabilizer excludes complex conjugation; its fixed field is CM and the type is a union of its cosets."
+  },
+  "status": "EXACT_FIXED_FIELD_CM_TYPE_CENSUS_DISCOVERY_PREPARATION",
+  "theorem_or_claim_adoption": false,
+  "type_count": 64,
+  "units_mod_42": [
+    1,
+    5,
+    11,
+    13,
+    17,
+    19,
+    23,
+    25,
+    29,
+    31,
+    37,
+    41
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "cloud_calls": 0,
+  "enumerated_subspaces": 0,
+  "faithfulness_witness": "Accepted C91 underlying orbit of size12",
+  "full_scalar_orbits": {
+    "R": 1,
+    "generic": 93,
+    "total": 94
+  },
+  "full_semilinear_order": 4368,
+  "new_108_orbit_count": false,
+  "packet_pins": 7,
+  "quotient_order": 12,
+  "scalar_generator_g13_order": 56,
+  "scalar_norm_exponent": 364,
+  "status": "PASS_SMALL_STRUCTURAL_ARITHMETIC_ONLY",
+  "unit_order": 364
+}

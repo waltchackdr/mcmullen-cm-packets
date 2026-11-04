@@ -1,0 +1,28 @@
+{
+  "status": "PREPARATION_ONLY_NOT_EXECUTION_AUTHORITY",
+  "unchanged_worker_functions": [
+    "SkipBeforeLaunch",
+    "require",
+    "read_regular",
+    "digest",
+    "save",
+    "verify_pins",
+    "snapshot",
+    "run_one"
+  ],
+  "changed_worker_functions": [
+    "validate_plan",
+    "successful_results",
+    "main"
+  ],
+  "focused_tests": "3PASS0.020seconds",
+  "theta_evaluations": 0,
+  "source_pins": {
+    "experiments/s_order_theta_v164/period_loader_candidate.py": "2e59167ec69ee51ad7760eea2b65424d49d49e5fb246f2f153ec57b5a670fd62",
+    "experiments/s_order_theta_v164/remote_theta_candidate.py": "e38c3cc4d31be1c0bc1b85fe359efe224823a5f542e0f1ec8fea9eac657d5ae0",
+    "experiments/s_order_theta_v164/worker_candidate.py": "9751cc3bb50b9d0cfe1d21663bfa81af39538007eebbef06164d16e9761a8e1c",
+    "tests/test_s_order_theta_v164.py": "bb50d069bae0567317919651580568c308e9b542ec0652874b796c56e2b37566",
+    "experiments/bc_jacobian_v147/evaluator_source/arb.pyx": "eb8f165e638756ffc19f2a7e72a478edc71e53ea866345f4cfcad05cb154882d"
+  },
+  "scope": "Exact tuple constructor inspected in pinned arb.pyx lines160-166,198-215. Runtime roundtrip/LDL/theta behavior remain unexecuted; no new local FLINT installation."
+}

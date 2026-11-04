@@ -1,0 +1,10 @@
+{
+  "status": "PASS",
+  "returncode": 0,
+  "seconds": 5.558953833009582,
+  "cpu_limit_seconds": 20,
+  "wall_alarm_seconds": 30,
+  "scope": "Installed C59 full primary and independent regression; not full suite",
+  "prior_attempt": "installed_attempt01 retained: system python lacks sympy, no mathematical checks ran",
+  "interpreter": "build/resume-v118/runtime01/venv/bin/python"
+}

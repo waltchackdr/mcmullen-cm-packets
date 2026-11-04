@@ -1,0 +1,24 @@
+{
+  "command": [
+    "python3",
+    "-m",
+    "unittest",
+    "discover",
+    "-s",
+    "tests",
+    "-p",
+    "test_fermat_unpolarized_quotients_v156.py",
+    "-v"
+  ],
+  "cpu_limit_seconds_per_child": 20,
+  "independent_residue_wall_seconds": 0.041557,
+  "producer_optimized_mode_rejection": "PASS",
+  "regression_wall_seconds": 1.272713,
+  "returncode": 0,
+  "scope": "One focused producer orbit regression; independent separate small residue-field check; no repeat of all-subspace enumeration.",
+  "status": "PASS",
+  "stderr": "test_principalizable_and_obstructed_orbit_partition (test_fermat_unpolarized_quotients_v156.UnpolarizedQuotients.test_principalizable_and_obstructed_orbit_partition) ... ok\n\n----------------------------------------------------------------------\nRan 1 test in 1.219s\n\nOK\n",
+  "stdout": "",
+  "submitted_pins_verified": 15,
+  "wall_timeout_seconds_per_child": 30
+}

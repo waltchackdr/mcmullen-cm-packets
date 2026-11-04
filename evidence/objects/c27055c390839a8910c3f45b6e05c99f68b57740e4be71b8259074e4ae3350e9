@@ -1,0 +1,18 @@
+"""Exact residue obstruction regression; no theorem promotion by this test."""
+import importlib.util
+from pathlib import Path
+import unittest
+
+spec = importlib.util.spec_from_file_location('c86',Path(__file__).resolve().parents[1] / 'experiments/obstructed_minimum_polarization_v157/arithmetic_candidate.py')
+a = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(a)
+
+class ObstructedMinimum(unittest.TestCase):
+    def test_all_residue_annihilators(self):
+        result = a.check()
+        self.assertEqual(result['dimension_counts'],{0:19656,1:14196,3:28})
+        self.assertEqual(result['all_subspaces'],33880)
+        self.assertEqual(result['nonzero_coefficient_forms_nondegenerate'],26)
+
+if __name__ == '__main__':
+    unittest.main()

@@ -1,0 +1,231 @@
+"""Exercise actual registry code with metadata fixtures and a nonlaunching executor."""
+from contextlib import redirect_stdout
+import ast
+import copy
+import io
+import json
+from pathlib import Path
+import runpy
+import sys
+import tempfile
+import types
+import unittest
+from unittest.mock import patch
+
+ROOT = Path(__file__).resolve().parents[1]
+PHASES = ["legacy159", "v82-controls", "v82-selected", "v83-positive-controls",
+          "v83-representatives", "v83-remaining"]
+COUNTS = [159, 6, 498, 12, 34, 696]
+FRONTENDS = ("certificates/reflected_primary_v83.py", "independent/reflected_sturm_v83.py")
+
+
+def nonhits():
+    # Fixed C39 population, independently expressed by family rather than
+    # imported from the runner or from an arithmetic module.
+    answer = {f"OM:pic0:{i:02d}" for i in range(16) if i not in (0, 7, 15)}
+    masks32 = (*range(16), *range(32, 48))
+    for family in ("R127", "R41_12", "R41_22", "R43_20", "R43_31", "R7", "R7sq", "R83"):
+        answer.update(f"{family}:pic0:{i:02d}" for i in masks32)
+    answer.update(f"R127:pic1:{i:02d}" for i in range(64))
+    answer.update(f"R83:pic1:{i:02d}" for i in range(32))
+    return answer
+
+
+def package_fixture():
+    jobs = {}
+    for point in nonhits():
+        key = "REFLECTED_AB_V1/" + point
+        jobs[key] = {"target_id": "REFLECTED_AB_V1", "point_label": point,
+                     "kind": "NEGATIVE_REPLAY", "cpu_seconds": 7200}
+    for target in ("ORIGINAL_Q_V1", "REFLECTED_AB_V1"):
+        for point in ("OM:pic0:00", "OM:pic0:07", "OM:pic0:15"):
+            jobs[target + "/" + point] = {"target_id": target, "point_label": point,
+                "kind": "KNOWN_POSITIVE_CONTROL", "cpu_seconds": 1800}
+    # No synthetic mathematical counts/outputs are created: registry preflight
+    # needs keys only; strict frontends verify actual expected data during jobs.
+    return {"jobs": jobs}, {"points": {key: {} for key in jobs}}
+
+
+class CertificateRegistrationTests(unittest.TestCase):
+    def registered(self, requested_workers="4", mutate_results=None, mutate_package=None,
+                   missing_frontend=None, node="/test/node", output_exists=False):
+        captured = []
+        executor = types.ModuleType("certificate_execution")
+        def capture(tasks, workers, root, output):
+            captured.append({"phase": output.name, "tasks": list(tasks), "workers": workers,
+                             "root": root, "output": output})
+            rows = [types.SimpleNamespace(label=l, command=tuple(c), stdout="",
+                    status="passed", returncode=0) for l, c in tasks]
+            return mutate_results(output.name, rows) if mutate_results else rows
+        executor.execute_tasks = capture
+        selection, expected = package_fixture()
+        if mutate_package:
+            mutate_package(selection, expected)
+        original_read = Path.read_text
+        def read(path, *args, **kwargs):
+            if path == ROOT / "certificates/reflected_packet_v83/selection.json":
+                return json.dumps(selection)
+            if path == ROOT / "certificates/reflected_packet_v83/expected.json":
+                return json.dumps(expected)
+            return original_read(path, *args, **kwargs)
+        def exists(path):
+            return path != ROOT / missing_frontend if missing_frontend else True
+        output = io.StringIO()
+        with tempfile.TemporaryDirectory() as td:
+            run_dir = Path(td) / "run"
+            if output_exists:
+                run_dir.mkdir()
+            with patch.dict("sys.modules", {"certificate_execution": executor}), \
+                 patch("shutil.which", return_value=node), \
+                 patch.dict("os.environ", {"CERT_WORKERS": requested_workers, "CERT_RUN_DIR": str(run_dir)}), \
+                 patch.object(Path, "read_text", read), \
+                 patch.object(Path, "exists", exists), patch.object(Path, "is_file", exists), \
+                 patch("subprocess.Popen", side_effect=AssertionError("No arithmetic child allowed")), \
+                 redirect_stdout(output):
+                try:
+                    runpy.run_path(str(ROOT / "scripts/run_certificates.py"))
+                    code = 0
+                except SystemExit as exc:
+                    code = exc.code
+                except FileExistsError:
+                    code = "EXISTING_OUTPUT"
+        return captured, code, output.getvalue()
+
+    def test_exact1405_inventory_and_six_phases(self):
+        captured, code, _ = self.registered()
+        self.assertEqual(code, 0)
+        self.assertEqual([p["phase"] for p in captured], PHASES)
+        self.assertEqual([len(p["tasks"]) for p in captured], COUNTS)
+        wanted = json.loads((ROOT / "tests/registration/combined1405.json").read_text())["commands"]
+        observed = []
+        for p in captured:
+            for label, command in p["tasks"]:
+                argv = ["node" if command[0] == "/test/node" else "python", *command[1:]]
+                pos = 3 if argv[1:3] == ["-I", "-B"] else 1
+                argv[pos] = Path(argv[pos]).relative_to(ROOT).as_posix()
+                observed.append((p["phase"], label, argv))
+        self.assertEqual(observed, [(r["phase"], r["label"], r["argv"]) for r in wanted])
+        self.assertEqual(len({tuple(row[2]) for row in observed}), 1405)
+        self.assertEqual(len({p["output"] for p in captured}), 6)
+
+    def test_exact159_prefix_and_four_worker_default_cap(self):
+        for request, workers in (("4", 4), ("99", 4), ("1", 1)):
+            captured, code, _ = self.registered(request)
+            self.assertEqual(code, 0)
+            self.assertEqual({p["workers"] for p in captured}, {workers})
+        legacy = json.loads((ROOT / "tests/registration/legacy159.json").read_text())
+        got = []
+        for i, (label, cmd) in enumerate(captured[0]["tasks"], 1):
+            got.append({"index": i, "label": label, "command": [
+                "node" if cmd[0] == "/test/node" else "python",
+                Path(cmd[1]).relative_to(ROOT).as_posix(), *cmd[2:]]})
+        self.assertEqual(got, legacy)
+        self.assertEqual(sum(r["command"][0] == "node" for r in got), 2)
+
+    def test_exact_v82_controls_selected_and_full_only_argv(self):
+        phases, code, _ = self.registered()
+        self.assertEqual(code, 0)
+        controls = {"R127:pic0:00", "R127:pic1:00", "R43_31:pic0:00"}
+        self.assertEqual({c[-1] for _, c in phases[1]["tasks"]}, controls)
+        self.assertEqual(len({c[-1] for _, c in phases[2]["tasks"]}), 249)
+        self.assertFalse(controls & {c[-1] for _, c in phases[2]["tasks"]})
+        for phase in phases[1:3]:
+            for _, cmd in phase["tasks"]:
+                self.assertEqual(len(cmd), 4)
+                self.assertEqual(cmd[0], sys.executable)
+                self.assertEqual(cmd[2], "--point")
+
+    def test_exact365_plus_six_positive_cases_and_om_subsumption(self):
+        phases, code, _ = self.registered()
+        self.assertEqual(code, 0)
+        positives = {(c[-3], c[-1]) for _, c in phases[3]["tasks"]}
+        self.assertEqual(positives, {(t, p) for t in ("ORIGINAL_Q_V1", "REFLECTED_AB_V1")
+            for p in ("OM:pic0:00", "OM:pic0:07", "OM:pic0:15")})
+        negative = [c for phase in phases[4:] for _, c in phase["tasks"]]
+        self.assertEqual(len(negative), 730)
+        self.assertEqual({c[-1] for c in negative}, nonhits())
+        self.assertEqual(sum(c[-1].startswith("OM:") for c in negative), 26)
+        for phase in phases[3:]:
+            for _, cmd in phase["tasks"]:
+                self.assertEqual(cmd[:3], [sys.executable, "-I", "-B"])
+                self.assertIn(Path(cmd[3]).relative_to(ROOT).as_posix(), FRONTENDS)
+                self.assertEqual(cmd[4::2], ["--target-id", "--point"])
+                self.assertEqual(len(cmd), 8)
+
+    def test_fixed16_plus_den_identity_pair_exact_subset_not_additional_jobs(self):
+        phases, _, _ = self.registered()
+        fixed = {"OM:pic0:01", "R127:pic0:00", "R127:pic1:00", "R127:pic1:03", "R127:pic1:16",
+                 "R127:pic1:32", "R127:pic1:63", "R41_12:pic0:00", "R41_22:pic0:00",
+                 "R43_20:pic0:00", "R43_31:pic0:00", "R7:pic0:00", "R7:pic0:32",
+                 "R7sq:pic0:00", "R83:pic0:00", "R83:pic1:00", "R83:pic1:16"}
+        a, b = ({c[-1] for _, c in p["tasks"]} for p in phases[4:])
+        self.assertEqual(a, fixed)
+        self.assertFalse(a & b)
+        self.assertEqual(a | b, nonhits())
+
+    def test_failure_in_each_phase_prevents_every_later_phase(self):
+        for i, failing in enumerate(PHASES):
+            def mutate(phase, rows):
+                if phase == failing:
+                    rows[0].status, rows[0].returncode = "failed", 1
+                return rows
+            with self.subTest(phase=failing):
+                captured, code, out = self.registered(mutate_results=mutate)
+                self.assertEqual(code, 1)
+                self.assertEqual([p["phase"] for p in captured], PHASES[:i+1])
+                self.assertNotIn("CERTIFICATE SUITE: PASS", out)
+
+    def test_incomplete_reordered_substituted_and_noninteger_success_refused(self):
+        def substitute(rows):
+            rows[0].command = ("foreign",)
+            return rows
+        def setfield(rows, field, value):
+            setattr(rows[0], field, value)
+            return rows
+        cases = [lambda r: r[:-1], lambda r: r[::-1], substitute,
+                 lambda r: setfield(r, "returncode", False),
+                 lambda r: setfield(r, "returncode", None),
+                 lambda r: setfield(r, "status", "error")]
+        for change in cases:
+            captured, code, _ = self.registered(mutate_results=lambda p, r: change(r) if p == "v82-controls" else r)
+            self.assertEqual(code, 1)
+            self.assertEqual(len(captured), 2)
+
+    def test_package_domain_kind_cap_and_missing_frontend_refuse_before_dispatch(self):
+        def extra(s, e):
+            s["jobs"]["FOREIGN/point"] = {}
+            e["points"]["FOREIGN/point"] = {}
+        def partial(s, e):
+            s["jobs"] = {k:v for k,v in s["jobs"].items() if k.startswith("REFLECTED_AB_V1/OM:") and v["kind"] == "NEGATIVE_REPLAY"}
+            e["points"] = {k:{} for k in s["jobs"]}
+        def wrong(s, e, field, value):
+            s["jobs"]["ORIGINAL_Q_V1/OM:pic0:00"][field] = value
+        mutations = [extra, partial, lambda s,e: e["points"].pop(next(iter(e["points"]))),
+                     lambda s,e: wrong(s,e,"kind","NEGATIVE_REPLAY"),
+                     lambda s,e: wrong(s,e,"cpu_seconds",7200),
+                     lambda s,e: wrong(s,e,"cpu_seconds",True)]
+        for mutation in mutations:
+            captured, code, _ = self.registered(mutate_package=mutation)
+            self.assertEqual((captured, code), ([], 1))
+        for path in ("certificates/continuous_primary_v82.py", FRONTENDS[0]):
+            captured, code, _ = self.registered(missing_frontend=path)
+            self.assertEqual((captured, code), ([], 1))
+
+    def test_node_required_worker_validation_and_no_output_overwrite(self):
+        for request in ("0", "-1", "not-an-int"):
+            captured, code, _ = self.registered(request)
+            self.assertEqual((captured, code), ([], 1))
+        captured, code, _ = self.registered(node=None)
+        self.assertEqual((captured, code), ([], 1))
+        captured, code, _ = self.registered(output_exists=True)
+        self.assertEqual((captured, code), ([], "EXISTING_OUTPUT"))
+
+    def test_existing_installed_files_bound_by_reviewed_receipt(self):
+        # This deliberately fails on a pending/scoped installation. Candidate
+        # metadata tests exclude only this integration method until installation.
+        from check_combined_registration_installation import check
+        self.assertEqual(check(ROOT)["registered_commands"], 1405)
+
+
+if __name__ == "__main__":
+    unittest.main()

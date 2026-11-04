@@ -1,0 +1,227 @@
+#!/usr/bin/env python3
+from pathlib import Path
+import sys, os, time, shutil
+from certificate_execution import execute_tasks
+ROOT=Path(__file__).resolve().parents[1]
+if not __debug__:
+    raise SystemExit("FAIL assertions are disabled; run Python without -O/-OO.")
+# Current-source exact certificates that are expected to be runnable in the baseline environment.
+py = [
+ 'certificates/full_packet_arithmetic_v62.py',
+ 'independent/full_packet_cyclotomic_v62.py',
+ 'certificates/d3_points_v60.py',
+ 'independent/d3_points_quadratic_v60.py',
+ 'certificates/d3_completeness_v60.py',
+ 'independent/d3_completeness_quadratic_v60.py',
+ 'certificates/k11_vertex_bridge_v60.py',
+ 'independent/k11_vertex_bridge_stdlib_v60.py',
+ 'certificates/packet_order_coverage_v58.py',
+ 'independent/packet_order_coverage_stdlib_v58.py',
+ 'certificates/known_cm_comparison_v58.py',
+ 'certificates/principal_descent_v57.py',
+ 'independent/principal_descent_stdlib_v57.py',
+ 'certificates/principal_homology_v56.py',
+ 'independent/principal_homology_stdlib_v56.py',
+ 'certificates/a_vertex_certificate_v31.py',
+ 'certificates/d7_nonmaximal_classes_v29.py',
+ 'certificates/d7_ambient_points_v45.py',
+ 'certificates/vertex_saturation_v35.py',
+ 'certificates/a_principal_local_v33.py',
+ 'certificates/three_vertex_level_v37.py',
+ 'certificates/maximal_vertex_orbits_v38.py',
+ 'certificates/packet_hodge_v39.py',
+ 'certificates/four_vertex_audit_v40.py',
+ 'certificates/residual_orbit_k17_k38_v42.py',
+ 'certificates/residual_orbit_k1_k22_v43.py',
+ 'certificates/a_vertex_orbits_k20_k41_v44.py',
+ # v47 subsumes the retained v46 mask-14 certificate and adds mask 30
+ # without duplicating the multi-minute bounded-matrix enumeration.
+ 'certificates/d7_r83_masks14_30_v47.py',
+ # v48 is a new reflected pair with independently derived bounds and counts.
+ 'certificates/d7_r83_masks15_31_v48.py',
+ # v49 is another disjoint reflected pair with its own exact bounds and counts.
+ 'certificates/d7_r83_masks6_22_v49.py',
+ # v50 is a fourth disjoint reflected pair with new exact bounds and counts.
+ 'certificates/d7_r83_masks1_17_v50.py',
+ # v51 excludes ten further reflected pairs / twenty distinct ambient points.
+ 'certificates/d7_r83_batch10_v51.py',
+ # v52 and v53 close the final two reflected pairs in the nontrivial-R83 stratum.
+ 'certificates/d7_r83_masks13_29_v52.py',
+ 'certificates/d7_r83_masks7_23_v53.py',
+ 'independent/quadrilateral_k17_stdlib_v41.py',
+ 'independent/packet_cm_hodge_sturm_v41.py',
+ 'independent/residual_orbit_k17_k38_sturm_v42.py',
+ 'independent/residual_orbit_k1_k22_sturm_v43.py',
+ 'independent/a_vertex_orbits_k20_k41_sturm_v44.py',
+ 'independent/d7_ambient_points_sturm_v45.py',
+ 'independent/d7_r83_masks14_30_sturm_v47.py',
+ 'independent/d7_r83_masks15_31_sturm_v48.py',
+ 'independent/d7_r83_masks6_22_sturm_v49.py',
+ 'independent/d7_r83_masks1_17_sturm_v50.py',
+ 'independent/d7_r83_batch10_sturm_v51.py',
+ 'independent/d7_r83_masks13_29_sturm_v52.py',
+ 'independent/d7_r83_masks7_23_sturm_v53.py',
+]
+# Required reproducibility regressions.  These programs are registered and
+# must run when the full suite is claimed, but they are not promoted as
+# theorem-grade independent exact implementations.  In particular the packet
+# script uses floating-point CM-type inputs; the two exact packet paths are in
+# ``py`` above.
+js_regression = [
+ 'independent/a_vertex_hodge_node_v31.js',
+ 'independent/packet_hodge_node_v40.js',
+]
+failed=[]
+tasks=[]
+for rel in py:
+    p=ROOT/rel
+    if not p.exists():
+        print('FAIL missing expected certificate',rel)
+        failed.append(rel)
+        continue
+    tasks.append((rel, [sys.executable, str(p)]))
+
+# The v55 principal-Picard proper-R83 theorem has two exact implementations.
+# Each implementation is partitioned into four disjoint commands so the full
+# arithmetic is rerun on four cores without weakening mask coverage.
+v55_shards = (
+    "0,1,2,3,4,5,6,7",
+    "8,9,10,11,12,13,14,15",
+    "32,33,34,35,36,37,38,39",
+    "40,41,42,43,44,45,46,47",
+)
+v55_masks = tuple(
+    int(mask) for shard in v55_shards for mask in shard.split(",")
+)
+assert len(v55_masks) == 32
+assert len(set(v55_masks)) == len(v55_masks)
+assert tuple(sorted(v55_masks)) == tuple(range(16)) + tuple(range(32, 48))
+for rel, extra in (
+    ("certificates/d7_r83_principal_v55.py", ()),
+    ("independent/d7_r83_principal_sturm_v55.py", ("--mode", "enumerate")),
+):
+    p = ROOT / rel
+    if not p.exists():
+        print("FAIL missing expected v55 certificate", rel)
+        failed.append(rel)
+        continue
+    for shard in v55_shards:
+        label = f"{rel} --masks {shard}"
+        tasks.append(
+            (label, [sys.executable, str(p), "--masks", shard, *extra])
+        )
+# C40: each of the eleven remaining maximal points is replayed in both paths.
+v61_masks = (1, 3, 4, 5, 6, 8, 9, 10, 11, 12, 14)
+assert len(v61_masks) == len(set(v61_masks)) == 11
+assert set(v61_masks) | {0, 2, 7, 13, 15} == set(range(16))
+for rel in ("certificates/d7_remaining_maximal_v61.py",
+            "independent/d7_remaining_maximal_sturm_v61.py"):
+    p = ROOT / rel
+    if not p.exists():
+        print("FAIL missing expected v61 certificate", rel)
+        failed.append(rel)
+        continue
+    for mask in v61_masks:
+        label = f"{rel} --masks {mask}"
+        tasks.append((label, [sys.executable, str(p), "--masks", str(mask)]))
+
+# C41: all 32 proper-(41,t-12) points, one whole job per exact path and mask.
+v63_masks = tuple(range(16)) + tuple(range(32, 48))
+assert len(v63_masks) == len(set(v63_masks)) == 32
+assert {m for mask in v63_masks for m in (mask, mask ^ 16)} == set(range(64))
+for rel in ("certificates/d7_r41_v63.py", "independent/d7_r41_sturm_v63.py"):
+    p = ROOT / rel
+    if not p.exists():
+        print("FAIL missing expected v63 certificate", rel)
+        failed.append(rel)
+        continue
+    for mask in v63_masks:
+        label = f"{rel} --masks {mask}"
+        tasks.append((label, [sys.executable, str(p), "--masks", str(mask)]))
+
+# V75: replay the six named broader principal points in both exact paths.
+# Registration runs full arithmetic; promotion/release status lives in the ledger.
+v75_points = ("R127:pic0:00", "R43_20:pic0:00", "R7sq:pic0:00",
+              "R41_22:pic0:00", "R43_31:pic0:00", "R7:pic0:00")
+assert len(v75_points) == len(set(v75_points)) == 6
+for rel in ("certificates/broader_principal_v75.py",
+            "independent/broader_principal_sturm_v75.py"):
+    p = ROOT / rel
+    if not p.exists():
+        print("FAIL missing expected v75 certificate", rel)
+        failed.append(rel)
+        continue
+    for point in v75_points:
+        label = f"{rel} --point {point}"
+        tasks.append((label, [sys.executable, str(p), "--point", point]))
+
+# V80: the new Pic1 point and its principal control, with fresh finite sets.
+v80_points = ("R127:pic0:00", "R127:pic1:00")
+for rel in ("certificates/r127_pic1_v80.py", "independent/r127_pic1_sturm_v80.py"):
+    p = ROOT / rel
+    if not p.exists():
+        print("FAIL missing expected v80 certificate", rel)
+        failed.append(rel)
+        continue
+    for point in v80_points:
+        label = f"{rel} --point {point}"
+        tasks.append((label, [sys.executable, str(p), "--point", point]))
+
+node = shutil.which("node")
+if node:
+    for rel in js_regression:
+        p=ROOT/rel
+        if not p.exists():
+            print('FAIL missing expected regression source',rel)
+            failed.append(rel)
+            continue
+        tasks.append((rel, [node, str(p)]))
+else:
+    print('FAIL Node not available for required reproducibility regressions')
+    failed.extend(js_regression)
+
+# Scoped OM13 reflected-target regressions. Append after the complete legacy159
+# registration, preserving its exact order and argv. Each strict frontend
+# recomputes all finite stages before checking the reviewed expected artifacts.
+# Registration is not a claim that this newly expanded suite has been run.
+om13_masks = (1, 2, 3, 4, 5, 6, 8, 9, 10, 11, 12, 13, 14)
+assert len(om13_masks) == len(set(om13_masks)) == 13
+assert set(om13_masks) | {0, 7, 15} == set(range(16))
+for rel in ("certificates/reflected_primary_v83.py",
+            "independent/reflected_sturm_v83.py"):
+    p = ROOT / rel
+    if not p.exists():
+        print("FAIL missing expected OM13 reflected certificate", rel)
+        failed.append(rel)
+        continue
+    for mask in om13_masks:
+        point = f"OM:pic0:{mask:02d}"
+        label = f"{rel} --target-id REFLECTED_AB_V1 --point {point}"
+        tasks.append((label, [sys.executable, "-I", "-B", str(p),
+                             "--target-id", "REFLECTED_AB_V1", "--point", point]))
+
+try:
+    workers = int(os.environ.get('CERT_WORKERS', '4'))
+except ValueError:
+    print('FAIL CERT_WORKERS must be a positive integer')
+    sys.exit(1)
+if workers < 1:
+    print('FAIL CERT_WORKERS must be a positive integer')
+    sys.exit(1)
+workers = min(workers, 4, len(tasks)) if tasks else 1
+print(f'CERTIFICATE WORKERS: {workers}', flush=True)
+output_dir = Path(os.environ.get(
+    "CERT_RUN_DIR", str(ROOT / "build/certificate_runs" / str(time.time_ns()))))
+print(f'COMPLETE JOB LOGS: {output_dir}', flush=True)
+# Full output and live status are retained for every task. This legacy summary
+# stays in registration order; START/DONE notices are emitted live on stderr.
+results = execute_tasks(tasks, workers, ROOT, output_dir)
+for result in results:
+    print('\n===', result.label, '===')
+    print(result.stdout[-5000:])
+    print(f'EXIT: {result.returncode}; STATUS: {result.status}', flush=True)
+    if result.status != "passed":
+        failed.append(result.label)
+if failed:
+    print('FAILED CERTIFICATES:',', '.join(failed)); sys.exit(1)
+print('\nCERTIFICATE SUITE: PASS')

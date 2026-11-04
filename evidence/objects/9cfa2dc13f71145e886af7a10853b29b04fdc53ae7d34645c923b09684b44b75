@@ -1,0 +1,32 @@
+{
+  "all_subspaces": 33880,
+  "census_orbit_size_fixed_form_intersection_count": [
+    {
+      "fixed_form_isotropic_count": 14,
+      "orbit_count": 2,
+      "orbit_size": 14
+    },
+    {
+      "fixed_form_isotropic_count": 0,
+      "orbit_count": 108,
+      "orbit_size": 182
+    },
+    {
+      "fixed_form_isotropic_count": 14,
+      "orbit_count": 78,
+      "orbit_size": 182
+    }
+  ],
+  "nonprincipalizable_classes_candidate": 108,
+  "principalizable_classes_candidate": 80,
+  "real_unit_residue_order": 26,
+  "scope": "Finite model only; separate C85 human proof and accepted C63/C83/C84 supply the geometric and global-unit conclusions.",
+  "status": "EXACT_UNPOLARIZED_ORBIT_MODEL_PASS",
+  "underlying_quotient_classes": 188,
+  "unit_actions": [
+    "T",
+    "T-T^-1 = adopted gamma residue",
+    "-(T+T^-1) = real unit t"
+  ],
+  "unrestricted_minimum_principal_kernel_count_candidate": 14224
+}

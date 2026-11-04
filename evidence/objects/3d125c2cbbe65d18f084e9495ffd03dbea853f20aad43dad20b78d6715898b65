@@ -1,0 +1,465 @@
+#!/usr/bin/env python3
+"""Field-free audit of the fixed V83 origin + V86 continuation, never promotion.
+
+Only hash-pinned administrative helpers are imported. All record coordinates keep
+ their original remote meaning; explicit stores relocate byte reads, not argv.
+Actual capture/review is an external prerequisite, not an auditor-created fact.
+"""
+import argparse, contextlib, fcntl, hashlib, importlib.util, json, math, os
+from pathlib import Path
+import resource, signal, sys, time
+from collections import Counter
+
+HERE='experiments/continuous_v83'
+PINS={
+ HERE+'/terminal_audit/audit.py':'b785ac6745741b8af511cf488aa4e348c0da4bd790cc327345471042f13e53c3',
+ HERE+'/continuation/controller.py':'b13300caf9dc7c7c31abcdd0861c18912d2eda6749b1f9770a12a52d1d2a686c',
+ HERE+'/continuation/authenticate_origin.py':'c0cd8b68a6a8d403cd2ee98915868e8ac469dcbd54a91202e687afc6b0a8b705',
+ HERE+'/runner.py':'3acda0f59005ad92ae832760e4c614c524eed078e84b571698f8209ff5614449'}
+INDEX='0eba23ec9c6e4b0389fffc4da7345396e27425cc4b0fe7b76c4c51f6f3090bb3'
+ORIGIN_REVIEW='509796279d7bd9e359e731456f7fb536982d7e88e6be48dace09ae716bea4dbd'
+CONFIG='76bd4acafec50390afba073fb542ab1ebe611ad4f69f4724d141b9dce4210ae1'
+ORIGIN_INVENTORY='9aa548026c0a2ad3d3732fce0f04021a57417a9b1ed7af73a6a290dc2f7f07af'
+ORIGIN='/workspace/v83-campaign-cohort1'
+CLOSED='SUBSET_COMPUTATIONS_CLOSED_PENDING_CROSSCOHORT_AUDIT'
+FAILED={'RESOURCE_LIMIT','WALL_LIMIT','QUEUE_DEADLINE_INCOMPLETE','INTERRUPTED',
+        'FAILED','FAILED_VALIDATION','NEVER_STARTED'}
+INTENT_KEYS={'status','target_id','task_key','directory','command','attempt_number','parent_pid',
+ 'task','started_utc','started_epoch','cpu_limit','wall_limit','effective_wall_limit','plan_sha256',
+ 'global_attempt_id','origin_index_sha256','origin_lineage'}
+
+
+def need(ok,message):
+ if not ok:raise ValueError(message)
+def encode(x):return (json.dumps(x,sort_keys=True,separators=(',',':'),allow_nan=False)+'\n').encode()
+def object_sha(x):return hashlib.sha256(encode(x)).hexdigest()
+def sha(p):
+ h=hashlib.sha256()
+ with Path(p).open('rb') as f:
+  for b in iter(lambda:f.read(1048576),b''):h.update(b)
+ return h.hexdigest()
+def load(p,pin,name):
+ p=Path(os.path.abspath(p));need(all(not q.is_symlink() for q in (p,*p.parents)),'Aliased helper path')
+ need(sha(p)==pin,'Unreviewed administrative source '+str(p))
+ spec=importlib.util.spec_from_file_location(name,p);m=importlib.util.module_from_spec(spec);spec.loader.exec_module(m);return m
+
+def modules(root):
+ for name,pin in PINS.items():need(sha(root/name)==pin,'Changed helper source '+name)
+ a=load(root/(HERE+'/terminal_audit/audit.py'),PINS[HERE+'/terminal_audit/audit.py'],'cross_structure')
+ c=load(root/(HERE+'/continuation/controller.py'),PINS[HERE+'/continuation/controller.py'],'cross_controller')
+ h=load(root/(HERE+'/continuation/authenticate_origin.py'),PINS[HERE+'/continuation/authenticate_origin.py'],'cross_origin')
+ return a,c,h
+
+def reference(a,record,expected=None):
+ need(type(record)is dict and set(record)=={'path','sha256'} and Path(record['path']).is_absolute(),'Exact absolute reference')
+ path=a.safe(record['path']);a.signature(path)
+ need(sha(path)==record['sha256'] and (expected is None or record['sha256']==expected),'Reference seal mismatch')
+ return path,a.read(path)
+
+
+class Store:
+ """Immutable, exhaustive retained bytes; zero authority from the local path."""
+ def __init__(self,a,root,coordinate,inventory,allow_extras=False):
+  self.a=a;self.root=a.safe(root);self.coordinate=Path(coordinate)
+  need(self.root.is_absolute() and self.root.is_dir() and self.coordinate.is_absolute(),'Absolute evidence roots')
+  self.before=a.inventory(self.root);self.directories=self.directory_snapshot();self.cache=a.Hashes();self.files=inventory['files'];self.json_cache={}
+  need(type(inventory['schema_version'])is int and inventory['schema_version']==1,'Inventory schema')
+  need(type(self.files)is dict and set(self.files)<=set(self.before),'Missing inventory files')
+  wanted_directories=inventory['directories']
+  need(type(wanted_directories)is list and wanted_directories==sorted(set(wanted_directories)), 'Captured directory names')
+  actual_directories=set(self.directories)-{'.'}
+  need(set(wanted_directories)<=actual_directories,'Missing captured directory')
+  self.extra_directories=sorted(actual_directories-set(wanted_directories))
+  need(allow_extras or not self.extra_directories,'Unrecorded continuation directories')
+  self.extras=sorted(set(self.before)-set(self.files)-{'coordinator.lock'})
+  need(allow_extras or not self.extras,'Unrecorded continuation files')
+  for name,row in self.files.items():
+   p=self.path(name)
+   need(type(row)is dict and set(row)=={'bytes','sha256'},'Inventory row schema')
+   need(type(row['bytes'])is int and row['bytes']>=0 and p.stat().st_size==row['bytes'] and self.cache(p)==row['sha256'],'Captured bytes changed: '+name)
+  # Retain prior-transfer extras as extras, never substitute them for indexed files.
+  self.extra_seals={n:{'bytes':self.before[n][2],'sha256':self.cache(self.root/n)} for n in self.extras}
+ def directory_snapshot(self):
+  result={}
+  def fail(error):raise error
+  for folder,dirs,files in os.walk(self.root,followlinks=False,onerror=fail):
+   p=self.a.safe(folder);st=p.stat();result[p.relative_to(self.root).as_posix()]=(st.st_dev,st.st_ino,st.st_mtime_ns,st.st_ctime_ns)
+  return result
+ def path(self,name):
+  need(name in self.files,'Read outside captured file inventory: '+name);return self.a.below(self.root,name)
+ def mapped(self,path):
+  path=Path(path)
+  if path.is_relative_to(self.root):relative=path.relative_to(self.root)
+  else:
+   need(path.is_relative_to(self.coordinate),'Unmapped evidence coordinate');relative=path.relative_to(self.coordinate)
+  # Directory mapping permits the frozen validators to derive descendant names.
+  result=self.a.below(self.root,relative.as_posix()) if relative.parts else self.root
+  if result.is_file():need(relative.as_posix() in self.files,'Read outside captured file inventory')
+  return result
+ def sha(self,name):return self.cache(self.path(name))
+ def read(self,name):
+  self.sha(name)
+  cacheable=name in ('state.json','manifest.json') or name.startswith('plans/')
+  if cacheable and name in self.json_cache:return self.json_cache[name]
+  result=self.a.read(self.path(name))
+  if cacheable:self.json_cache[name]=result
+  return result
+ def unchanged(self):
+  self.cache.unchanged();need(self.a.inventory(self.root)==self.before and self.directory_snapshot()==self.directories,'Captured inventory mutated during audit')
+
+
+def mapped_runner(a,store):
+ """Only file adapters differ; argv, result and journal algorithms stay frozen."""
+ p=store.path('source/'+HERE+'/runner.py')
+ r=load(p,PINS[HERE+'/runner.py'],'cross_runner_'+str(id(store)))
+ original_pins=r.driver_pins
+ r.read=lambda p:store.read(store.mapped(p).relative_to(store.root).as_posix())
+ r.digest=lambda p:store.cache(store.mapped(p))
+ r.contained=lambda root,name:store.mapped(a.below(Path(root),name))
+ r.driver_pins=lambda p:original_pins(store.mapped(p))
+ return r
+
+
+def source_and_plans(a,store,index,labels,r):
+ names={n.removeprefix('source/') for n in store.files if n.startswith('source/')}
+ need(names==set(a.PINS) and index['origin']['source_sha256']==a.PINS,'Exact frozen19 source closure')
+ for n,h in a.PINS.items():need(store.sha('source/'+n)==h,'Frozen source changed')
+ wanted={'plans/'+r.slug(label)+'.json' for label in labels}
+ need({n for n in store.files if n.startswith('plans/')}==wanted,'Plan inventory')
+ for label in labels:
+  n='plans/'+r.slug(label)+'.json';r.validate_plan(store.read(n),label)
+  need(store.sha(n)==index['preparations'][label]['plan_sha256'],'Changed mapped plan bytes')
+
+
+def original(a,c,h,store,index,review,labels):
+ r=mapped_runner(a,store);manifest=store.read('manifest.json');state=store.read('state.json')
+ need(store.sha('manifest.json')==a.MANIFEST and store.sha('state.json')==index['origin']['state_sha256'],'Original anchors')
+ need(object_sha(state['runtime'])==index['origin']['runtime_sha256']==a.RUNTIME,'Original runtime')
+ source_and_plans(a,store,index,labels,r)
+ # The already-reviewed authenticator validates all old attempts/argv/leases,
+ # complete outputs, preparation and timing. Here every byte is rehashed anew.
+ actual=h.authenticate(a,r,store,manifest,state,{'normal_producer_closure':True})
+ for name,value in actual.items():need(value==index[name],'Accepted origin index no longer matches bytes: '+name)
+ records=[];results={}
+ for k,job in state['jobs'].items():
+  for row in job['attempts']:
+   base=row['directory'];files={n[len(base)+1:]:v for n,v in store.files.items() if n.startswith(base+'/')}
+   records.append({'cohort':'ORIGINAL_V83','task_key':k,'attempt_number':row['attempt_number'],
+    'status':row['status'],'attempt_record_sha256':object_sha(row),'retained_files':files})
+   if row['status']=='COMPLETE' and row['task'][1]=='full':
+    selected=index['accepted'][k]
+    need(selected['attempt_record_sha256']==object_sha(row),'Original accepted row mismatch')
+    results[k]=complete(a,c,r,store,manifest,row,index,'ORIGINAL_V83')
+    if row['task'][0] in state['points']:results[k]['_row_evidence_sha256']=state['points'][row['task'][0]]['row_evidence_sha256']
+ intents={n[:-len('/attempt.json')] for n in store.files if n.startswith('attempts/') and n.endswith('/attempt.json')}
+ need(intents=={x['directory'] for j in state['jobs'].values() for x in j['attempts']},'Unrecorded original intent')
+ return results,records,state
+
+
+def complete(a,c,r,store,manifest,row,index,cohort):
+ label,stage,backend=row['task'];need(stage=='full','Only full executions contribute')
+ result,seals=r.validate_result(store.coordinate,manifest,label,stage,backend,row)
+ need(seals==row['output_sha256'],'Complete output seal/inventory mismatch')
+ counts={k:result[k] for k in c.COUNTS};c.validate_counts(counts)
+ need(result['runtime']['python_version']==store.read('state.json')['runtime']['python_version'],'Raw Python version')
+ need(type(result['runtime']['cpu_limits_seconds'])is list and all(type(x)is int for x in result['runtime']['cpu_limits_seconds']),'Strict CPU result types')
+ need(set(result['artifact_sha256'])|{'result.json'}==set(seals),'Unbound output file')
+ need(all(result['artifact_sha256'][n]==result['canonical_artifact_sha256'][n] for n in c.CANONICAL),'Canonical artifact link')
+ prep=index['preparations'][label]
+ need(result['target_geometry_sha256']==prep['target_geometry_sha256']==a.TARGET_HASH and
+      result['artifact_sha256']['preparation.json']==prep['preparation_sha256'] and
+      result['input_witness_plan_sha256']==result['witness_plan_sha256']==prep['plan_sha256'],'Full/paired preparation/target/plan differs')
+ return {'cohort':cohort,'backend':backend,'point_label':label,'attempt_directory':row['directory'],
+   'attempt_number':row['attempt_number'],'attempt_record_sha256':object_sha(row),
+   'result_sha256':store.sha(row['directory']+'/output/result.json'),
+   'output_sha256':seals,'counts':counts,'canonical_artifact_sha256':result['canonical_artifact_sha256'],
+   'plan_sha256':prep['plan_sha256'],'preparation_sha256':prep['preparation_sha256'],
+   'target_geometry_sha256':result['target_geometry_sha256'],'log_sha256':store.sha(row['directory']+'/child.log'),
+   'cpu_seconds':result['cpu_seconds'],'wall_seconds':result['wall_seconds'],
+   '_folder':store.path(row['directory']+'/output/result.json').parent,'_runner':r,'_result':result}
+
+
+def capture_gate(a,store,receipt,receipt_sha,review,config,partition,config_sha,inventory_sha,documents):
+ host=config['hosts'][partition];state=store.read('state.json')
+ need(receipt['status']=='TERMINAL_COHORT_BYTES_CAPTURED_NOT_ADOPTED' and receipt['kind']=='REFLECTED_CONTINUATION','Capture scope')
+ need(receipt['cohort_id']==config['cohort_id'] and receipt['partition_id']==partition and
+      receipt['original_campaign_path']==host['campaign_path']==str(store.coordinate),'Capture identity')
+ expected={'manifest_sha256':store.sha('manifest.json'),'configuration_sha256':config_sha,
+  'state_sha256':store.sha('state.json'),'controller_sha256':PINS[HERE+'/continuation/controller.py'],
+  'runtime_sha256':host['runtime']['sha256'],'source_sha256':a.PINS}
+ need(all(receipt[k]==v for k,v in expected.items()),'Capture anchor differs')
+ need(receipt['file_inventory']['sha256']==inventory_sha and receipt['file_inventory']['files']==len(store.files) and receipt['file_inventory']['bytes']==sum(v['bytes'] for v in store.files.values()) and receipt['file_inventory']['scope']=='ALL_PERSISTED_COHORT_REGULAR_FILES_EXCEPT_COORDINATOR_LOCK','Capture inventory differs')
+ need(review['status']=='ACCEPTED_TERMINAL_COHORT_CAPTURE' and review['receipt_sha256']==receipt_sha
+      and review['file_inventory_sha256']==inventory_sha and review['state_sha256']==expected['state_sha256']
+      and review['configuration_sha256']==config_sha,'Unaccepted captured closure')
+ # Review must bind actual producer normal closure + actual host PID/lock evidence,
+ # not infer it from a boolean or a local /proc view of another host.
+ need(review['parent_completion_sha256']==receipt['parent_completion']['sha256'] and
+      review['process_observation_sha256']==receipt['process_observation']['sha256'],'Closure evidence review binding')
+ need(type(state['schema_version'])is int and state['schema_version']==1 and state['status'] in (CLOSED,'COHORT_HALTED_NO_ADOPTION') and state['theorem_promotion'] is False,'Nonterminal continuation')
+ capture_documents(a,receipt,receipt_sha,review,state,host,documents)
+ return state
+
+
+def capture_documents(a,receipt,receipt_sha,review,state,host,documents):
+ parent=documents['parent-completion.json']['value'];observation=documents['process-observation.json']['value'];envelope=documents['observer-completion.json']['value']
+ for name,key in (('parent-completion.json','parent_completion'),('process-observation.json','process_observation')):
+  need(documents[name]['sha256']==receipt[key]['sha256'],'Capture closure file changed')
+ need(review['observer_completion_sha256']==documents['observer-completion.json']['sha256'],'Capture parent envelope review')
+ need(envelope['status']=='CAPTURE_PARENT_CLOSED' and type(envelope['returncode'])is int and envelope['returncode']==0 and envelope['error'] is None and envelope['receipt_sha256']==receipt_sha and envelope['theorem_promotion'] is False,'Observer parent did not close normally')
+ need(envelope['observer_sha256']==receipt['observer_sha256'] and envelope['config_sha256']==receipt['observer_configuration_sha256'],'Observer source/config changed')
+ for name in ('stdout','stderr'):
+  need(envelope[name+'_sha256']==documents[name+'.log']['sha256'] and
+       receipt['parent_logs'][name]['sha256']==documents['parent-'+name+'.log']['sha256']==parent[name+'_sha256'],'Capture/producer parent log mismatch')
+ need(documents['runtime-observed.json']['sha256']==receipt['observed_runtime_sha256'] and documents['runtime-observed.json']['value']==state['runtime'],'Actual capture runtime profile')
+ need(receipt['guard_deadline_epoch']==host['limits']['guard_deadline_epoch'] and receipt['observed_epoch']<receipt['guard_deadline_epoch']-60,'Capture deadline contract')
+ need(receipt['input_source_runtime_unchanged_during_capture'] is True and receipt['own_coordinator_lock_held'] is True and receipt['mathematical_kernels_executed'] is False and receipt['theorem_promotion'] is False,'Capture scope/source/lock guards')
+ need(type(parent['returncode'])is int and parent['wall_timeout'] is False and parent.get('launcher_failure') is None and
+      parent['input_unchanged'] and all(v is True for v in parent['input_unchanged'].values()),'Producer parent closure')
+ need(parent['returncode']==receipt['parent_returncode']==(0 if state['status']==CLOSED else 1) and receipt['producer_terminal_status']==state['status'],'Parent/state contradiction')
+ need(a.number(parent['finished_epoch']) and a.number(receipt['observed_epoch']) and state['finished_epoch']<=parent['finished_epoch']<=receipt['observed_epoch']<=envelope['finished_epoch'],'Closure publication order')
+ need(a.number(envelope['started_epoch']) and a.number(envelope['finished_epoch']) and a.number(envelope['wall_seconds']),'Capture timing')
+ need(observation['boot_id']==host['guard']['boot_id'] and observation['matching_campaign_or_math_processes']==[] and observation['own_coordinator_lock_held'] is True,'Remote process closure')
+ wanted={state['coordinator_pid']}|{r['pid'] for j in state['jobs'].values() for r in j['attempts'] if r.get('pid') is not None}
+ need(observation['recorded_pids_absent']==sorted(wanted) and all(type(p)is int and p>1 for p in wanted),'Recorded process absence set')
+ need(a.number(observation['observed_epoch']) and parent['finished_epoch']<=observation['observed_epoch']<=receipt['observed_epoch'],'Process observation ordering')
+ producers=observation['producer_identities_absent'];need(type(producers)is list and len(producers)>=2 and len({r['pid'] for r in producers})==len(producers),'Distinct closed producer identities')
+ for row in producers:
+  need(type(row['pid'])is int and row['pid']>1 and type(row['start_ticks'])is int and row['start_ticks']>0 and row['boot_id']==host['guard']['boot_id'] and type(row['argv'])is list and row['argv'] and all(type(v)is str for v in row['argv']),'Producer process identity')
+ coordinator=next((row for row in producers if row['pid']==state['coordinator_pid']),None)
+ need(coordinator is not None and coordinator['start_ticks']==state['coordinator_identity']['start_ticks'],'Actual coordinator closure identity')
+
+
+def continuation_row(a,c,r,store,manifest,state,index,config,partition,row):
+ host=config['hosts'][partition];limits=host['limits'];k=row['task_key'];label,stage,backend=c.task(k)
+ need(k in config['partitions'][partition] and row['task']==[label,stage,backend] and row['attempt_number']==1 and type(row['attempt_number'])is int,'Continuation task/ordinal')
+ need(row['target_id']==a.TARGET and row['parent_pid']==state['coordinator_pid'] and type(row['parent_pid'])is int,'Continuation parent/target')
+ need(row['origin_index_sha256']==INDEX and row['origin_lineage']==index['unresolved'][k]['prior_attempts'] and
+      row['global_attempt_id']==config['cohort_id']+'/'+partition+'/'+k+'/01','Original attempt lineage')
+ directory=f'attempts/{a.TARGET}/{r.slug(label)}/full-{backend}-01'
+ need(row['directory']==directory and row['cpu_limit']==limits['cpu_seconds'] and type(row['cpu_limit'])is int and
+      type(row['wall_limit'])is int and row['wall_limit']==limits['cpu_seconds']*2,'Continuation caps/directory')
+ for n in ('started_epoch','finished_epoch','wall_seconds','effective_wall_limit'):need(a.number(row.get(n)),'Finite attempt timing')
+ need(state['started_epoch']<=row['started_epoch']<limits['queue_deadline_epoch'] and row['finished_epoch']>=row['started_epoch'] and row['finished_epoch']<=state['finished_epoch'],'Attempt outside coordinator interval')
+ need(type(row['effective_wall_limit'])in(int,float) and row['effective_wall_limit']==c.clipped_wall(limits['cpu_seconds'],limits['queue_deadline_epoch'],row['started_epoch']),'Effective wall/deadline clipping differs')
+ need(abs(a.timestamp(row['started_utc'])-row['started_epoch'])<1,'Attempt launch clock')
+ need(abs(row['finished_epoch']-row['started_epoch']-row['wall_seconds'])<=1,'Reported wall duration contradicts epoch interval')
+ need(row['plan_sha256']==index['preparations'][label]['plan_sha256'],'Attempt plan changed')
+ intent=store.read(directory+'/attempt.json')
+ need(set(intent)==INTENT_KEYS and intent['status']=='RUNNING' and all(row.get(n)==v for n,v in intent.items() if n!='status'),'Immutable continuation intent')
+ expected=r.attempt_command(store.coordinate,(label,stage,backend),directory,row['cpu_limit'],manifest['limits'],row['parent_pid'],state['runtime']['invocation_path'],True)
+ need(row['command']==expected,'Original raw invocation/argv contract')
+ status=row['status'];rc=row.get('returncode');need(status=='COMPLETE' or status in FAILED,'Open/unknown attempt')
+ if status=='NEVER_STARTED':
+  need(rc is None and 'pid' not in row and directory+'/lease.json' not in store.files,'Never-started child exists')
+ else:
+  need(type(rc)is int and type(row['pid'])is int and row['pid']>1,'Child exit/PID types')
+  lease=store.read(directory+'/lease.json')
+  need(lease=={'pid':row['pid'],'parent_pid':row['parent_pid'],'target_id':a.TARGET,'task_key':k} and all(type(lease[n])is int for n in ('pid','parent_pid')),'Actual child lease')
+  need(type(row['start_ticks'])is int and row['start_ticks']>0 and row['boot_id']==state['coordinator_identity']['boot_id'],'Child PID identity')
+ if status=='COMPLETE':need(rc==0,'Complete nonzero exit')
+ elif status=='RESOURCE_LIMIT':need(rc in (-signal.SIGXCPU,-signal.SIGKILL,-signal.SIGXFSZ),'Resource signal mismatch')
+ elif status in ('WALL_LIMIT','QUEUE_DEADLINE_INCOMPLETE','INTERRUPTED'):
+  # The parent may apply an incomplete status after the child already exited0.
+  # Preserve the race as incomplete; never promote unvalidated partial output.
+  pass
+ elif status=='FAILED':need(rc!=0,'Failed attempt has successful exit')
+ need(store.sha(directory+'/child.log')==row['log_sha256'],'Continuation log seal')
+ files={n[len(directory)+1:]:{'size_bytes':v['bytes'],'sha256':v['sha256']} for n,v in store.files.items() if n.startswith(directory+'/')}
+ need(files==row['files'],'Complete/failed attempt inventory differs')
+ return {'cohort':config['cohort_id'],'partition_id':partition,'task_key':k,'attempt_number':1,
+  'global_attempt_id':row['global_attempt_id'],'origin_lineage':row['origin_lineage'],'status':status,
+  'returncode':rc,'started_epoch':row['started_epoch'],'finished_epoch':row['finished_epoch'],
+  'effective_wall_limit':row['effective_wall_limit'],'wall_seconds':row['wall_seconds'],
+  'attempt_record_sha256':object_sha(row),'retained_files':files}
+
+
+def overlap(rows,capacity):
+ events=[]
+ for row in rows:
+  if row['status']!='NEVER_STARTED':events.extend(((row['started_epoch'],1),(row['finished_epoch'],-1)))
+ active=peak=0
+ for _,delta in sorted(events):active+=delta;need(active>=0,'Invalid interval');peak=max(peak,active)
+ need(active==0 and peak<=capacity,'Observed concurrency exceeds approved workers');return peak
+
+
+def continuation(a,c,store,index,config,partition,receipt,receipt_sha,review,inventory_sha,documents):
+ state=capture_gate(a,store,receipt,receipt_sha,review,config,partition,CONFIG,inventory_sha,documents);host=config['hosts'][partition]
+ manifest=store.read('manifest.json');r=mapped_runner(a,store)
+ need(manifest==c.expected_manifest(config,index,host,partition,CONFIG),'Continuation manifest differs from reviewed configuration')
+ need(state['manifest_sha256']==store.sha('manifest.json') and state['configuration_sha256']==CONFIG and
+      store.sha('configuration.json')==CONFIG and store.sha('controller.py')==PINS[HERE+'/continuation/controller.py'] and
+      state['controller_sha256']==PINS[HERE+'/continuation/controller.py'],'Continuation state/source/config binding')
+ need(state['runtime']==store.read('approvals/runtime.json') and store.sha('approvals/runtime.json')==host['runtime']['sha256'],'Approved cohort runtime')
+ rr=store.read('approvals/runtime-review.json');need(store.sha('approvals/runtime-review.json')==host['runtime_review']['sha256'] and rr['status']=='APPROVED_CONTINUATION_RUNTIME' and rr['runtime_sha256']==host['runtime']['sha256'],'Actual runtime review')
+ for name,ref in (('origin-index',config['origin_index']),('origin-review',config['origin_review']),('root-authorization',config['authorization']),('guard-source',host['guard']['source']),('guard-config',host['guard']['configuration'])):
+  need(store.sha('approvals/'+name+'.json')==ref['sha256'],'Copied authorization/input changed')
+ auth=store.read('approvals/root-authorization.json')
+ need(auth['status']=='ROOT_APPROVED_BOUNDED_CONTINUATION' and auth['configuration_core_sha256']==object_sha({k:v for k,v in config.items() if k!='authorization'}) and auth['controller_sha256']==PINS[HERE+'/continuation/controller.py'] and auth['theorem_promotion'] is False and auth['funding_and_volume_reservations_verified'] is True and auth['linux_resource_probe_accepted'] is True,'Root authorization contract')
+ labels=sorted({c.task(k)[0] for k in config['partitions'][partition]});source_and_plans(a,store,index,labels,r)
+ need(a.number(state['started_epoch']) and a.number(state['finished_epoch']) and state['finished_epoch']>=state['started_epoch'],'Coordinator times')
+ need(type(state['coordinator_pid'])is int and state['coordinator_pid']>1 and type(state['coordinator_identity']['start_ticks'])is int and state['coordinator_identity']['start_ticks']>0 and state['coordinator_identity']['boot_id']==host['guard']['boot_id'],'Coordinator host/process identity')
+ c.validate_limits(host['limits'])
+ assigned=set(config['partitions'][partition]);need(set(state['jobs'])<=assigned and state['pending_tasks']==sorted(set(state['pending_tasks'])) and set(state['pending_tasks'])==assigned-set(state['jobs']),'Continuation pending domain')
+ records=[];results={};dirs=set()
+ for k,job in sorted(state['jobs'].items()):
+  need(type(job['attempts'])is list and len(job['attempts'])==1,'No hidden retry');row=job['attempts'][0]
+  need(row['task_key']==k and row['directory'] not in dirs,'Repeated/mislabeled attempt');dirs.add(row['directory'])
+  records.append(continuation_row(a,c,r,store,manifest,state,index,config,partition,row))
+  if row['status']=='COMPLETE':
+   value=complete(a,c,r,store,manifest,row,index,config['cohort_id'])
+   validation={n:value[n] for n in ('result_sha256','counts','canonical_artifact_sha256','target_geometry_sha256','preparation_sha256','plan_sha256')}
+   validation['outcome']='EMPTY_COMPUTATION' if value['counts']['survivor_count']==0 else 'SURVIVORS_REQUIRE_RESEARCH_REVIEW'
+   # row_evidence is independently recomputed during the paired structural stage.
+   need(all(row['validation'][n]==v for n,v in validation.items()),'Saved validation differs')
+   value['_row_evidence_sha256']=row['validation']['row_evidence_sha256'];results[k]=value
+ need({n[:-len('/attempt.json')] for n in store.files if n.startswith('attempts/') and n.endswith('/attempt.json')}==dirs,'Unrecorded continuation intent')
+ for n in store.files:
+  if n.startswith('attempts/'):need(any(n.startswith(d+'/') for d in dirs),'Orphan continuation output')
+ need({n[:-len('/lease.json')] for n in store.files if n.startswith('attempts/') and n.endswith('/lease.json')}=={r['directory'] for j in state['jobs'].values() for r in j['attempts'] if r['status']!='NEVER_STARTED'},'Unrecorded/missing lease')
+ peak=overlap(records,host['limits']['workers'])
+ guards=state.get('sources_unchanged') is True and state.get('runtime_unchanged') is True and state.get('full730_crosscohort_audit_required') is True
+ if state['status']==CLOSED:need(guards,'Normal closure lacks source/runtime guards')
+ return results,records,{'partition_id':partition,'status':state['status'],'pending_tasks':state['pending_tasks'],
+  'maximum_observed_concurrency':peak,'source_runtime_postguards':guards,
+  'over_effective_wall_observations':[x['global_attempt_id'] for x in records if x['wall_seconds']>x['effective_wall_limit']],
+  'timing_limitation':'Parent-observed finish includes polling/validation; it is not exact child lifetime.'}
+
+
+def reconcile(a,c,labels,accepted,new,records,partition_reports,output):
+ need(not set(accepted)&set(new),'Duplicate old/new completed task')
+ all_results={**accepted,**new};expected={c.key(label,b) for label in labels for b in c.BACKENDS}
+ need(set(all_results)<=expected,'Foreign successful obligation');points={}
+ for label in labels:
+  keys=[c.key(label,b) for b in c.BACKENDS];missing=[k for k in keys if k not in all_results]
+  if missing:
+   present=[]
+   for k in keys:
+    if k not in all_results:continue
+    item=all_results[k];a.inspect_geometry(item['_folder'],item['_result']);a.survivor_journal(item['_folder'])
+    rows=item['_runner'].row_coverage(item['_folder'],item['backend'])
+    if '_row_evidence_sha256' in item:need(object_sha(rows)==item['_row_evidence_sha256'],'Unpaired saved row digest differs')
+    name='unpaired-rows/'+item['_runner'].slug(label)+'-'+item['backend']+'.json'
+    present.append({'backend':item['backend'],'result_sha256':item['result_sha256'],'row_evidence':{'path':name,'sha256':a.save(output,name,rows)}})
+   points[label]={'outcome':'INCOMPLETE_NO_EXCLUSION','missing_backend_keys':missing,'validated_present_backends':present};continue
+  pair=[all_results[k] for k in keys];c.compare_paths(pair[0],pair[1])
+  # Equal artifact hashes permit one structural parse, but both journals are parsed.
+  counts=a.inspect_geometry(pair[0]['_folder'],pair[0]['_result']);need(counts==pair[1]['counts'],'Structural counts differ')
+  normalized=[]
+  for item in pair:
+   a.survivor_journal(item['_folder']);rows=item['_runner'].row_coverage(item['_folder'],item['backend']);normalized.append(rows)
+   if '_row_evidence_sha256' in item:need(object_sha(rows)==item['_row_evidence_sha256'],'Saved normalized journal digest differs')
+  need(normalized[0]==normalized[1],'Cross-cohort normalized journals differ')
+  name='rows/'+pair[0]['_runner'].slug(label)+'.json';row_sha=a.save(output,name,normalized[0])
+  detail=[{k:v for k,v in item.items() if not k.startswith('_')} for item in pair]
+  points[label]={'target_id':a.TARGET,'point_label':label,
+   'outcome':'PAIRED_EMPTY_DISCOVERY' if counts['survivor_count']==0 else 'PAIRED_SURVIVORS_REQUIRE_GEOMETRY',
+   'counts':counts,'accepted_backends':detail,'canonical_artifact_sha256':pair[0]['canonical_artifact_sha256'],
+   'plan_sha256':pair[0]['plan_sha256'],'preparation_sha256':pair[0]['preparation_sha256'],
+   'target_geometry_sha256':pair[0]['target_geometry_sha256'],'row_evidence':{'path':name,'sha256':row_sha}}
+ missing=sorted(expected-set(all_results));normal=all(p['status']==CLOSED and p['source_runtime_postguards'] for p in partition_reports)
+ return {'status':'COMPLETE_730_CROSSCOHORT_DISCOVERY_AUDIT_NO_PROMOTION' if not missing and normal else 'PARTIAL_CROSSCOHORT_AUDIT_NO_COMPLETENESS',
+  'obligation_count':len(expected),'original_completed_paths':len(accepted),'continuation_completed_paths':len(new),
+  'complete_backend_count':len(all_results),'missing_backend_keys':missing,'points':points,
+  'summary':dict(Counter(x['outcome'] for x in points.values())),'continuation_partitions':partition_reports,
+  'attempt_status_counts':dict(Counter(r['status'] for r in records)),
+  'failed_attempts_are_exclusions':False,'original_cohort_complete':False,'theorem_promotion':False}
+
+
+def audit_locked(args):
+ root=Path(args.helpers);a,c,h=modules(root);input_path,inputs=reference(a,{'path':str(args.input),'sha256':args.input_sha256})
+ need(type(inputs['schema_version'])is int and inputs['schema_version']==1 and inputs['scope']=='FIXED_557_PLUS_173_CROSSCOHORT_RESULT_AUDIT_NO_PROMOTION','Audit input scope')
+ ip,index=reference(a,inputs['origin_index'],INDEX);rp,review=reference(a,inputs['origin_review'],ORIGIN_REVIEW)
+ cp,config=reference(a,inputs['configuration'],CONFIG);op,old_inventory=reference(a,inputs['original_inventory'],ORIGIN_INVENTORY)
+ need(old_inventory['scope']=='ALL_PERSISTED_ORIGINAL_CAMPAIGN_REGULAR_FILES_EXCEPT_COORDINATOR_LOCK','Original inventory scope')
+ c.validate_origin_acceptance(index,review,INDEX);labels=a.declared_domain();c.validate_partition(index,config['partitions'],labels)
+ need(len(index['accepted'])==557 and len(index['unresolved'])==173 and config['origin_index']['sha256']==INDEX and config['origin_review']['sha256']==ORIGIN_REVIEW,'Fixed historical split')
+ need(set(inputs['continuations'])==set(config['partitions']),'Missing/extra continuation partition')
+
+ stores=[];refs=[input_path,ip,rp,cp,op];anchors={str(p):sha(p) for p in refs};all_records=[];continuations={};partition_reports=[]
+ original_store=Store(a,inputs['original_root'],ORIGIN,old_inventory,True);stores.append(original_store)
+ output=a.safe(args.output);need(all(not output.is_relative_to(s.root) for s in stores),'Output overlaps evidence');output.mkdir(parents=True,exist_ok=False);args.owned_output=True
+ old,records,old_state=original(a,c,h,original_store,index,review,labels);all_records+=records
+ for partition,entry in inputs['continuations'].items():
+  vp,inv=reference(a,entry['inventory']);need(inv['scope']=='ALL_PERSISTED_COHORT_REGULAR_FILES_EXCEPT_COORDINATOR_LOCK','Continuation inventory scope');pp,receipt=reference(a,entry['receipt']);qp,approval=reference(a,entry['review'])
+  for p in (vp,pp,qp):anchors[str(p)]=sha(p)
+  store=Store(a,entry['root'],config['hosts'][partition]['campaign_path'],inv);stores.append(store)
+  need(not output.is_relative_to(store.root) and not store.root.is_relative_to(output),'Output/evidence overlap')
+  documents={}
+  for name in ('parent-completion.json','process-observation.json','observer-completion.json','runtime-observed.json','stdout.log','stderr.log','parent-stdout.log','parent-stderr.log'):
+   p=a.below(pp.parent,name);a.signature(p);digest=sha(p);anchors[str(p)]=digest
+   documents[name]={'sha256':digest,'value':a.read(p) if name.endswith('.json') else None}
+  value,rows,part=continuation(a,c,store,index,config,partition,receipt,entry['receipt']['sha256'],approval,entry['inventory']['sha256'],documents)
+  need(not set(value)&set(continuations),'Overlapping continuations');continuations.update(value);all_records+=rows;partition_reports.append(part)
+  part.update(inventory_sha256=entry['inventory']['sha256'],receipt_sha256=entry['receipt']['sha256'],review_sha256=entry['review']['sha256'],state_sha256=store.sha('state.json'),manifest_sha256=store.sha('manifest.json'))
+ report=reconcile(a,c,labels,old,continuations,all_records,partition_reports,output)
+ report.update(schema_version=1,scope=inputs['scope'],target_id=a.TARGET,known_positive_hits_outside_domain=a.HITS,
+   source_sha256=a.PINS,administrative_source_sha256=PINS,origin_index_sha256=INDEX,origin_review_sha256=ORIGIN_REVIEW,
+   origin_manifest_sha256=a.MANIFEST,origin_state_sha256=index['origin']['state_sha256'],origin_inventory_sha256=ORIGIN_INVENTORY,
+   configuration_sha256=CONFIG,origin_prior_transfer_extras=original_store.extra_seals,
+   origin_prior_transfer_extra_directories=original_store.extra_directories,original_runtime_sha256=index['origin']['runtime_sha256'],historical_runtime_profiles_verified_from_sealed_bytes=True,
+   installed_historical_runtimes_reverified=False,actual_remote_process_absence_source='Accepted terminal capture/closure evidence; not inferred from audit-host /proc',
+   mathematical_recomputation=False,archival_retention='Separate capture/archive/local-retention gates remain mandatory',
+   limitations=['Neither field arithmetic nor finite-domain proof is re-proved by this metadata audit.',
+    'Survivors are retained research candidates, not new claimed curve points.',
+    'Hash cache assumes immutable ordinary filesystem; it is not a malicious-root defense.'])
+ report['attempts']={'path':'attempts.json','sha256':a.save(output,'attempts.json',all_records)}
+ # Fresh small anchors/sources plus whole stat inventory and cache checks.
+ for p,digest in anchors.items():need(sha(p)==digest,'Audit input changed')
+ for store in stores:
+  for n,digest in a.PINS.items():need(sha(store.path('source/'+n))==digest,'Mathematical source changed')
+  store.unchanged()
+ for n,digest in PINS.items():need(sha(root/n)==digest,'Administrative source changed')
+ report['anchors_sha256']=anchors;report['bytes_hashed_once']=sum(s.cache.bytes_hashed for s in stores)
+ return a,output,report
+
+
+def administrative_window(a,inputs,args):
+ path,record=reference(a,inputs['administrative_window'])
+ core={k:v for k,v in inputs.items() if k!='administrative_window'}
+ need(type(record['schema_version'])is int and record['schema_version']==1 and record['status']=='ROOT_APPROVED_CLOSED_CAPTURE_AUDIT_WINDOW','Separate administrative-window approval required')
+ need(record['auditor_sha256']==sha(__file__) and record['input_core_sha256']==object_sha(core),'Exact admin source/input authorization')
+ need(type(record['deadline_epoch'])is int and record['deadline_epoch']==args.deadline_epoch and
+      type(record['guard_deadline_epoch'])is int and record['deadline_epoch']<=record['guard_deadline_epoch']-60,'Independent audit guard reserve')
+ need(type(record['wall_limit_seconds'])is int and 0<record['wall_limit_seconds']<=1200 and
+      record['cpu_limits_seconds']==[600,610] and all(type(v)is int for v in record['cpu_limits_seconds']) and
+      type(record['memory_bytes'])is int and record['memory_bytes']==4*1024**3,'Administrative resource authorization')
+ need(all(record[n] is True for n in ('exclusive_administrative_capacity_reserved','read_only_closed_captures_only','producer_deadlines_unchanged')) and record['mathematical_execution'] is False and record['theorem_promotion'] is False,'Admin-only scope')
+ return path,record
+
+
+def audit(args):
+ # The external audit lock serializes audits/retention operations on these sealed
+ # snapshots. It is not a substitute for actual captured producer closure.
+ a,_,_=modules(Path(args.helpers));p=a.safe(args.input);a.signature(p)
+ need(sha(p)==args.input_sha256,'Input seal');inputs=a.read(p)
+ window_path,window=administrative_window(a,inputs,args);window_sha=sha(window_path)
+ lock=a.safe(inputs['audit_lock']);a.signature(lock)
+ with lock.open('rb') as stream:
+  fcntl.flock(stream,fcntl.LOCK_EX|fcntl.LOCK_NB)
+  need(time.time()<args.deadline_epoch,'Administrative cutoff passed')
+  result=audit_locked(args)
+  need(time.time()<args.deadline_epoch and sha(window_path)==window_sha,'Administrative window crossed/changed')
+  result[2]['administrative_window_sha256']=window_sha;result[2]['administrative_deadline_epoch']=args.deadline_epoch
+  result[2]['producer_deadlines_unchanged']=True
+  return result
+
+
+def main():
+ p=argparse.ArgumentParser(description=__doc__);p.add_argument('--helpers',type=Path,required=True);p.add_argument('--input',type=Path,required=True);p.add_argument('--input-sha256',required=True);p.add_argument('--output',type=Path,required=True);p.add_argument('--deadline-epoch',type=int,required=True);args=p.parse_args()
+ need(__debug__ and sys.flags.isolated and sys.flags.dont_write_bytecode,'Run raw Python -I -B')
+ soft,hard=resource.getrlimit(resource.RLIMIT_CPU);memory,_=resource.getrlimit(resource.RLIMIT_AS)
+ need(0<soft<=600 and soft<=hard<=610 and 0<memory<=4*1024**3,'Bounded600/610CPU4GiB admin execution required')
+ own=sha(__file__);binary=sha(Path(sys.executable).resolve());start=time.monotonic();cpu=time.process_time()
+ def interrupted(signum,frame):raise InterruptedError('Administrative audit interrupted by signal '+str(signum))
+ for sig in (signal.SIGTERM,signal.SIGINT):signal.signal(sig,interrupted)
+ try:
+  a,output,report=audit(args);need(sha(__file__)==own and sha(Path(sys.executable).resolve())==binary,'Auditor/runtime binary changed')
+  report.update(auditor_sha256=own,cpu_seconds=time.process_time()-cpu,wall_seconds=time.monotonic()-start,
+   audit_runtime={'invocation_path':sys.executable,'python_version':sys.version,'binary_sha256':binary,'binary_unchanged':True,'cpu_limits_seconds':[soft,hard],'memory_bytes':memory})
+  digest=a.save(output,'audit.json',report);print(json.dumps({'status':report['status'],'audit_sha256':digest,'summary':report['summary']}));return 0 if report['status'].startswith('COMPLETE_730') else 2
+ except BaseException as error:
+  failure={'status':'CROSSCOHORT_AUDIT_FAILED_NO_CONCLUSION','error':repr(error),'auditor_sha256':own,'theorem_promotion':False}
+  if getattr(args,'owned_output',False) and not (args.output/'failure.json').exists():(args.output/'failure.json').write_bytes(encode(failure))
+  print(json.dumps(failure),file=sys.stderr);return 1
+if __name__=='__main__':raise SystemExit(main())

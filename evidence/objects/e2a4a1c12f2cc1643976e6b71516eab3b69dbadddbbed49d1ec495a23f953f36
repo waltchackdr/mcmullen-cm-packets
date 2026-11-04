@@ -1,0 +1,11 @@
+{
+  "source_sha256": "449019827f01d0e73de3ba181a10009a3889e13690407cf6e3531eb3c1eca157",
+  "attempt01": {
+    "command": "python3 model_candidate.py",
+    "failure": "ModuleNotFoundError: sympy; no mathematical checks ran."
+  },
+  "attempt02": {
+    "command": ".venv/bin/python model_candidate.py",
+    "failure": "Sympy HNF required ZZ domain for recursive complement projection. Earlier exact source/quotient/lattice assertions passed; no serialized model or adoption."
+  }
+}

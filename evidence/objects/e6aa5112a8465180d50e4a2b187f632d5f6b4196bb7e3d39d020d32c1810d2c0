@@ -1,0 +1,10 @@
+{
+  "bundle_builder_sha256": "33c4a8ced71474ee9adb7ed2a6fa087f7fa900728fe909afbedba5e4a4c74c59",
+  "commands": 159,
+  "commit": "462b53ff29ef0035729878dededbb556926f0cc8",
+  "launcher_sha256": "11b22137bdd668fba76e8c73c8d56985f47d178c1c495daaa310b9571f66507f",
+  "manifest_sha256": "d5cc8cdcab982e930c46e523aad544362f2f66cb293d13996fb304e4e9e19606",
+  "source": "/workspace/v81-release159-source-cohort1",
+  "source_commit_archive_sha256": "1f7849308933389802eecb46f8906458d0c2e6637daaefbbea94cb5c1cf6ef8d",
+  "status": "IMMUTABLE_LEGACY_SOURCE_PREPARED_NO_MATH"
+}

@@ -1,0 +1,28 @@
+{
+  "status": "PASS_PRODUCER_ADMISSION_CHECKS_NOT_INDEPENDENT",
+  "checks": [
+    "job0 positive archive admission",
+    "job0 rejects ninth pair",
+    "job0 rejects duplicate pair",
+    "job0 rejects duplicate task",
+    "job0 rejects wrong total",
+    "job0 rejects unadopted representative",
+    "job0 rejects CPU extension",
+    "job0 rejects wall extension",
+    "job0 rejects pair index bool",
+    "job0 rejects incorrect numerator",
+    "job0 rejects source drift",
+    "job1 positive archive admission",
+    "job1 rejects ninth pair",
+    "job1 rejects duplicate pair",
+    "job1 rejects duplicate task",
+    "job1 rejects wrong total",
+    "job1 rejects unadopted representative",
+    "job1 rejects CPU extension",
+    "job1 rejects wall extension",
+    "job1 rejects pair index bool",
+    "job1 rejects incorrect numerator",
+    "job1 rejects source drift"
+  ],
+  "scope": "No numerical execution,provider call,authority or data adoption."
+}

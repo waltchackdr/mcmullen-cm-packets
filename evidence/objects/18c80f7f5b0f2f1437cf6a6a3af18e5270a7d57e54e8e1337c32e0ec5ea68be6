@@ -1,0 +1,8 @@
+{
+  "status": "PROVISIONAL_PULLBACK_COORDINATE_CORRECTION_BEFORE_PROMOTION",
+  "old_shorthand": "pullback multiplier eta*bar(eta)",
+  "correct": "target-coordinate normalized relative norm is eta*bar(eta); on source I_B actual trace-form multiplier is sigma19(eta*bar(eta))",
+  "reason": "The rational map is m sigma31, so moving sigma31 through trace applies inverse sigma19 to the relative norm. Scalars2etc unchanged.",
+  "affected": "V127 planned description/checkpoint only; existing C58-C61 certificates and scalar claims unchanged",
+  "reviewer": "historical_binding"
+}

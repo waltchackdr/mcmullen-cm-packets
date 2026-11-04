@@ -1,0 +1,25 @@
+"""Tiny independent unit/coboundary regression; classification is human proof."""
+import json
+from pathlib import Path
+import subprocess
+import sys
+import tempfile
+import unittest
+ROOT=Path(__file__).resolve().parents[1]
+class RealForms(unittest.TestCase):
+    def test_unit_coboundaries_and_forgetful_count(self):
+        source=ROOT/'experiments/all_underlying_galois_v165/referee_real_forms01.py'
+        with tempfile.TemporaryDirectory() as folder:
+            target=Path(folder)/source.name;target.write_bytes(source.read_bytes())
+            result=subprocess.run([sys.executable,str(target)],check=True,capture_output=True,text=True,timeout=20)
+        d=json.loads(result.stdout)
+        self.assertEqual(d['status'],'PASS')
+        self.assertEqual(d['gamma_absolute_norm'],1)
+        self.assertEqual(d['gamma_cubed_ratio_exponent_mod42'],21)
+        self.assertEqual(d['R_and_S_coboundary_image_order'],3)
+        self.assertEqual(d['O_coboundary_image_order'],42)
+        self.assertTrue(d['omitting_gamma_wrongly_leaves_two_source_twists'])
+        self.assertEqual(d['polarized_real_forms'],58)
+        self.assertEqual(d['underlying_real_forms'],29)
+        self.assertEqual(d['forgetful_fiber_size'],2)
+if __name__=='__main__':unittest.main()

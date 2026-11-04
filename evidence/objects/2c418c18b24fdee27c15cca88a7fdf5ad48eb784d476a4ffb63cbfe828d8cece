@@ -1,0 +1,120 @@
+{
+  "actual_outcomes_claimed": false,
+  "mathematical_source_changed": false,
+  "prior_path": "experiments/continuous_v83/final_join/configuration_serialization_cpu1800/join.py",
+  "prior_sha256": "80adbcb31a82cc30b97928c509eef6814c3a8a324e0bcb557289045228669ce0",
+  "replacements": [
+    {
+      "after": "experiments/continuous_v83/continuation/fanout/structural_cache_candidate/cpu7200",
+      "before": "experiments/continuous_v83/continuation/fanout/configuration_serialization/cpu1800"
+    },
+    {
+      "after": "6c12e07b0cce9b6fff4512c932f5b834acc9e32b071f4e54f3dd38ce27e5ffc5",
+      "before": "87708d61c1fc6b508c7bf78acca309fed250c34dfe7324df7db3ed6301b4088e"
+    },
+    {
+      "after": "b2db9e7784f0e2ed6fbdc164ba244db0c8dd7da358276b7bd83bcccb1f66e51c",
+      "before": "11c0eaebc4a8a36a1272bd33e6cca2c19c5b64ec7506e7989418969ca277d147"
+    },
+    {
+      "after": "experiments/continuous_v83/continuation/representative_remaining/v86_partial_admission/canonical_configuration/cpu7200_cache/join32.py",
+      "before": "experiments/continuous_v83/continuation/representative_remaining/v86_partial_admission/canonical_configuration/cpu1800/join32.py"
+    },
+    {
+      "after": "4a38929e7cc5a4aa2d6880fe0cdf4365d006bbbc6cb8a8f7d778e7c35f683130",
+      "before": "3a9e466e0459a428c9d6ed2472d6ac7f13dbd8ce5ba3e86addb28675a56a2ced"
+    },
+    {
+      "after": "HELPER_PINS.update({\n 'experiments/continuous_v83/continuation/fanout/structural_cache_candidate/cache.py':'3786473b04b0eea4d5b74f6489ca45d0c3f5530ef01db7a5de4aae8df8d3ec47',",
+      "before": "HELPER_PINS.update({"
+    },
+    {
+      "after": " 'configuration_serialization_review':'43afff910266620acdb433d3f1f0662c814d7572bda4254aaab88bd1e63eb6bc',\n 'structural_cache_review':'de2e4b221a867f08069444ba69148699663522844f948ba2337a4d806ad0f679',\n 'audit_parent_source_review':'a3b69bfc93c197ecd4fcc5db33eb456ba120f0af6871eca80a53445e850151dc',",
+      "before": " 'configuration_serialization_review':'43afff910266620acdb433d3f1f0662c814d7572bda4254aaab88bd1e63eb6bc',"
+    },
+    {
+      "after": "'v86_receipt','configuration_serialization_review','structural_cache_review','audit_parent_source_review')",
+      "before": "'v86_receipt','configuration_serialization_review')"
+    },
+    {
+      "after": "+=('v86_halted_policy','v86_admission_record','configuration_serialization_review','structural_cache_review','audit_parent_source_review')",
+      "before": "+=('v86_halted_policy','v86_admission_record','configuration_serialization_review')"
+    },
+    {
+      "after": "+=('v86_halted_policy','v83_frozen_audit','v86_admission_record','configuration_serialization_review','structural_cache_review','audit_parent_source_review')",
+      "before": "+=('v86_halted_policy','v83_frozen_audit','v86_admission_record','configuration_serialization_review')"
+    },
+    {
+      "after": "        REPRESENTATIVE.PRIOR_CPU1800_AUDITOR,REPRESENTATIVE.PRIOR_CPU1800_WRAPPER)",
+      "before": "        POLICY.FROZEN_SHA,PRODUCERS['v83_audit'])"
+    },
+    {
+      "after": "    REPRESENTATIVE.cache_reviews(objects['structural_cache_review'],objects['audit_parent_source_review'])\n    REPRESENTATIVE.cache_report(report)\n    configuration_serialization_join(frozen,objects,seals,authority)",
+      "before": "    configuration_serialization_join(frozen,objects,seals,authority)"
+    },
+    {
+      "after": "# Productionb2db adds the explicit cache authority envelope to actual6c12 PARTIAL.",
+      "before": "# Production11c0 adds only this explicit administrative envelope to actual87708 PARTIAL."
+    },
+    {
+      "after": "'installed_configuration_encoding_verified','structural_cache_review_sha256',\n           'prior_cpu1800_auditor_sha256','prior_cpu1800_wrapper_sha256'}",
+      "before": "'installed_configuration_encoding_verified'}"
+    },
+    {
+      "after": "<=7200 and runtime['cpu_limits_seconds'][0]<=runtime['cpu_limits_seconds'][1]<=7210",
+      "before": "<=1800 and runtime['cpu_limits_seconds'][0]<=runtime['cpu_limits_seconds'][1]<=1810"
+    },
+    {
+      "after": "    require(report['wall_seconds']<=7800,'Actual audit within reviewed maximum wall bound')\n    return complete\n\n\ndef representative_admission_join",
+      "before": "    return complete\n\n\ndef representative_admission_join"
+    },
+    {
+      "after": "    require(report['structural_cache_review_sha256']==seals['structural_cache_review']==REPRESENTATIVE.CACHE_REVIEW and\n            report['audit_parent_source_review_sha256']==seals['audit_parent_source_review']==REPRESENTATIVE.PARENT_REVIEW and\n            report['structural_cache_sha256']==REPRESENTATIVE.CACHE_SHA and report['audit_parent_sha256']==REPRESENTATIVE.PARENT_SHA and\n            report['prior_cpu1800_auditor_sha256']==REPRESENTATIVE.PRIOR_CPU1800_AUDITOR and\n            report['prior_cpu1800_wrapper_sha256']==REPRESENTATIVE.PRIOR_CPU1800_WRAPPER and\n            report['terminal_auditor_sha256']==PRODUCERS['v83_audit'] and report['frozen_terminal_auditor_sha256']==POLICY.FROZEN_SHA and\n            report['terminal_structural_validation_cache']==REPRESENTATIVE.cache_report(terminal),\n            'Representative32 and whole730 share actual cache/helper/parent lineage')\n    REPRESENTATIVE.cache_outcome_review(objects['v83_outcome_review'],seals['v83_audit'],seals['origin_index'],seals['v86_halted_policy'])\n    require(report['terminal_actual_execution_evidence_sha256']==objects['v83_outcome_review']['actual_execution_evidence_sha256'],\n            'Representative32 carries the accepted actual parent/config/runtime/handoff evidence')\n    descriptor=REPRESENTATIVE.cv.validate_descriptor",
+      "before": "    descriptor=REPRESENTATIVE.cv.validate_descriptor"
+    },
+    {
+      "after": "\"v86_halted_policy\", \"v83_frozen_audit\", \"v86_admission_record\", \"configuration_serialization_review\", \"structural_cache_review\", \"audit_parent_source_review\")",
+      "before": "\"v86_halted_policy\", \"v83_frozen_audit\", \"v86_admission_record\", \"configuration_serialization_review\")"
+    },
+    {
+      "after": "    if name=='v83_outcome_review':\n        REPRESENTATIVE.cache_outcome_review(record,seals['v83_audit'],seals['origin_index'],seals['v86_halted_policy'])\n        return\n",
+      "before": "    if name=='v83_outcome_review':\n        require(record['status']=='ACCEPTED_ACTUAL_CONDITIONAL730_OUTCOME_AND_RETENTION' and\n                record['binds']=={'audit_sha256':seals['v83_audit'],'auditor_sha256':PRODUCERS['v83_audit'],\n                    'final_selection_sha256':STATIC_PINS['v91_amendment'],'origin_index_sha256':seals['origin_index'],\n                    'v86_halted_policy_review_sha256':seals['v86_halted_policy'],\n                    'configuration_serialization_review_sha256':seals['configuration_serialization_review'],\n                    'frozen_auditor_sha256':POLICY.FROZEN_SHA},'Actual conditional730 outcome review')\n        require(all(record[k]is True for k in('historical_immutability_assumption_accepted','normal_audit_execution_accepted',\n                    'all730_selected_results_verified','all_completed_duplicates_compared','all_failed_histories_retained',\n                    'archive_members_and_local_retention_verified','configuration_serialization_amendment_reviewed'))and record['theorem_promotion']is False,\n                'Actual conditional audit/retrieval and explicit assumption required')\n        retention = record.get('retention_evidence_sha256')\n        require(type(retention) is dict and retention and all(valid_hash(v) for v in retention.values()),\n                'No archival evidence bindings')\n        return\n"
+    },
+    {
+      "after": "available(\"representative_control_audit\",\"v86_admission_record\",\"v86_halted_policy\",\"v83_outcome_review\")",
+      "before": "available(\"representative_control_audit\",\"v86_admission_record\",\"v86_halted_policy\")"
+    },
+    {
+      "after": "\"configuration_serialization_review_sha256\":seals.get('configuration_serialization_review'),\n            \"structural_cache_review_sha256\":seals.get('structural_cache_review'),\n            \"audit_parent_source_review_sha256\":seals.get('audit_parent_source_review'),\n            \"structural_cache_sha256\":REPRESENTATIVE.CACHE_SHA,\n            \"audit_parent_sha256\":REPRESENTATIVE.PARENT_SHA,\n            \"terminal_structural_validation_cache\":objects['v83_audit']['structural_validation_cache']if checks.get('actual_v83_365_paired')else None,\n            \"actual_audit_execution_evidence_sha256\":objects['v83_outcome_review']['actual_execution_evidence_sha256']if checks.get('v83_outcome_review')else None,",
+      "before": "\"configuration_serialization_review_sha256\":seals.get('configuration_serialization_review'),"
+    },
+    {
+      "after": "526de556d489b3bf90f9847972cc73a95eeb6560ec3107f397121f0023d4c5cc",
+      "before": "4a38929e7cc5a4aa2d6880fe0cdf4365d006bbbc6cb8a8f7d778e7c35f683130"
+    },
+    {
+      "after": "EXECUTION_INPUTS=tuple('audit_'+role for role in REPRESENTATIVE.EXECUTION_EVIDENCE)\nREVIEW_DEPENDENCIES['v83_outcome_review']+=EXECUTION_INPUTS\nREQUIRED=tuple(dict.fromkeys((*REQUIRED,*EXECUTION_INPUTS)))\n\ndef actual_execution_join(objects,seals):\n    report=objects['v83_audit'];review=objects['v83_outcome_review']\n    REPRESENTATIVE.cache_outcome_review(review,seals['v83_audit'],seals['origin_index'],seals['v86_halted_policy'])\n    REPRESENTATIVE.execution_join(report,review,{k:objects['audit_'+k]for k in REPRESENTATIVE.EXECUTION_EVIDENCE},\n                                  {k:seals['audit_'+k]for k in REPRESENTATIVE.EXECUTION_EVIDENCE})\n\ndef configuration_serialization_join(",
+      "before": "def configuration_serialization_join("
+    },
+    {
+      "after": "self.objects[name] = raw if name in ('audit_stdout','audit_stderr')else decode(raw)",
+      "before": "self.objects[name] = decode(raw)"
+    },
+    {
+      "after": "            final_review(name, objects[name], seals)\n            if name=='v83_outcome_review':actual_execution_join(objects,seals)\n            checks[name] = True",
+      "before": "            final_review(name, objects[name], seals); checks[name] = True"
+    },
+    {
+      "after": "available(\"representative_control_audit\",\"v86_admission_record\",\"v86_halted_policy\",\"v83_outcome_review\",*EXECUTION_INPUTS)",
+      "before": "available(\"representative_control_audit\",\"v86_admission_record\",\"v86_halted_policy\",\"v83_outcome_review\")"
+    },
+    {
+      "after": "f53737f6854ca4fd5552ebb29bfa4e3a5b0c8d85ac8dc692e5a1c2a314b262ac",
+      "before": "526de556d489b3bf90f9847972cc73a95eeb6560ec3107f397121f0023d4c5cc"
+    },
+    {
+      "after": "HELPER_PINS.update({\n 'experiments/continuous_v83/continuation/representative_remaining/v86_partial_admission/canonical_configuration/cpu7200_cache/common.py':'6e5770522d55fecd9c8b3ecd6ed06dd1fb6905fa757f18272366269e3f20bf69',\n 'experiments/continuous_v83/continuation/representative_remaining/v86_partial_admission/canonical_configuration/cpu7200_cache/conditional.py':'eca050d1478efad4702e7df8527205986cf8c7d8da535a62d991884a63bc9503',\n",
+      "before": "HELPER_PINS.update({\n"
+    }
+  ]
+}

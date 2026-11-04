@@ -1,0 +1,36 @@
+{
+  "actual_runtime_evidence": false,
+  "all_observations_inconclusive": true,
+  "mathematical_adoption": false,
+  "negative_rejections": [
+    "truncated_stream",
+    "duplicate_pair",
+    "wrong_task",
+    "bad_nonfinite",
+    "wrong_input_record",
+    "wrong_result_spec",
+    "failed_child",
+    "missing_task07",
+    "runtime_mismatch",
+    "false_cleanup"
+  ],
+  "observations": 160,
+  "provider_calls": 0,
+  "status": "PASS_SYNTHETIC_COLLECTOR_CONTRACT_ONLY",
+  "targets": 10,
+  "task_counts_by_target": {
+    "0": 2,
+    "1": 2,
+    "12": 2,
+    "15": 2,
+    "17": 2,
+    "2": 2,
+    "3": 1,
+    "40": 1,
+    "6": 1,
+    "91": 1
+  },
+  "tasks": 16,
+  "theta_calls": 0,
+  "wall_seconds": 0.48949404200538993
+}

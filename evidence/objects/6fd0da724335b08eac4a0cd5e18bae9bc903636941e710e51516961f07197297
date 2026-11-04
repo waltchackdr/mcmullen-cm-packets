@@ -1,0 +1,11 @@
+{
+  "status": "LOCAL_SNAPSHOT_RECOVERY_DELTA_ONLY",
+  "candidate_sha256": "5668f2084f99b8408055ea77e3861beb04400256fbb798cf3955f9ab004403f7",
+  "job_function_ast_unchanged": true,
+  "controller_changed_functions": [
+    "main"
+  ],
+  "remote05_archives_unchanged": true,
+  "focused_tests": "12PASS; no provider, no sleeps or FLINT",
+  "prior_failure": "build/s-order-v164/session_run02/failure_summary.json"
+}

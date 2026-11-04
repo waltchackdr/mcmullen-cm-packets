@@ -1,0 +1,63 @@
+"""Bounded remote exact audit plus interval-period candidates; no theta values."""
+import argparse
+import hashlib
+import json
+import os
+from pathlib import Path
+import platform
+import resource
+import signal
+import sys
+import time
+
+import referee_data_checker as audit
+import period_recon_candidate as recon
+import period_interval_candidate as interval
+
+ROOT = Path(__file__).resolve().parents[2]
+BASE = Path(__file__).resolve().parent
+
+
+def pinned_inputs():
+    plan = json.loads((ROOT/'experiments/bc_jacobian_v147/certificate_plan_candidate.json').read_text())
+    assert len(plan['pins']) <= 64
+    for path,pin in plan['pins'].items():
+        full = ROOT/path
+        assert full.is_file() and not full.is_symlink() and full.resolve().is_relative_to(ROOT)
+        assert full.stat().st_size <= 2*1024**2
+        assert hashlib.sha256(full.read_bytes()).hexdigest() == pin
+    return plan
+
+
+def main():
+    p = argparse.ArgumentParser();p.add_argument('--start',type=int,required=True);args = p.parse_args()
+    if not __debug__:
+        raise RuntimeError('Enabled assertions required')
+    assert platform.system() == 'Linux' and os.environ.get('RUNPOD_POD_ID')
+    assert args.start in range(0,160,10)
+    resource.setrlimit(resource.RLIMIT_CPU,(120,120));signal.alarm(150)
+    resource.setrlimit(resource.RLIMIT_FSIZE,(2*1024**2,2*1024**2))
+    plan = pinned_inputs();assert args.start in [t['start'] for t in plan['tasks']]
+    ctx = audit.context();items = ctx['inventory']['models'][args.start:args.start+10]
+    digest = items[0]['stdout_sha256']
+    assert all(x['stdout_sha256'] == digest for x in items)
+    path = BASE/'inputs'/f'chunk{args.start//10:02d}.jsonl'
+    raw = audit.checked(path,digest);lines = raw.splitlines()
+    assert len(lines) == 10 and raw.endswith(b'\n')
+    for offset,line in enumerate(lines):
+        start = time.monotonic();index = args.start+offset;item = items[offset]
+        model_sha = audit.sha(line+b'\n');assert model_sha == item['sha256']
+        model = audit.decode(line)
+        checked = audit.audit_line(ctx,line,index,digest)
+        transport = recon.run(model,ctx['seed'])
+        enclosure = interval.run(model,ctx['seed'],transport)
+        pinned_inputs()
+        result = {'status':'EXACT_MODEL_AUDIT_AND_PERIOD_CANDIDATES','catalog_index':index,
+                  'input_model_sha256':model_sha,'original_stdout_sha256':digest,'original_line':offset+1,
+                  'source_pins':plan['pins'],'exact_audit':checked,'transport':transport,'interval_period':enclosure,
+                  'elapsed_seconds':time.monotonic()-start,'theta_evaluations':0,
+                  'scope':'Independent exact model check and candidate analytic coordinates/enclosures; final provenance/runtime/geometric review required.'}
+        print(json.dumps(result,sort_keys=True),flush=True)
+
+
+if __name__ == '__main__':main()

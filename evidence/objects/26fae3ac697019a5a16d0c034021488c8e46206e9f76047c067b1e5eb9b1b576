@@ -1,0 +1,125 @@
+"""Experimental rigorous period enclosures; adoption and runtime review pending.
+
+Only exact integer matrices from reconnaissance are consumed. All complex
+periods are recomputed from cyclotomic roots using Arb complex balls.
+"""
+import hashlib
+import importlib.util
+import itertools
+import json
+import resource
+import signal
+from pathlib import Path
+import sympy as s
+from flint import acb, arb, acb_mat, ctx
+from prepare_periods import rref_mod, require, PINS
+
+BASE = Path(__file__).resolve().parent
+ROOT = BASE.parents[1]
+
+
+def digest(path):
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def construct(name, precision=256):
+    ctx.prec = precision
+    for path, expected in PINS.items():
+        require(digest(ROOT/path) == expected, 'Changed input '+path)
+    setup = json.loads((BASE/'period_setup.json').read_text())
+    reduction = json.loads((BASE/'reduced_periods.json').read_text())
+    require(reduction['setup_sha256'] == digest(BASE/'period_setup.json'), 'Reduction source')
+    data = json.loads((ROOT/'certificates/principal_unmarked_bc_data.json').read_text())
+    spec = importlib.util.spec_from_file_location('field122', ROOT/'certificates/principal_unmarked_bc_v122.py')
+    field = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(field)
+    K = field.K
+    z = K([0, 1])
+    mat = lambda xs: s.Matrix.hstack(*(s.Matrix(x.c) for x in xs))
+    mm = lambda x: mat([x*z**i for i in range(12)])
+    integral = lambda a: all(x.q == 1 for x in a)
+    label, twist = name[0], int(name[1])
+    require(label in ('B', 'C') and twist in (0, 1), 'Model')
+    I = mat([K(v) for v in data['data']['I_'+label+'_basis']])
+    E = s.Matrix(data['data']['principal_alternating_matrix'])
+    if twist:
+        t = z+z**41
+        E = E*(I.inv()*mm(4-t*t)*I)
+    U = s.Matrix(setup['models'][name]['symplectic_basis_in_original_lattice'])
+    S = s.Matrix(reduction['models'][name]['symplectic_transform'])
+    J = s.zeros(12)
+    J[:6, 6:], J[6:, :6] = s.eye(6), -s.eye(6)
+    require(integral(U) and abs(U.det()) == 1 and U.T*E*U == J, 'First basis')
+    require(integral(S) and S.T*J*S == J, 'Reduction basis')
+    basis = I*U*S
+    F = basis.inv()*mm(z**14)*basis
+    require(integral(F) and F*F+F+s.eye(12) == s.zeros(12) and F.T*J*F == J, 'Delta')
+    equations = []
+    for i in range(12):
+        col = [int(F[j, i]) for j in range(12)]
+        equations.append([col[j]-int(i == j) for j in range(12)] + [sum(col[j]*col[j+6] for j in range(6))])
+    rows, pivots = rref_mod(equations, 2)
+    require(pivots == list(range(12)), 'Unique theta refinement')
+    chi = [r[-1] for r in rows]
+    A3 = s.eye(12)-F
+    rows, pivots = rref_mod(A3.tolist(), 3)
+    free = [i for i in range(12) if i not in pivots]
+    require(len(free) == 6 and A3.det() == 729, 'Fixed group size')
+    generators = []
+    for j in free:
+        v = [0]*12
+        v[j] = 1
+        for k, lead in enumerate(pivots):
+            v[lead] = -rows[k][j] % 3
+        generators.append(v)
+    points = set()
+    for coefficients in itertools.product(range(3), repeat=6):
+        v = tuple(sum(coefficients[k]*generators[k][j] for k in range(6)) % 3 for j in range(12))
+        require(all(int(x) % 3 == 0 for x in A3*s.Matrix(v)), 'Fixed point')
+        points.add(v)
+    require(len(points) == 729, 'Distinct fixed points')
+    pairs = sorted(v for v in points if v < tuple(-x % 3 for x in v))
+    require(len(pairs) == 364, 'Distinct nonzero pairs')
+    period = acb_mat(6, 12)
+    for i, exponent in enumerate(data['actual_tangent_types'][label]):
+        root = (acb(exponent)/21).exp_pi_i()
+        for j in range(12):
+            period[i, j] = sum((acb(int(basis[k, j].p))/int(basis[k, j].q))*root**k for k in range(12))
+    A = acb_mat([[period[i, j] for j in range(6)] for i in range(6)])
+    B = acb_mat([[period[i, j+6] for j in range(6)] for i in range(6)])
+    tau0 = A.inv()*B
+    # Exact Riemann symmetry follows from the adopted positive polarization.
+    # Reflect the upper triangle, preserving enclosure of that symmetric matrix.
+    for i in range(6):
+        for j in range(6):
+            require((tau0[i, j]-tau0[j, i]).contains(0), 'Symmetry enclosure')
+    tau = acb_mat([[tau0[min(i, j), max(i, j)] for j in range(6)] for i in range(6)])
+    # Interval LDL^T: positive pivot lower bounds certify positive definiteness.
+    L = [[arb(int(i == j)) for j in range(6)] for i in range(6)]
+    piv = []
+    for j in range(6):
+        pivot = tau[j, j].imag-sum(L[j][k]**2*piv[k] for k in range(j))
+        require(pivot > 0, 'Uncertified positive pivot')
+        piv.append(pivot)
+        for i in range(j+1, 6):
+            L[i][j] = (tau[i, j].imag-sum(L[i][k]*L[j][k]*piv[k] for k in range(j)))/pivot
+    # FLINT labels the 12 characteristic bits alpha first, then beta, MSB first.
+    characteristic = sum(bit << (11-j) for j, bit in enumerate(chi))
+    return tau, pairs, chi, characteristic, piv
+
+
+def point_argument(tau, numerator):
+    return acb_mat([[acb(numerator[i])/3+sum(tau[i, j]*numerator[j+6]/3 for j in range(6))] for i in range(6)])
+
+
+if __name__ == '__main__':
+    resource.setrlimit(resource.RLIMIT_CPU, (20, 20))
+    signal.alarm(30)
+    output = {}
+    for name in ('B0', 'B1', 'C0', 'C1'):
+        tau, pairs, chi, characteristic, piv = construct(name)
+        output[name] = {'chi': chi, 'flint_characteristic_index': characteristic,
+                        'pair_count': len(pairs), 'positive_ldl_pivots': [str(x) for x in piv],
+                        'tau_ball_display': [[str(tau[i, j]) for j in range(6)] for i in range(6)]}
+    print(json.dumps({'status': 'EXPERIMENTAL_INTERVAL_SETUP_REVIEW_PENDING', 'precision_bits': ctx.prec,
+                      'models': output, 'theta_evaluations_performed': False}, indent=2))

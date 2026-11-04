@@ -1,0 +1,14 @@
+{
+  "eigenvalues_by_order": {
+    "21": 21,
+    "3": 0,
+    "7": 0
+  },
+  "group_ring_relation": "N^2-21N=42S21 modulo t^21-1",
+  "inverse_rotation_invariant": true,
+  "least_denominator_from_C80_group_exponent": 21,
+  "negative_control": "False full-group-ring idempotence rejected by trivial-character residual 882.",
+  "on_jacobian_relation": "N^2=21N because S21(T)=0",
+  "scope": "Finite subgroup identities; geometric claims require the separate human review.",
+  "status": "PASS_INDEPENDENT_PROJECTOR_ARITHMETIC"
+}

@@ -1,0 +1,23 @@
+{
+  "status": "PREPARATION_ONLY_NOT_AUTHORIZED",
+  "candidate": {
+    "path": "build/s-order-v164/preparation08/execution_candidate.json",
+    "sha256": "4bf614c725e23560f09720ff6dfbfa44f97f01566ed9abf534c0d4708e296be6",
+    "bytes": 47497
+  },
+  "tests": 16,
+  "local_test_wall_seconds": 0.115,
+  "bootstrap_encoded_bytes": 24984,
+  "same_remote05_job_packets": true,
+  "same_session_manifest": true,
+  "same_load_packet_and_run_queue_AST": true,
+  "provider_calls": 0,
+  "reservations": 0,
+  "mathematical_adoption": false,
+  "endpoint_discovery_limit_seconds": 120,
+  "per_job_startup_bound_unchanged": 360,
+  "absolute_deletion_deadlines_unchanged": [
+    1200,
+    1500
+  ]
+}

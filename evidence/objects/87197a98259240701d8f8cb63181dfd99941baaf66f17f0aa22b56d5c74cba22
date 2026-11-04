@@ -1,0 +1,338 @@
+#!/usr/bin/env python3
+"""Whole-mask recovery of nine incomplete legacy commands; never a 159 PASS.
+
+No mathematical module is imported here. Frozen drivers execute unchanged in
+the reviewed resource child. Failed original batches and their logs stay intact.
+"""
+import argparse
+import ast
+import fcntl
+import hashlib
+import importlib.util
+import json
+import os
+from pathlib import Path
+import re
+import signal
+import subprocess
+import sys
+import time
+
+STOP_EPOCH = 1791850219
+QUEUE_EPOCH = 1791849919
+LEGACY_SHA = '11b22137bdd668fba76e8c73c8d56985f47d178c1c495daaa310b9571f66507f'
+CHILD_SHA = 'b78ba5ccdb4fcdec0b568c0ea2502575768f12bb8c04c87714576397dfc3f31e'
+SOURCE_MANIFEST_SHA = 'd5cc8cdcab982e930c46e523aad544362f2f66cb293d13996fb304e4e9e19606'
+INCOMPLETE = tuple(range(48, 56)) + (118,)
+MASKS = tuple(range(16)) + tuple(range(32, 48))
+DRIVERS = ('certificates/d7_r83_principal_v55.py',
+           'independent/d7_r83_principal_sturm_v55.py',
+           'independent/d7_r41_sturm_v63.py')
+STOP_REQUESTED = False
+
+
+def require(value, message):
+    if not value:
+        raise ValueError(message)
+
+
+def sha(path):
+    path = Path(path)
+    require(not path.is_symlink() and path.is_file() and path.stat().st_nlink == 1,
+            'Unsafe/missing regular file: ' + str(path))
+    with path.open('rb') as stream:
+        h = hashlib.sha256()
+        for data in iter(lambda: stream.read(1024**2), b''):
+            h.update(data)
+    return h.hexdigest()
+
+
+def read(path):
+    def unique(pairs):
+        result = {}
+        for key, value in pairs:
+            require(key not in result, 'Duplicate JSON key')
+            result[key] = value
+        return result
+    sha(path)
+    return json.loads(Path(path).read_text(), object_pairs_hook=unique,
+                      parse_constant=lambda _: require(False, 'Nonfinite JSON'))
+
+
+def write(path, value):
+    temporary = path.with_suffix('.tmp')
+    with temporary.open('x') as stream:
+        json.dump(value, stream, sort_keys=True, indent=2)
+        stream.write('\n'); stream.flush(); os.fsync(stream.fileno())
+    temporary.replace(path)
+
+
+def contained(root, name):
+    path = Path(name)
+    require(not path.is_absolute() and path.parts and '..' not in path.parts, 'Unsafe relative input')
+    result = root / path
+    require(not any(p.is_symlink() for p in (result, *result.parents)), 'Symlink input path')
+    return result
+
+
+def literal(path, name):
+    values = [node.value for node in ast.parse(path.read_text()).body
+              if isinstance(node, ast.Assign) and any(isinstance(t, ast.Name) and t.id == name for t in node.targets)]
+    require(len(values) == 1, 'Expected one literal constant: ' + name)
+    return ast.literal_eval(values[0])
+
+
+def plan(commands, source, python):
+    require(len(commands) == 159 and [r['index'] for r in commands] == list(range(1, 160)), 'Exact159 registry needed')
+    rows = []
+    for backend in range(2):
+        for group in range(4):
+            index = 48 + 4 * backend + group
+            masks = MASKS[8 * group:8 * group + 8]
+            extra = ['--mode', 'enumerate'] if backend else []
+            expected = ['python', DRIVERS[backend], '--masks', ','.join(map(str, masks)), *extra]
+            require(commands[index-1]['command'] == expected, 'Original R83 batch argv differs')
+            for mask in masks:
+                rows.append({'key': f'r83-{backend}-{mask:02d}', 'original_index': index,
+                             'backend': 'primary' if backend == 0 else 'sturm', 'family': 'R83', 'mask': mask,
+                             'argv': [python, str(source / DRIVERS[backend]), '--masks', str(mask), *extra],
+                             'status': 'PENDING'})
+    require(commands[117]['command'] == ['python', DRIVERS[2], '--masks', '8'], 'Original R41 argv differs')
+    rows.append({'key': 'r41-sturm-08', 'original_index': 118, 'backend': 'sturm', 'family': 'R41', 'mask': 8,
+                 'argv': [python, str(source / DRIVERS[2]), '--masks', '8'], 'status': 'PENDING'})
+    # Long singleton first, then interleave paths/masks to avoid a late straggler.
+    rows = [rows[-1]] + [r for mask in MASKS for r in rows[:-1] if r['mask'] == mask]
+    require(len(rows) == len({r['key'] for r in rows}) == 65, 'Recovery partition differs')
+    return rows
+
+
+def prior_guard(prior, state_hash, manifest, source):
+    require(sha(prior / 'state.json') == state_hash, 'Prior state changed')
+    state = read(prior / 'state.json')
+    require(state['status'] == 'MATH_PHASE_FAILED_OR_INCOMPLETE', 'Original failure must remain explicit')
+    rows = state['rows']
+    require(rows == state['registered_command_vectors'] and len(rows) == 159, 'Original command identity differs')
+    require([r['index'] for r in rows] == list(range(1, 160)), 'Original order differs')
+    require(tuple(r['index'] for r in rows if r['status'] != 'COMPLETE') == INCOMPLETE, 'Unexpected incomplete set')
+    require(sum(r['status'] == 'COMPLETE' for r in rows) == 150, 'Expected150 retained completed commands')
+    require(state['source_manifest_sha256'] == SOURCE_MANIFEST_SHA, 'Prior source identity differs')
+    logs = {}
+    for row, registered in zip(rows, manifest['registered_commands']):
+        require(row['label'] == registered['label'] and row['argv'][1:] ==
+                [str(source / registered['command'][1]), *registered['command'][2:]], 'Prior argv changed')
+        if row['status'] == 'COMPLETE':
+            require(type(row['returncode']) is int and row['returncode'] == 0, 'Old completion was not successful')
+        log = contained(prior, row['directory']) / 'child.log'
+        require(sha(log) == row['log_sha256'], 'Original full log changed')
+        logs[str(row['index'])] = row['log_sha256']
+    for name, checksum in state['file_sha256'].items():
+        require(sha(contained(prior, name)) == checksum, 'Prior sealed evidence changed: ' + name)
+    return {'state_sha256': state_hash, 'retained_complete_indices': [r['index'] for r in rows if r['status'] == 'COMPLETE'],
+            'incomplete_indices': list(INCOMPLETE), 'all159_log_sha256': logs,
+            'partial_mask_log_prefixes_adopted': False}
+
+
+def completed_mask(row, log, expected83, entries83, expected41):
+    """Only called after rc0 and exact child lease; progress is never evidence."""
+    text = log.read_text(); lines = text.splitlines(); mask = row['mask']
+    if row['family'] == 'R41':
+        values = [json.loads(s.removeprefix('POINT_PASS ')) for s in lines if s.startswith('POINT_PASS ')]
+        require(values == [{'mask': mask, **expected41[mask]}], 'R41 complete expected result missing/different')
+        require(f'SUBSET_PASS masks={mask}' in lines and any(s.startswith('SOURCE_SHA256 ') for s in lines),
+                'R41 final source/subset guard missing')
+        return values[0]
+    expected = expected83[mask]
+    if row['backend'] == 'primary':
+        matches = [line for line in lines if re.match(r'^mask=\d+: bottom=', line)]
+        target = (f'mask={mask:02d}: bottom={expected[0]}; c!=0={expected[1]}; '
+                  f'c=0={expected[2]}; digest={expected[4]}; survivors=0')
+        require(matches == [target], 'Primary complete mask expected output missing/different')
+        require(lines[-1] == 'PASS: exact principal-Picard proper-R83 exclusions', 'Primary final full-stage pass missing')
+    else:
+        matches = [line for line in lines if re.match(r'^mask=\d+ exact polygon result=', line)]
+        require(len(matches) == 1 and matches[0].startswith(f'mask={mask:02d} exact polygon result='), 'Sturm completed mask missing')
+        value = ast.literal_eval(matches[0].split('=', 2)[2])
+        require(value == expected[:-1] + ((),), 'Sturm exact result differs')
+        require(f'mask={mask:02d} exact a/c counts={entries83[mask][0]}/{entries83[mask][1]}' in lines,
+                'Sturm entry result missing')
+        require(f'mask={mask:02d} c=0 audit=' + '/'.join(map(str, expected[-1])) in lines, 'Sturm c0 audit differs')
+        require(lines[-1] == 'PASS: independent exact principal-Picard proper-R83 exclusions', 'Sturm final enumeration pass missing')
+    return {'mask': mask, 'bottom_rows': expected[0], 'nonzero_candidates': expected[1],
+            'zero_candidates': expected[2], 'classification_digest': expected[4], 'survivor_count': 0}
+
+
+def terminate(process):
+    try: os.killpg(process.pid, signal.SIGTERM)
+    except ProcessLookupError: pass
+    try: process.wait(timeout=.2)
+    except subprocess.TimeoutExpired: pass
+    try: os.killpg(process.pid, signal.SIGKILL)
+    except ProcessLookupError: pass
+    process.wait()
+
+
+def execute(rows, output, source, child, deadline, workers, verifier, checkpoint, cpu=7200):
+    live = {}; peak = 0
+    def publish():
+        write(output / 'progress.json', {'status': 'RECOVERY_RUNNING', 'rows': rows, 'peak_workers': peak,
+                                        'deadline_epoch': deadline, 'legacy159_pass': False})
+    try:
+        while any(r['status'] in ('PENDING', 'RUNNING') for r in rows):
+            now = time.time()
+            if STOP_REQUESTED or now >= deadline:
+                break
+            for key, (process, row) in list(live.items()):
+                if process.poll() is None and now >= row['deadline_epoch']:
+                    row['failure'] = 'WALL_OR_ORIGINAL_DEADLINE'; terminate(process)
+                if process.poll() is None: continue
+                row.update(returncode=process.returncode, finished_epoch=time.time())
+                terminate(process); del live[key]
+                folder = output / row['directory']; row['log_sha256'] = sha(folder / 'child.log')
+                try:
+                    require(type(row['returncode']) is int and row['returncode'] == 0 and 'failure' not in row,
+                            'Whole mask did not exit successfully')
+                    require(read(folder / 'lease.json') == {'pid': row['pid'], 'parent_pid': os.getpid()}, 'Lease differs')
+                    checkpoint()
+                    observed = verifier(row, folder / 'child.log')
+                    write(folder / 'completed-mask.json', {'status': 'WHOLE_MASK_FULL_RESULT_VERIFIED',
+                          'observed': observed, 'log_sha256': row['log_sha256'], 'argv': row['argv']})
+                    row.update(status='COMPLETE', completed_mask_sha256=sha(folder / 'completed-mask.json'))
+                except Exception as error:
+                    row.update(status='INCOMPLETE_OR_FAILED', error=str(error))
+                write(folder / 'result.json', row); publish()
+            for row in [r for r in rows if r['status'] == 'PENDING'][:max(0, workers-len(live))]:
+                checkpoint(); remaining = int(deadline - time.time())
+                if remaining < 2: break
+                soft = min(cpu, remaining - 1)
+                folder = output / 'jobs' / row['key']; folder.mkdir(parents=True, exist_ok=False)
+                command = [sys.executable, '-I', '-B', str(child), '--cpu', str(soft), '--memory-mib', '2048',
+                           '--file-mib', '128', '--lease', str(folder / 'lease.json'), '--parent-pid', str(os.getpid()), '--', *row['argv']]
+                row.update(status='RUNNING', directory=folder.relative_to(output).as_posix(), command=command,
+                           started_epoch=time.time(), deadline_epoch=deadline, cpu_soft=soft, cpu_hard=soft+1,
+                           memory_mib=2048, file_mib=128, parent_pid=os.getpid())
+                write(folder / 'attempt.json', row)
+                process = None
+                try:
+                    with (folder / 'child.log').open('xb') as stream:
+                        process = subprocess.Popen(command, cwd=source, stdout=stream, stderr=subprocess.STDOUT,
+                          env={'PATH': '/usr/bin:/bin', 'LANG': 'C.UTF-8', 'PYTHONDONTWRITEBYTECODE': '1',
+                               'PYTHONNOUSERSITE': '1', 'OPENBLAS_NUM_THREADS': '1', 'OMP_NUM_THREADS': '1'}, start_new_session=True)
+                    row['pid'] = process.pid; live[row['key']] = (process, row)
+                    peak = max(peak, len(live)); publish()
+                except BaseException:
+                    if process is not None: terminate(process)
+                    row.update(status='LAUNCH_FAILED_NO_COMPLETION', finished_epoch=time.time())
+                    raise
+            if live: time.sleep(.1)
+        return peak
+    finally:
+        # Reap the entire pool before any log hashing or metadata write can fail.
+        cleanup_errors = []
+        for process, row in live.values():
+            try: terminate(process)
+            except BaseException as error: cleanup_errors.append(error)
+            row.update(status='INTERRUPTED', returncode=process.returncode, finished_epoch=time.time())
+        for process, row in live.values():
+            try:
+                row['log_sha256'] = sha(output / row['directory'] / 'child.log')
+                write(output / row['directory'] / 'result.json', row)
+            except BaseException as error: cleanup_errors.append(error)
+        try: publish()
+        except BaseException as error: cleanup_errors.append(error)
+        if cleanup_errors: raise cleanup_errors[0]
+
+
+def run(args):
+    require(sys.platform.startswith('linux') and __debug__ and sys.flags.isolated and sys.dont_write_bytecode, 'Linux -I -B with assertions required')
+    approval = read(args.approval)
+    require(sha(args.approval) == args.approval_sha256 and approval['status'] == 'SCOPED_LEGACY_SINGLE_MASK_RECOVERY_APPROVED', 'Approval binding differs')
+    require(type(approval['schema_version']) is int and approval['schema_version'] == 1, 'Approval schema')
+    require(approval['runner_sha256'] == sha(Path(__file__)), 'Runner source differs')
+    require(approval['queue_deadline_epoch'] == QUEUE_EPOCH and approval['provider_stop_epoch'] == STOP_EPOCH,
+            'Original deadlines must not be extended')
+    require(type(approval['workers']) is int and 1 <= approval['workers'] <= 26 and time.time() < QUEUE_EPOCH, 'Workers/deadline')
+    require(approval['python_invocation'] == sys.executable and approval['cpu_soft_max'] == 7200 and
+            approval['memory_mib'] == 2048 and approval['file_mib'] == 128, 'Invocation/resource contract differs')
+    source, prior = Path(approval['source']), Path(approval['prior'])
+    output = args.output.absolute()
+    require(output.is_relative_to('/workspace') and '..' not in output.parts, 'Persistent output required')
+    inputs = {name: Path(approval[name]['path']) for name in ('snapshot', 'runtime')}
+    for base in (source, prior, *[p.parent for p in inputs.values()]):
+        require(not output.is_relative_to(base) and not base.is_relative_to(output), 'Output overlaps retained evidence')
+    require(not any(p.is_symlink() for p in (output, *output.parents)), 'Output symlink')
+    output.mkdir(parents=True, exist_ok=False)
+    write(output / 'approval.json', approval)
+    bound = {str(args.approval): args.approval_sha256, str(Path(__file__)): approval['runner_sha256'],
+             str(prior / 'state.json'): approval['prior_state_sha256']}
+    for name, path in inputs.items(): bound[str(path)] = approval[name]['sha256']
+    helper_path = source / 'experiments/continuous_v81/cloud/legacy_math.py'
+    child = source / 'experiments/continuous_v81/child.py'
+    bound[str(helper_path)] = LEGACY_SHA; bound[str(child)] = CHILD_SHA
+    def checkpoint():
+        require(all(sha(Path(p)) == value for p, value in bound.items()), 'Bound source/evidence changed')
+    checkpoint()
+    spec = importlib.util.spec_from_file_location('frozen_legacy_recovery_helper', helper_path)
+    legacy = importlib.util.module_from_spec(spec); spec.loader.exec_module(legacy)
+    snapshot = read(inputs['snapshot']); runtime = read(inputs['runtime'])
+    require(snapshot['manifest_sha256'] == SOURCE_MANIFEST_SHA and snapshot['source'] == str(source), 'Snapshot/source differs')
+    manifest = legacy.source_guard(source, snapshot, snapshot['commit'])
+    require(legacy.runtime() == runtime, 'Reviewed Python runtime differs')
+    memory_path = next(p for p in (Path('/sys/fs/cgroup/memory.max'), Path('/sys/fs/cgroup/memory/memory.limit_in_bytes')) if p.is_file())
+    require(int(memory_path.read_text()) >= 59 * 1024**3, 'Insufficient cgroup memory for26×2GiB plus administrative reserve')
+    # This node must have no old arithmetic pool before the26-worker recovery.
+    for path in Path('/proc').glob('[0-9]*/cmdline'):
+        try: argv = path.read_bytes().split(b'\0')
+        except FileNotFoundError: continue
+        require(not any(arg.startswith(str(source / d).encode() + b'/') for arg in argv for d in ('certificates', 'independent')),
+                'Original source arithmetic process remains')
+    retained = prior_guard(prior, approval['prior_state_sha256'], manifest, source)
+    write(output / 'retained-original-evidence.json', retained)
+    rows = plan(manifest['registered_commands'], source, sys.executable)
+    expected83 = literal(source / 'certificates/d7_r83_principal_expected_v55.py', 'EXPECTED')
+    entries83 = literal(source / 'certificates/d7_r83_principal_expected_v55.py', 'EXPECTED_ENTRY_COUNTS')
+    expected41 = literal(source / 'certificates/d7_r41_expected_v63.py', 'EXPECTED')
+    write(output / 'partition.json', rows)
+    record = {'status': 'RECOVERY_RUNNING', 'prior_state_sha256': approval['prior_state_sha256'],
+              'source_manifest_sha256': SOURCE_MANIFEST_SHA, 'runtime_sha256': approval['runtime']['sha256'],
+              'approval_sha256': args.approval_sha256, 'runner_sha256': approval['runner_sha256'],
+              'legacy159_pass': False, 'full_release': False, 'theorem_promotion': False,
+              'original_completed_commands': 150, 'required_recovery_jobs': 65, 'rows': rows}
+    write(output / 'state.json', record)
+    def stop(*_):
+        global STOP_REQUESTED
+        STOP_REQUESTED = True
+    signal.signal(signal.SIGTERM, stop); signal.signal(signal.SIGINT, stop)
+    with Path('/tmp/legacy-single-mask-recovery.lock').open('a+') as lock:
+        fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
+        try:
+            record['peak_workers'] = execute(rows, output, source, child, QUEUE_EPOCH, approval['workers'],
+                 lambda row, log: completed_mask(row, log, expected83, entries83, expected41), checkpoint)
+            checkpoint(); legacy.source_guard(source, snapshot, snapshot['commit'])
+            require(legacy.runtime() == runtime, 'Runtime changed during recovery')
+            require(prior_guard(prior, approval['prior_state_sha256'], manifest, source) == retained, 'Original evidence changed')
+            record.update(sources_unchanged=True, runtime_unchanged=True, original_evidence_unchanged=True)
+            record['status'] = ('RECOVERY_65_FULL_JOBS_COMPLETE_REQUIRES_REVIEW' if all(r['status'] == 'COMPLETE' for r in rows)
+                                else 'RECOVERY_INCOMPLETE_NO_LEGACY159_PASS')
+        except BaseException as error:
+            record.update(status='RECOVERY_INCOMPLETE_NO_LEGACY159_PASS', error=repr(error))
+            raise
+        finally:
+            record.update(finished_epoch=time.time(), completed_recovery_jobs=sum(r['status'] == 'COMPLETE' for r in rows))
+            record['file_sha256'] = {p.relative_to(output).as_posix(): sha(p) for p in output.rglob('*') if p.is_file() and p.name != 'state.json'}
+            write(output / 'state.json', record)
+    return record
+
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--approval', type=Path, required=True)
+    parser.add_argument('--approval-sha256', required=True)
+    parser.add_argument('--output', type=Path, required=True)
+    args = parser.parse_args()
+    result = run(args)
+    print(result['status'], flush=True)
+    return 0 if result['status'] == 'RECOVERY_65_FULL_JOBS_COMPLETE_REQUIRES_REVIEW' else 2
+
+
+if __name__ == '__main__':
+    raise SystemExit(main())

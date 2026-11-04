@@ -1,0 +1,21 @@
+{
+  "status": "C61_REVIEWED_PROMOTION_CANDIDATE_PENDING_ADOPTION",
+  "files": {
+    "certificates/principal_bc_min_degree_v126.py": {
+      "sha256": "b37f080c3d33936473c178cbe0e75b9932cb644719249d12ba27c2859856173e",
+      "bytes": 4404
+    },
+    "certificates/principal_bc_min_degree_data.json": {
+      "sha256": "1e6b331975adac3175523d6a0a1de7152e4dc230be440e7e96a71d2243e95a6a",
+      "bytes": 2351
+    },
+    "independent/principal_bc_min_degree_v126.py": {
+      "sha256": "7fd930ccd9a9ebf25dcfa0d3035bfc96beb0723d730bc88612ed9e7ba7042810",
+      "bytes": 6268
+    },
+    "tests/test_principal_bc_min_degree_v126.py": {
+      "sha256": "911e3546017e29767e4c92d522f54bf77bbb9000980b7bc43afe301ce7ec8a1e",
+      "bytes": 1113
+    }
+  }
+}

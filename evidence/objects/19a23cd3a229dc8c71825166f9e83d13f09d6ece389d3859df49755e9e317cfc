@@ -1,0 +1,70 @@
+{
+  "note": "Prior run paths document provenance only; portable drivers must not read build or experiments at runtime. Pic0 is a previously certified control; only Pic1 is a new promotion target.",
+  "points": {
+    "R127:pic0:00": {
+      "canonical_artifact_sha256": {
+        "A-entries.json": "3df6f7f7df57743a316ead8678a9cbc6b8baf9dec7edfdac338c9ce2ce576baa",
+        "C-entries.json": "368c97decba7ef54861eb9c3a42f65f0e86708f1935185f0890090e5a5aa1ea3",
+        "bottom-rows.json": "cbf0711a55504dea20e12dd2b585b09e06271ae0c8ac6d246b27dbb87e113487",
+        "candidates-nonzero.json": "9d59c9d592d823d4ea659d25ba7c5fe19c77a473ce9668a17cc751a1bf3c1ea1",
+        "candidates-zero.json": "03ffd89cfffebf6e06cf4e983f6b20d0e8b27920f8298e931adc37be444823d1",
+        "classification.json": "641380998d35893d07f95b24ccf1a5b3bf2197c7d0c736bb7ba4d580c4cde3ad",
+        "preparation.json": "e81c3efc9550deaf1d2e6a9c764ab5e5626fd30e01a1b5319701ec0be23bef31",
+        "survivors.json": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+      },
+      "counts": {
+        "a_count": 233,
+        "bottom_rows": 1949,
+        "c_count": 65,
+        "c_zero_audit": [
+          133,
+          1,
+          74,
+          12,
+          2304
+        ],
+        "candidate_count": 8876,
+        "classification_digest": "ad75a5b1d54ab79d495709583c567023b16f175e00929301142dfaf5e8010c89",
+        "nonzero_candidates": 6572,
+        "survivor_count": 0,
+        "zero_candidates": 2304
+      },
+      "prior_comparison_sha256": "c858eccb1e6474ee4f09960936a074bdb4216793571d79c275e5020671f7ba24",
+      "prior_run": "build/research-v79/full-r127-pic0-00-2026-10-10"
+    },
+    "R127:pic1:00": {
+      "canonical_artifact_sha256": {
+        "A-entries.json": "7440ca4c2c2b70f847808a18116022e93757839c98ce589e9ced0ca8308e9eae",
+        "C-entries.json": "55be0122dd3b6a7ce98e897bd2a3deff3cda4812f826e55023b5216033922254",
+        "bottom-rows.json": "4928a9048370b31f7a6c60fc5c228025bcc89070e333d38789627484fd7cad7f",
+        "candidates-nonzero.json": "81d4cdce28f100cb4450a7ed8a701676ccc12c4b316f5d87629bf29d990aef97",
+        "candidates-zero.json": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+        "classification.json": "e80e404adcca23e803595f88bdccce5039454e4b7cf86473988a892e21cf4cf3",
+        "preparation.json": "4edfbe6cfed63f4e476b1136a82ce5462cbd9dc1d49f849fddf76198c548e7b9",
+        "survivors.json": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+      },
+      "counts": {
+        "a_count": 29555,
+        "bottom_rows": 2005,
+        "c_count": 8167,
+        "c_zero_audit": [
+          1,
+          1,
+          0,
+          0,
+          0
+        ],
+        "candidate_count": 8488,
+        "classification_digest": "4b98fa2c3c880c40a239d3ca94c1a002df89ff0c4290a66ad40253aef3af0cca",
+        "nonzero_candidates": 8488,
+        "survivor_count": 0,
+        "zero_candidates": 0
+      },
+      "prior_comparison_sha256": "b1409b4f3aca405f2d4265c4d9b1129ae563fd6971d9138544f979b134614535",
+      "prior_run": "build/research-v79/full-r127-pic1-00-2026-10-10"
+    }
+  },
+  "schema_version": 1,
+  "scope": "R127_PIC1_MASK_ZERO_WITH_PRINCIPAL_CONTROL",
+  "status": "EXPECTED_DATA_ONLY_PENDING_PORTABLE_REPLAY_AND_REVIEW"
+}

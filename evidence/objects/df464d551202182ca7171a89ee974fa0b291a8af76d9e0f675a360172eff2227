@@ -1,0 +1,79 @@
+{
+  "accepted_source_record_details": {
+    "Markman": "Prior-work source/hypothesis check +v41 spot check; v2 \u00a71.1 and Theorem1.5.1; final application binding still required",
+    "McMullen": "v57 direct primary-source check and two_chamber_bridge_verdict; retain component normalization and simultaneous labelled targets",
+    "unitnorm_human_argument": "v54 \u00a77 and om13_q26_scoped_outcome_review accept C03 use under its hypotheses; citation locator receipts tracked separately"
+  },
+  "existing_accepted_checks_invalidated_by_age": false,
+  "external_specialist_approval_claimed": false,
+  "mathematical_theorems_rerun": false,
+  "pending_focused_source_bindings": {
+    "Hasse": {
+      "acceptance": null,
+      "requirement": "Exact Neukirch1999 VI\u00a78 cyclic norm/local-unit source locator plus already stated cyclic/unramified/positive hypotheses"
+    },
+    "Lefschetz_1_1": {
+      "acceptance": null,
+      "requirement": "Authoritative theorem/edition locator and final rational divisor-class application"
+    },
+    "Masley_Montgomery": {
+      "acceptance": null,
+      "requirement": "Exact authoritative conductor21 class-number-one theorem/list entry and final application binding"
+    }
+  },
+  "primary_source_rechecks_performed_by_this_task": false,
+  "schema_version": 1,
+  "scope": "Bounded local review-record inventory, not a proof that no other archived source review exists.",
+  "source_records": {
+    "docs/PRINCIPAL_DESCENT_V57.md": {
+      "path": "docs/PRINCIPAL_DESCENT_V57.md",
+      "sha256": "84381e3c3bdae05f0d963b09b3671bdb40ffb0cfab4aa51d84cbef1af97303c0"
+    },
+    "docs/PRINCIPAL_HOMOLOGY_REPAIR_V56.md": {
+      "path": "docs/PRINCIPAL_HOMOLOGY_REPAIR_V56.md",
+      "sha256": "511fe4fbe2a2278987bb50b6146bdc87bd3feb38d106c05affb5b0ca46d542c9"
+    },
+    "docs/PRIOR_WORK_COMPARISON_2026-09-18.md": {
+      "path": "docs/PRIOR_WORK_COMPARISON_2026-09-18.md",
+      "sha256": "a04d79486ced36b0c8e823ae3f437f55b6bbd8928d514837d20405c87b62d6cb"
+    },
+    "docs/REFEREE_AUDIT_V41_WORKING.md": {
+      "path": "docs/REFEREE_AUDIT_V41_WORKING.md",
+      "sha256": "d310cd58a184937189d4fe2b49d16b001e917bf976043a42f36226fe5ee5618e"
+    },
+    "docs/REFEREE_AUDIT_V54.md": {
+      "path": "docs/REFEREE_AUDIT_V54.md",
+      "sha256": "dcea3b5a3bcbb2044d27122d5af877933c6dbf17f529fbaa1d6a1fdde410ea2d"
+    },
+    "docs/REFEREE_AUDIT_V56.md": {
+      "path": "docs/REFEREE_AUDIT_V56.md",
+      "sha256": "0266c2a78cc0720980a69045867afd06df83b58f8fdcdd1b38165597ede29291"
+    },
+    "docs/REFEREE_AUDIT_V57.md": {
+      "path": "docs/REFEREE_AUDIT_V57.md",
+      "sha256": "3171ca7d7b8ad013e9a4b3a7c25fb6f14d488744e8df645d18a824d3444db243"
+    },
+    "experiments/continuous_v82_review/c40_manuscript_integration_review.json": {
+      "path": "experiments/continuous_v82_review/c40_manuscript_integration_review.json",
+      "sha256": "ea3d7b4e63feb724a25163c5177a909b95c261856052d5809239e5efa0b79eb5"
+    },
+    "experiments/continuous_v82_review/om13_q26_scoped_outcome_review.json": {
+      "path": "experiments/continuous_v82_review/om13_q26_scoped_outcome_review.json",
+      "sha256": "241c6a59e8d6d23d8dcaeee163641eaa42b47949a914001ba0d089fad8876dc2"
+    },
+    "experiments/continuous_v82_review/two_chamber_bridge_verdict.json": {
+      "path": "experiments/continuous_v82_review/two_chamber_bridge_verdict.json",
+      "sha256": "942ecc5125e5eccea6b9faf3d815ccbc8d9e531613d346cb150b6f829869a4a4"
+    },
+    "experiments/continuous_v83/maximal_packet_assessment/Q26_ACCEPTANCE_PROPOSAL.md": {
+      "path": "experiments/continuous_v83/maximal_packet_assessment/Q26_ACCEPTANCE_PROPOSAL.md",
+      "sha256": "cd9a3d6ca2012058f15162954f02a958f89e9938e94090d0f23575c1e84213d6"
+    },
+    "paper/main.tex": {
+      "path": "paper/main.tex",
+      "sha256": "d6448c8abfe029895be26718f8c061ad9e2e7db855f1ec6d0578d2a9ab7fd234"
+    }
+  },
+  "status": "EXISTING_HYPOTHESIS_REVIEW_INVENTORY_PENDING_FINAL_SUBMISSION_BINDING",
+  "submission_grade_accepted": false
+}

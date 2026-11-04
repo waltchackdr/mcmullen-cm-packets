@@ -1,0 +1,1502 @@
+[
+  {
+    "command": [
+      "python",
+      "certificates/full_packet_arithmetic_v62.py"
+    ],
+    "index": 1,
+    "label": "certificates/full_packet_arithmetic_v62.py"
+  },
+  {
+    "command": [
+      "python",
+      "independent/full_packet_cyclotomic_v62.py"
+    ],
+    "index": 2,
+    "label": "independent/full_packet_cyclotomic_v62.py"
+  },
+  {
+    "command": [
+      "python",
+      "certificates/d3_points_v60.py"
+    ],
+    "index": 3,
+    "label": "certificates/d3_points_v60.py"
+  },
+  {
+    "command": [
+      "python",
+      "independent/d3_points_quadratic_v60.py"
+    ],
+    "index": 4,
+    "label": "independent/d3_points_quadratic_v60.py"
+  },
+  {
+    "command": [
+      "python",
+      "certificates/d3_completeness_v60.py"
+    ],
+    "index": 5,
+    "label": "certificates/d3_completeness_v60.py"
+  },
+  {
+    "command": [
+      "python",
+      "independent/d3_completeness_quadratic_v60.py"
+    ],
+    "index": 6,
+    "label": "independent/d3_completeness_quadratic_v60.py"
+  },
+  {
+    "command": [
+      "python",
+      "certificates/k11_vertex_bridge_v60.py"
+    ],
+    "index": 7,
+    "label": "certificates/k11_vertex_bridge_v60.py"
+  },
+  {
+    "command": [
+      "python",
+      "independent/k11_vertex_bridge_stdlib_v60.py"
+    ],
+    "index": 8,
+    "label": "independent/k11_vertex_bridge_stdlib_v60.py"
+  },
+  {
+    "command": [
+      "python",
+      "certificates/packet_order_coverage_v58.py"
+    ],
+    "index": 9,
+    "label": "certificates/packet_order_coverage_v58.py"
+  },
+  {
+    "command": [
+      "python",
+      "independent/packet_order_coverage_stdlib_v58.py"
+    ],
+    "index": 10,
+    "label": "independent/packet_order_coverage_stdlib_v58.py"
+  },
+  {
+    "command": [
+      "python",
+      "certificates/known_cm_comparison_v58.py"
+    ],
+    "index": 11,
+    "label": "certificates/known_cm_comparison_v58.py"
+  },
+  {
+    "command": [
+      "python",
+      "certificates/principal_descent_v57.py"
+    ],
+    "index": 12,
+    "label": "certificates/principal_descent_v57.py"
+  },
+  {
+    "command": [
+      "python",
+      "independent/principal_descent_stdlib_v57.py"
+    ],
+    "index": 13,
+    "label": "independent/principal_descent_stdlib_v57.py"
+  },
+  {
+    "command": [
+      "python",
+      "certificates/principal_homology_v56.py"
+    ],
+    "index": 14,
+    "label": "certificates/principal_homology_v56.py"
+  },
+  {
+    "command": [
+      "python",
+      "independent/principal_homology_stdlib_v56.py"
+    ],
+    "index": 15,
+    "label": "independent/principal_homology_stdlib_v56.py"
+  },
+  {
+    "command": [
+      "python",
+      "certificates/a_vertex_certificate_v31.py"
+    ],
+    "index": 16,
+    "label": "certificates/a_vertex_certificate_v31.py"
+  },
+  {
+    "command": [
+      "python",
+      "certificates/d7_nonmaximal_classes_v29.py"
+    ],
+    "index": 17,
+    "label": "certificates/d7_nonmaximal_classes_v29.py"
+  },
+  {
+    "command": [
+      "python",
+      "certificates/d7_ambient_points_v45.py"
+    ],
+    "index": 18,
+    "label": "certificates/d7_ambient_points_v45.py"
+  },
+  {
+    "command": [
+      "python",
+      "certificates/vertex_saturation_v35.py"
+    ],
+    "index": 19,
+    "label": "certificates/vertex_saturation_v35.py"
+  },
+  {
+    "command": [
+      "python",
+      "certificates/a_principal_local_v33.py"
+    ],
+    "index": 20,
+    "label": "certificates/a_principal_local_v33.py"
+  },
+  {
+    "command": [
+      "python",
+      "certificates/three_vertex_level_v37.py"
+    ],
+    "index": 21,
+    "label": "certificates/three_vertex_level_v37.py"
+  },
+  {
+    "command": [
+      "python",
+      "certificates/maximal_vertex_orbits_v38.py"
+    ],
+    "index": 22,
+    "label": "certificates/maximal_vertex_orbits_v38.py"
+  },
+  {
+    "command": [
+      "python",
+      "certificates/packet_hodge_v39.py"
+    ],
+    "index": 23,
+    "label": "certificates/packet_hodge_v39.py"
+  },
+  {
+    "command": [
+      "python",
+      "certificates/four_vertex_audit_v40.py"
+    ],
+    "index": 24,
+    "label": "certificates/four_vertex_audit_v40.py"
+  },
+  {
+    "command": [
+      "python",
+      "certificates/residual_orbit_k17_k38_v42.py"
+    ],
+    "index": 25,
+    "label": "certificates/residual_orbit_k17_k38_v42.py"
+  },
+  {
+    "command": [
+      "python",
+      "certificates/residual_orbit_k1_k22_v43.py"
+    ],
+    "index": 26,
+    "label": "certificates/residual_orbit_k1_k22_v43.py"
+  },
+  {
+    "command": [
+      "python",
+      "certificates/a_vertex_orbits_k20_k41_v44.py"
+    ],
+    "index": 27,
+    "label": "certificates/a_vertex_orbits_k20_k41_v44.py"
+  },
+  {
+    "command": [
+      "python",
+      "certificates/d7_r83_masks14_30_v47.py"
+    ],
+    "index": 28,
+    "label": "certificates/d7_r83_masks14_30_v47.py"
+  },
+  {
+    "command": [
+      "python",
+      "certificates/d7_r83_masks15_31_v48.py"
+    ],
+    "index": 29,
+    "label": "certificates/d7_r83_masks15_31_v48.py"
+  },
+  {
+    "command": [
+      "python",
+      "certificates/d7_r83_masks6_22_v49.py"
+    ],
+    "index": 30,
+    "label": "certificates/d7_r83_masks6_22_v49.py"
+  },
+  {
+    "command": [
+      "python",
+      "certificates/d7_r83_masks1_17_v50.py"
+    ],
+    "index": 31,
+    "label": "certificates/d7_r83_masks1_17_v50.py"
+  },
+  {
+    "command": [
+      "python",
+      "certificates/d7_r83_batch10_v51.py"
+    ],
+    "index": 32,
+    "label": "certificates/d7_r83_batch10_v51.py"
+  },
+  {
+    "command": [
+      "python",
+      "certificates/d7_r83_masks13_29_v52.py"
+    ],
+    "index": 33,
+    "label": "certificates/d7_r83_masks13_29_v52.py"
+  },
+  {
+    "command": [
+      "python",
+      "certificates/d7_r83_masks7_23_v53.py"
+    ],
+    "index": 34,
+    "label": "certificates/d7_r83_masks7_23_v53.py"
+  },
+  {
+    "command": [
+      "python",
+      "independent/quadrilateral_k17_stdlib_v41.py"
+    ],
+    "index": 35,
+    "label": "independent/quadrilateral_k17_stdlib_v41.py"
+  },
+  {
+    "command": [
+      "python",
+      "independent/packet_cm_hodge_sturm_v41.py"
+    ],
+    "index": 36,
+    "label": "independent/packet_cm_hodge_sturm_v41.py"
+  },
+  {
+    "command": [
+      "python",
+      "independent/residual_orbit_k17_k38_sturm_v42.py"
+    ],
+    "index": 37,
+    "label": "independent/residual_orbit_k17_k38_sturm_v42.py"
+  },
+  {
+    "command": [
+      "python",
+      "independent/residual_orbit_k1_k22_sturm_v43.py"
+    ],
+    "index": 38,
+    "label": "independent/residual_orbit_k1_k22_sturm_v43.py"
+  },
+  {
+    "command": [
+      "python",
+      "independent/a_vertex_orbits_k20_k41_sturm_v44.py"
+    ],
+    "index": 39,
+    "label": "independent/a_vertex_orbits_k20_k41_sturm_v44.py"
+  },
+  {
+    "command": [
+      "python",
+      "independent/d7_ambient_points_sturm_v45.py"
+    ],
+    "index": 40,
+    "label": "independent/d7_ambient_points_sturm_v45.py"
+  },
+  {
+    "command": [
+      "python",
+      "independent/d7_r83_masks14_30_sturm_v47.py"
+    ],
+    "index": 41,
+    "label": "independent/d7_r83_masks14_30_sturm_v47.py"
+  },
+  {
+    "command": [
+      "python",
+      "independent/d7_r83_masks15_31_sturm_v48.py"
+    ],
+    "index": 42,
+    "label": "independent/d7_r83_masks15_31_sturm_v48.py"
+  },
+  {
+    "command": [
+      "python",
+      "independent/d7_r83_masks6_22_sturm_v49.py"
+    ],
+    "index": 43,
+    "label": "independent/d7_r83_masks6_22_sturm_v49.py"
+  },
+  {
+    "command": [
+      "python",
+      "independent/d7_r83_masks1_17_sturm_v50.py"
+    ],
+    "index": 44,
+    "label": "independent/d7_r83_masks1_17_sturm_v50.py"
+  },
+  {
+    "command": [
+      "python",
+      "independent/d7_r83_batch10_sturm_v51.py"
+    ],
+    "index": 45,
+    "label": "independent/d7_r83_batch10_sturm_v51.py"
+  },
+  {
+    "command": [
+      "python",
+      "independent/d7_r83_masks13_29_sturm_v52.py"
+    ],
+    "index": 46,
+    "label": "independent/d7_r83_masks13_29_sturm_v52.py"
+  },
+  {
+    "command": [
+      "python",
+      "independent/d7_r83_masks7_23_sturm_v53.py"
+    ],
+    "index": 47,
+    "label": "independent/d7_r83_masks7_23_sturm_v53.py"
+  },
+  {
+    "command": [
+      "python",
+      "certificates/d7_r83_principal_v55.py",
+      "--masks",
+      "0,1,2,3,4,5,6,7"
+    ],
+    "index": 48,
+    "label": "certificates/d7_r83_principal_v55.py --masks 0,1,2,3,4,5,6,7"
+  },
+  {
+    "command": [
+      "python",
+      "certificates/d7_r83_principal_v55.py",
+      "--masks",
+      "8,9,10,11,12,13,14,15"
+    ],
+    "index": 49,
+    "label": "certificates/d7_r83_principal_v55.py --masks 8,9,10,11,12,13,14,15"
+  },
+  {
+    "command": [
+      "python",
+      "certificates/d7_r83_principal_v55.py",
+      "--masks",
+      "32,33,34,35,36,37,38,39"
+    ],
+    "index": 50,
+    "label": "certificates/d7_r83_principal_v55.py --masks 32,33,34,35,36,37,38,39"
+  },
+  {
+    "command": [
+      "python",
+      "certificates/d7_r83_principal_v55.py",
+      "--masks",
+      "40,41,42,43,44,45,46,47"
+    ],
+    "index": 51,
+    "label": "certificates/d7_r83_principal_v55.py --masks 40,41,42,43,44,45,46,47"
+  },
+  {
+    "command": [
+      "python",
+      "independent/d7_r83_principal_sturm_v55.py",
+      "--masks",
+      "0,1,2,3,4,5,6,7",
+      "--mode",
+      "enumerate"
+    ],
+    "index": 52,
+    "label": "independent/d7_r83_principal_sturm_v55.py --masks 0,1,2,3,4,5,6,7"
+  },
+  {
+    "command": [
+      "python",
+      "independent/d7_r83_principal_sturm_v55.py",
+      "--masks",
+      "8,9,10,11,12,13,14,15",
+      "--mode",
+      "enumerate"
+    ],
+    "index": 53,
+    "label": "independent/d7_r83_principal_sturm_v55.py --masks 8,9,10,11,12,13,14,15"
+  },
+  {
+    "command": [
+      "python",
+      "independent/d7_r83_principal_sturm_v55.py",
+      "--masks",
+      "32,33,34,35,36,37,38,39",
+      "--mode",
+      "enumerate"
+    ],
+    "index": 54,
+    "label": "independent/d7_r83_principal_sturm_v55.py --masks 32,33,34,35,36,37,38,39"
+  },
+  {
+    "command": [
+      "python",
+      "independent/d7_r83_principal_sturm_v55.py",
+      "--masks",
+      "40,41,42,43,44,45,46,47",
+      "--mode",
+      "enumerate"
+    ],
+    "index": 55,
+    "label": "independent/d7_r83_principal_sturm_v55.py --masks 40,41,42,43,44,45,46,47"
+  },
+  {
+    "command": [
+      "python",
+      "certificates/d7_remaining_maximal_v61.py",
+      "--masks",
+      "1"
+    ],
+    "index": 56,
+    "label": "certificates/d7_remaining_maximal_v61.py --masks 1"
+  },
+  {
+    "command": [
+      "python",
+      "certificates/d7_remaining_maximal_v61.py",
+      "--masks",
+      "3"
+    ],
+    "index": 57,
+    "label": "certificates/d7_remaining_maximal_v61.py --masks 3"
+  },
+  {
+    "command": [
+      "python",
+      "certificates/d7_remaining_maximal_v61.py",
+      "--masks",
+      "4"
+    ],
+    "index": 58,
+    "label": "certificates/d7_remaining_maximal_v61.py --masks 4"
+  },
+  {
+    "command": [
+      "python",
+      "certificates/d7_remaining_maximal_v61.py",
+      "--masks",
+      "5"
+    ],
+    "index": 59,
+    "label": "certificates/d7_remaining_maximal_v61.py --masks 5"
+  },
+  {
+    "command": [
+      "python",
+      "certificates/d7_remaining_maximal_v61.py",
+      "--masks",
+      "6"
+    ],
+    "index": 60,
+    "label": "certificates/d7_remaining_maximal_v61.py --masks 6"
+  },
+  {
+    "command": [
+      "python",
+      "certificates/d7_remaining_maximal_v61.py",
+      "--masks",
+      "8"
+    ],
+    "index": 61,
+    "label": "certificates/d7_remaining_maximal_v61.py --masks 8"
+  },
+  {
+    "command": [
+      "python",
+      "certificates/d7_remaining_maximal_v61.py",
+      "--masks",
+      "9"
+    ],
+    "index": 62,
+    "label": "certificates/d7_remaining_maximal_v61.py --masks 9"
+  },
+  {
+    "command": [
+      "python",
+      "certificates/d7_remaining_maximal_v61.py",
+      "--masks",
+      "10"
+    ],
+    "index": 63,
+    "label": "certificates/d7_remaining_maximal_v61.py --masks 10"
+  },
+  {
+    "command": [
+      "python",
+      "certificates/d7_remaining_maximal_v61.py",
+      "--masks",
+      "11"
+    ],
+    "index": 64,
+    "label": "certificates/d7_remaining_maximal_v61.py --masks 11"
+  },
+  {
+    "command": [
+      "python",
+      "certificates/d7_remaining_maximal_v61.py",
+      "--masks",
+      "12"
+    ],
+    "index": 65,
+    "label": "certificates/d7_remaining_maximal_v61.py --masks 12"
+  },
+  {
+    "command": [
+      "python",
+      "certificates/d7_remaining_maximal_v61.py",
+      "--masks",
+      "14"
+    ],
+    "index": 66,
+    "label": "certificates/d7_remaining_maximal_v61.py --masks 14"
+  },
+  {
+    "command": [
+      "python",
+      "independent/d7_remaining_maximal_sturm_v61.py",
+      "--masks",
+      "1"
+    ],
+    "index": 67,
+    "label": "independent/d7_remaining_maximal_sturm_v61.py --masks 1"
+  },
+  {
+    "command": [
+      "python",
+      "independent/d7_remaining_maximal_sturm_v61.py",
+      "--masks",
+      "3"
+    ],
+    "index": 68,
+    "label": "independent/d7_remaining_maximal_sturm_v61.py --masks 3"
+  },
+  {
+    "command": [
+      "python",
+      "independent/d7_remaining_maximal_sturm_v61.py",
+      "--masks",
+      "4"
+    ],
+    "index": 69,
+    "label": "independent/d7_remaining_maximal_sturm_v61.py --masks 4"
+  },
+  {
+    "command": [
+      "python",
+      "independent/d7_remaining_maximal_sturm_v61.py",
+      "--masks",
+      "5"
+    ],
+    "index": 70,
+    "label": "independent/d7_remaining_maximal_sturm_v61.py --masks 5"
+  },
+  {
+    "command": [
+      "python",
+      "independent/d7_remaining_maximal_sturm_v61.py",
+      "--masks",
+      "6"
+    ],
+    "index": 71,
+    "label": "independent/d7_remaining_maximal_sturm_v61.py --masks 6"
+  },
+  {
+    "command": [
+      "python",
+      "independent/d7_remaining_maximal_sturm_v61.py",
+      "--masks",
+      "8"
+    ],
+    "index": 72,
+    "label": "independent/d7_remaining_maximal_sturm_v61.py --masks 8"
+  },
+  {
+    "command": [
+      "python",
+      "independent/d7_remaining_maximal_sturm_v61.py",
+      "--masks",
+      "9"
+    ],
+    "index": 73,
+    "label": "independent/d7_remaining_maximal_sturm_v61.py --masks 9"
+  },
+  {
+    "command": [
+      "python",
+      "independent/d7_remaining_maximal_sturm_v61.py",
+      "--masks",
+      "10"
+    ],
+    "index": 74,
+    "label": "independent/d7_remaining_maximal_sturm_v61.py --masks 10"
+  },
+  {
+    "command": [
+      "python",
+      "independent/d7_remaining_maximal_sturm_v61.py",
+      "--masks",
+      "11"
+    ],
+    "index": 75,
+    "label": "independent/d7_remaining_maximal_sturm_v61.py --masks 11"
+  },
+  {
+    "command": [
+      "python",
+      "independent/d7_remaining_maximal_sturm_v61.py",
+      "--masks",
+      "12"
+    ],
+    "index": 76,
+    "label": "independent/d7_remaining_maximal_sturm_v61.py --masks 12"
+  },
+  {
+    "command": [
+      "python",
+      "independent/d7_remaining_maximal_sturm_v61.py",
+      "--masks",
+      "14"
+    ],
+    "index": 77,
+    "label": "independent/d7_remaining_maximal_sturm_v61.py --masks 14"
+  },
+  {
+    "command": [
+      "python",
+      "certificates/d7_r41_v63.py",
+      "--masks",
+      "0"
+    ],
+    "index": 78,
+    "label": "certificates/d7_r41_v63.py --masks 0"
+  },
+  {
+    "command": [
+      "python",
+      "certificates/d7_r41_v63.py",
+      "--masks",
+      "1"
+    ],
+    "index": 79,
+    "label": "certificates/d7_r41_v63.py --masks 1"
+  },
+  {
+    "command": [
+      "python",
+      "certificates/d7_r41_v63.py",
+      "--masks",
+      "2"
+    ],
+    "index": 80,
+    "label": "certificates/d7_r41_v63.py --masks 2"
+  },
+  {
+    "command": [
+      "python",
+      "certificates/d7_r41_v63.py",
+      "--masks",
+      "3"
+    ],
+    "index": 81,
+    "label": "certificates/d7_r41_v63.py --masks 3"
+  },
+  {
+    "command": [
+      "python",
+      "certificates/d7_r41_v63.py",
+      "--masks",
+      "4"
+    ],
+    "index": 82,
+    "label": "certificates/d7_r41_v63.py --masks 4"
+  },
+  {
+    "command": [
+      "python",
+      "certificates/d7_r41_v63.py",
+      "--masks",
+      "5"
+    ],
+    "index": 83,
+    "label": "certificates/d7_r41_v63.py --masks 5"
+  },
+  {
+    "command": [
+      "python",
+      "certificates/d7_r41_v63.py",
+      "--masks",
+      "6"
+    ],
+    "index": 84,
+    "label": "certificates/d7_r41_v63.py --masks 6"
+  },
+  {
+    "command": [
+      "python",
+      "certificates/d7_r41_v63.py",
+      "--masks",
+      "7"
+    ],
+    "index": 85,
+    "label": "certificates/d7_r41_v63.py --masks 7"
+  },
+  {
+    "command": [
+      "python",
+      "certificates/d7_r41_v63.py",
+      "--masks",
+      "8"
+    ],
+    "index": 86,
+    "label": "certificates/d7_r41_v63.py --masks 8"
+  },
+  {
+    "command": [
+      "python",
+      "certificates/d7_r41_v63.py",
+      "--masks",
+      "9"
+    ],
+    "index": 87,
+    "label": "certificates/d7_r41_v63.py --masks 9"
+  },
+  {
+    "command": [
+      "python",
+      "certificates/d7_r41_v63.py",
+      "--masks",
+      "10"
+    ],
+    "index": 88,
+    "label": "certificates/d7_r41_v63.py --masks 10"
+  },
+  {
+    "command": [
+      "python",
+      "certificates/d7_r41_v63.py",
+      "--masks",
+      "11"
+    ],
+    "index": 89,
+    "label": "certificates/d7_r41_v63.py --masks 11"
+  },
+  {
+    "command": [
+      "python",
+      "certificates/d7_r41_v63.py",
+      "--masks",
+      "12"
+    ],
+    "index": 90,
+    "label": "certificates/d7_r41_v63.py --masks 12"
+  },
+  {
+    "command": [
+      "python",
+      "certificates/d7_r41_v63.py",
+      "--masks",
+      "13"
+    ],
+    "index": 91,
+    "label": "certificates/d7_r41_v63.py --masks 13"
+  },
+  {
+    "command": [
+      "python",
+      "certificates/d7_r41_v63.py",
+      "--masks",
+      "14"
+    ],
+    "index": 92,
+    "label": "certificates/d7_r41_v63.py --masks 14"
+  },
+  {
+    "command": [
+      "python",
+      "certificates/d7_r41_v63.py",
+      "--masks",
+      "15"
+    ],
+    "index": 93,
+    "label": "certificates/d7_r41_v63.py --masks 15"
+  },
+  {
+    "command": [
+      "python",
+      "certificates/d7_r41_v63.py",
+      "--masks",
+      "32"
+    ],
+    "index": 94,
+    "label": "certificates/d7_r41_v63.py --masks 32"
+  },
+  {
+    "command": [
+      "python",
+      "certificates/d7_r41_v63.py",
+      "--masks",
+      "33"
+    ],
+    "index": 95,
+    "label": "certificates/d7_r41_v63.py --masks 33"
+  },
+  {
+    "command": [
+      "python",
+      "certificates/d7_r41_v63.py",
+      "--masks",
+      "34"
+    ],
+    "index": 96,
+    "label": "certificates/d7_r41_v63.py --masks 34"
+  },
+  {
+    "command": [
+      "python",
+      "certificates/d7_r41_v63.py",
+      "--masks",
+      "35"
+    ],
+    "index": 97,
+    "label": "certificates/d7_r41_v63.py --masks 35"
+  },
+  {
+    "command": [
+      "python",
+      "certificates/d7_r41_v63.py",
+      "--masks",
+      "36"
+    ],
+    "index": 98,
+    "label": "certificates/d7_r41_v63.py --masks 36"
+  },
+  {
+    "command": [
+      "python",
+      "certificates/d7_r41_v63.py",
+      "--masks",
+      "37"
+    ],
+    "index": 99,
+    "label": "certificates/d7_r41_v63.py --masks 37"
+  },
+  {
+    "command": [
+      "python",
+      "certificates/d7_r41_v63.py",
+      "--masks",
+      "38"
+    ],
+    "index": 100,
+    "label": "certificates/d7_r41_v63.py --masks 38"
+  },
+  {
+    "command": [
+      "python",
+      "certificates/d7_r41_v63.py",
+      "--masks",
+      "39"
+    ],
+    "index": 101,
+    "label": "certificates/d7_r41_v63.py --masks 39"
+  },
+  {
+    "command": [
+      "python",
+      "certificates/d7_r41_v63.py",
+      "--masks",
+      "40"
+    ],
+    "index": 102,
+    "label": "certificates/d7_r41_v63.py --masks 40"
+  },
+  {
+    "command": [
+      "python",
+      "certificates/d7_r41_v63.py",
+      "--masks",
+      "41"
+    ],
+    "index": 103,
+    "label": "certificates/d7_r41_v63.py --masks 41"
+  },
+  {
+    "command": [
+      "python",
+      "certificates/d7_r41_v63.py",
+      "--masks",
+      "42"
+    ],
+    "index": 104,
+    "label": "certificates/d7_r41_v63.py --masks 42"
+  },
+  {
+    "command": [
+      "python",
+      "certificates/d7_r41_v63.py",
+      "--masks",
+      "43"
+    ],
+    "index": 105,
+    "label": "certificates/d7_r41_v63.py --masks 43"
+  },
+  {
+    "command": [
+      "python",
+      "certificates/d7_r41_v63.py",
+      "--masks",
+      "44"
+    ],
+    "index": 106,
+    "label": "certificates/d7_r41_v63.py --masks 44"
+  },
+  {
+    "command": [
+      "python",
+      "certificates/d7_r41_v63.py",
+      "--masks",
+      "45"
+    ],
+    "index": 107,
+    "label": "certificates/d7_r41_v63.py --masks 45"
+  },
+  {
+    "command": [
+      "python",
+      "certificates/d7_r41_v63.py",
+      "--masks",
+      "46"
+    ],
+    "index": 108,
+    "label": "certificates/d7_r41_v63.py --masks 46"
+  },
+  {
+    "command": [
+      "python",
+      "certificates/d7_r41_v63.py",
+      "--masks",
+      "47"
+    ],
+    "index": 109,
+    "label": "certificates/d7_r41_v63.py --masks 47"
+  },
+  {
+    "command": [
+      "python",
+      "independent/d7_r41_sturm_v63.py",
+      "--masks",
+      "0"
+    ],
+    "index": 110,
+    "label": "independent/d7_r41_sturm_v63.py --masks 0"
+  },
+  {
+    "command": [
+      "python",
+      "independent/d7_r41_sturm_v63.py",
+      "--masks",
+      "1"
+    ],
+    "index": 111,
+    "label": "independent/d7_r41_sturm_v63.py --masks 1"
+  },
+  {
+    "command": [
+      "python",
+      "independent/d7_r41_sturm_v63.py",
+      "--masks",
+      "2"
+    ],
+    "index": 112,
+    "label": "independent/d7_r41_sturm_v63.py --masks 2"
+  },
+  {
+    "command": [
+      "python",
+      "independent/d7_r41_sturm_v63.py",
+      "--masks",
+      "3"
+    ],
+    "index": 113,
+    "label": "independent/d7_r41_sturm_v63.py --masks 3"
+  },
+  {
+    "command": [
+      "python",
+      "independent/d7_r41_sturm_v63.py",
+      "--masks",
+      "4"
+    ],
+    "index": 114,
+    "label": "independent/d7_r41_sturm_v63.py --masks 4"
+  },
+  {
+    "command": [
+      "python",
+      "independent/d7_r41_sturm_v63.py",
+      "--masks",
+      "5"
+    ],
+    "index": 115,
+    "label": "independent/d7_r41_sturm_v63.py --masks 5"
+  },
+  {
+    "command": [
+      "python",
+      "independent/d7_r41_sturm_v63.py",
+      "--masks",
+      "6"
+    ],
+    "index": 116,
+    "label": "independent/d7_r41_sturm_v63.py --masks 6"
+  },
+  {
+    "command": [
+      "python",
+      "independent/d7_r41_sturm_v63.py",
+      "--masks",
+      "7"
+    ],
+    "index": 117,
+    "label": "independent/d7_r41_sturm_v63.py --masks 7"
+  },
+  {
+    "command": [
+      "python",
+      "independent/d7_r41_sturm_v63.py",
+      "--masks",
+      "8"
+    ],
+    "index": 118,
+    "label": "independent/d7_r41_sturm_v63.py --masks 8"
+  },
+  {
+    "command": [
+      "python",
+      "independent/d7_r41_sturm_v63.py",
+      "--masks",
+      "9"
+    ],
+    "index": 119,
+    "label": "independent/d7_r41_sturm_v63.py --masks 9"
+  },
+  {
+    "command": [
+      "python",
+      "independent/d7_r41_sturm_v63.py",
+      "--masks",
+      "10"
+    ],
+    "index": 120,
+    "label": "independent/d7_r41_sturm_v63.py --masks 10"
+  },
+  {
+    "command": [
+      "python",
+      "independent/d7_r41_sturm_v63.py",
+      "--masks",
+      "11"
+    ],
+    "index": 121,
+    "label": "independent/d7_r41_sturm_v63.py --masks 11"
+  },
+  {
+    "command": [
+      "python",
+      "independent/d7_r41_sturm_v63.py",
+      "--masks",
+      "12"
+    ],
+    "index": 122,
+    "label": "independent/d7_r41_sturm_v63.py --masks 12"
+  },
+  {
+    "command": [
+      "python",
+      "independent/d7_r41_sturm_v63.py",
+      "--masks",
+      "13"
+    ],
+    "index": 123,
+    "label": "independent/d7_r41_sturm_v63.py --masks 13"
+  },
+  {
+    "command": [
+      "python",
+      "independent/d7_r41_sturm_v63.py",
+      "--masks",
+      "14"
+    ],
+    "index": 124,
+    "label": "independent/d7_r41_sturm_v63.py --masks 14"
+  },
+  {
+    "command": [
+      "python",
+      "independent/d7_r41_sturm_v63.py",
+      "--masks",
+      "15"
+    ],
+    "index": 125,
+    "label": "independent/d7_r41_sturm_v63.py --masks 15"
+  },
+  {
+    "command": [
+      "python",
+      "independent/d7_r41_sturm_v63.py",
+      "--masks",
+      "32"
+    ],
+    "index": 126,
+    "label": "independent/d7_r41_sturm_v63.py --masks 32"
+  },
+  {
+    "command": [
+      "python",
+      "independent/d7_r41_sturm_v63.py",
+      "--masks",
+      "33"
+    ],
+    "index": 127,
+    "label": "independent/d7_r41_sturm_v63.py --masks 33"
+  },
+  {
+    "command": [
+      "python",
+      "independent/d7_r41_sturm_v63.py",
+      "--masks",
+      "34"
+    ],
+    "index": 128,
+    "label": "independent/d7_r41_sturm_v63.py --masks 34"
+  },
+  {
+    "command": [
+      "python",
+      "independent/d7_r41_sturm_v63.py",
+      "--masks",
+      "35"
+    ],
+    "index": 129,
+    "label": "independent/d7_r41_sturm_v63.py --masks 35"
+  },
+  {
+    "command": [
+      "python",
+      "independent/d7_r41_sturm_v63.py",
+      "--masks",
+      "36"
+    ],
+    "index": 130,
+    "label": "independent/d7_r41_sturm_v63.py --masks 36"
+  },
+  {
+    "command": [
+      "python",
+      "independent/d7_r41_sturm_v63.py",
+      "--masks",
+      "37"
+    ],
+    "index": 131,
+    "label": "independent/d7_r41_sturm_v63.py --masks 37"
+  },
+  {
+    "command": [
+      "python",
+      "independent/d7_r41_sturm_v63.py",
+      "--masks",
+      "38"
+    ],
+    "index": 132,
+    "label": "independent/d7_r41_sturm_v63.py --masks 38"
+  },
+  {
+    "command": [
+      "python",
+      "independent/d7_r41_sturm_v63.py",
+      "--masks",
+      "39"
+    ],
+    "index": 133,
+    "label": "independent/d7_r41_sturm_v63.py --masks 39"
+  },
+  {
+    "command": [
+      "python",
+      "independent/d7_r41_sturm_v63.py",
+      "--masks",
+      "40"
+    ],
+    "index": 134,
+    "label": "independent/d7_r41_sturm_v63.py --masks 40"
+  },
+  {
+    "command": [
+      "python",
+      "independent/d7_r41_sturm_v63.py",
+      "--masks",
+      "41"
+    ],
+    "index": 135,
+    "label": "independent/d7_r41_sturm_v63.py --masks 41"
+  },
+  {
+    "command": [
+      "python",
+      "independent/d7_r41_sturm_v63.py",
+      "--masks",
+      "42"
+    ],
+    "index": 136,
+    "label": "independent/d7_r41_sturm_v63.py --masks 42"
+  },
+  {
+    "command": [
+      "python",
+      "independent/d7_r41_sturm_v63.py",
+      "--masks",
+      "43"
+    ],
+    "index": 137,
+    "label": "independent/d7_r41_sturm_v63.py --masks 43"
+  },
+  {
+    "command": [
+      "python",
+      "independent/d7_r41_sturm_v63.py",
+      "--masks",
+      "44"
+    ],
+    "index": 138,
+    "label": "independent/d7_r41_sturm_v63.py --masks 44"
+  },
+  {
+    "command": [
+      "python",
+      "independent/d7_r41_sturm_v63.py",
+      "--masks",
+      "45"
+    ],
+    "index": 139,
+    "label": "independent/d7_r41_sturm_v63.py --masks 45"
+  },
+  {
+    "command": [
+      "python",
+      "independent/d7_r41_sturm_v63.py",
+      "--masks",
+      "46"
+    ],
+    "index": 140,
+    "label": "independent/d7_r41_sturm_v63.py --masks 46"
+  },
+  {
+    "command": [
+      "python",
+      "independent/d7_r41_sturm_v63.py",
+      "--masks",
+      "47"
+    ],
+    "index": 141,
+    "label": "independent/d7_r41_sturm_v63.py --masks 47"
+  },
+  {
+    "command": [
+      "python",
+      "certificates/broader_principal_v75.py",
+      "--point",
+      "R127:pic0:00"
+    ],
+    "index": 142,
+    "label": "certificates/broader_principal_v75.py --point R127:pic0:00"
+  },
+  {
+    "command": [
+      "python",
+      "certificates/broader_principal_v75.py",
+      "--point",
+      "R43_20:pic0:00"
+    ],
+    "index": 143,
+    "label": "certificates/broader_principal_v75.py --point R43_20:pic0:00"
+  },
+  {
+    "command": [
+      "python",
+      "certificates/broader_principal_v75.py",
+      "--point",
+      "R7sq:pic0:00"
+    ],
+    "index": 144,
+    "label": "certificates/broader_principal_v75.py --point R7sq:pic0:00"
+  },
+  {
+    "command": [
+      "python",
+      "certificates/broader_principal_v75.py",
+      "--point",
+      "R41_22:pic0:00"
+    ],
+    "index": 145,
+    "label": "certificates/broader_principal_v75.py --point R41_22:pic0:00"
+  },
+  {
+    "command": [
+      "python",
+      "certificates/broader_principal_v75.py",
+      "--point",
+      "R43_31:pic0:00"
+    ],
+    "index": 146,
+    "label": "certificates/broader_principal_v75.py --point R43_31:pic0:00"
+  },
+  {
+    "command": [
+      "python",
+      "certificates/broader_principal_v75.py",
+      "--point",
+      "R7:pic0:00"
+    ],
+    "index": 147,
+    "label": "certificates/broader_principal_v75.py --point R7:pic0:00"
+  },
+  {
+    "command": [
+      "python",
+      "independent/broader_principal_sturm_v75.py",
+      "--point",
+      "R127:pic0:00"
+    ],
+    "index": 148,
+    "label": "independent/broader_principal_sturm_v75.py --point R127:pic0:00"
+  },
+  {
+    "command": [
+      "python",
+      "independent/broader_principal_sturm_v75.py",
+      "--point",
+      "R43_20:pic0:00"
+    ],
+    "index": 149,
+    "label": "independent/broader_principal_sturm_v75.py --point R43_20:pic0:00"
+  },
+  {
+    "command": [
+      "python",
+      "independent/broader_principal_sturm_v75.py",
+      "--point",
+      "R7sq:pic0:00"
+    ],
+    "index": 150,
+    "label": "independent/broader_principal_sturm_v75.py --point R7sq:pic0:00"
+  },
+  {
+    "command": [
+      "python",
+      "independent/broader_principal_sturm_v75.py",
+      "--point",
+      "R41_22:pic0:00"
+    ],
+    "index": 151,
+    "label": "independent/broader_principal_sturm_v75.py --point R41_22:pic0:00"
+  },
+  {
+    "command": [
+      "python",
+      "independent/broader_principal_sturm_v75.py",
+      "--point",
+      "R43_31:pic0:00"
+    ],
+    "index": 152,
+    "label": "independent/broader_principal_sturm_v75.py --point R43_31:pic0:00"
+  },
+  {
+    "command": [
+      "python",
+      "independent/broader_principal_sturm_v75.py",
+      "--point",
+      "R7:pic0:00"
+    ],
+    "index": 153,
+    "label": "independent/broader_principal_sturm_v75.py --point R7:pic0:00"
+  },
+  {
+    "command": [
+      "python",
+      "certificates/r127_pic1_v80.py",
+      "--point",
+      "R127:pic0:00"
+    ],
+    "index": 154,
+    "label": "certificates/r127_pic1_v80.py --point R127:pic0:00"
+  },
+  {
+    "command": [
+      "python",
+      "certificates/r127_pic1_v80.py",
+      "--point",
+      "R127:pic1:00"
+    ],
+    "index": 155,
+    "label": "certificates/r127_pic1_v80.py --point R127:pic1:00"
+  },
+  {
+    "command": [
+      "python",
+      "independent/r127_pic1_sturm_v80.py",
+      "--point",
+      "R127:pic0:00"
+    ],
+    "index": 156,
+    "label": "independent/r127_pic1_sturm_v80.py --point R127:pic0:00"
+  },
+  {
+    "command": [
+      "python",
+      "independent/r127_pic1_sturm_v80.py",
+      "--point",
+      "R127:pic1:00"
+    ],
+    "index": 157,
+    "label": "independent/r127_pic1_sturm_v80.py --point R127:pic1:00"
+  },
+  {
+    "command": [
+      "node",
+      "independent/a_vertex_hodge_node_v31.js"
+    ],
+    "index": 158,
+    "label": "independent/a_vertex_hodge_node_v31.js"
+  },
+  {
+    "command": [
+      "node",
+      "independent/packet_hodge_node_v40.js"
+    ],
+    "index": 159,
+    "label": "independent/packet_hodge_node_v40.js"
+  }
+]

@@ -1,0 +1,8 @@
+{
+  "url": "https://stacks.math.columbia.edu/tag/02VV",
+  "observed_utc": "2026-11-03T06:10:34.445656+00:00",
+  "path": "experiments/all_underlying_galois_v165/real_descent_source/stacks_02VV.html",
+  "sha256": "496d7491dc0a1b07677dbf3f86a3264a7a39044bf9ce508733bdacbfe4011d5d",
+  "bytes": 36180,
+  "hypothesis_check": "Finite etale degree2 field cover is fpqc. Equivariant group law,origin,polarization morphism descend under full faithfulness."
+}

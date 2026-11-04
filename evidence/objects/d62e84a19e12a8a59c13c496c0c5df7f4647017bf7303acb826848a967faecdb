@@ -1,0 +1,73 @@
+{
+  "status": "EXACT_ARITHMETIC_ONLY_GEOMETRIC_PROOF_PENDING",
+  "table_sha256": "f137da9b751a8f9750a01ae426fa190eef5d97c78d908ec95d825e3ab7ff5d9f",
+  "K3_signatures": [
+    [
+      3,
+      3
+    ],
+    [
+      4,
+      2
+    ],
+    [
+      1,
+      5
+    ],
+    [
+      2,
+      4
+    ]
+  ],
+  "triple_cover_cases": [
+    {
+      "n1": 7,
+      "n2": 1,
+      "dimensions": [
+        4,
+        2
+      ]
+    },
+    {
+      "n1": 4,
+      "n2": 4,
+      "dimensions": [
+        3,
+        3
+      ]
+    },
+    {
+      "n1": 1,
+      "n2": 7,
+      "dimensions": [
+        2,
+        4
+      ]
+    }
+  ],
+  "order21_ramification_solutions": [
+    [
+      1,
+      1,
+      1
+    ]
+  ],
+  "order21_monodromy_tuples": 12,
+  "order21_monodromy_orbits": 1,
+  "known_jacobian_type_lift": [
+    1,
+    23,
+    25,
+    29,
+    31,
+    37
+  ],
+  "known_jacobian_type_matches": [
+    [],
+    [],
+    [],
+    [
+      23
+    ]
+  ]
+}

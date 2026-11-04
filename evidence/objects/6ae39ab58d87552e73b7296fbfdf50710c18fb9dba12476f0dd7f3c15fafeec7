@@ -1,0 +1,42 @@
+{
+  "current_packet_adoption": false,
+  "file_modes": {
+    "certificates/reflected_packet_v83/expected.json": 420,
+    "certificates/reflected_packet_v83/selection.json": 420,
+    "experiments/continuous_v82_review/c40_manuscript_integration_review.json": 420,
+    "experiments/continuous_v82_review/c40_manuscript_path_amendment_review.json": 420,
+    "experiments/continuous_v82_review/first_target_coverage_review.json": 420,
+    "experiments/continuous_v82_review/om13_executable_runtime_adoption_review.json": 420,
+    "experiments/continuous_v82_review/om13_q26_scoped_outcome_review.json": 420,
+    "experiments/continuous_v82_review/om13_registration_installation_review.json": 420,
+    "experiments/continuous_v82_review/two_chamber_bridge_verdict.json": 420,
+    "experiments/continuous_v83/maximal_packet_assessment/final-adoption.json": 420,
+    "experiments/continuous_v83/maximal_packet_assessment/manuscript-compilation.json": 420,
+    "experiments/continuous_v83/maximal_packet_assessment/root-conjunction-review.json": 420,
+    "paper/main.tex": 420,
+    "scripts/run_certificates.py": 493,
+    "tests/registration/validation-01/run.json": 420
+  },
+  "file_sha256": {
+    "certificates/reflected_packet_v83/expected.json": "ab441e42c3541a61667e84e4c3f0888124373ab527d265f9a80ce98149fc37c6",
+    "certificates/reflected_packet_v83/selection.json": "ff68b6c84d3cc5afb0960f7a08761ce0bea2e08b3698f74971732312aa12afd7",
+    "experiments/continuous_v82_review/c40_manuscript_integration_review.json": "ea3d7b4e63feb724a25163c5177a909b95c261856052d5809239e5efa0b79eb5",
+    "experiments/continuous_v82_review/c40_manuscript_path_amendment_review.json": "2b03dd27f796c80f8e24810eb64d1fd10c1f0544ad6a4e84750188c2609ad3f3",
+    "experiments/continuous_v82_review/first_target_coverage_review.json": "3879881003484d43773e8112935a85baf2849486c3f801f27e4e660d57b2b386",
+    "experiments/continuous_v82_review/om13_executable_runtime_adoption_review.json": "36012b40be401b6f88e8639a0eef32b99760620a67d10078beacc8e11a77fac0",
+    "experiments/continuous_v82_review/om13_q26_scoped_outcome_review.json": "241c6a59e8d6d23d8dcaeee163641eaa42b47949a914001ba0d089fad8876dc2",
+    "experiments/continuous_v82_review/om13_registration_installation_review.json": "0d8bb46abac87c0986adb518c8476da10dec805b89123855513807cd44321abd",
+    "experiments/continuous_v82_review/two_chamber_bridge_verdict.json": "942ecc5125e5eccea6b9faf3d815ccbc8d9e531613d346cb150b6f829869a4a4",
+    "experiments/continuous_v83/maximal_packet_assessment/final-adoption.json": "57660280db57cad71faba70c9f569ae10c7cb8c0ab9a0144970f38b4a61cdbba",
+    "experiments/continuous_v83/maximal_packet_assessment/manuscript-compilation.json": "348a553d7ef1d09718bac08d8a05ee85f565f07db52f4f6d805e6c3333b4c5a4",
+    "experiments/continuous_v83/maximal_packet_assessment/root-conjunction-review.json": "965fe1c4eb60a654dbf8eb75f06f608091cba2402fe76f1267090cb3b27270b6",
+    "paper/main.tex": "d6448c8abfe029895be26718f8c061ad9e2e7db855f1ec6d0578d2a9ab7fd234",
+    "scripts/run_certificates.py": "0048bd470cefd7a7b597bf122fe62202d08e0917060223c75aef31e56eefacbb",
+    "tests/registration/validation-01/run.json": "3e55d32e8123ebb0472ecbf6ecf122b56bde344790c1e1e61a1e780faaef5516"
+  },
+  "original_record_sha256": "57660280db57cad71faba70c9f569ae10c7cb8c0ab9a0144970f38b4a61cdbba",
+  "purpose": "Run the unchanged historical C40 validator against its exact original premises after the final packet supersedes live selection, expectations, registry and manuscript. No claim that old C40 bytes are current final files.",
+  "replacement_manuscript": false,
+  "schema_version": 1,
+  "status": "EXACT_RETAINED_C40_HISTORICAL_PREMISES_NOT_CURRENT_PACKET_ADOPTION"
+}

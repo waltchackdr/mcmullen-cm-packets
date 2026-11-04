@@ -1,0 +1,30 @@
+{
+  "accepted": 52,
+  "actual_components_checked": 720,
+  "extra_rejections": [
+    "zero_radius_inflated",
+    "boolean_radius",
+    "extra_component_field",
+    "missing_imag"
+  ],
+  "flint_imported": false,
+  "predicate_cases": 300,
+  "predicted_counts_by_target": {
+    "0": 43,
+    "1": 36,
+    "2": 39,
+    "3": 42,
+    "6": 40,
+    "12": 39,
+    "15": 31,
+    "17": 34,
+    "40": 33,
+    "91": 42
+  },
+  "provider_calls": 0,
+  "rejected": 248,
+  "source_prediction_is_runtime_proof": false,
+  "status": "PASS_EXACT_RATIONAL_PREDICATE_AND_SOURCE_CONDITIONAL_EXAMPLES",
+  "theta_calls": 0,
+  "wall_seconds": 0.02975350001361221
+}

@@ -1,0 +1,6 @@
+{
+  "status": "FAILED_BEFORE_OUTPUT",
+  "source_sha256": "3d32e90e8bb8a6f278e393252c593efe751224d2f8fd17b9a437793e99f59f9d",
+  "failure": "Assertion d*T = epsilon^-1*N failed; algebra gives d*T=epsilon*N. No basis output published.",
+  "repair": "Correct common unit direction; lattice unchanged because epsilon is a unit."
+}

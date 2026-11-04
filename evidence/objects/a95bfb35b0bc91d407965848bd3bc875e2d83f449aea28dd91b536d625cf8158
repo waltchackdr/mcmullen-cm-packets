@@ -1,0 +1,20 @@
+{
+  "status": "PASS",
+  "producer_imports": false,
+  "method": "Explicit 27-point subspace sets; structural C84 total supplies completeness",
+  "distinct_lagrangians": 1120,
+  "root_orbits": 160,
+  "orbit_size": 7,
+  "R_indices": [
+    8,
+    38,
+    118,
+    153
+  ],
+  "S_orbits": 156,
+  "witness_orbit": 0,
+  "dependent_plane_negative_control": "REJECTED",
+  "full_33880_search_replayed": false,
+  "bulk_models_constructed": 0,
+  "theta_evaluations": 0
+}

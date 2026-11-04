@@ -1,0 +1,50 @@
+[
+  {
+    "component": "final-adapter",
+    "entry": "experiments/continuous_v83/final_join/configuration_serialization_cpu7200_cache34/join.py",
+    "mechanism": "ROOT=HERE.parents[3]; load_helper validates HELPER_PINS and imports six modules at module load; preserve repository-relative layout. Conjunction common.py and revision03-source/join.py remain required even when current adapter is copied.",
+    "obligation": "All HELPER_PINS, transitive imports, actual input references and external reviews must be packaged/retrievable."
+  },
+  {
+    "component": "Join34",
+    "entry": "experiments/continuous_v83/continuation/representative_remaining/v86_partial_admission/canonical_configuration/cpu7200_cache/den_identity_pair/join34.py",
+    "mechanism": "Sibling common.py and conditional.py loaded by __file__.with_name; q.Reader resolves absolute hash-bound references; 365 exact plan/row/reconstruction triples are required.",
+    "obligation": "Relocating its input JSON requires separately sealed data-only path mapping; never rewrite a historical manifest."
+  },
+  {
+    "component": "whole730 audit",
+    "entry": "experiments/continuous_v83/continuation/fanout/structural_cache_candidate/cpu7200/conditional.py",
+    "mechanism": "cpu7200 wrapper\u21926c12 auditor\u2192078989 fanout\u21923d125 fixed audit\u2192terminal_audit/controller/authenticate_origin; amended controller55e3 and cache378647 imported separately. mapped_runner reads each retained source/runner.py with original coordinates translated through Store.",
+    "obligation": "Retain all12 inventories and raw stores, each11 configuration/receipt/review and actual source maps; cache cannot replace immutable full inventory or source/runtime guards."
+  },
+  {
+    "component": "V86 conditional admission",
+    "entry": "experiments/continuous_v83/continuation/fanout/v86_halted/audit.py",
+    "mechanism": "Exact a25 helper validates all78 completed paths before projection; assessment ea32 and a4 policy are separately hash-pinned. Selected26, extra52,26interrupted,69pending remain distinct.",
+    "obligation": "Keep historical immutable-execution assumption; no reconstructed coordinator endguards."
+  },
+  {
+    "component": "final371 frontend",
+    "entry": "certificates/reflected_primary_v83.py and independent/reflected_sturm_v83.py within2998",
+    "mechanism": "Rendered full frontend verifies own full package pins, installs exact target and schema2 plan, dynamically imports full relocated kernel and reads expected outcomes only after enumeration. Positive witness envelope adapts status while exact signed records remain unchanged.",
+    "obligation": "Preserve both rendered files plus395-file package map, whole16 source map, actual strict12 outcomes and failed5f59 lineage; package registration alone is not POINT_PASS."
+  },
+  {
+    "component": "mathematical kernels",
+    "entry": "portable16 source-relocation969f",
+    "mechanism": "Primary imports target helper via retained sys.modules name and foundations via certificates sys.path; Sturm analogously uses independent paths. __file__ checks and original full-byte reversal govern root changes. Imports initialize mathematical constants.",
+    "obligation": "No import executed by this preparation. Whole-executable human argument plus accepted actual import diagnostics/runtime profiles are necessary beyond hash equality."
+  },
+  {
+    "component": "original-target V82",
+    "entry": "accepted package18f75 and source159\u2192663 registration proposal",
+    "mechanism": "504 exact commands=6 controls+498 candidate/backends; old legacy prefix differs from current185/1405 registry. Package embedded source/data/runtime and aggregate validators form a distinct dependency set.",
+    "obligation": "Retain V82 package descriptor, replay plan/commands, approved aggregate/supervisor/runtime/retention and legacy prefix; do not count registry entries as fresh execution."
+  },
+  {
+    "component": "runtime and system",
+    "entry": "raw recorded Python invocation and runtime profiles",
+    "mechanism": "CPython raw venv invocation differs from resolved binary; SymPy/mpmath package byte trees/platform profiles are externally measured. fcntl/resource/Linux /proc/cgroup/PDEATHSIG/GNUtimeout are administrative dependencies, not field proof.",
+    "obligation": "Document supported reexecution environment and exact prior runtime evidence; no present binary hash reconstructs missing past temporal guards."
+  }
+]

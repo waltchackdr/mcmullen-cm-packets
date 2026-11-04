@@ -1,0 +1,184 @@
+"""Bounded offline archive/admission/failure checks, without model mathematics."""
+import ast
+import copy
+import hashlib
+import importlib.util
+import io
+import json
+from pathlib import Path
+import resource
+import signal
+import tarfile
+import tempfile
+import time
+from types import SimpleNamespace
+
+ROOT = Path(__file__).resolve().parents[2]
+BASE = ROOT/'build/s-order-v162/postprocess_preparation01'
+def sha(b): return hashlib.sha256(b).hexdigest()
+def load(p): return json.loads(Path(p).read_bytes())
+def module(p, name):
+    spec = importlib.util.spec_from_file_location(name,p)
+    m = importlib.util.module_from_spec(spec);spec.loader.exec_module(m);return m
+def functions(p):
+    return {n.name:ast.dump(n,include_attributes=False) for n in ast.parse(Path(p).read_text()).body if isinstance(n,ast.FunctionDef)}
+
+def composite_fixtures(tmp):
+    """Execute exact main body with math and system effects replaced by spies."""
+    src=ROOT/'experiments/s_order_census_v162/postprocess_candidate.py'
+    tree=ast.parse(src.read_text());fn=next(n for n in tree.body if isinstance(n,ast.FunctionDef) and n.name=='main')
+    parser=SimpleNamespace(add_argument=lambda *a,**k:None,parse_args=lambda:SimpleNamespace(start=0))
+    lines=[json.dumps({'catalog_index':i}).encode() for i in range(10)]
+    raw=b'\n'.join(lines)+b'\n';digest=sha(raw)
+    ctx={'seed':{},'inventory':{'models':[{'stdout_sha256':digest,'sha256':sha(l+b'\n')} for l in lines]}}
+    tested=[]
+    for failure in (None,'audit','transport','interval','post_pin'):
+        calls=[];outputs=[];pin_count=[0]
+        def pins():
+            pin_count[0]+=1
+            if failure=='post_pin' and pin_count[0]>1:raise RuntimeError('fixture')
+            return {'tasks':[{'start':0}],'pins':{}}
+        def stage(name):
+            def call(*a):
+                calls.append(name)
+                if failure==name:raise RuntimeError('fixture')
+                return {}
+            return call
+        ns={'argparse':SimpleNamespace(ArgumentParser=lambda:parser),
+            'platform':SimpleNamespace(system=lambda:'Linux'),'os':SimpleNamespace(environ={'RUNPOD_POD_ID':'OFFLINE'}),
+            'resource':SimpleNamespace(RLIMIT_CPU=0,RLIMIT_FSIZE=1,setrlimit=lambda *a:None),
+            'signal':SimpleNamespace(alarm=lambda *a:None),'pinned_inputs':pins,
+            'audit':SimpleNamespace(context=lambda:ctx,checked=lambda *a:raw,sha=sha,decode=json.loads,audit_line=stage('audit')),
+            'recon':SimpleNamespace(run=stage('transport')),'interval':SimpleNamespace(run=stage('interval')),
+            'BASE':tmp,'time':time,'json':json,'print':lambda line,**kw:outputs.append(json.loads(line))}
+        exec(compile(ast.Module(body=[fn],type_ignores=[]),str(src),'exec'),ns)
+        try:ns['main']()
+        except RuntimeError:
+            assert failure is not None and not outputs
+        else:
+            assert failure is None and len(outputs)==10 and calls==['audit','transport','interval']*10
+        if failure=='audit':assert calls==['audit']
+        if failure=='transport':assert calls==['audit','transport']
+        if failure in ('interval','post_pin'):assert calls==['audit','transport','interval']
+        tested.append(failure or 'success10')
+    for filename,entry in [('postprocess_candidate.py','main'),('period_recon_candidate.py','run'),('period_interval_candidate.py','run')]:
+        source=ROOT/'experiments/s_order_census_v162'/filename
+        fn=next(n for n in ast.parse(source.read_text()).body if isinstance(n,ast.FunctionDef) and n.name==entry)
+        ns={'argparse':SimpleNamespace(ArgumentParser=lambda:parser)}
+        exec(compile(ast.Module(body=[fn],type_ignores=[]),str(source),'exec',optimize=2),ns)
+        try:ns[entry](*([] if entry=='main' else ([{},{}] if filename=='period_recon_candidate.py' else [{},{},{}])))
+        except RuntimeError as error:assert str(error)=='Enabled assertions required'
+        else:raise AssertionError('Optimized code admitted')
+    return {'exact_main_body_stage_fixtures':tested,'optimized_guards_reject':3,'math_functions_mocked':True}
+
+def run():
+    packet = load(ROOT/'experiments/s_order_census_v162/postprocess_review_inputs01.json')
+    candidate = load(BASE/'execution_candidate.json')
+    for p,h in {**packet['pins'],**candidate['pins']}.items():
+        assert sha((ROOT/p).read_bytes()) == h,p
+    old = load(ROOT/candidate['baseline_model_execution_authority']['path'])
+    assert candidate['status'] == 'CANDIDATE_V162_POSTPROCESS_NOT_AUTHORIZED'
+    assert candidate['local_entrypoint'] == old['local_entrypoint']
+    assert candidate['execution_distinctions'] == old['execution_distinctions']
+    for name,ref in candidate['bootstrap_code'].items():
+        if name != 'job_manifest.json': assert ref == old['bootstrap_code'][name]
+    assert candidate['bootstrap_code']['job_manifest.json'] == candidate['session_manifest']
+    session_raw = (ROOT/candidate['session_manifest']['path']).read_bytes()
+    assert sha(session_raw) == candidate['session_manifest']['sha256']
+    assert session_raw == (json.dumps(json.loads(session_raw),sort_keys=True)+'\n').encode()
+    compact = load(ROOT/'build/s-order-v162/models01/compact_inventory.json')
+    parent_raw = (ROOT/compact['parent_inspection']['path']).read_bytes()
+    assert sha(parent_raw) == compact['parent_inspection']['sha256']
+    assert compact['models'] == json.loads(parent_raw)['models']
+    oldfunctions = functions(ROOT/'experiments/s_order_census_v162/worker_candidate.py')
+    newfunctions = functions(ROOT/'experiments/s_order_census_v162/postprocess_worker_candidate.py')
+    assert set(oldfunctions) == set(newfunctions)
+    changed = [k for k in oldfunctions if oldfunctions[k] != newfunctions[k]]
+    assert set(changed) == {'main','successful_results'}
+    worker = module(ROOT/'experiments/s_order_census_v162/postprocess_worker_candidate.py','ref_post_worker')
+    pipeline = module(ROOT/'experiments/s_order_census_v162/pipeline_candidate.py','ref_post_pipeline')
+    indices=[];manifests=[];archives=[]
+    with tempfile.TemporaryDirectory() as tmp:
+        tmp=Path(tmp)
+        for job,ref in enumerate(candidate['jobs']):
+            raw=(ROOT/ref['path']).read_bytes();assert sha(raw)==ref['sha256'] and len(raw)==ref['bytes']
+            current=json.loads(raw);prior=load(ROOT/old['jobs'][job]['path'])
+            for k in ('pipeline','setup','selector'):assert current['uploads'][k]==prior['uploads'][k]
+            for k in current['code']:
+                if k!='job_manifest.json':assert current['code'][k]==prior['code'][k]
+            manifest_raw=(ROOT/current['code']['job_manifest.json']['path']).read_bytes()
+            jm=json.loads(manifest_raw);manifests.append(jm)
+            assert sha(manifest_raw)==current['code']['job_manifest.json']['sha256']
+            assert manifest_raw==(json.dumps(jm,sort_keys=True)+'\n').encode()
+            for k,v in current['uploads'].items():
+                raw=(ROOT/v['path']).read_bytes()
+                assert sha(raw)==v['sha256'] and len(raw)==v['bytes']
+                assert jm['transport']['blobs'][k]=={'sha256':sha(raw),'bytes':len(raw)}
+            folder=BASE/f'job{job}';mf=load(folder/'source_manifest.json');planraw=(folder/'certificate_plan_candidate.json').read_bytes();plan=json.loads(planraw)
+            mapping=current['source_mapping'];tarraw=(folder/'source.tar').read_bytes()
+            assert sha(tarraw)==mf['archive_sha256'] and len(tarraw)==1761280
+            assert sha(planraw)==mf['plan_sha256']==jm['transport']['plan_sha256']
+            assert plan['pins']=={v:sha((ROOT/p).read_bytes()) for v,p in mapping.items()}
+            with tarfile.open(fileobj=io.BytesIO(tarraw),mode='r:') as tar:
+                members=tar.getmembers();assert len(members)==21
+                assert len(set(m.name for m in members))==21
+                assert set(mf['files'])==set(m.name for m in members)==set(mapping)|{'experiments/bc_jacobian_v147/certificate_plan_candidate.json'}
+                for m in members:
+                    assert m.isfile() and m.size<=2*1024**2 and not m.name.startswith('/') and '..' not in Path(m.name).parts
+                    value=tar.extractfile(m).read()
+                    assert mf['files'][m.name]=={'sha256':sha(value),'bytes':len(value)}
+                    assert value==((ROOT/mapping[m.name]).read_bytes() if m.name in mapping else planraw)
+            for task in range(8):
+                start=80*job+10*task;virtual=f'experiments/s_order_census_v162/inputs/chunk{start//10:02d}.jsonl'
+                chunk=(ROOT/mapping[virtual]).read_bytes();lines=chunk.splitlines()
+                assert len(lines)==10 and chunk.endswith(b'\n')
+                for offset,line in enumerate(lines):
+                    item=compact['models'][start+offset]
+                    assert (item['index'],item['job'],item['task'],item['line'])==(start+offset,job,task,offset+1)
+                    assert item['sha256']==sha(line+b'\n') and item['stdout_sha256']==sha(chunk)
+                    indices.append(item['index'])
+            dest=tmp/f'unpacked{job}'
+            pipeline.unpack(folder/'source.tar',folder/'source_manifest.json',sha((folder/'source_manifest.json').read_bytes()),dest)
+            worker.validate_plan(plan,dest)
+            frozen=tmp/f'frozen{job}';worker.snapshot(plan,planraw,frozen,dest);worker.validate_plan(plan,frozen)
+            for p in frozen.rglob('*'):
+                if p.is_dir():p.chmod(0o700)
+            frozen.chmod(0o700)
+            archives.append({'job':job,'files':21,'bytes':len(tarraw),'actual_unpack_snapshot_validation':'PASS'})
+        assert json.loads(session_raw)=={'version':1,'jobs':manifests}
+        assert indices==list(range(160))
+        tasks=[{'start':10*i} for i in range(8)];results=[{'status':'EXITED','returncode':0} for _ in tasks]
+        output=tmp/'completion';output.mkdir()
+        names={'exact_audit':'EXACT_SERIALIZED_MODEL_CHECK_PASS','transport':'EXACT_TRANSPORT_WITH_NONCERTIFIED_PERIOD_RECONNAISSANCE','interval_period':'INTERVAL_PERIOD_CANDIDATE_REVIEW_REQUIRED'}
+        def value(i):
+            v={'catalog_index':i,'status':'EXACT_MODEL_AUDIT_AND_PERIOD_CANDIDATES','theta_evaluations':0}
+            for k,s in names.items():v[k]={'status':s,'catalog_index':i,'theta_evaluations':0}
+            return v
+        for task in range(8):
+            p=output/f'task{task:02d}';p.mkdir();(p/'stdout.jsonl').write_text(''.join(json.dumps(value(i))+'\n' for i in range(10*task,10*task+10)))
+        assert worker.successful_results(results,output,tasks)
+        target=output/'task00/stdout.jsonl';good=target.read_bytes();rows=[value(i) for i in range(10)];cases=[]
+        def reject(name,bad):
+            target.write_text(''.join(json.dumps(v)+'\n' for v in bad))
+            assert not worker.successful_results(results,output,tasks),name
+            cases.append(name)
+        for k in names:
+            for field,new in (('status','WRONG'),('catalog_index',1),('theta_evaluations',1)):
+                bad=copy.deepcopy(rows);bad[0][k][field]=new;reject(k+'/'+field,bad)
+            bad=copy.deepcopy(rows);del bad[0][k];reject(k+'/missing',bad)
+            bad=copy.deepcopy(rows);bad[0][k]=None;reject(k+'/null',bad)
+        for name,bad in [('short',rows[:-1]),('extra',rows+[rows[-1]]),('reversed',rows[::-1])]:reject(name,bad)
+        target.write_bytes(good);badresults=copy.deepcopy(results);badresults[0]['returncode']=1
+        assert not worker.successful_results(badresults,output,tasks);cases.append('nonzero child')
+        composite=composite_fixtures(tmp)
+    return {'status':'PASS','packet_pins':len(packet['pins']),'candidate_pins':len(candidate['pins']),
+            'archives':archives,'full_raw_model_provenance_hashes':160,'model_mathematics_executed':0,
+            'exact_index_partition':list(range(0,160,10)),'unchanged_worker_functions':sorted(set(newfunctions)-set(changed)),
+            'changed_worker_functions':changed,'negative_completion_cases':cases,'negative_completion_count':len(cases),
+            'baseline_bootstrap_pipeline_setup_selector':'IDENTICAL except canonical new manifests',
+            'composite_control_flow':composite,'provider_calls':0,'flint_execution':False,'full_suite':False}
+
+if __name__=='__main__':
+    resource.setrlimit(resource.RLIMIT_CPU,(20,20));signal.alarm(30)
+    begin=time.monotonic();result=run();result['wall_seconds']=time.monotonic()-begin
+    print(json.dumps(result,indent=2,sort_keys=True))

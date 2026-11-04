@@ -1,0 +1,84 @@
+{
+  "code": {
+    "artifact_selection.py": {
+      "bytes": 2065,
+      "path": "experiments/bc_jacobian_v147/runtime/artifact_selection.py",
+      "sha256": "2b9cfc3d89a8f3a8cfd4379fc5e900fc6f2b7f652466a03c906ad8bd1d9dc4b8"
+    },
+    "artifact_store_candidate.py": {
+      "bytes": 3114,
+      "path": "experiments/final_binding_v124/artifact_store_candidate.py",
+      "sha256": "dd5d43b5427e82dc86f4b907c732098edb6d27c77a1084af226d45441746baef"
+    },
+    "guard_candidate.py": {
+      "bytes": 3840,
+      "path": "experiments/bc_jacobian_v147/runtime/guard_candidate.py",
+      "sha256": "e5c6f7f4da26daa5be73707bd4179447e229577519cbe500e432cffede48da87"
+    },
+    "http_server_candidate.py": {
+      "bytes": 8542,
+      "path": "experiments/bc_jacobian_v147/runtime/http_server_candidate.py",
+      "sha256": "c3f8ee5e5ad2792701c6ab85037bc0c03aea88006a5e58aafeb1383b7a326a96"
+    },
+    "job_manifest.json": {
+      "bytes": 836,
+      "path": "build/s-order-v162/postprocess_preparation01/job0/job_manifest.json",
+      "sha256": "a84b1aa47003fdb922570a8289e3f1092700238bacf7ff701edf866c930e821f"
+    },
+    "service_core_candidate.py": {
+      "bytes": 5488,
+      "path": "experiments/bc_jacobian_v147/runtime/service_core_candidate.py",
+      "sha256": "db625f0c7754fdc0c0be328452d0750e5ada7d08fa10cc6d072f9ec13b6c202b"
+    }
+  },
+  "scope": "Job0: independent model audit and period candidates for indices0..79; no theta",
+  "source_mapping": {
+    "build/s-order-v162/models01/compact_inventory.json": "build/s-order-v162/models01/compact_inventory.json",
+    "experiments/bc_jacobian_v147/certificate_worker_candidate.py": "experiments/s_order_census_v162/postprocess_worker_candidate.py",
+    "experiments/bc_jacobian_v147/exact_ball_candidate.py": "experiments/bc_jacobian_v147/exact_ball_candidate.py",
+    "experiments/bc_jacobian_v147/remote_wheels.json": "experiments/bc_jacobian_v147/remote_wheels.json",
+    "experiments/s_order_census_v162/inputs/chunk00.jsonl": "build/s-order-v162/session_run02/controller/jobs/job0/controller/retained/blobs/2d5a58127f3ff3e75ec09a33bff15da1987024a1a3df43bc0c3659ced3871901.blob",
+    "experiments/s_order_census_v162/inputs/chunk01.jsonl": "build/s-order-v162/session_run02/controller/jobs/job0/controller/retained/blobs/96edf9f5f508d2c53a7c3299ab99c8ba549ee3bdd6af199990e548b6a432cea4.blob",
+    "experiments/s_order_census_v162/inputs/chunk02.jsonl": "build/s-order-v162/session_run02/controller/jobs/job0/controller/retained/blobs/ee382d81dcd20d64fb4791607cecb39144087700d8fcde62671eed5208e2c62b.blob",
+    "experiments/s_order_census_v162/inputs/chunk03.jsonl": "build/s-order-v162/session_run02/controller/jobs/job0/controller/retained/blobs/c9a428b071dc0bd0d651b7d887cc4239672f1317e0dd514ed4174d54841c635d.blob",
+    "experiments/s_order_census_v162/inputs/chunk04.jsonl": "build/s-order-v162/session_run02/controller/jobs/job0/controller/retained/blobs/1a7fa669582ff27962c59e41e45379bb0360c6f82c80bc1410ebcf2c08e7a909.blob",
+    "experiments/s_order_census_v162/inputs/chunk05.jsonl": "build/s-order-v162/session_run02/controller/jobs/job0/controller/retained/blobs/a1f951adccca2377f715e3f3b6f17b6b940cc2dddb4ac7ecf29a1e9937b725d8.blob",
+    "experiments/s_order_census_v162/inputs/chunk06.jsonl": "build/s-order-v162/session_run02/controller/jobs/job0/controller/retained/blobs/cb5db570323c8d9fa01a95c7879ced753dc459b406656aaebd565846113b141b.blob",
+    "experiments/s_order_census_v162/inputs/chunk07.jsonl": "build/s-order-v162/session_run02/controller/jobs/job0/controller/retained/blobs/f4b10b8abcf844d19fca669452186288c883c1941f6b429c3cd3baee7e2ca864.blob",
+    "experiments/s_order_census_v162/period_interval_candidate.py": "experiments/s_order_census_v162/period_interval_candidate.py",
+    "experiments/s_order_census_v162/period_recon_candidate.py": "experiments/s_order_census_v162/period_recon_candidate.py",
+    "experiments/s_order_census_v162/postprocess_candidate.py": "experiments/s_order_census_v162/postprocess_candidate.py",
+    "experiments/s_order_census_v162/referee_data_checker.py": "experiments/s_order_census_v162/referee_data_checker.py",
+    "experiments/s_order_census_v162/review.json": "experiments/s_order_census_v162/review.json",
+    "experiments/s_order_models_v161/adoption.json": "experiments/s_order_models_v161/adoption.json",
+    "experiments/s_order_models_v161/catalog_candidate.json": "experiments/s_order_models_v161/catalog_candidate.json",
+    "experiments/s_order_models_v161/model.json": "experiments/s_order_models_v161/model.json"
+  },
+  "uploads": {
+    "pipeline": {
+      "bytes": 8367,
+      "path": "experiments/s_order_census_v162/pipeline_candidate.py",
+      "sha256": "b59ca77caf42a1dfffe9e4d7810fd7737a0f434b15899fa7b5204d63268c695b"
+    },
+    "selector": {
+      "bytes": 2065,
+      "path": "experiments/bc_jacobian_v147/runtime/artifact_selection.py",
+      "sha256": "2b9cfc3d89a8f3a8cfd4379fc5e900fc6f2b7f652466a03c906ad8bd1d9dc4b8"
+    },
+    "setup": {
+      "bytes": 7925,
+      "path": "experiments/bc_jacobian_v147/runtime/setup_candidate.py",
+      "sha256": "9afceb4fbfa8d1f6089a94d2a5a1ac490227f904d280c219fbb670e2457db37b"
+    },
+    "source_manifest": {
+      "bytes": 3947,
+      "path": "build/s-order-v162/postprocess_preparation01/job0/source_manifest.json",
+      "sha256": "538780b1f3baef3eeee8d5ed2cee2a75b4b7924e3b8d992d23f2586bf265c41f"
+    },
+    "source_tar": {
+      "bytes": 1761280,
+      "path": "build/s-order-v162/postprocess_preparation01/job0/source.tar",
+      "sha256": "58d5f23364b2dac18ad40d07df7ed494556a2af2350982907d6cb9770168c9dc"
+    }
+  }
+}

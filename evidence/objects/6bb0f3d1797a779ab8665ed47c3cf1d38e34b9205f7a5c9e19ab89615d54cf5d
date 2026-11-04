@@ -1,0 +1,246 @@
+"""One exact S-order quotient model. No period or theta evaluation.
+
+Uses accepted actual C lattice/form data; not an independent CM identification.
+All matrices are rational or integral. The full160-model census is not run.
+"""
+import hashlib
+from itertools import product
+import json
+from pathlib import Path
+import resource
+import signal
+import sys
+import sympy as s
+from sympy.matrices.normalforms import hermite_normal_form
+
+ROOT = Path(__file__).resolve().parents[2]
+PINS = {
+    'certificates/principal_unmarked_bc_data.json': 'b9792b7ebe38ab8235d8b7b603a2596768d182b7863c6ca975eac56f9cb0437f',
+    'certificates/principal_bc_unpolarized_data.json': 'f4481b8162c2a8aac0db7dcc9afdbb0e8d6f56eb252e1ede92670034d6deb86e',
+    'certificates/actual_bc_polarizations_data.json': '76c0520fbbae970dd2abfbe1b70d9d71df59534a8c7f4b1f20433047c83f311c',
+}
+
+
+def integral(a):
+    return all(x.q == 1 for x in a)
+
+
+def mod(a, p=3):
+    assert integral(a), 'Finite reduction requires integral entries'
+    return a.applyfunc(lambda x: int(x) % p)
+
+
+def rref(rows, p=3):
+    a = [[int(x) % p for x in row] for row in rows]
+    piv = []
+    if not a:
+        return a, piv
+    for j in range(len(a[0])):
+        k = next((i for i in range(len(piv), len(a)) if a[i][j]), None)
+        if k is None:
+            continue
+        r = len(piv)
+        a[r], a[k] = a[k], a[r]
+        t = pow(a[r][j], -1, p)
+        a[r] = [t*x % p for x in a[r]]
+        for i in range(len(a)):
+            if i != r:
+                t = a[i][j]
+                a[i] = [(x-t*y) % p for x, y in zip(a[i], a[r])]
+        piv.append(j)
+        if len(piv) == len(a):
+            break
+    return a[:len(piv)], piv
+
+
+def quotient_coordinates(n):
+    rows, piv = rref(n.T.tolist())
+    free = [j for j in range(n.rows) if j not in piv]
+    ann = []
+    for j in free:
+        v = [0]*n.rows
+        v[j] = 1
+        for i, k in enumerate(piv):
+            v[k] = -rows[i][j] % 3
+        ann.append(v)
+    q = s.Matrix(ann)
+    _, cols = rref(q.tolist())
+    lift = s.eye(n.rows)[:, cols]
+    q = mod((q*lift).inv_mod(3)*q)
+    assert mod(q*n) == s.zeros(q.rows, n.cols)
+    assert mod(q*lift) == s.eye(q.rows)
+    return q, lift
+
+
+def symplectic_f3(e):
+    remaining = [s.eye(e.rows)[:, j] for j in range(e.rows)]
+    aa, bb = [], []
+    pair = lambda v, w: int((v.T*e*w)[0]) % 3
+    while remaining:
+        v = remaining[0]
+        w = next(w for w in remaining if pair(v, w))
+        w = mod(w*pow(pair(v, w), -1, 3))
+        aa.append(v); bb.append(w)
+        projected = [list(mod(u-pair(u, w)*v+pair(u, v)*w)) for u in remaining]
+        rows, _ = rref(projected)
+        remaining = [s.Matrix(row) for row in rows]
+    out = s.Matrix.hstack(*(aa+bb))
+    g = e.rows//2
+    standard = s.zeros(2*g)
+    standard[:g, g:] = s.eye(g); standard[g:, :g] = -s.eye(g)
+    assert mod(out.T*e*out) == mod(standard)
+    return aa, bb
+
+
+def symplectic_integral(e):
+    """Primitive-vector Bezout splitting; HNF keeps the full complement lattice."""
+    if e.rows == 0:
+        return [], []
+    n = e.rows
+    v = s.eye(n)[:, 0]
+    w = s.zeros(n, 1)
+    g = s.Integer(0)
+    for j in range(1, n):
+        if e[0, j] == 0:
+            continue
+        a, b, gnew = s.gcdex(g, e[0, j])
+        w = a*w
+        w[j] += b
+        g = gnew
+    assert g == 1 and (v.T*e*w)[0] == 1
+    projection = s.eye(n)-v*(e*w).T+w*(e*v).T
+    assert integral(projection)
+    q = hermite_normal_form(s.Matrix(projection.rows, projection.cols, [int(v) for v in projection]))
+    assert q.shape == (n, n-2)
+    assert abs(s.Matrix.hstack(v, w, q).det()) == 1
+    assert v.T*e*q == w.T*e*q == s.zeros(1, n-2)
+    aa, bb = symplectic_integral(q.T*e*q)
+    return [v]+[q*x for x in aa], [w]+[q*x for x in bb]
+
+
+def run():
+    if not __debug__:
+        raise RuntimeError('Enabled assertions required')
+    data = {}
+    for p, pin in PINS.items():
+        raw = (ROOT/p).read_bytes()
+        assert hashlib.sha256(raw).hexdigest() == pin, p
+        data[Path(p).name] = json.loads(raw)
+    d = data['principal_unmarked_bc_data.json']
+    c = data['actual_bc_polarizations_data.json']['models']['C']
+    r = s.Matrix(data['principal_bc_unpolarized_data.json']['R_C_basis'])
+    u = s.Matrix(c['basis_change'])
+    original = s.Matrix(d['data']['I_C_basis']).T
+    e0 = s.Matrix(d['data']['principal_alternating_matrix'])
+    x = s.Symbol('x')
+    coeff = list(reversed(s.Poly(s.cyclotomic_poly(42, x), x).all_coeffs()))
+    z = s.zeros(12)
+    for j in range(11):
+        z[j+1, j] = 1
+    z[:, 11] = s.Matrix([-v for v in coeff[:-1]])
+    assert z**42 == s.eye(12) and z**21 == -s.eye(12)
+    rescale = sum((s.Rational(v)*z**i for i, v in enumerate(c['rescaling'])), s.zeros(12))
+    assert rescale*original == r*u
+    assert integral(u) and abs(u.det()) == 1
+    transform = (r*u).inv()
+    e = transform.T*e0*transform
+    f = z**14
+    pi = s.eye(12)-f
+    assert f*f+f+s.eye(12) == s.zeros(12)
+    assert f.T*e*f == e and (z**6).T*e*z**6 == e
+    assert integral(r) and abs(r.det()) == 27
+    assert integral(r.inv()*pi) and abs((r.inv()*pi).det()) == 27
+    source_form = pi.T*e*pi
+    assert integral(source_form) and source_form.det() == 729
+    # E-dual of P is exactly O; E-dual of O is exactly P.
+    dual_identity = pi.inv()*e.inv()
+    assert integral(dual_identity) and abs(dual_identity.det()) == 1
+    assert integral(3*e)
+    quotient, lift = quotient_coordinates(pi)
+    assert quotient.shape == (6, 12)
+    omega = mod(3*lift.T*e*lift)
+    assert omega.T == -omega or mod(omega.T+omega) == s.zeros(6)
+    assert int(omega.det()) % 3 != 0
+    root = mod(quotient*z**6*lift)
+    real = mod(quotient*(z+z.inv())*lift)
+    assert mod(root**7) == s.eye(6)
+    assert mod(root.T*omega*root) == omega
+    aa, bb = symplectic_f3(omega)
+    h = None
+    for mask in product(range(2), repeat=3):
+        trial = s.Matrix.hstack(*[bb[i] if mask[i] else aa[i] for i in range(3)])
+        rows, _ = rref(trial.T.tolist())
+        expanded, _ = rref(s.Matrix.hstack(trial, real*trial).T.tolist())
+        if expanded != rows:
+            h = trial
+            break
+    assert h is not None and mod(h.T*omega*h) == s.zeros(3)
+    lattice = hermite_normal_form(s.Matrix.hstack(pi, lift*h))
+    assert lattice.det() == 27
+    assert integral(lattice.inv()*pi) and abs((lattice.inv()*pi).det()) == 27
+    target_form = lattice.T*e*lattice
+    assert integral(target_form) and target_form.det() == 1
+    # Reduce in the already accepted C symplectic coordinates. Here the target
+    # lies between 3*C and (1/3)*C; power-basis HNF obscures this small lattice.
+    c_symp = s.diag(s.eye(6), e0[:6, 6:].inv())
+    assert integral(c_symp) and abs(c_symp.det()) == 1
+    relative = (r*u*c_symp).inv()*lattice
+    denominator = s.ilcm(*[v.q for v in relative])
+    assert denominator in (1, 3)
+    scaled = s.Matrix(12, 12, [int(v) for v in denominator*relative.T])
+    reduced, lll_rows = scaled.lll_transform(delta=s.Rational(3, 4))
+    short_change = lll_rows.T
+    assert integral(short_change) and abs(short_change.det()) == 1
+    assert reduced == lll_rows*scaled
+    short_form = short_change.T*target_form*short_change
+    aa, bb = symplectic_integral(short_form)
+    symp = short_change*s.Matrix.hstack(*(aa+bb))
+    standard = s.zeros(12)
+    standard[:6, 6:] = s.eye(6); standard[6:, :6] = -s.eye(6)
+    assert integral(symp) and abs(symp.det()) == 1
+    assert symp.T*target_form*symp == standard
+    basis = lattice*symp
+    action = basis.inv()*f*basis
+    assert integral(action) and action.T*standard*action == standard
+    assert action**2+action+s.eye(12) == s.zeros(12)
+    chi = [int((standard*action)[i, i]) % 2 for i in range(12)]
+    assert sum(chi[i]*chi[i+6] for i in range(6)) % 2 == 0
+    qfixed, kfixed = quotient_coordinates(action-s.eye(12))
+    numerators = -(action+2*s.eye(12))*kfixed
+    assert mod((action-s.eye(12))*numerators) == s.zeros(12, 6)
+    b = mod(kfixed.T*standard*action*kfixed)
+    eligible = []
+    levels = [0, 0, 0]
+    for coeff in product(range(3), repeat=6):
+        vv = s.Matrix(coeff)
+        level = int((vv.T*b*vv)[0]) % 3
+        levels[level] += 1
+        if level == 0:
+            eligible.append(list(mod(numerators*vv)))
+    assert levels == [261, 234, 234]
+    points = {tuple(map(int, v)) for v in eligible}
+    assert len(points) == 261
+    pairs = sorted(v for v in points if any(v) and v < tuple(-x % 3 for x in v))
+    assert len(pairs) == 130
+    serial = lambda a: [[str(v) for v in row] for row in a.tolist()]
+    return {'status': 'PROVISIONAL_EXACT_ONE_MODEL_NO_THETA_EVALUATION',
+            'pins': PINS, 'actual_tangent_type': d['actual_tangent_types']['C'],
+            'source_lattice_basis': serial(pi), 'source_form': serial(source_form),
+            'ambient_form': serial(e), 'quotient_projection': serial(quotient),
+            'quotient_lifts': serial(lift), 'discriminant_gram': serial(omega),
+            'order7_action': serial(root), 'real_subfield_action': serial(real),
+            'non_real_stable_lagrangian': serial(h),
+            'target_lattice_basis': serial(lattice), 'target_form': serial(target_form),
+            'short_basis_change': serial(short_change), 'short_basis_form': serial(short_form),
+            'symplectic_change': serial(symp), 'symplectic_power_basis': serial(basis),
+            'delta_in_symplectic_basis': serial(action),
+            'invariant_refinement_chi': chi, 'fixed_torsion_numerator_basis': serial(numerators),
+            'eligible_nonzero_pairs': [list(v) for v in pairs],
+            'fiber_levels': levels, 'theta_evaluations': 0,
+            'runtime': {'python': sys.version, 'sympy': s.__version__}}
+
+
+if __name__ == '__main__':
+    resource.setrlimit(resource.RLIMIT_CPU, (20, 20))
+    signal.alarm(30)
+    print(json.dumps(run(), indent=2))

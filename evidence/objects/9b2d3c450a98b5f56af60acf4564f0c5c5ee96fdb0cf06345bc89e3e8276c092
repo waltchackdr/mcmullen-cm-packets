@@ -1,0 +1,31 @@
+{
+  "excluded": "inspection-cache contains copyrighted source inspection aids, not repository/release material",
+  "files": {
+    "APPLICATION.md": "44b184b611e441a2164dc67e22bc76426866aae12956498c51580a718ca87579",
+    "PROSPECTIVE_CITATION_PATCH.md": "d97280ead6afebc08d573392a3c49512316713aa580328bc7856e38359fbfdc4",
+    "RETRIEVAL_NOTES.md": "396f1fd7a064c0b0373aea45ca6dc930c8a7063b8aa2368a379f6c9c5cdfb85a",
+    "candidate.json": "004e9b18f1372c11ad15d216d5a9e2271013283446ebe9d8269ac727de116020",
+    "prepare_receipts.py": "21e515cea81bb21dcfcc44c8e7ede53a6e476547be8550cc80b39bec30b73ec0",
+    "revision01/APPLICATION.md": "72da6401033f4c938dd6fae720f6236b086ce2ae44bfefcf79c766a3fdd81d59",
+    "revision01/candidate.json": "737ac873df5f18f754702d0b0cb74163efa7f4062e5fa0f6eb8fc0b59d260199",
+    "revision01/source-receipts.json": "a3f71b32161a7c9692b51532fd4116ffac095b11753df56967e109e7c94e7233",
+    "revision01/validate.py": "5e284051e6e552541401943d4e86992dd115df78f694cec39ab6f70a77a2f7bc",
+    "source-receipts.json": "a3f71b32161a7c9692b51532fd4116ffac095b11753df56967e109e7c94e7233",
+    "validate.py": "5e284051e6e552541401943d4e86992dd115df78f694cec39ab6f70a77a2f7bc",
+    "validation01/run.json": "fce8bfc79b0a7d4e97e6668b821f89322c3395b4008da09d0356e2c5b0436966",
+    "validation01/stderr.log": "7effea6b916f97a300d73128f7a8e15fdbad7b20033d59ee93925138378ae35f",
+    "validation01/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "validation01/validate.py": "dd99accc89007a060d0a9013956fc89230fe8baec09a7102fde3d59264cba6eb",
+    "validation02/check.json": "18290907b75512c29cbdbb0bbcf8a5e1e6c60678d22e68979fc4135f936ba89c",
+    "validation02/run.json": "c438892f8a3c9f430254b37c823ad64ad3ea822f5a206fbd25a0ba3c4f66356d",
+    "validation02/stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "validation02/stdout.log": "5fc0d487e9b8e857a408635f2f47673d0d8fc856c79bd5eb94ae764623819ed2",
+    "validation03/check.json": "34b91d1e171c9aaee288ecfb9d13b1d281c090969607f9a1965593ca2403d828",
+    "validation03/run.json": "6ed75a769c6c8f8780ba5ad8dd4e75883c784b8d666921df342c5082ef2be05a",
+    "validation03/stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "validation03/stdout.log": "cb040ceda3ee44385f60b82bf8b04bbed18b5254eb4872e2e6641e7c3b6f8163"
+  },
+  "review_acceptance": null,
+  "schema_version": 1,
+  "status": "FOCUSED_READINESS_ARTIFACT_INVENTORY_NOT_ACCEPTANCE"
+}

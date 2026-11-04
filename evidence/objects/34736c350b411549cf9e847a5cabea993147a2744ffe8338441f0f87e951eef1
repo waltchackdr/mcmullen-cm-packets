@@ -1,0 +1,83 @@
+import hashlib
+import importlib.util
+from pathlib import Path
+import resource
+import signal
+import tempfile
+import time
+import unittest
+
+resource.setrlimit(resource.RLIMIT_CPU,(20,20))
+signal.alarm(30)
+ROOT=Path(__file__).resolve().parents[1]
+spec=importlib.util.spec_from_file_location('service_core',
+    ROOT/'experiments/bc_jacobian_v147/runtime/service_core_candidate.py')
+core=importlib.util.module_from_spec(spec);spec.loader.exec_module(core)
+
+
+class JobTests(unittest.TestCase):
+    def fixture(self, root, guard=lambda:True):
+        raw={key:key.encode() for key in core.KEYS}
+        manifest={'blobs':{key:{'bytes':len(value),
+            'sha256':hashlib.sha256(value).hexdigest()} for key,value in raw.items()},
+            'plan_sha256':'0'*64}
+        job=core.Job(Path(root)/'job',manifest,guard,time.time()+900)
+        return job,raw
+
+    def upload_all(self, job, raw):
+        for key,value in raw.items():job.upload(key,value)
+
+    def test_guard_blocks_upload(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            job,raw=self.fixture(tmp,lambda:False)
+            with self.assertRaises(ValueError):job.upload('setup',raw['setup'])
+
+    def test_immutable_upload(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            job,raw=self.fixture(tmp)
+            first=job.upload('setup',raw['setup'])
+            self.assertEqual(first,job.upload('setup',raw['setup']))
+            with self.assertRaises(ValueError):job.upload('setup',b'changed')
+
+    def test_missing_upload_prevents_spawn(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            job,raw=self.fixture(tmp)
+            with self.assertRaises(ValueError):
+                job.launch(lambda *a:self.fail('Unexpected spawn'),'/python',{'RUNPOD_POD_ID':'fixture'})
+
+    def test_staged_drift_prevents_spawn(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            job,raw=self.fixture(tmp);self.upload_all(job,raw)
+            path=job.blobs/'setup';path.chmod(0o600);path.write_bytes(b'wrong')
+            with self.assertRaises(ValueError):
+                job.launch(lambda *a:self.fail('Unexpected spawn'),'/python',{'RUNPOD_POD_ID':'fixture'})
+
+    def test_spawn_failure_not_retried(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            job,raw=self.fixture(tmp);self.upload_all(job,raw)
+            calls=[]
+            def spawn(*args):calls.append(args);raise OSError('fixture')
+            with self.assertRaises(OSError):job.launch(spawn,'/python',{'RUNPOD_POD_ID':'fixture'})
+            self.assertTrue((job.root/'launch_claim.json').is_file())
+            with self.assertRaises(ValueError):job.launch(spawn,'/python',{'RUNPOD_POD_ID':'fixture'})
+            self.assertEqual(len(calls),1)
+
+    def test_credential_env_refused(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            job,raw=self.fixture(tmp);self.upload_all(job,raw)
+            with self.assertRaises(ValueError):
+                job.launch(lambda *a:self.fail('Unexpected spawn'),'/python',
+                           {'RUNPOD_POD_ID':'fixture','RESEARCH_GUARD_KEY':'fake'})
+
+    def test_guard_stop_reason_survives_observation(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            job,raw=self.fixture(tmp)
+            class Ended:
+                def poll(self):return -15
+            job.process=Ended();job.stage='STOPPED_GUARD_OR_DEADLINE'
+            observed=job.observe()
+            self.assertEqual(observed['stage'],'STOPPED_GUARD_OR_DEADLINE')
+            self.assertEqual(observed['returncode'],-15)
+
+
+if __name__ == '__main__':unittest.main()

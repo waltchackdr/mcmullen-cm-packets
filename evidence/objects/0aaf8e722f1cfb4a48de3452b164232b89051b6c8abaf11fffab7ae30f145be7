@@ -1,0 +1,50 @@
+"""Construct bounded cases from retained exact-type triples; no partition search."""
+import hashlib,itertools,json
+from pathlib import Path
+HERE=Path(__file__).resolve().parent;ROOT=HERE.parents[1]
+
+def check():
+    paths=['experiments/all_eight_v109/lattice.json','experiments/fermat_type_coverage_v108/coverage.json']
+    raw={p:(ROOT/p).read_bytes() for p in paths};lattice,coverage=(json.loads(raw[p]) for p in paths)
+    types={i:coverage['orbit_summaries'][i]['representative'] for i in range(4)}
+    triples={i:[r['triple'] for r in coverage['records'] if r['cm_type']==types[i]] for i in range(4)}
+    assert list(map(len,triples.values()))==[12,2,1,3]
+    seeds=[]
+    for task,j in enumerate((0,1)):
+        terms=lattice['new_generators'][j]['terms'];copies=[]
+        for term in terms:
+            for k in range(abs(term['coefficient'])):
+                a=term['embedding_representative']
+                copies.append({'copy_id':len(copies),'orbit':term['orbit'],'embedding':a if term['coefficient']>0 else 42-a,
+                   'source_reduced_embedding':a,'sign':1 if term['coefficient']>0 else -1,'repeated_coefficient_copy':k})
+        cases=[]
+        # Same B presentation across its distinct source copies; type1 choices independent.
+        count_type1=sum(c['orbit']==1 for c in copies)
+        for b in triples[0]:
+            for one_choices in itertools.product(triples[1],repeat=count_type1):
+                for other in triples[2 if task==0 else 3]:
+                    i1=iter(one_choices);sources=[];flat=[]
+                    for c in copies:
+                        triple=b if c['orbit']==0 else next(i1) if c['orbit']==1 else other
+                        residues=[c['embedding']*a%42 for a in triple]
+                        sources.append({'copy_id':c['copy_id'],'triple':triple,'residues':residues});flat+=residues
+                    assert all(sum(g*a%42 for a in flat)==len(flat)*21 for g in lattice['synchronized_rows'])
+                    cases.append({'case_id':len(cases),'sources':sources,'concatenated_residues':flat})
+        seeds.append({'task_index':task,'tensor_degree':len(copies),'copies':copies,'case_count':len(cases),'cases':cases})
+    assert [s['case_count'] for s in seeds]==[24,144]
+    return {'schema_version':1,'status':'BOUNDED_SOURCE_SEARCH_INPUT_PREPARATION_NO_WITNESSES',
+       'input_sha256':{p:hashlib.sha256(v).hexdigest() for p,v in raw.items()},'modulus':42,'units':lattice['synchronized_rows'],
+       'canonical_types':types,'all_unordered_exact_type_presentations':triples,'tasks':seeds,
+       'case_scope':'168 cases: B presentation uniform across B copies; repeated type1 copies may use distinct exact-type presentations. Exhausts this explicitly limited choice set only, not every per-copy B choice.',
+       'source_hypotheses':'Use retained original Shioda1981 Theorem4.3/Lemmas4.1-4.2 criterion: balanced2/4 blocks; balanced6 blocks additionally split into two nonzero zero-sum triples. Failure is only failure of tested source cases.',
+       'transfer_gate':'Separate actual character-factor/projector, induced-type isogeny and contraction proof must be reviewed; no cycle result follows from balanced concatenation alone.',
+       'remote_bounds_requested':{'tasks':2,'per_task_wall_seconds':120,'local_search_performed':False},
+       'coefficient_two_means':'Two distinct source copies, not a repeated exterior eigenline on a single copy.'}
+
+if __name__=='__main__':
+    import resource,signal
+    if not __debug__:raise RuntimeError('Assertions required')
+    resource.setrlimit(resource.RLIMIT_CPU,(20,20));signal.alarm(30)
+    out=check();out['producer_sha256']=hashlib.sha256(Path(__file__).read_bytes()).hexdigest()
+    with (HERE/'source_manifest.json').open('x') as f:json.dump(out,f,sort_keys=True,indent=2);f.write('\n')
+    print('Prepared two tasks,24+144 cases; no partition search executed.')

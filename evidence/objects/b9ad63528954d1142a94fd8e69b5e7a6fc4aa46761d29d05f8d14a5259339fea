@@ -1,0 +1,15 @@
+{
+  "cocycle_product_cases": 32928,
+  "minus_one_nonsquare_in_both": true,
+  "polarized_twist_groups": [
+    6,
+    42
+  ],
+  "root_adjustments": 42,
+  "scope": "Abstract finite-image root cocycle only; actual Galois action/descent/classification are adopted human-proof inputs",
+  "semidirect_elements": 28,
+  "status": "PASS",
+  "torsion_cancellation_cases": 14,
+  "wall_seconds": 0.01188104200991802,
+  "wrong_trivial_conjugation_failures": 336
+}

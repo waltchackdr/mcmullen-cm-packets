@@ -1,0 +1,58 @@
+"""Candidate checks only: no installed package or mathematical result implied."""
+from pathlib import Path
+import ast, hashlib, importlib.util, json, sys, unittest
+ROOT = Path(__file__).resolve().parents[4]
+B = Path(__file__).resolve().parent
+O = B/'overlay'
+sys.path.insert(0, str(O/'tests'))
+import test_certificate_registration as reg
+import test_combined_registration_installation as installation
+import check_combined_registration_installation as gate
+
+class CandidateProof(unittest.TestCase):
+    def test_identical1405_obligations_and_only_exact_pair_moves_phase(self):
+        prior = json.loads((B.parent/'combined-registration-2026-10-13/overlay/tests/registration/combined1405.json').read_text())['commands']
+        current = json.loads((O/'tests/registration/combined1405.json').read_text())['commands']
+        self.assertEqual({r['label']:r['argv'] for r in prior}, {r['label']:r['argv'] for r in current})
+        old = {r['label']:r for r in prior}
+        changed = [r for r in current if r['phase'] != old[r['label']]['phase']]
+        self.assertEqual(len(changed), 2)
+        self.assertEqual({r['identity']['point_label'] for r in changed}, {'R127:pic1:03'})
+        self.assertEqual({r['identity']['backend'] for r in changed}, {'primary','sturm'})
+        self.assertTrue(all(r['phase']=='v83-representatives' for r in changed))
+        self.assertEqual(current[:159], prior[:159])
+    def test_unaccepted34_outcome_is_required(self):
+        self.assertIn('representative34_outcome_review',gate.EVIDENCE)
+        self.assertNotIn('fixed32_outcome_review',gate.EVIDENCE)
+    def test_current_files_still_equal_captured_preconditions(self):
+        for name, sha in json.loads((B/'preconditions.json').read_text())['sha256'].items():
+            self.assertEqual(hashlib.sha256((ROOT/name).read_bytes()).hexdigest(), sha)
+    def test_entire_legacy_prefix_preserved(self):
+        old = (ROOT/'scripts/run_certificates.py').read_bytes().split(b'# Scoped OM13 reflected-target regressions.')[0]
+        new = (O/'scripts/run_certificates.py').read_bytes()
+        self.assertTrue(new.startswith(old))
+        prior = (ROOT/'experiments/continuous_v82/registration_candidate/run_certificates.py').read_text()
+        old_block = prior[prior.index('# V82 exact registration domain'):prior.index('if failed:\n    print("FAILED CERTIFICATE PREFLIGHT:')]
+        self.assertIn(old_block.encode(), new)
+    def test_candidate_receipt_pending_and_exact_verify_gate(self):
+        with self.assertRaises(ValueError): gate.check(O)
+        old = (ROOT/'verify_all.sh').read_text()
+        new = (O/'verify_all.sh').read_text()
+        added = '"$VERIFY_PYTHON" tests/check_combined_registration_installation.py\n'
+        self.assertEqual(new.count(added), 1)
+        self.assertEqual(new.replace(added, ''), old)
+    def test_no_mathematical_imports_in_candidate(self):
+        for p in (O/'scripts/run_certificates.py', O/'tests/check_combined_registration_installation.py'):
+            tree=ast.parse(p.read_text())
+            imports = [n.module for n in ast.walk(tree) if isinstance(n, ast.ImportFrom)]
+            self.assertFalse(any(x and x.startswith(('certificates','independent','sympy','mpmath')) for x in imports))
+
+suite = unittest.TestSuite()
+for name in unittest.defaultTestLoader.getTestCaseNames(reg.CertificateRegistrationTests):
+    if name != 'test_existing_installed_files_bound_by_reviewed_receipt':
+        suite.addTest(reg.CertificateRegistrationTests(name))
+suite.addTests(unittest.defaultTestLoader.loadTestsFromTestCase(installation.InstallationMetadataTests))
+suite.addTests(unittest.defaultTestLoader.loadTestsFromTestCase(CandidateProof))
+result = unittest.TextTestRunner(verbosity=2).run(suite)
+print(json.dumps({'status':'PASS_METADATA_CANDIDATE_ONLY' if result.wasSuccessful() else 'FAIL', 'tests':result.testsRun, 'excluded_installation_test':'Pending package/adoption receipt intentionally prevents integration success', 'mathematical_jobs':0, 'live_registry_modified':False},sort_keys=True))
+raise SystemExit(0 if result.wasSuccessful() else 1)

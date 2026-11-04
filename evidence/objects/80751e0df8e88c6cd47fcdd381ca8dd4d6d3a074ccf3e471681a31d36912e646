@@ -1,0 +1,86 @@
+{
+  "concurrency": 2,
+  "job_index": 1,
+  "max_tasks": 8,
+  "pins": {
+    "build/s-order-v162/models01/compact_inventory.json": "a8c4d55907e1be64106916d8b23a528f924da5bbe41ce9b04e3a8009792a2c3a",
+    "experiments/bc_jacobian_v147/certificate_worker_candidate.py": "ce50be99080fccecf636732d5b9291f0c3d6fb32d1ac3e9f5bcede40ceafde25",
+    "experiments/bc_jacobian_v147/exact_ball_candidate.py": "84902541ab1460a3f1ead0ce6148b79f61e4517689f96f862e4376ec768ee0a2",
+    "experiments/bc_jacobian_v147/remote_wheels.json": "0f5a54a15cda08ac95234437b16779763b8ab3a442b2b822488466df4e9bad73",
+    "experiments/s_order_census_v162/inputs/chunk08.jsonl": "812ffc503850f419e3d273b19e04d694394724abf29a068ad5ada08f1d99b3e2",
+    "experiments/s_order_census_v162/inputs/chunk09.jsonl": "ff0db5dd74681acbb7b0abf3f423a320580edc680fc24d0d87957d2c1d2c84b6",
+    "experiments/s_order_census_v162/inputs/chunk10.jsonl": "b4b01291c75b5ba08c036afe4eeffc189114528a0cd93e4659231d7dc641b4d1",
+    "experiments/s_order_census_v162/inputs/chunk11.jsonl": "bbbd8aa51aa09953208794fc198c518ad37c1fcd055452732694d48bf8e436ea",
+    "experiments/s_order_census_v162/inputs/chunk12.jsonl": "d6e519e148a4d213bd559aada2ee61d756a6d1f1afe7b3acc7342b5172d6be49",
+    "experiments/s_order_census_v162/inputs/chunk13.jsonl": "12ea49e40782a0b5ee93f0ea78f3a0ebed9354d204b76857601866a38b7be9a8",
+    "experiments/s_order_census_v162/inputs/chunk14.jsonl": "2311e7b09350f55a2216bb897f4915a802e463df017fb25cd2c119d2e938d5bf",
+    "experiments/s_order_census_v162/inputs/chunk15.jsonl": "a0783e368b647db6b89bb0f02eddb949d7351d3cac81b86d57eddbaf5fbb4c99",
+    "experiments/s_order_census_v162/period_interval_candidate.py": "9352823315ec204dd7c9f1072c0c4728d55d65d2da503cdf152e588b34b06769",
+    "experiments/s_order_census_v162/period_recon_candidate.py": "da97435b2c4eb3e06f2d6afaaa44af915645deb88e5a80e72ee77994b2b8ee3c",
+    "experiments/s_order_census_v162/postprocess_candidate.py": "f440c21d2dbaab9eb69cd5c1bd2a8c07e641aaba3a7f176b154d08ee13fad973",
+    "experiments/s_order_census_v162/referee_data_checker.py": "5b1a7ae1ba7d715c386c489926c8be57e499148eff57654f27fd747715c7d264",
+    "experiments/s_order_census_v162/review.json": "b8f0e1ef527b05b45601a41a6b0a4c25ef2e3b536144d85f485b3e898c68c049",
+    "experiments/s_order_models_v161/adoption.json": "bd08dfa1f408a3dc17385c6d6e76de27c35f21336f9411898cbdb68ceab1156b",
+    "experiments/s_order_models_v161/catalog_candidate.json": "e6a6d431107ce1ceb9cee31ace70558876800d56daf3869a2174dfbea9eb97e3",
+    "experiments/s_order_models_v161/model.json": "1803891819609ee4c8ecb84222a898a2574207f06bfdf08c48fca95ef27f8184"
+  },
+  "scope": "Exact model audits plus candidate period coordinates/enclosures; no theta",
+  "tasks": [
+    {
+      "child_wall_seconds": 150,
+      "count": 10,
+      "max_cpu_seconds": 120,
+      "parent_kill_seconds": 160,
+      "start": 80
+    },
+    {
+      "child_wall_seconds": 150,
+      "count": 10,
+      "max_cpu_seconds": 120,
+      "parent_kill_seconds": 160,
+      "start": 90
+    },
+    {
+      "child_wall_seconds": 150,
+      "count": 10,
+      "max_cpu_seconds": 120,
+      "parent_kill_seconds": 160,
+      "start": 100
+    },
+    {
+      "child_wall_seconds": 150,
+      "count": 10,
+      "max_cpu_seconds": 120,
+      "parent_kill_seconds": 160,
+      "start": 110
+    },
+    {
+      "child_wall_seconds": 150,
+      "count": 10,
+      "max_cpu_seconds": 120,
+      "parent_kill_seconds": 160,
+      "start": 120
+    },
+    {
+      "child_wall_seconds": 150,
+      "count": 10,
+      "max_cpu_seconds": 120,
+      "parent_kill_seconds": 160,
+      "start": 130
+    },
+    {
+      "child_wall_seconds": 150,
+      "count": 10,
+      "max_cpu_seconds": 120,
+      "parent_kill_seconds": 160,
+      "start": 140
+    },
+    {
+      "child_wall_seconds": 150,
+      "count": 10,
+      "max_cpu_seconds": 120,
+      "parent_kill_seconds": 160,
+      "start": 150
+    }
+  ]
+}

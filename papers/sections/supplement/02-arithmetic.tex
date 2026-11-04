@@ -1,0 +1,808 @@
+% !TeX root = ../../arithmetic-and-computation.tex
+\section{Detailed arithmetic underlying the $k=11$ certificate}\label{app:arithdetail}
+This supplement contains the derivational arithmetic suppressed from the main proof path.  It also records the broader $42$-trace computation from which the $k=11$ point was isolated.
+
+\section{The prime $43$: an explicit totally positive generator}\label{app:prime43}
+We now specialize to the first completely split rational prime, $43$. Consider
+\[
+ \mathfrak l=(43,t-5)\subset\OL.
+\]
+Define
+\begin{equation}\label{eq:alpha0}
+ \alpha_0=1+\zeta_{42}+\zeta_{42}^4\in\OM.
+\end{equation}
+A direct resultant computation gives
+\begin{equation}\label{eq:absnormalpha}
+ N_{M/\Ql}(\alpha_0)=43.
+\end{equation}
+Its relative norm is
+\begin{align}
+ \pi&=\alpha_0\bar\alpha_0\\
+ &=3+(\zeta+\zeta^{-1})+(\zeta^3+\zeta^{-3})+(\zeta^4+\zeta^{-4})\\
+ &=t^4+t^3-4t^2-2t+5.\label{eq:pi}
+\end{align}
+The resultant of $f(T)$ in (\externalref{packet}{eq:minpoly}) with the polynomial in \eqref{eq:pi} is $43$, hence
+\[
+ N_{L/\Ql}(\pi)=43.
+\]
+Moreover $\pi$ is totally positive because for every real embedding $\sigma$ and either extension $\widetilde\sigma:M\hookrightarrow\C$,
+\[
+ \sigma(\pi)=|\widetilde\sigma(\alpha_0)|^2>0.
+\]
+Finally $\pi(5)\equiv0\pmod{43}$, so $(\pi)=\mathfrak l$.
+
+\begin{proposition}\label{prop:pi1}
+The element
+\[
+ \pi_1=t^4-t^2+t-3
+\]
+listed in \cite[Sec.~5.3]{Mostaed2026} has norm $43$ but is not totally positive.
+\end{proposition}
+\begin{proof}
+At the embeddings indexed by $k=11$ and $13$ one obtains, respectively,
+\[
+ \sigma_{11}(\pi_1)\approx-3.1712995,\qquad
+ \sigma_{13}(\pi_1)\approx-3.9795331.
+\]
+The signs can be certified with rational isolating intervals for the roots of (\externalref{packet}{eq:minpoly}).
+\end{proof}
+
+\begin{remark}
+If $M_2^+(\OL)$ is intended in its standard Hilbert-modular sense of matrices with totally positive determinant, then the representatives $\operatorname{diag}(\pi_1,1)$ cannot lie in $M_2^+(\OL)$ as written. The totally positive generator \eqref{eq:pi} repairs this issue for the chosen prime.
+\end{remark}
+
+\begin{remark}[A related matrix-group typo]
+Section~5.1 says that $\sigma_i(\gamma)$ lies in $\operatorname{SL}_2(\mathbb R)$ while simultaneously imposing $\det(\gamma)\OL=\mathfrak l$.  For a genuine $\mathfrak l$-Hecke matrix one has $\det(\sigma_i(\gamma))=\sigma_i(\pi)$, not $1$.  The M\"obius action is of course well-defined for $\operatorname{GL}_2^+(\mathbb R)$ (or projectively), so this is repairable, but it reinforces that the determinant is the local element $\pi$.
+\end{remark}
+
+
+\section{Classification of the integral norm fiber}
+The cyclotomic structure makes the corrected norm equation completely explicit.
+
+\begin{theorem}[The $84$ elements and $42$ traces]\label{thm:42}
+Let $\pi$ and $\alpha_0$ be as in \eqref{eq:pi} and \eqref{eq:alpha0}. Then
+\begin{equation}\label{eq:normfiber}
+ \{x\in\OM:x\bar x=\pi\}
+ =\{\zeta_{42}^k\alpha_0:0\le k<42\}
+ \sqcup
+ \{\zeta_{42}^k\bar\alpha_0:0\le k<42\}.
+\end{equation}
+In particular the norm fiber contains exactly $84$ elements. Modulo complex conjugation it has $42$ classes, and the corresponding relative traces
+\[
+ c_k=\zeta_{42}^k\alpha_0+\zeta_{42}^{-k}\bar\alpha_0\in\OL
+\]
+are pairwise distinct.
+\end{theorem}
+\begin{proof}
+Because $(\alpha_0)=\mathfrak P$ is a prime of $M$ above $\mathfrak l$ and
+\[
+ (\pi)=\mathfrak P\bar{\mathfrak P},
+\]
+any integral $x$ with $(x)(\bar x)=(\pi)$ must have $(x)=\mathfrak P$ or $(x)=\bar{\mathfrak P}$. Thus $x=u\alpha_0$ or $x=u\bar\alpha_0$ for a unit $u$ satisfying $u\bar u=1$.
+
+If $u\bar u=1$, then for every complex embedding $\tau:M\hookrightarrow\mathbb C$ one has $|\tau(u)|^2=\tau(u\bar u)=1$.  Since $u$ is an algebraic integer, Kronecker's theorem implies that $u$ is a root of unity.  Conversely every root of unity has relative norm one.  The root-of-unity group of $M=\Ql(\zeta_{42})$ is $\mu_{42}$, so the norm-one unit kernel is exactly $\mu_{42}$, giving \eqref{eq:normfiber}. The two displayed sets are disjoint because they generate the distinct prime ideals $\mathfrak P$ and $\bar{\mathfrak P}$.
+
+Conjugation pairs the $84$ elements. If two conjugacy classes had the same trace, their representatives would have the same trace and the same norm $\pi$, hence would be roots of the same quadratic $X^2-cX+\pi$; they would therefore be equal or conjugate. Thus there are exactly $42$ distinct traces.
+\end{proof}
+
+For example,
+\[
+ c_0=\alpha_0+\bar\alpha_0=t^4-4t^2+t+4.
+\]
+This theorem replaces an unstructured search for the relative-norm stage by a finite and complete classification for the chosen split prime.
+
+
+\section{Certified signature enumeration}
+For $d=3$ and $d=7$, the same cyclotomic field can be written as $M=L(\sqrt{-d})$. We choose
+\[
+ \sqrt{-3}=1+2\zeta_{42}^{14}
+\]
+and
+\[
+ \sqrt{-7}=1+2(\zeta_{42}^{6}+\zeta_{42}^{12}+\zeta_{42}^{24}),
+\]
+which square to $-3$ and $-7$, respectively.
+
+For
+\[
+ \alpha_k=\zeta_{42}^k\alpha_0,
+\]
+define $a_{k,d},b_{k,d}\in L$ by
+\[
+ \alpha_k=a_{k,d}+b_{k,d}\sqrt{-d}.
+\]
+The signs of the six real embeddings of $b_{k,d}$ can be certified exactly by expressing $b_{k,d}$ as a degree-at-most-five polynomial in $t$, isolating the six real roots of (\externalref{packet}{eq:minpoly}) with rational intervals, and evaluating by rational interval arithmetic.
+
+\begin{theorem}[Arithmetic $(3,3)$ signature counts]\label{thm:signature}
+With the normalization above:
+\begin{enumerate}[label=(\alph*)]
+\item for $d=3$, exactly $24$ of the $42$ trace classes have $b_{k,3}$ with three positive and three negative real embeddings;
+\item for $d=7$, exactly $4$ of the $42$ trace classes have $b_{k,7}$ with three positive and three negative real embeddings.
+\end{enumerate}
+A set of representatives is
+\[
+\begin{split}
+ d=3:\quad k\in\{&0,1,4,8,11,12,15,16,17,18,19,20,21,22,25,29,\\
+ &32,33,36,37,38,39,40,41\},
+\end{split}
+\]
+and
+\[
+ d=7:\quad k\in\{2,14,23,35\}.
+\]
+\end{theorem}
+
+One explicit $d=3$ example is
+\[
+ b_{0,3}=-\frac13t^5-\frac16t^4+\frac73t^3+t^2-\frac{23}{6}t-\frac43,
+\]
+whose signs at $k=1,5,11,13,17,19$ are
+\[
+ (+,-,-,+,+,-).
+\]
+For $d=7$, one example is
+\[
+ b_{2,7}=-\frac5{14}t^5+\frac{31}{14}t^3+\frac37t^2-\frac{45}{14}t-\frac{15}{14},
+\]
+with sign vector
+\[
+ (+,-,-,+,-,+).
+\]
+
+\begin{remark}[What Theorem \ref{thm:signature} does not prove]\label{rem:notgeometry}
+The sign vector of $b$ is an arithmetic compatibility condition, not the CM type of a period point. The preprint itself notes that the Hecke endomorphism alone does not determine the CM type. Therefore Theorem \ref{thm:signature} does not prove
+\[
+ V\cap\mathcal W_K\ne\varnothing.
+\]
+It proves only that the corrected relative-norm fiber contains integral CM elements whose $b$-coefficients have the desired $3+3$ sign pattern.
+\end{remark}
+
+
+\section{Canonical fixed points and a finite replacement for the lift variable}
+The missing elimination of $\delta$ in Section 5.3 can be reorganized using integral conjugacy rather than by ranging directly over $\mathrm{SL}_2(\OL)$. For any corrected trace $c\in\OL$ define the companion matrix
+\begin{equation}\label{eq:companion}
+ A_c=\begin{pmatrix}0&-\pi\\1&c\end{pmatrix}\in M_2(\OL).
+\end{equation}
+Then $\det A_c=\pi$ and $\chi_{A_c}(X)=X^2-cX+\pi$.
+
+\begin{proposition}[Canonical Hecke-fixed CM representative]\label{prop:canonical-fixed}
+Assume $c^2-4\pi$ is totally negative. For each real embedding $\sigma_i:L\hookrightarrow\R$, put
+\begin{equation}\label{eq:wi}
+ w_i(c)=\frac{-\sigma_i(c)+\sqrt{\sigma_i(c)^2-4\sigma_i(\pi)}}{2},
+\end{equation}
+where the square root is chosen with positive imaginary part. Then
+\[
+ w(c)=(w_1(c),\ldots,w_6(c))\in\mathbb H^6
+\]
+is fixed componentwise by $A_c$ under the fractional-linear action. Thus $A_c$ supplies an explicit determinant-$\pi$ Hecke-fixed CM representative in the Hilbert modular domain.
+\end{proposition}
+\begin{proof}
+The fixed-point equation for
+$\left(\begin{smallmatrix}0&-\pi\\1&c\end{smallmatrix}\right)$ is
+$w=-\pi/(w+c)$, equivalently $w^2+cw+\pi=0$. Applying $\sigma_i$ gives \eqref{eq:wi}. Total negativity of the discriminant puts the selected root in $\mathbb H$ at every embedding. The characteristic polynomial generates the same quadratic CM field as a root of $X^2-cX+\pi$.
+\end{proof}
+
+For the $42$ traces of Theorem \ref{thm:42}, Proposition \ref{prop:canonical-fixed} therefore gives $42$ explicit canonical fixed-point representatives. They need not be pairwise distinct in the quotient $X_L$, and they do not automatically exhaust all integral conjugacy classes with the same characteristic polynomial.
+
+That last caveat is exactly where the infinite $\delta$-variable belongs. Generalized Latimer--MacDuffee theory replaces conjugacy of integral matrices with a finite module-classification problem for the quadratic order
+\[
+ R_c=\OL[\alpha],\qquad \alpha^2-c\alpha+\pi=0.
+\]
+Generalized Latimer--MacDuffee theory identifies the analogous integral problem with module classes over the quadratic order.  For comparison, algorithms for prescribed characteristic and minimal polynomials over $\Z$ are developed in \cite{Marseglia2025}.  In the maximal-order cases needed here, the $\OL$-module classification is handled directly below using class number one. Consequently, a corrected finite search should proceed trace by trace through the finitely many integral conjugacy classes attached to $R_c$, rather than count root choices before the lift has been eliminated.
+
+McMullen's standard modular embedding has the normalization
+\begin{equation}\label{eq:mcmullenF}
+ F(z)=(z,f_2(z),\ldots,f_6(z))
+\end{equation}
+with equivariance $f_i(g_1z)=g_i f_i(z)$ \cite[Sec.~6]{McMullen2026}. For the canonical representative \eqref{eq:companion}, the concrete identities
+\begin{equation}\label{eq:42test}
+ f_i(w_1(c))=w_i(c),\qquad i=2,\ldots,6
+\end{equation}
+are therefore a sufficient test that the chosen lift $w(c)$ itself lies on the distinguished lift $F(\mathbb H)\subset\mathbb H^6$.
+
+There is an important quotient-level qualification. If $\Gamma_L$ denotes the Hilbert modular group defining $X_L$, then the full inverse image of the McMullen curve in $\mathbb H^6$ is the $\Gamma_L$-saturation
+\[
+ \bigcup_{\gamma\in\Gamma_L}\gamma\,F(\mathbb H).
+\]
+Consequently the complete membership criterion for the quotient point $[w(c)]\in X_L$ is
+\begin{equation}\label{eq:orbit-test}
+ \exists\,\gamma\in\Gamma_L,\ z\in\mathbb H
+ \quad\text{such that}\quad
+ \gamma\cdot w(c)=F(z).
+\end{equation}
+Equation \eqref{eq:42test} is the special case $\gamma=1$. For a non-companion integral conjugacy representative one obtains the analogous distinguished-lift test after the corresponding $\mathrm{SL}_2(\OL)$ normalization, but a complete quotient-level search must still account for the orbit condition \eqref{eq:orbit-test}. Thus the arithmetic reductions below make the set of Hecke conjugacy classes finite; they do not by themselves collapse the geometric orbit problem to the single lift $F(\mathbb H)$.
+
+
+\section{Component normalization and an effective finite orbit search}\label{app:components}
+There is a further normalization issue that must be separated from the arithmetic
+corrections above.  McMullen's construction first produces the modular embedding in the
+disconnected Hilbert modular variety
+\[
+ Y_L=(\pm\mathbb H)^6/\mathrm{SL}_2(\OL),
+\]
+not directly in $X_L=\mathbb H^6/\mathrm{SL}_2(\OL)$.  If a Galois-conjugate triangle
+has opposite orientation, its component map takes values in $-\mathbb H$ while still
+satisfying the equivariance relation \eqref{eq:correct-equiv}; McMullen then uses
+commensurability of the components of $Y_L$ and passes to a finite-index subgroup to
+obtain a curve on $X_L$ \cite[Prop.~6.1, Cor.~6.2 and proof of Thm.~1.9]{McMullen2026}.
+
+The shortcut in \cite[Sec.~1.4]{Mostaed2026} of replacing a map
+$f_i:\mathbb H\to-\mathbb H$ by $-\overline{f_i}$ does not preserve the same target
+representation in general.  Let
+\[
+ J(z)=-\overline z,
+ \qquad
+ s=\begin{pmatrix}-1&0\\0&1\end{pmatrix}\in\mathrm{PGL}_2(\mathbb R).
+\]
+For $g\in\mathrm{PSL}_2(\mathbb R)$ one has
+\[
+ J\circ g\circ J^{-1}=s g s^{-1},
+\]
+which is not generally equal to $g$.  Hence if
+$f_i(g_1z)=g_i f_i(z)$, then $J\circ f_i$ is equivariant for
+$g_i\mapsto s g_i s^{-1}$, not for the original $g_i$.  For example, with
+$B=\left(\begin{smallmatrix}0&-1\\1&t\end{smallmatrix}\right)$,
+\[
+ J(Bz)=\frac{1}{\overline z+t},
+ \qquad
+ B(Jz)=\frac{1}{\overline z-t},
+\]
+so the two actions differ for $t\ne0$.
+
+Consequently an exact Hecke search on the curve in $X_L$ must specify the finite-cover
+and component-changing normalization used to pass from McMullen's $Y_L$-curve to
+$X_L$.  This does not alter the abstract local norm calculations of the preceding
+sections, but it is part of the data required to identify an arithmetic Hecke class with
+a point on the actual curve in $X_L$.
+
+The missing normalization can be written explicitly.  Let
+$\varepsilon_i\in\{\pm1\}$ record the component containing $f_i(\mathbb H)$, so that
+$f_i(\mathbb H)\subset \varepsilon_i\mathbb H$ and $\varepsilon_1=1$.  By weak
+approximation choose $\lambda\in L^\times$ satisfying
+$\operatorname{sgn}(\sigma_i(\lambda))=\varepsilon_i$ for all $i$, and put
+\[
+ h=\begin{pmatrix}\lambda&0\\0&1\end{pmatrix}\in\mathrm{GL}_2(L).
+\]
+Then the $i$-th real component of $h$ sends $\varepsilon_i\mathbb H$ to $\mathbb H$.
+Define
+\begin{equation}\label{eq:explicitcovergroup}
+ \Gamma_\lambda
+ =\Delta_0\cap h^{-1}\mathrm{SL}_2(\OL)h.
+\end{equation}
+Since $h\mathrm{SL}_2(\OL)h^{-1}$ is commensurable with
+$\mathrm{SL}_2(\OL)$, the subgroup $\Gamma_\lambda$ has finite index in $\Delta_0$.
+For
+\[
+ F_\lambda(z)=h\cdot F(z)\in\mathbb H^6
+\]
+and $g\in\Gamma_\lambda$, equivariance becomes
+\[
+ F_\lambda(g_1z)=(hgh^{-1})\cdot F_\lambda(z),
+ \qquad hgh^{-1}\in\mathrm{SL}_2(\OL).
+\]
+Thus $F_\lambda$ descends to the finite-cover curve
+$\mathbb H/\Gamma_\lambda\to X_L$.  This is the concrete specialization of McMullen's
+commensurability argument in Proposition~6.1 and Corollary~6.2.  In particular, after
+$\lambda$ is fixed the Hecke-orbit test must be performed against $F_\lambda$, not
+against an ad hoc componentwise conjugation of $F$.
+
+For the present $(14,21,42)$ example the component correction is especially simple and
+does not itself force a smaller subgroup.
+
+\begin{proposition}[Explicit component orientation and integral transfer]\label{prop:orientationt}
+Order the six embeddings by $k=1,5,11,13,17,19$.  The orientations of the six
+Galois triangles relative to the identity triangle are
+\[
+ (\varepsilon_1,\ldots,\varepsilon_6)=(+,+,-,-,-,-).
+\]
+The unit
+\[
+ t=2\cos(\pi/21)\in\OL^\times
+\]
+has the same real sign vector.  Consequently, with
+\[
+ h_t=\begin{pmatrix}t&0\\0&1\end{pmatrix}\in\mathrm{GL}_2(\OL),
+\]
+the map $F_t=h_t\cdot F$ takes values in $\mathbb H^6$, and
+$h_t\mathrm{SL}_2(\OL)h_t^{-1}=\mathrm{SL}_2(\OL)$.  Thus the component-changing
+normalization may be carried out integrally on $X_L$ itself; no additional finite-index
+subgroup is required solely for the purpose of changing the signs of the six half-plane
+components.
+\end{proposition}
+\begin{proof}
+Use McMullen's printed matrices $A,B,C\in\mathrm{SL}_2(\OL)$ for three consecutively
+ordered vertices of the quadrilateral model of $\Delta_0$.  For each of the six real
+embeddings indexed by $k=1,5,11,13,17,19$, let $p_A,p_B,p_C\in\mathbb H$ be their
+upper-half-plane fixed points.  The oriented Euclidean determinant
+\[
+ \Omega_k=\det\!\begin{pmatrix}
+ \Re(p_B-p_A)&\Im(p_B-p_A)\\
+ \Re(p_C-p_A)&\Im(p_C-p_A)
+ \end{pmatrix}
+\]
+has certified rational-interval signs
+\[
+ \Omega_1<0,\quad \Omega_5<0,\quad
+ \Omega_{11}>0,\quad\Omega_{13}>0,\quad\Omega_{17}>0,\quad\Omega_{19}>0.
+\]
+The six isolating intervals are disjoint and each has an exact sign change for the degree-six
+minimal polynomial, so they contain all six real roots, one apiece.  Interval evaluation of
+$\Omega_k$ then excludes zero in every case.  Thus, relative to $k=1$, the orientation
+vector is $(+,+,-,-,-,-)$.  The same sign
+vector for $t$ is immediate from
+$\sigma_k(t)=2\cos(k\pi/21)$.  Finally, the minimal polynomial
+(\externalref{packet}{eq:minpoly}) has constant term $1$, so
+$N_{L/\Ql}(t)=1$ and $t\in\OL^\times$.  Hence $h_t\in\mathrm{GL}_2(\OL)$ and
+conjugation by $h_t$ preserves $\mathrm{SL}_2(\OL)$.
+\end{proof}
+
+A torsion-free or level cover may still be imposed for fine-moduli purposes, but the
+component transfer itself is already integral.  This removes one previously unspecified
+normalization from the Hecke comparison: in what follows the normalized lift can be
+taken to be $F_t$.
+
+Once that normalization is fixed, compactness gives an effective replacement for the
+apparently infinite orbit search in \eqref{eq:orbit-test}.
+
+\begin{proposition}[Effective finiteness of the orbit test]\label{prop:effectiveorbit}
+Let $G\subset\mathrm{SL}_2(L)$ be an arithmetic subgroup commensurable with
+$\mathrm{SL}_2(\OL)$ acting diagonally on $\mathbb H^6$, let
+$F:\mathbb H\to\mathbb H^6$ be a $\Gamma$-equivariant modular embedding with
+$\Gamma$ cocompact, and let $D\subset\mathbb H$ be a compact fundamental polygon for
+$\Gamma$.  Put $K=F(D)$.  For every fixed $w=(w_1,\ldots,w_6)\in\mathbb H^6$, the set
+\[
+ \{\gamma\in G:\gamma w\in K\}
+\]
+is finite.  Moreover, after choosing an integral lattice containing $G$, it is
+effectively enumerable from certified lower bounds for the coordinate imaginary parts
+on $K$ and upper bounds for the coordinate absolute values on $K$.
+\end{proposition}
+\begin{proof}
+Write $w_i=x_i+i y_i$ with $y_i>0$, and
+$\gamma_i=\left(\begin{smallmatrix}a_i&b_i\\c_i&d_i\end{smallmatrix}\right)$ for the
+$i$-th real embedding of $\gamma$.  Since $K$ is compact in $\mathbb H^6$, there are
+constants
+\[
+ m_i=\inf_{z\in K}\operatorname{Im}(z_i)>0,
+ \qquad
+ U_i=\sup_{z\in K}|z_i|<\infty.
+\]
+If $u=\gamma w\in K$, the Möbius imaginary-part identity gives
+\[
+ \operatorname{Im}(u_i)=\frac{y_i}{|c_iw_i+d_i|^2}\ge m_i,
+\]
+hence
+\[
+ |c_iw_i+d_i|\le B_i:=\sqrt{y_i/m_i}.
+\]
+Taking imaginary parts yields
+\[
+ |c_i|\le\frac{B_i}{y_i}=\frac1{\sqrt{m_i y_i}},
+\]
+and therefore
+\[
+ |d_i|\le B_i+|c_i|\,|w_i|.
+\]
+Likewise $a_iw_i+b_i=u_i(c_iw_i+d_i)$, so
+\[
+ |a_iw_i+b_i|\le U_iB_i.
+\]
+Taking imaginary parts once more and then using the triangle inequality gives
+\[
+ |a_i|\le\frac{U_iB_i}{y_i},
+ \qquad
+ |b_i|\le U_iB_i+|a_i|\,|w_i|.
+\]
+Thus every real embedding of every matrix entry is bounded by an explicit constant.
+The Minkowski embedding of the chosen coefficient lattice is discrete in a finite-dimensional
+real vector space, so only finitely many lattice elements satisfy these simultaneous
+archimedean bounds.  Enumerating them and imposing determinant one gives the claimed
+effective finite set.
+\end{proof}
+
+\begin{corollary}[Finite geometric search for each CM candidate]\label{cor:finitegeometric}
+After the explicit component normalization of Proposition \ref{prop:orientationt} (and any independently chosen level cover), the quotient-membership test for each of the $12$ strongest maximal-order
+$d=3$ candidates reduces to a finite computation.  In particular, the infinite union in
+\eqref{eq:orbit-test} does not require an unbounded search through
+$\mathrm{SL}_2(\OL)$: only matrices satisfying the archimedean bounds of
+Proposition \ref{prop:effectiveorbit} can occur.
+\end{corollary}
+
+The generic finite-search argument requires a specific finite-index model
+of the curve in $X_L$, a compact polygon $D$, and certified bounds
+$m_i,U_i$ for its normalized component maps. The corrected Schwarz equations
+in Proposition~\ref{prop:sixHG} provide one route to such bounds.
+For the fixed packet considered here, the explicit two-region construction
+of Lemma~\externalref{packet}{lem:twochambers} and the exact certificates assembled in
+Theorem~\externalref{packet}{thm:fullpacketgeometry} complete the geometric decisions.
+
+
+\section{Order-discriminant stratification of the $42$ traces}\label{app:orders}
+There is a further exact reduction at $43$. The field discriminants are
+\[
+ \operatorname{disc}(L)=453789=3^3 7^5,
+ \qquad
+ \operatorname{disc}(M)=205924456521=3^6 7^{10}.
+\]
+Hence
+\[
+ |\operatorname{disc}(M)|=\operatorname{disc}(L)^2.
+\]
+By the discriminant tower formula, the relative discriminant ideal $\mathfrak D_{M/L}$ has norm one and is therefore the unit ideal. In particular, $M/L$ is unramified at all finite primes.
+
+For $\alpha_k=\zeta^k\alpha_0$ and $c_k=\alpha_k+\bar\alpha_k$, the relative discriminant of the basis $(1,\alpha_k)$ is
+\begin{equation}\label{eq:Deltak}
+ \Delta_k=(\alpha_k-\bar\alpha_k)^2=c_k^2-4\pi.
+\end{equation}
+Since the maximal relative discriminant is the unit ideal, $\OL[\alpha_k]=\OM$ exactly when $(\Delta_k)=\OL$.
+
+\begin{theorem}[Maximal-order trace classes at $43$]\label{thm:maxorder}
+Among the $42$ trace classes of Theorem \ref{thm:42}, exactly $16$ generate the maximal CM order $\OM$. With the indexing $\alpha_k=\zeta^k\alpha_0$, they are
+\[
+ k\in\{1,7,11,13,16,17,19,20,22,28,32,34,37,38,40,41\}.
+\]
+The absolute norms of the relative order discriminants across all $42$ classes belong to
+\[
+ \{1,49,1681,1849,2401,6889,16129\}
+ =\{1,7^2,41^2,43^2,49^2,83^2,127^2\}.
+\]
+Exactly $12$ of the $16$ maximal-order classes are also among the $24$ $d=3$ arithmetic $(3,3)$ classes, namely
+\[
+ \{1,11,16,17,19,20,22,32,37,38,40,41\}.
+\]
+None of the four $d=7$ arithmetic $(3,3)$ classes is maximal-order.
+\end{theorem}
+\begin{proof}
+Equation \eqref{eq:Deltak} is evaluated exactly in the power basis of $L$, and its absolute norm is the resultant with the minimal polynomial (\externalref{packet}{eq:minpoly}). The resulting norm list is printed in the computational certificate. Because $\mathfrak D_{M/L}=\OL$, norm one is equivalent to equality of the generated order with $\OM$. Intersecting the resulting $16$ indices with the certified lists in Theorem \ref{thm:signature} gives the final two assertions.
+\end{proof}
+
+\begin{remark}
+The maximal-order cases are particularly attractive for the conjugacy repair. The cyclotomic field $M=\Ql(\zeta_{42})=\Ql(\zeta_{21})$ has class number one by Masley's Main Theorem \cite[p.~179]{Masley1976}. This removes the ordinary ideal-class obstruction in $\OM$; however, one must still track the precise $\OL$-module, determinant, and $\mathrm{SL}_2$ versus $\mathrm{GL}_2$ equivalence conditions before concluding uniqueness of an admissible Hecke conjugacy class.
+\end{remark}
+
+\begin{proposition}[All-trace reduction by embedded order]\label{prop:alltraceorders}
+The $42$ traces generate exactly nine embedded orders
+$R_k=\OL[\alpha_k]$ in the fixed field $M$. Their conductors in $\OM$
+are the extensions of the following ideals of $\OL$:
+\begin{center}
+\begin{tabular}{ll}
+\toprule
+Conductor in $\OL$ & Trace indices $k$\\
+\midrule
+$\OL$ & $1,7,11,13,16,17,19,20,22,28,32,34,37,38,40,41$\\
+$(7,t-1)$ & $0,3,6,9,15,18,21,24,27,30,36,39$\\
+$(7,t-1)^2$ & $12,33$\\
+$(41,t-12)$ & $14,35$\\
+$(41,t-22)$ & $5,26$\\
+$(43,t-20)$ & $4,25$\\
+$(43,t-31)$ & $8,29$\\
+$(83,t-36)$ & $2,23$\\
+$(127,t-94)$ & $10,31$\\
+\bottomrule
+\end{tabular}
+\end{center}
+Within each row, an integral invertible affine change of generator gives
+an $\SL_2(\OL)$-equivariant correspondence of all integral actions,
+preserving their upper-half-plane fixed tuples. For every trace, the
+maximal-multiplier population is represented by the same sixteen maximal
+points in Theorem~\ref{thm:d7ambient}.
+\end{proposition}
+\begin{proof}
+Write $\alpha_k=a_k+b_k\zeta$ in $\OM=\OL+\OL\zeta$.
+Then $R_k=\OL+b_k\OM$, and its conductor is $b_k\OM$:
+if $A+B\zeta$ and its product with $\zeta$ lie in $R_k$, then both
+$B$ and $A+tB$ are divisible by $b_k$, so $A$ is too.
+For each prime-conductor row, the two exact implementations listed in
+Section~\ref{app:computer} verify $|N_{L/\mathbf Q}(b_k)|=p$ and
+$b_k(r)=0\pmod p$ for the displayed root $r$.
+Inclusion and equal index give $(b_k)=(p,t-r)$.
+For the square-conductor row, $b_k/(t-1)^2$ and its inverse are integral
+units, and $|N_{L/\mathbf Q}(t-1)|=7$.
+All within-row ratios $e=b_l/b_k$ are checked to be integral units.
+Thus $\alpha_l=s+e\alpha_k$, with $s=a_l-ea_k\in\OL$, and
+$T\mapsto sI+eT$ is the required correspondence. The fixed-point
+equation is multiplied by the nonzero scalar $e$ at each embedding.
+
+For maximal multiplier, multiplication by $\alpha_k$ in an orientation
+sector $\delta\in\OL^\times$ has matrix
+\[
+ \begin{pmatrix}a_k&-\delta b_k\\ b_k/\delta&a_k+tb_k\end{pmatrix}.
+\]
+Here $b_k\ne0$, since otherwise $\pi=a_k^2$ would have square absolute
+norm. Its upper-half-plane tuple has
+\[
+ x=-\delta t/2,\qquad y^2=\delta^2(4-t^2)/4,
+ \qquad |w|^2=\delta^2,
+\]
+independently of $k$. The maximal Picard group is trivial, and
+Theorem~\ref{thm:unitnorm} gives the same $32$ determinant sectors for
+every trace. The root identifications in Theorem~\ref{thm:d7ambient}
+reduce them to the same sixteen representatives.
+\end{proof}
+\begin{remark}
+The two conductor ideals of norm $41$ are different embedded ideals.
+Also the basis change from $(1,\alpha_k)$ to $(1,\alpha_l)$ has
+determinant $e$, so companion orientation labels need not be unchanged.
+This proposition gives no count of all proper modules and no new curve
+decision; those require the separate class and orbit analyses.
+\end{remark}
+
+\begin{theorem}[Exact nonmaximal $d=7$ conjugacy counts]\label{thm:d7nonmax}
+For the four $d=7$ arithmetic $(3,3)$ trace classes
+\[
+ k\in\{2,14,23,35\},
+\]
+put $R_k=\OL[\alpha_k]\subset\OM$.  Their conductors are
+\[
+ \mathfrak f_2=\mathfrak f_{23}=(83,t-36),\qquad
+ \mathfrak f_{14}=\mathfrak f_{35}=(41,t-12).
+\]
+The two conductor primes have residue degree one in $L$ and are inert in the quadratic extension $M/L=L(\sqrt{-7})/L$.  The proper ideal class groups and full ideal-class monoids are
+\[
+\begin{array}{c|c|c|c}
+ k & N\mathfrak f_k & |\operatorname{Pic}(R_k)| &
+ |\operatorname{ICM}(R_k)|\\ \hline
+ 14,35&41&1&2\\
+ 2,23&83&2&3.
+\end{array}
+\]
+Within any fixed totally-positive determinant-orientation sector, refining the corresponding $\mathrm{GL}_2^+(\OL)$ similarity classes to determinant one gives
+\[
+ 3\quad(k=14,35),\qquad 5\quad(k=2,23)
+\]
+classes.  Across all determinant-sign sectors, the full numbers of $\mathrm{SL}_2(\OL)$ similarity classes are
+\[
+ 96\quad(k=14,35),\qquad 160\quad(k=2,23).
+\]
+Thus the nonmaximal $d=7$ conjugacy problem is completely finite, but the full oriented enumeration is substantially larger than the single totally-positive sector.
+\end{theorem}
+\begin{proof}
+Since the maximal relative discriminant of $M/L$ is the unit ideal, the order-discriminant formula gives
+\[
+ \operatorname{disc}(R_k/\OL)=\mathfrak f_k^2.
+\]
+Exact reduction of $\Delta_k=c_k^2-4\pi$ gives
+\[
+ N(\Delta_2)=N(\Delta_{23})=83^2,
+ \qquad
+ N(\Delta_{14})=N(\Delta_{35})=41^2,
+\]
+and modulo the completely split rational primes one finds that the unique vanishing factors are $t\equiv36\pmod{83}$ and $t\equiv12\pmod{41}$, respectively.  Thus the displayed conductor ideals are exact.  Moreover
+\[
+ \left(\frac{-7}{41}\right)=\left(\frac{-7}{83}\right)=-1,
+\]
+so the conductor primes are inert in $M/L$.  Therefore locally
+\[
+ (\OM/\mathfrak f_k\OM)^\times/(\OL/\mathfrak f_k)^\times
+ \cong \mathbb F_{p^2}^\times/\mathbb F_p^\times
+\]
+is cyclic of order $p+1$.
+
+Let $z=\zeta_{42}$, $\rho=z^2=\zeta_{21}$, and $\varepsilon=1-\rho$.  Because $\Phi_{21}(1)=1$, $\varepsilon$ is a global unit.  At either conductor prime $p\equiv-1\pmod{42}$, Frobenius is complex conjugation and
+\[
+ \varepsilon^{p-1}
+ =\frac{1-z^{-2}}{1-z^2}
+ =-z^{-2}=z^{19}.
+\]
+Since $19$ is prime to $42$, the image of $\varepsilon$ in the local quotient has order $42$.
+We must also show that no omitted global unit enlarges this image.  For any
+$\eta\in E_M$, Kronecker's theorem gives
+$\eta/\bar\eta\in\mu(M)$.  The map
+\[
+ E_M/(\mu(M)E_L)\longrightarrow \mu(M)/\mu(M)^2,
+ \qquad \eta\longmapsto\eta/\bar\eta,
+\]
+is injective: if $\eta/\bar\eta=\omega^2$, then $\eta/\omega\in E_L$.
+The target has order two, while
+$\varepsilon/\bar\varepsilon=-z^2=z^{23}$ is not a square in $\mu_{42}$.
+Consequently
+\[
+ E_M=\langle\varepsilon\rangle\mu_{42}E_L.
+\]
+Since $[z]=[\varepsilon]^{22}$ locally, the global-unit image is exactly the
+order-$42$ subgroup generated by $[\varepsilon]$.  At the conductor-$83$
+prime the element $1+3z$ has exact quotient order $84$, so it represents the
+other coset.  The standard order class exact sequence and $h(M)=1$ now give
+\[
+ |\operatorname{Pic}(R_{14})|=|\operatorname{Pic}(R_{35})|=42/42=1,
+\]
+\[
+ |\operatorname{Pic}(R_2)|=|\operatorname{Pic}(R_{23})|=84/42=2.
+\]
+For clarity, the ideal-class-monoid completeness can be seen directly in this
+prime-conductor case.  Locally write $A=(\OL)_{\mathfrak f}$,
+$B=(\OM)_{\mathfrak f}$, and $R=A+\mathfrak fB$.  After scaling a rank-one
+torsion-free $R$-lattice $I$, one has $R\subset I\subset B$.  Since $B/R$ is
+one-dimensional over the residue field of $A$, necessarily $I=R$ or $I=B$.
+Away from $\mathfrak f$ the order is maximal.  Thus the multiplier order is
+either $R_k$ or $\OM$, and within either multiplier order the classes form its
+Picard group.  Equivalently, this is the prime-conductor Bass-order
+decomposition
+\[
+ \operatorname{ICM}(R_k)
+ =\operatorname{Pic}(R_k)\sqcup\operatorname{Pic}(\OM).
+\]
+Since $h(M)=1$, the displayed ideal-class-monoid counts follow.
+
+For the determinant-one refinement, the integral centralizer of an $R_k$-multiplier class is $R_k^\times$.  In the same local quotient one has $[z]=[\varepsilon]^{22}$.  Hence a unit $\varepsilon^n z^m u$, $u\in E_L$, lies in $R_k^\times$ only if
+\[
+ n+22m\equiv0\pmod{42},
+\]
+which forces $n$ even.  Conversely every square of an $E_L$-unit is a norm
+from $R_k^\times$.  Hence the norm calculation sharpens to
+\[
+ N_{M/L}(R_k^\times)=E_L^2.
+\]
+Because $[E_L^+:E_L^2]=2$, every $R_k$-multiplier class splits into two determinant-one classes inside a fixed totally-positive determinant sector, whereas the $\OM$-multiplier class has centralizer $\OM^\times$ and does not split there.  This gives $2|\operatorname{Pic}(R_k)|+1$, namely $3$ for conductor $41$ and $5$ for conductor $83$, in such a sector.
+
+For the full $\mathrm{SL}_2(\OL)$ enumeration one must also retain determinant signs.  The maximal-overorder class splits according to
+\[
+ E_L/N(\OM^\times)=E_L/E_L^+,
+\]
+of order $32$, while each $R_k$-multiplier class splits according to
+\[
+ E_L/N(R_k^\times)=E_L/E_L^2,
+\]
+of order $64$.  Hence the total counts are $64|\operatorname{Pic}(R_k)|+32$: $96$ for conductor $41$ and $160$ for conductor $83$.  The primary and independent exact certificates construct every module template, all determinant-sign twists, and all $512$ trace-labelled representatives.
+\end{proof}
+
+\begin{theorem}[The nonmaximal $d=3$ classes]\label{thm:d3classes}
+For the twelve selected arithmetic-$(3,3)$ traces
+\[
+ k\in\{0,4,8,12,15,18,21,25,29,33,36,39\},
+\]
+there are exactly $1280$ trace-labelled $\SL_2(\OL)$ matrix classes,
+or $40$ in one chosen totally positive determinant sector per module class.
+These are matrix-class counts, not counts of distinct ambient or curve points.
+The multiplier orders have conductors
+$\OL$, $(7,t-1)$, $(7,t-1)^2$, $(43,t-20)$, or $(43,t-31)$,
+and each of these orders has trivial Picard group.
+\end{theorem}
+\begin{proof}
+Proposition~\ref{prop:alltraceorders} supplies the conductors.
+Ten labels have prime conductor and two, $12,33$, have the square conductor.
+Every relevant prime splits in $M/L$. In the conductor unit quotient
+\[
+ Q_{\mathfrak f}=(\OM/\mathfrak f\OM)^\times/
+                    (\OL/\mathfrak f)^\times,
+\]
+use the ratio of the two split coordinates. With
+$\varepsilon=1-z^2$ as above, the following exact table gives generators:
+\begin{center}
+\begin{tabular}{llll}
+\toprule
+$\mathfrak f$ & Residue ring & $z$ & $[\varepsilon]$, order\\
+\midrule
+$(7,t-1)$ & $\mathbf F_7$ & $3$ & $5$, $6$\\
+$(7,t-1)^2$ & $\mathbf F_7[v]/(v^2)$ & $3+2v$ & $5+2v$, $42$\\
+$(43,t-20)$ & $\mathbf F_{43}$ & $30$ & $3$, $42$\\
+$(43,t-31)$ & $\mathbf F_{43}$ & $5$ & $18$, $42$\\
+\bottomrule
+\end{tabular}
+\end{center}
+In the second row $t=1+v$: the identity
+$f(1+v)=7(1-v)\pmod{v^2}$ proves the displayed residue-ring description.
+In each row the class of $\varepsilon$ generates the entire quotient.
+The conductor exact sequence and $h(M)=1$ therefore give trivial Picard
+groups for these four proper orders. Moreover $[z]=[\varepsilon]^{22}$.
+The complete relative unit generation
+$E_M=\langle\varepsilon\rangle\mu_{42}E_L$ proved above shows that
+$\varepsilon^n z^m w$, $w\in E_L$, is a unit of the proper order
+precisely when $n+22m\equiv0\pmod d$, where $d=6$ or $42$.
+As $\gcd(22,d)=2$, its exponent $n$ is even. Consequently the proper-order
+norm image is exactly $E_L^2$; the maximal-order image is $E_L^+$.
+
+For completeness of the module list, let $D$ be the completed local DVR,
+$B=D\times D$, and $R_e=D+\varpi^eB$, with $e=1$ or $2$.
+Scale any full rank-one $R_e$ lattice $I$ so that $BI=B$.
+Both coordinate projections of $I$ are surjective. Its image in the residue
+plane thus contains a vector with both coordinates nonzero, so $I$ contains
+a unit of $B$. Scaling by its inverse gives $R_e\subseteq I\subseteq B$.
+The quotient $B/R_e\simeq D/(\varpi^e)$ is cyclic; its submodules have
+preimages exactly $R_j=D+\varpi^jB$, $0\le j\le e$.
+Their multiplier rings are distinct. Away from the conductor every lattice
+is locally principal over the maximal order. Globally every lattice is
+therefore invertible over its own multiplier order, and its class belongs
+to that order's Picard group. This proves there are exactly $e+1$ module
+classes, represented by the overorders themselves, including the intermediate
+conductor-7 order in the square-conductor case.
+
+Since $h(L)=1$, each lattice is free of rank two over $\OL$.
+The characteristic polynomial is irreducible over $L$, so integral matrix
+classes correspond to these rank-one $R_k$ modules.
+The determinant of a centralizer unit is its relative norm; a module with
+multiplier $S$ therefore contributes $E_L/N(S^\times)$ determinant-one
+classes. This gives $32$ for maximal multiplier and $64$ for each proper
+multiplier, or $1$ and $2$ in a fixed positive determinant sector.
+The totals are $10(32+64)+2(32+2\cdot64)=1280$ and
+$10(1+2)+2(1+2\cdot2)=40$.
+The two exact implementations reconstruct all representatives and check
+their traces and determinants; completeness and nonconjugacy follow from
+the module and determinant quotients just proved.
+\end{proof}
+
+\begin{theorem}[The $112$ ambient nonmaximal $d=7$ CM points]\label{thm:d7ambient}
+Let $\mathcal X_{41}$ and $\mathcal X_{83}$ be the sets of
+$\mathrm{SL}_2(\OL)$-quotient upper fixed points arising from the trace pairs
+$\{14,35\}$ and $\{2,23\}$, respectively.  Then
+\[
+ |\mathcal X_{41}|=48,\qquad |\mathcal X_{83}|=80,
+ \qquad |\mathcal X_{41}\cap\mathcal X_{83}|=16,
+\]
+and hence
+\[
+ |\mathcal X_{41}\cup\mathcal X_{83}|=112.
+\]
+The union has the disjoint multiplier-order decomposition
+\[
+ 32\text{ proper-}R_{41}
+ \;\sqcup\;
+ 64\text{ proper-}R_{83}
+ \;\sqcup\;
+ 16\text{ maximal-}\OM.
+\]
+Thus the $512$ objects of Theorem~\ref{thm:d7nonmax} are trace-labelled
+oriented matrix classes, not $512$ distinct quotient points.
+
+The normalized $A,B,C$ vertices are three of the $16$ maximal-multiplier
+points.  Exact determinant-orientation fingerprints identify two further
+maximal points with the companion pairs $\{1,22\}$ and $\{17,38\}$ excluded
+in Proposition~\ref{prop:residualexclusions}. These vertex and residual
+results alone leave $107$ ambient membership decisions: $11$
+maximal-multiplier and $96$ proper-order points. The further exclusions below complete these historical v45 membership
+decisions in Corollary~\ref{cor:d7geometrycomplete}.
+\end{theorem}
+\begin{proof}
+Fix one trace $c=c_k$.  For every elliptic matrix $T$, the matrix
+$\bar T=cI-T$ has the same fixed-point equation.  The involution
+$T\mapsto\bar T$ is free on $\mathrm{SL}_2(\OL)$ similarity classes.  Indeed,
+at every real embedding a conjugator from $T$ to $\bar T$ must exchange the
+upper and lower eigenlines, and therefore has negative determinant.  More
+algebraically, every anti-intertwiner is complex conjugation followed by an
+element $m$ of the CM centralizer, so its determinant has the totally negative
+form $-N_{M/L}(m)$.  It cannot have determinant one.
+
+Conversely, if two classes give the same quotient point, conjugate them so
+that they fix the same upper tuple.  Their real coefficients make them fix the
+same lower tuple as well, so both lie in the same quadratic stabilizer algebra.
+The polynomial $X^2-cX+\pi$ has only its two roots there.  Hence every fixed
+point fiber has exactly the two classes $T$ and $cI-T$.  The $96$ and $160$
+classes therefore give $48$ and $80$ points for a fixed conductor trace.
+
+The exact identities
+\[
+ \alpha_{23}=-\alpha_2,\qquad \alpha_{35}=-\alpha_{14}
+\]
+show that the two traces for each conductor have the same point set.  If
+\[
+ \gamma_{41}=-1-2t+t^2-t^3-t^4,
+ \qquad \gamma_{83}=-2-2t+2t^2-t^4,
+\]
+then exact reduction gives
+\[
+ (-174-718t-267t^2+733t^3+131t^4-167t^5)\gamma_{41}
+ +30\gamma_{83}=1.
+\]
+Thus the conductor ideals are comaximal.  A point supporting both proper
+orders has multiplier ring containing the order they generate, namely $\OM$.
+Conversely every maximal-multiplier point supports all four $\alpha_k$.
+The intersection is therefore exactly the maximal stratum, whose $32$ matrix
+classes give $16$ points.  Halving within each multiplier stratum yields
+\[
+64/2=32,\qquad 128/2=64,\qquad 32/2=16,
+\]
+and proves the $112$-point decomposition.  Equivalently, each proper point
+occurs four times in the trace-labelled manifest and each maximal point eight
+times, giving $32\cdot4+64\cdot4+16\cdot8=512$.
+
+Finally, the integral generators $Z_A,B_t,C_t$ all generate $\OM$, so direct
+and conjugate evaluation of every $\alpha_k$ gives the complete two-class
+fiber over each of the three distinct vertices.  In the exact unit-sign basis
+$(\xi_5,\xi_{11},\xi_{13},\xi_{17},-1,4-t^2)$ their maximal-point masks are
+$7,15,0$.  The companion bridges for $\{1,22\}$ and $\{17,38\}$ have masks
+$13$ and $2$.  These five masks are distinct, leaving $11+96=107$ ambient
+points.  Both exact implementations verify every representative, root
+pairing, and mask.
+\end{proof}
+
+

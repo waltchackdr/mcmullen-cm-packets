@@ -1,0 +1,12 @@
+{
+  "status": "PROPOSED_C59_MANUSCRIPT_PATCH_PENDING_REVIEW",
+  "base_sha256": "6b8d14eba24665fa5f30ba8f965a9bc41558ecd8defcb20766cd40f308179308",
+  "candidate_sha256": "5a01d6e9268dfb56e0f28c68210901c8e96ff9acf1ee451b5d97e835aebbddc6",
+  "replacement": {
+    "old": "$B$ and $C$. The original trace polarization",
+    "new": "$B$ and $C$. For these two fibers the least scalar polarization multiplier\nis $2$, and the six resulting degree-$64$ isogenies share one kernel.\nThe original trace polarization"
+  },
+  "insertion_anchor": "\\begin{corollary}[Weil points on the specified principal image]",
+  "insertion_sha256": "c9de1cee313311ba0c7ee533c3d7d037d451c4a5e5441f6e8c58a18737396d30",
+  "active_paper_unchanged": true
+}

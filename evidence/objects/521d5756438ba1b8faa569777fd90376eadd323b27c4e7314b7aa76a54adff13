@@ -1,0 +1,94 @@
+"""Small, read-only evidence primitives; no mathematical modules."""
+import hashlib
+import importlib.util
+import json
+from pathlib import Path
+import re
+import stat
+
+
+def need(value, message):
+    if not value:
+        raise ValueError(message)
+
+
+def valid_hash(value):
+    return type(value) is str and re.fullmatch('[0-9a-f]{64}', value) is not None
+
+
+def safe(path):
+    p = Path(path).absolute()
+    need('..' not in p.parts and not any(x.is_symlink() for x in (p, *p.parents)), 'Unsafe evidence path')
+    s = p.stat()
+    need(stat.S_ISREG(s.st_mode) and s.st_nlink == 1, 'Single-link regular evidence required')
+    return p
+
+
+def sha(path):
+    h = hashlib.sha256()
+    with safe(path).open('rb') as stream:
+        for data in iter(lambda: stream.read(1024**2), b''):
+            h.update(data)
+    return h.hexdigest()
+
+
+def decode(data):
+    def unique(items):
+        result = {}
+        for key, value in items:
+            need(key not in result, 'Duplicate JSON key')
+            result[key] = value
+        return result
+    return json.loads(data, object_pairs_hook=unique,
+                      parse_constant=lambda _: need(False, 'Nonfinite JSON'))
+
+
+def read(path):
+    return decode(safe(path).read_bytes())
+
+
+def below(root, name):
+    need(type(name) is str and name and not name.startswith('/') and
+         all(x not in ('', '.', '..') for x in name.split('/')), 'Unsafe relative path')
+    return safe(Path(root)/name)
+
+
+def load(path, checksum, name):
+    need(sha(path) == checksum, 'Unreviewed administrative module')
+    spec = importlib.util.spec_from_file_location(name, path)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+class Evidence:
+    def __init__(self, root, references, pins=None):
+        self.root = Path(root).absolute()
+        self.objects, self.paths, self.seals = {}, {}, {}
+        seen = set()
+        for name, ref in references.items():
+            if ref is None:
+                continue
+            need(type(ref) is dict and set(ref) == {'path', 'sha256'} and valid_hash(ref['sha256']), 'Reference shape')
+            p = below(self.root, ref['path'])
+            identity = (p.stat().st_dev, p.stat().st_ino)
+            need(identity not in seen, 'Aliased references'); seen.add(identity)
+            need(sha(p) == ref['sha256'], 'Reference changed: '+name)
+            if pins and name in pins:
+                need(ref['sha256'] == pins[name], 'Unreviewed fixed anchor: '+name)
+            self.paths[name], self.seals[name], self.objects[name] = p, ref['sha256'], read(p)
+
+    def recheck(self):
+        need(all(sha(p) == self.seals[n] for n, p in self.paths.items()), 'Late evidence mutation')
+
+
+def write_new(path, value, evidence_paths=()):
+    p = Path(path).absolute()
+    need(not p.exists() and '..' not in p.parts and
+         not any(x.is_symlink() for x in (p, *p.parents)), 'Fresh safe output required')
+    for source in evidence_paths:
+        source = Path(source).absolute()
+        need(p != source and not source.is_relative_to(p), 'Output overlaps input')
+    with p.open('x') as stream:
+        json.dump(value, stream, sort_keys=True, indent=2, allow_nan=False)
+        stream.write('\n')

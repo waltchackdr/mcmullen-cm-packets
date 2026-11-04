@@ -1,0 +1,64 @@
+{
+  "R_orbits": 4,
+  "S_orbits": 156,
+  "counts_by_projection_rank": {
+    "0": 1,
+    "1": 39,
+    "2": 351,
+    "3": 729
+  },
+  "enumeration": "Projection U<=F3^3 plus symmetric forms on U; no six-column RREF enumeration",
+  "hyperbolic_basis": {
+    "e": [
+      1,
+      10,
+      91
+    ],
+    "f": [
+      3,
+      27,
+      243
+    ]
+  },
+  "k_lines": 28,
+  "lagrangians": 1120,
+  "model": "F3[r]/Phi7; trace skew-Hermitian form",
+  "non_k_lagrangians": 1092,
+  "orbit_size": 7,
+  "root_orbits": 160,
+  "scope": "Finite-field regression and explicit counting-domain negative control. Actual quotient geometry, endomorphism orders and model bridge remain human proofs.",
+  "status": "PASS",
+  "unpolarized_unit_negative_control": {
+    "gamma_residue": 725,
+    "image_is_not_lagrangian": true,
+    "lagrangian": [
+      0,
+      1,
+      2,
+      9,
+      10,
+      11,
+      18,
+      19,
+      20,
+      81,
+      82,
+      83,
+      90,
+      91,
+      92,
+      99,
+      100,
+      101,
+      162,
+      163,
+      164,
+      171,
+      172,
+      173,
+      180,
+      181,
+      182
+    ]
+  }
+}

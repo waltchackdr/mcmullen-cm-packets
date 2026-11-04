@@ -1,0 +1,28 @@
+{
+  "degrees_over_F3": {
+    "4": 2,
+    "28": 6
+  },
+  "input_pins_verified": 6,
+  "new_subspace_enumeration": false,
+  "orders_outside_U14_in_U28": [
+    4,
+    28
+  ],
+  "status": "EXACT_SMALL_ARITHMETIC_CHECK_NOT_NEW_ENUMERATION",
+  "structural_proof_primary": true,
+  "underlying_R_orbit_size": 2,
+  "underlying_S_orbit_sizes": [
+    2,
+    4,
+    6,
+    6,
+    6,
+    6,
+    12,
+    12,
+    12,
+    12
+  ],
+  "underlying_total": 80
+}

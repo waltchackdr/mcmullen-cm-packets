@@ -1,0 +1,5363 @@
+{
+  "attempts": [
+    {
+      "blocks": null,
+      "candidate_visits": 17128,
+      "case_id": 0,
+      "concatenated_residues": [
+        1,
+        1,
+        40,
+        37,
+        37,
+        10,
+        13,
+        13,
+        16,
+        41,
+        29,
+        14,
+        41,
+        29,
+        14,
+        1,
+        6,
+        35
+      ],
+      "sources": [
+        {
+          "copy_id": 0,
+          "residues": [
+            1,
+            1,
+            40
+          ],
+          "triple": [
+            1,
+            1,
+            40
+          ]
+        },
+        {
+          "copy_id": 1,
+          "residues": [
+            37,
+            37,
+            10
+          ],
+          "triple": [
+            1,
+            1,
+            40
+          ]
+        },
+        {
+          "copy_id": 2,
+          "residues": [
+            13,
+            13,
+            16
+          ],
+          "triple": [
+            1,
+            1,
+            40
+          ]
+        },
+        {
+          "copy_id": 3,
+          "residues": [
+            41,
+            29,
+            14
+          ],
+          "triple": [
+            1,
+            13,
+            28
+          ]
+        },
+        {
+          "copy_id": 4,
+          "residues": [
+            41,
+            29,
+            14
+          ],
+          "triple": [
+            1,
+            13,
+            28
+          ]
+        },
+        {
+          "copy_id": 5,
+          "residues": [
+            1,
+            6,
+            35
+          ],
+          "triple": [
+            1,
+            6,
+            35
+          ]
+        }
+      ],
+      "status": "NO_PARTITION_THIS_PRESENTATION",
+      "wall_seconds": 0.013540763407945633
+    },
+    {
+      "blocks": null,
+      "candidate_visits": 19634,
+      "case_id": 1,
+      "concatenated_residues": [
+        1,
+        1,
+        40,
+        37,
+        37,
+        10,
+        13,
+        13,
+        16,
+        41,
+        29,
+        14,
+        41,
+        29,
+        14,
+        2,
+        5,
+        35
+      ],
+      "sources": [
+        {
+          "copy_id": 0,
+          "residues": [
+            1,
+            1,
+            40
+          ],
+          "triple": [
+            1,
+            1,
+            40
+          ]
+        },
+        {
+          "copy_id": 1,
+          "residues": [
+            37,
+            37,
+            10
+          ],
+          "triple": [
+            1,
+            1,
+            40
+          ]
+        },
+        {
+          "copy_id": 2,
+          "residues": [
+            13,
+            13,
+            16
+          ],
+          "triple": [
+            1,
+            1,
+            40
+          ]
+        },
+        {
+          "copy_id": 3,
+          "residues": [
+            41,
+            29,
+            14
+          ],
+          "triple": [
+            1,
+            13,
+            28
+          ]
+        },
+        {
+          "copy_id": 4,
+          "residues": [
+            41,
+            29,
+            14
+          ],
+          "triple": [
+            1,
+            13,
+            28
+          ]
+        },
+        {
+          "copy_id": 5,
+          "residues": [
+            2,
+            5,
+            35
+          ],
+          "triple": [
+            2,
+            5,
+            35
+          ]
+        }
+      ],
+      "status": "NO_PARTITION_THIS_PRESENTATION",
+      "wall_seconds": 0.012036388739943504
+    },
+    {
+      "blocks": null,
+      "candidate_visits": 15323,
+      "case_id": 2,
+      "concatenated_residues": [
+        1,
+        1,
+        40,
+        37,
+        37,
+        10,
+        13,
+        13,
+        16,
+        41,
+        29,
+        14,
+        41,
+        29,
+        14,
+        3,
+        4,
+        35
+      ],
+      "sources": [
+        {
+          "copy_id": 0,
+          "residues": [
+            1,
+            1,
+            40
+          ],
+          "triple": [
+            1,
+            1,
+            40
+          ]
+        },
+        {
+          "copy_id": 1,
+          "residues": [
+            37,
+            37,
+            10
+          ],
+          "triple": [
+            1,
+            1,
+            40
+          ]
+        },
+        {
+          "copy_id": 2,
+          "residues": [
+            13,
+            13,
+            16
+          ],
+          "triple": [
+            1,
+            1,
+            40
+          ]
+        },
+        {
+          "copy_id": 3,
+          "residues": [
+            41,
+            29,
+            14
+          ],
+          "triple": [
+            1,
+            13,
+            28
+          ]
+        },
+        {
+          "copy_id": 4,
+          "residues": [
+            41,
+            29,
+            14
+          ],
+          "triple": [
+            1,
+            13,
+            28
+          ]
+        },
+        {
+          "copy_id": 5,
+          "residues": [
+            3,
+            4,
+            35
+          ],
+          "triple": [
+            3,
+            4,
+            35
+          ]
+        }
+      ],
+      "status": "NO_PARTITION_THIS_PRESENTATION",
+      "wall_seconds": 0.009126419201493263
+    },
+    {
+      "blocks": null,
+      "candidate_visits": 18933,
+      "case_id": 3,
+      "concatenated_residues": [
+        1,
+        1,
+        40,
+        37,
+        37,
+        10,
+        13,
+        13,
+        16,
+        41,
+        29,
+        14,
+        38,
+        32,
+        14,
+        1,
+        6,
+        35
+      ],
+      "sources": [
+        {
+          "copy_id": 0,
+          "residues": [
+            1,
+            1,
+            40
+          ],
+          "triple": [
+            1,
+            1,
+            40
+          ]
+        },
+        {
+          "copy_id": 1,
+          "residues": [
+            37,
+            37,
+            10
+          ],
+          "triple": [
+            1,
+            1,
+            40
+          ]
+        },
+        {
+          "copy_id": 2,
+          "residues": [
+            13,
+            13,
+            16
+          ],
+          "triple": [
+            1,
+            1,
+            40
+          ]
+        },
+        {
+          "copy_id": 3,
+          "residues": [
+            41,
+            29,
+            14
+          ],
+          "triple": [
+            1,
+            13,
+            28
+          ]
+        },
+        {
+          "copy_id": 4,
+          "residues": [
+            38,
+            32,
+            14
+          ],
+          "triple": [
+            4,
+            10,
+            28
+          ]
+        },
+        {
+          "copy_id": 5,
+          "residues": [
+            1,
+            6,
+            35
+          ],
+          "triple": [
+            1,
+            6,
+            35
+          ]
+        }
+      ],
+      "status": "NO_PARTITION_THIS_PRESENTATION",
+      "wall_seconds": 0.01195964403450489
+    },
+    {
+      "blocks": null,
+      "candidate_visits": 19725,
+      "case_id": 4,
+      "concatenated_residues": [
+        1,
+        1,
+        40,
+        37,
+        37,
+        10,
+        13,
+        13,
+        16,
+        41,
+        29,
+        14,
+        38,
+        32,
+        14,
+        2,
+        5,
+        35
+      ],
+      "sources": [
+        {
+          "copy_id": 0,
+          "residues": [
+            1,
+            1,
+            40
+          ],
+          "triple": [
+            1,
+            1,
+            40
+          ]
+        },
+        {
+          "copy_id": 1,
+          "residues": [
+            37,
+            37,
+            10
+          ],
+          "triple": [
+            1,
+            1,
+            40
+          ]
+        },
+        {
+          "copy_id": 2,
+          "residues": [
+            13,
+            13,
+            16
+          ],
+          "triple": [
+            1,
+            1,
+            40
+          ]
+        },
+        {
+          "copy_id": 3,
+          "residues": [
+            41,
+            29,
+            14
+          ],
+          "triple": [
+            1,
+            13,
+            28
+          ]
+        },
+        {
+          "copy_id": 4,
+          "residues": [
+            38,
+            32,
+            14
+          ],
+          "triple": [
+            4,
+            10,
+            28
+          ]
+        },
+        {
+          "copy_id": 5,
+          "residues": [
+            2,
+            5,
+            35
+          ],
+          "triple": [
+            2,
+            5,
+            35
+          ]
+        }
+      ],
+      "status": "NO_PARTITION_THIS_PRESENTATION",
+      "wall_seconds": 0.012545991688966751
+    },
+    {
+      "blocks": null,
+      "candidate_visits": 18276,
+      "case_id": 5,
+      "concatenated_residues": [
+        1,
+        1,
+        40,
+        37,
+        37,
+        10,
+        13,
+        13,
+        16,
+        41,
+        29,
+        14,
+        38,
+        32,
+        14,
+        3,
+        4,
+        35
+      ],
+      "sources": [
+        {
+          "copy_id": 0,
+          "residues": [
+            1,
+            1,
+            40
+          ],
+          "triple": [
+            1,
+            1,
+            40
+          ]
+        },
+        {
+          "copy_id": 1,
+          "residues": [
+            37,
+            37,
+            10
+          ],
+          "triple": [
+            1,
+            1,
+            40
+          ]
+        },
+        {
+          "copy_id": 2,
+          "residues": [
+            13,
+            13,
+            16
+          ],
+          "triple": [
+            1,
+            1,
+            40
+          ]
+        },
+        {
+          "copy_id": 3,
+          "residues": [
+            41,
+            29,
+            14
+          ],
+          "triple": [
+            1,
+            13,
+            28
+          ]
+        },
+        {
+          "copy_id": 4,
+          "residues": [
+            38,
+            32,
+            14
+          ],
+          "triple": [
+            4,
+            10,
+            28
+          ]
+        },
+        {
+          "copy_id": 5,
+          "residues": [
+            3,
+            4,
+            35
+          ],
+          "triple": [
+            3,
+            4,
+            35
+          ]
+        }
+      ],
+      "status": "NO_PARTITION_THIS_PRESENTATION",
+      "wall_seconds": 0.011611800640821457
+    },
+    {
+      "blocks": null,
+      "candidate_visits": 18933,
+      "case_id": 6,
+      "concatenated_residues": [
+        1,
+        1,
+        40,
+        37,
+        37,
+        10,
+        13,
+        13,
+        16,
+        38,
+        32,
+        14,
+        41,
+        29,
+        14,
+        1,
+        6,
+        35
+      ],
+      "sources": [
+        {
+          "copy_id": 0,
+          "residues": [
+            1,
+            1,
+            40
+          ],
+          "triple": [
+            1,
+            1,
+            40
+          ]
+        },
+        {
+          "copy_id": 1,
+          "residues": [
+            37,
+            37,
+            10
+          ],
+          "triple": [
+            1,
+            1,
+            40
+          ]
+        },
+        {
+          "copy_id": 2,
+          "residues": [
+            13,
+            13,
+            16
+          ],
+          "triple": [
+            1,
+            1,
+            40
+          ]
+        },
+        {
+          "copy_id": 3,
+          "residues": [
+            38,
+            32,
+            14
+          ],
+          "triple": [
+            4,
+            10,
+            28
+          ]
+        },
+        {
+          "copy_id": 4,
+          "residues": [
+            41,
+            29,
+            14
+          ],
+          "triple": [
+            1,
+            13,
+            28
+          ]
+        },
+        {
+          "copy_id": 5,
+          "residues": [
+            1,
+            6,
+            35
+          ],
+          "triple": [
+            1,
+            6,
+            35
+          ]
+        }
+      ],
+      "status": "NO_PARTITION_THIS_PRESENTATION",
+      "wall_seconds": 0.01183767057955265
+    },
+    {
+      "blocks": null,
+      "candidate_visits": 19725,
+      "case_id": 7,
+      "concatenated_residues": [
+        1,
+        1,
+        40,
+        37,
+        37,
+        10,
+        13,
+        13,
+        16,
+        38,
+        32,
+        14,
+        41,
+        29,
+        14,
+        2,
+        5,
+        35
+      ],
+      "sources": [
+        {
+          "copy_id": 0,
+          "residues": [
+            1,
+            1,
+            40
+          ],
+          "triple": [
+            1,
+            1,
+            40
+          ]
+        },
+        {
+          "copy_id": 1,
+          "residues": [
+            37,
+            37,
+            10
+          ],
+          "triple": [
+            1,
+            1,
+            40
+          ]
+        },
+        {
+          "copy_id": 2,
+          "residues": [
+            13,
+            13,
+            16
+          ],
+          "triple": [
+            1,
+            1,
+            40
+          ]
+        },
+        {
+          "copy_id": 3,
+          "residues": [
+            38,
+            32,
+            14
+          ],
+          "triple": [
+            4,
+            10,
+            28
+          ]
+        },
+        {
+          "copy_id": 4,
+          "residues": [
+            41,
+            29,
+            14
+          ],
+          "triple": [
+            1,
+            13,
+            28
+          ]
+        },
+        {
+          "copy_id": 5,
+          "residues": [
+            2,
+            5,
+            35
+          ],
+          "triple": [
+            2,
+            5,
+            35
+          ]
+        }
+      ],
+      "status": "NO_PARTITION_THIS_PRESENTATION",
+      "wall_seconds": 0.012680402025580406
+    },
+    {
+      "blocks": null,
+      "candidate_visits": 18276,
+      "case_id": 8,
+      "concatenated_residues": [
+        1,
+        1,
+        40,
+        37,
+        37,
+        10,
+        13,
+        13,
+        16,
+        38,
+        32,
+        14,
+        41,
+        29,
+        14,
+        3,
+        4,
+        35
+      ],
+      "sources": [
+        {
+          "copy_id": 0,
+          "residues": [
+            1,
+            1,
+            40
+          ],
+          "triple": [
+            1,
+            1,
+            40
+          ]
+        },
+        {
+          "copy_id": 1,
+          "residues": [
+            37,
+            37,
+            10
+          ],
+          "triple": [
+            1,
+            1,
+            40
+          ]
+        },
+        {
+          "copy_id": 2,
+          "residues": [
+            13,
+            13,
+            16
+          ],
+          "triple": [
+            1,
+            1,
+            40
+          ]
+        },
+        {
+          "copy_id": 3,
+          "residues": [
+            38,
+            32,
+            14
+          ],
+          "triple": [
+            4,
+            10,
+            28
+          ]
+        },
+        {
+          "copy_id": 4,
+          "residues": [
+            41,
+            29,
+            14
+          ],
+          "triple": [
+            1,
+            13,
+            28
+          ]
+        },
+        {
+          "copy_id": 5,
+          "residues": [
+            3,
+            4,
+            35
+          ],
+          "triple": [
+            3,
+            4,
+            35
+          ]
+        }
+      ],
+      "status": "NO_PARTITION_THIS_PRESENTATION",
+      "wall_seconds": 0.011654535308480263
+    },
+    {
+      "blocks": null,
+      "candidate_visits": 10511,
+      "case_id": 9,
+      "concatenated_residues": [
+        1,
+        1,
+        40,
+        37,
+        37,
+        10,
+        13,
+        13,
+        16,
+        38,
+        32,
+        14,
+        38,
+        32,
+        14,
+        1,
+        6,
+        35
+      ],
+      "sources": [
+        {
+          "copy_id": 0,
+          "residues": [
+            1,
+            1,
+            40
+          ],
+          "triple": [
+            1,
+            1,
+            40
+          ]
+        },
+        {
+          "copy_id": 1,
+          "residues": [
+            37,
+            37,
+            10
+          ],
+          "triple": [
+            1,
+            1,
+            40
+          ]
+        },
+        {
+          "copy_id": 2,
+          "residues": [
+            13,
+            13,
+            16
+          ],
+          "triple": [
+            1,
+            1,
+            40
+          ]
+        },
+        {
+          "copy_id": 3,
+          "residues": [
+            38,
+            32,
+            14
+          ],
+          "triple": [
+            4,
+            10,
+            28
+          ]
+        },
+        {
+          "copy_id": 4,
+          "residues": [
+            38,
+            32,
+            14
+          ],
+          "triple": [
+            4,
+            10,
+            28
+          ]
+        },
+        {
+          "copy_id": 5,
+          "residues": [
+            1,
+            6,
+            35
+          ],
+          "triple": [
+            1,
+            6,
+            35
+          ]
+        }
+      ],
+      "status": "NO_PARTITION_THIS_PRESENTATION",
+      "wall_seconds": 0.006244506686925888
+    },
+    {
+      "blocks": null,
+      "candidate_visits": 8769,
+      "case_id": 10,
+      "concatenated_residues": [
+        1,
+        1,
+        40,
+        37,
+        37,
+        10,
+        13,
+        13,
+        16,
+        38,
+        32,
+        14,
+        38,
+        32,
+        14,
+        2,
+        5,
+        35
+      ],
+      "sources": [
+        {
+          "copy_id": 0,
+          "residues": [
+            1,
+            1,
+            40
+          ],
+          "triple": [
+            1,
+            1,
+            40
+          ]
+        },
+        {
+          "copy_id": 1,
+          "residues": [
+            37,
+            37,
+            10
+          ],
+          "triple": [
+            1,
+            1,
+            40
+          ]
+        },
+        {
+          "copy_id": 2,
+          "residues": [
+            13,
+            13,
+            16
+          ],
+          "triple": [
+            1,
+            1,
+            40
+          ]
+        },
+        {
+          "copy_id": 3,
+          "residues": [
+            38,
+            32,
+            14
+          ],
+          "triple": [
+            4,
+            10,
+            28
+          ]
+        },
+        {
+          "copy_id": 4,
+          "residues": [
+            38,
+            32,
+            14
+          ],
+          "triple": [
+            4,
+            10,
+            28
+          ]
+        },
+        {
+          "copy_id": 5,
+          "residues": [
+            2,
+            5,
+            35
+          ],
+          "triple": [
+            2,
+            5,
+            35
+          ]
+        }
+      ],
+      "status": "NO_PARTITION_THIS_PRESENTATION",
+      "wall_seconds": 0.005303969606757164
+    },
+    {
+      "blocks": null,
+      "candidate_visits": 8706,
+      "case_id": 11,
+      "concatenated_residues": [
+        1,
+        1,
+        40,
+        37,
+        37,
+        10,
+        13,
+        13,
+        16,
+        38,
+        32,
+        14,
+        38,
+        32,
+        14,
+        3,
+        4,
+        35
+      ],
+      "sources": [
+        {
+          "copy_id": 0,
+          "residues": [
+            1,
+            1,
+            40
+          ],
+          "triple": [
+            1,
+            1,
+            40
+          ]
+        },
+        {
+          "copy_id": 1,
+          "residues": [
+            37,
+            37,
+            10
+          ],
+          "triple": [
+            1,
+            1,
+            40
+          ]
+        },
+        {
+          "copy_id": 2,
+          "residues": [
+            13,
+            13,
+            16
+          ],
+          "triple": [
+            1,
+            1,
+            40
+          ]
+        },
+        {
+          "copy_id": 3,
+          "residues": [
+            38,
+            32,
+            14
+          ],
+          "triple": [
+            4,
+            10,
+            28
+          ]
+        },
+        {
+          "copy_id": 4,
+          "residues": [
+            38,
+            32,
+            14
+          ],
+          "triple": [
+            4,
+            10,
+            28
+          ]
+        },
+        {
+          "copy_id": 5,
+          "residues": [
+            3,
+            4,
+            35
+          ],
+          "triple": [
+            3,
+            4,
+            35
+          ]
+        }
+      ],
+      "status": "NO_PARTITION_THIS_PRESENTATION",
+      "wall_seconds": 0.00711393915116787
+    },
+    {
+      "blocks": null,
+      "candidate_visits": 19974,
+      "case_id": 12,
+      "concatenated_residues": [
+        1,
+        5,
+        36,
+        37,
+        17,
+        30,
+        13,
+        23,
+        6,
+        41,
+        29,
+        14,
+        41,
+        29,
+        14,
+        1,
+        6,
+        35
+      ],
+      "sources": [
+        {
+          "copy_id": 0,
+          "residues": [
+            1,
+            5,
+            36
+          ],
+          "triple": [
+            1,
+            5,
+            36
+          ]
+        },
+        {
+          "copy_id": 1,
+          "residues": [
+            37,
+            17,
+            30
+          ],
+          "triple": [
+            1,
+            5,
+            36
+          ]
+        },
+        {
+          "copy_id": 2,
+          "residues": [
+            13,
+            23,
+            6
+          ],
+          "triple": [
+            1,
+            5,
+            36
+          ]
+        },
+        {
+          "copy_id": 3,
+          "residues": [
+            41,
+            29,
+            14
+          ],
+          "triple": [
+            1,
+            13,
+            28
+          ]
+        },
+        {
+          "copy_id": 4,
+          "residues": [
+            41,
+            29,
+            14
+          ],
+          "triple": [
+            1,
+            13,
+            28
+          ]
+        },
+        {
+          "copy_id": 5,
+          "residues": [
+            1,
+            6,
+            35
+          ],
+          "triple": [
+            1,
+            6,
+            35
+          ]
+        }
+      ],
+      "status": "NO_PARTITION_THIS_PRESENTATION",
+      "wall_seconds": 0.012526402249932289
+    },
+    {
+      "blocks": null,
+      "candidate_visits": 18330,
+      "case_id": 13,
+      "concatenated_residues": [
+        1,
+        5,
+        36,
+        37,
+        17,
+        30,
+        13,
+        23,
+        6,
+        41,
+        29,
+        14,
+        41,
+        29,
+        14,
+        2,
+        5,
+        35
+      ],
+      "sources": [
+        {
+          "copy_id": 0,
+          "residues": [
+            1,
+            5,
+            36
+          ],
+          "triple": [
+            1,
+            5,
+            36
+          ]
+        },
+        {
+          "copy_id": 1,
+          "residues": [
+            37,
+            17,
+            30
+          ],
+          "triple": [
+            1,
+            5,
+            36
+          ]
+        },
+        {
+          "copy_id": 2,
+          "residues": [
+            13,
+            23,
+            6
+          ],
+          "triple": [
+            1,
+            5,
+            36
+          ]
+        },
+        {
+          "copy_id": 3,
+          "residues": [
+            41,
+            29,
+            14
+          ],
+          "triple": [
+            1,
+            13,
+            28
+          ]
+        },
+        {
+          "copy_id": 4,
+          "residues": [
+            41,
+            29,
+            14
+          ],
+          "triple": [
+            1,
+            13,
+            28
+          ]
+        },
+        {
+          "copy_id": 5,
+          "residues": [
+            2,
+            5,
+            35
+          ],
+          "triple": [
+            2,
+            5,
+            35
+          ]
+        }
+      ],
+      "status": "NO_PARTITION_THIS_PRESENTATION",
+      "wall_seconds": 0.011751111596822739
+    },
+    {
+      "blocks": null,
+      "candidate_visits": 18251,
+      "case_id": 14,
+      "concatenated_residues": [
+        1,
+        5,
+        36,
+        37,
+        17,
+        30,
+        13,
+        23,
+        6,
+        41,
+        29,
+        14,
+        41,
+        29,
+        14,
+        3,
+        4,
+        35
+      ],
+      "sources": [
+        {
+          "copy_id": 0,
+          "residues": [
+            1,
+            5,
+            36
+          ],
+          "triple": [
+            1,
+            5,
+            36
+          ]
+        },
+        {
+          "copy_id": 1,
+          "residues": [
+            37,
+            17,
+            30
+          ],
+          "triple": [
+            1,
+            5,
+            36
+          ]
+        },
+        {
+          "copy_id": 2,
+          "residues": [
+            13,
+            23,
+            6
+          ],
+          "triple": [
+            1,
+            5,
+            36
+          ]
+        },
+        {
+          "copy_id": 3,
+          "residues": [
+            41,
+            29,
+            14
+          ],
+          "triple": [
+            1,
+            13,
+            28
+          ]
+        },
+        {
+          "copy_id": 4,
+          "residues": [
+            41,
+            29,
+            14
+          ],
+          "triple": [
+            1,
+            13,
+            28
+          ]
+        },
+        {
+          "copy_id": 5,
+          "residues": [
+            3,
+            4,
+            35
+          ],
+          "triple": [
+            3,
+            4,
+            35
+          ]
+        }
+      ],
+      "status": "NO_PARTITION_THIS_PRESENTATION",
+      "wall_seconds": 0.012476956471800804
+    },
+    {
+      "blocks": null,
+      "candidate_visits": 18479,
+      "case_id": 15,
+      "concatenated_residues": [
+        1,
+        5,
+        36,
+        37,
+        17,
+        30,
+        13,
+        23,
+        6,
+        41,
+        29,
+        14,
+        38,
+        32,
+        14,
+        1,
+        6,
+        35
+      ],
+      "sources": [
+        {
+          "copy_id": 0,
+          "residues": [
+            1,
+            5,
+            36
+          ],
+          "triple": [
+            1,
+            5,
+            36
+          ]
+        },
+        {
+          "copy_id": 1,
+          "residues": [
+            37,
+            17,
+            30
+          ],
+          "triple": [
+            1,
+            5,
+            36
+          ]
+        },
+        {
+          "copy_id": 2,
+          "residues": [
+            13,
+            23,
+            6
+          ],
+          "triple": [
+            1,
+            5,
+            36
+          ]
+        },
+        {
+          "copy_id": 3,
+          "residues": [
+            41,
+            29,
+            14
+          ],
+          "triple": [
+            1,
+            13,
+            28
+          ]
+        },
+        {
+          "copy_id": 4,
+          "residues": [
+            38,
+            32,
+            14
+          ],
+          "triple": [
+            4,
+            10,
+            28
+          ]
+        },
+        {
+          "copy_id": 5,
+          "residues": [
+            1,
+            6,
+            35
+          ],
+          "triple": [
+            1,
+            6,
+            35
+          ]
+        }
+      ],
+      "status": "NO_PARTITION_THIS_PRESENTATION",
+      "wall_seconds": 0.012441353872418404
+    },
+    {
+      "blocks": null,
+      "candidate_visits": 19059,
+      "case_id": 16,
+      "concatenated_residues": [
+        1,
+        5,
+        36,
+        37,
+        17,
+        30,
+        13,
+        23,
+        6,
+        41,
+        29,
+        14,
+        38,
+        32,
+        14,
+        2,
+        5,
+        35
+      ],
+      "sources": [
+        {
+          "copy_id": 0,
+          "residues": [
+            1,
+            5,
+            36
+          ],
+          "triple": [
+            1,
+            5,
+            36
+          ]
+        },
+        {
+          "copy_id": 1,
+          "residues": [
+            37,
+            17,
+            30
+          ],
+          "triple": [
+            1,
+            5,
+            36
+          ]
+        },
+        {
+          "copy_id": 2,
+          "residues": [
+            13,
+            23,
+            6
+          ],
+          "triple": [
+            1,
+            5,
+            36
+          ]
+        },
+        {
+          "copy_id": 3,
+          "residues": [
+            41,
+            29,
+            14
+          ],
+          "triple": [
+            1,
+            13,
+            28
+          ]
+        },
+        {
+          "copy_id": 4,
+          "residues": [
+            38,
+            32,
+            14
+          ],
+          "triple": [
+            4,
+            10,
+            28
+          ]
+        },
+        {
+          "copy_id": 5,
+          "residues": [
+            2,
+            5,
+            35
+          ],
+          "triple": [
+            2,
+            5,
+            35
+          ]
+        }
+      ],
+      "status": "NO_PARTITION_THIS_PRESENTATION",
+      "wall_seconds": 0.013426598161458969
+    },
+    {
+      "blocks": null,
+      "candidate_visits": 20922,
+      "case_id": 17,
+      "concatenated_residues": [
+        1,
+        5,
+        36,
+        37,
+        17,
+        30,
+        13,
+        23,
+        6,
+        41,
+        29,
+        14,
+        38,
+        32,
+        14,
+        3,
+        4,
+        35
+      ],
+      "sources": [
+        {
+          "copy_id": 0,
+          "residues": [
+            1,
+            5,
+            36
+          ],
+          "triple": [
+            1,
+            5,
+            36
+          ]
+        },
+        {
+          "copy_id": 1,
+          "residues": [
+            37,
+            17,
+            30
+          ],
+          "triple": [
+            1,
+            5,
+            36
+          ]
+        },
+        {
+          "copy_id": 2,
+          "residues": [
+            13,
+            23,
+            6
+          ],
+          "triple": [
+            1,
+            5,
+            36
+          ]
+        },
+        {
+          "copy_id": 3,
+          "residues": [
+            41,
+            29,
+            14
+          ],
+          "triple": [
+            1,
+            13,
+            28
+          ]
+        },
+        {
+          "copy_id": 4,
+          "residues": [
+            38,
+            32,
+            14
+          ],
+          "triple": [
+            4,
+            10,
+            28
+          ]
+        },
+        {
+          "copy_id": 5,
+          "residues": [
+            3,
+            4,
+            35
+          ],
+          "triple": [
+            3,
+            4,
+            35
+          ]
+        }
+      ],
+      "status": "NO_PARTITION_THIS_PRESENTATION",
+      "wall_seconds": 0.016042856499552727
+    },
+    {
+      "blocks": null,
+      "candidate_visits": 18479,
+      "case_id": 18,
+      "concatenated_residues": [
+        1,
+        5,
+        36,
+        37,
+        17,
+        30,
+        13,
+        23,
+        6,
+        38,
+        32,
+        14,
+        41,
+        29,
+        14,
+        1,
+        6,
+        35
+      ],
+      "sources": [
+        {
+          "copy_id": 0,
+          "residues": [
+            1,
+            5,
+            36
+          ],
+          "triple": [
+            1,
+            5,
+            36
+          ]
+        },
+        {
+          "copy_id": 1,
+          "residues": [
+            37,
+            17,
+            30
+          ],
+          "triple": [
+            1,
+            5,
+            36
+          ]
+        },
+        {
+          "copy_id": 2,
+          "residues": [
+            13,
+            23,
+            6
+          ],
+          "triple": [
+            1,
+            5,
+            36
+          ]
+        },
+        {
+          "copy_id": 3,
+          "residues": [
+            38,
+            32,
+            14
+          ],
+          "triple": [
+            4,
+            10,
+            28
+          ]
+        },
+        {
+          "copy_id": 4,
+          "residues": [
+            41,
+            29,
+            14
+          ],
+          "triple": [
+            1,
+            13,
+            28
+          ]
+        },
+        {
+          "copy_id": 5,
+          "residues": [
+            1,
+            6,
+            35
+          ],
+          "triple": [
+            1,
+            6,
+            35
+          ]
+        }
+      ],
+      "status": "NO_PARTITION_THIS_PRESENTATION",
+      "wall_seconds": 0.012317290529608727
+    },
+    {
+      "blocks": null,
+      "candidate_visits": 19059,
+      "case_id": 19,
+      "concatenated_residues": [
+        1,
+        5,
+        36,
+        37,
+        17,
+        30,
+        13,
+        23,
+        6,
+        38,
+        32,
+        14,
+        41,
+        29,
+        14,
+        2,
+        5,
+        35
+      ],
+      "sources": [
+        {
+          "copy_id": 0,
+          "residues": [
+            1,
+            5,
+            36
+          ],
+          "triple": [
+            1,
+            5,
+            36
+          ]
+        },
+        {
+          "copy_id": 1,
+          "residues": [
+            37,
+            17,
+            30
+          ],
+          "triple": [
+            1,
+            5,
+            36
+          ]
+        },
+        {
+          "copy_id": 2,
+          "residues": [
+            13,
+            23,
+            6
+          ],
+          "triple": [
+            1,
+            5,
+            36
+          ]
+        },
+        {
+          "copy_id": 3,
+          "residues": [
+            38,
+            32,
+            14
+          ],
+          "triple": [
+            4,
+            10,
+            28
+          ]
+        },
+        {
+          "copy_id": 4,
+          "residues": [
+            41,
+            29,
+            14
+          ],
+          "triple": [
+            1,
+            13,
+            28
+          ]
+        },
+        {
+          "copy_id": 5,
+          "residues": [
+            2,
+            5,
+            35
+          ],
+          "triple": [
+            2,
+            5,
+            35
+          ]
+        }
+      ],
+      "status": "NO_PARTITION_THIS_PRESENTATION",
+      "wall_seconds": 0.01307309977710247
+    },
+    {
+      "blocks": null,
+      "candidate_visits": 20922,
+      "case_id": 20,
+      "concatenated_residues": [
+        1,
+        5,
+        36,
+        37,
+        17,
+        30,
+        13,
+        23,
+        6,
+        38,
+        32,
+        14,
+        41,
+        29,
+        14,
+        3,
+        4,
+        35
+      ],
+      "sources": [
+        {
+          "copy_id": 0,
+          "residues": [
+            1,
+            5,
+            36
+          ],
+          "triple": [
+            1,
+            5,
+            36
+          ]
+        },
+        {
+          "copy_id": 1,
+          "residues": [
+            37,
+            17,
+            30
+          ],
+          "triple": [
+            1,
+            5,
+            36
+          ]
+        },
+        {
+          "copy_id": 2,
+          "residues": [
+            13,
+            23,
+            6
+          ],
+          "triple": [
+            1,
+            5,
+            36
+          ]
+        },
+        {
+          "copy_id": 3,
+          "residues": [
+            38,
+            32,
+            14
+          ],
+          "triple": [
+            4,
+            10,
+            28
+          ]
+        },
+        {
+          "copy_id": 4,
+          "residues": [
+            41,
+            29,
+            14
+          ],
+          "triple": [
+            1,
+            13,
+            28
+          ]
+        },
+        {
+          "copy_id": 5,
+          "residues": [
+            3,
+            4,
+            35
+          ],
+          "triple": [
+            3,
+            4,
+            35
+          ]
+        }
+      ],
+      "status": "NO_PARTITION_THIS_PRESENTATION",
+      "wall_seconds": 0.0150524340569973
+    },
+    {
+      "blocks": null,
+      "candidate_visits": 8471,
+      "case_id": 21,
+      "concatenated_residues": [
+        1,
+        5,
+        36,
+        37,
+        17,
+        30,
+        13,
+        23,
+        6,
+        38,
+        32,
+        14,
+        38,
+        32,
+        14,
+        1,
+        6,
+        35
+      ],
+      "sources": [
+        {
+          "copy_id": 0,
+          "residues": [
+            1,
+            5,
+            36
+          ],
+          "triple": [
+            1,
+            5,
+            36
+          ]
+        },
+        {
+          "copy_id": 1,
+          "residues": [
+            37,
+            17,
+            30
+          ],
+          "triple": [
+            1,
+            5,
+            36
+          ]
+        },
+        {
+          "copy_id": 2,
+          "residues": [
+            13,
+            23,
+            6
+          ],
+          "triple": [
+            1,
+            5,
+            36
+          ]
+        },
+        {
+          "copy_id": 3,
+          "residues": [
+            38,
+            32,
+            14
+          ],
+          "triple": [
+            4,
+            10,
+            28
+          ]
+        },
+        {
+          "copy_id": 4,
+          "residues": [
+            38,
+            32,
+            14
+          ],
+          "triple": [
+            4,
+            10,
+            28
+          ]
+        },
+        {
+          "copy_id": 5,
+          "residues": [
+            1,
+            6,
+            35
+          ],
+          "triple": [
+            1,
+            6,
+            35
+          ]
+        }
+      ],
+      "status": "NO_PARTITION_THIS_PRESENTATION",
+      "wall_seconds": 0.005325552076101303
+    },
+    {
+      "blocks": null,
+      "candidate_visits": 8471,
+      "case_id": 22,
+      "concatenated_residues": [
+        1,
+        5,
+        36,
+        37,
+        17,
+        30,
+        13,
+        23,
+        6,
+        38,
+        32,
+        14,
+        38,
+        32,
+        14,
+        2,
+        5,
+        35
+      ],
+      "sources": [
+        {
+          "copy_id": 0,
+          "residues": [
+            1,
+            5,
+            36
+          ],
+          "triple": [
+            1,
+            5,
+            36
+          ]
+        },
+        {
+          "copy_id": 1,
+          "residues": [
+            37,
+            17,
+            30
+          ],
+          "triple": [
+            1,
+            5,
+            36
+          ]
+        },
+        {
+          "copy_id": 2,
+          "residues": [
+            13,
+            23,
+            6
+          ],
+          "triple": [
+            1,
+            5,
+            36
+          ]
+        },
+        {
+          "copy_id": 3,
+          "residues": [
+            38,
+            32,
+            14
+          ],
+          "triple": [
+            4,
+            10,
+            28
+          ]
+        },
+        {
+          "copy_id": 4,
+          "residues": [
+            38,
+            32,
+            14
+          ],
+          "triple": [
+            4,
+            10,
+            28
+          ]
+        },
+        {
+          "copy_id": 5,
+          "residues": [
+            2,
+            5,
+            35
+          ],
+          "triple": [
+            2,
+            5,
+            35
+          ]
+        }
+      ],
+      "status": "NO_PARTITION_THIS_PRESENTATION",
+      "wall_seconds": 0.005463588982820511
+    },
+    {
+      "blocks": null,
+      "candidate_visits": 8471,
+      "case_id": 23,
+      "concatenated_residues": [
+        1,
+        5,
+        36,
+        37,
+        17,
+        30,
+        13,
+        23,
+        6,
+        38,
+        32,
+        14,
+        38,
+        32,
+        14,
+        3,
+        4,
+        35
+      ],
+      "sources": [
+        {
+          "copy_id": 0,
+          "residues": [
+            1,
+            5,
+            36
+          ],
+          "triple": [
+            1,
+            5,
+            36
+          ]
+        },
+        {
+          "copy_id": 1,
+          "residues": [
+            37,
+            17,
+            30
+          ],
+          "triple": [
+            1,
+            5,
+            36
+          ]
+        },
+        {
+          "copy_id": 2,
+          "residues": [
+            13,
+            23,
+            6
+          ],
+          "triple": [
+            1,
+            5,
+            36
+          ]
+        },
+        {
+          "copy_id": 3,
+          "residues": [
+            38,
+            32,
+            14
+          ],
+          "triple": [
+            4,
+            10,
+            28
+          ]
+        },
+        {
+          "copy_id": 4,
+          "residues": [
+            38,
+            32,
+            14
+          ],
+          "triple": [
+            4,
+            10,
+            28
+          ]
+        },
+        {
+          "copy_id": 5,
+          "residues": [
+            3,
+            4,
+            35
+          ],
+          "triple": [
+            3,
+            4,
+            35
+          ]
+        }
+      ],
+      "status": "NO_PARTITION_THIS_PRESENTATION",
+      "wall_seconds": 0.005920533090829849
+    },
+    {
+      "blocks": null,
+      "candidate_visits": 15307,
+      "case_id": 24,
+      "concatenated_residues": [
+        1,
+        10,
+        31,
+        37,
+        34,
+        13,
+        13,
+        4,
+        25,
+        41,
+        29,
+        14,
+        41,
+        29,
+        14,
+        1,
+        6,
+        35
+      ],
+      "sources": [
+        {
+          "copy_id": 0,
+          "residues": [
+            1,
+            10,
+            31
+          ],
+          "triple": [
+            1,
+            10,
+            31
+          ]
+        },
+        {
+          "copy_id": 1,
+          "residues": [
+            37,
+            34,
+            13
+          ],
+          "triple": [
+            1,
+            10,
+            31
+          ]
+        },
+        {
+          "copy_id": 2,
+          "residues": [
+            13,
+            4,
+            25
+          ],
+          "triple": [
+            1,
+            10,
+            31
+          ]
+        },
+        {
+          "copy_id": 3,
+          "residues": [
+            41,
+            29,
+            14
+          ],
+          "triple": [
+            1,
+            13,
+            28
+          ]
+        },
+        {
+          "copy_id": 4,
+          "residues": [
+            41,
+            29,
+            14
+          ],
+          "triple": [
+            1,
+            13,
+            28
+          ]
+        },
+        {
+          "copy_id": 5,
+          "residues": [
+            1,
+            6,
+            35
+          ],
+          "triple": [
+            1,
+            6,
+            35
+          ]
+        }
+      ],
+      "status": "NO_PARTITION_THIS_PRESENTATION",
+      "wall_seconds": 0.009701162576675415
+    },
+    {
+      "blocks": null,
+      "candidate_visits": 14606,
+      "case_id": 25,
+      "concatenated_residues": [
+        1,
+        10,
+        31,
+        37,
+        34,
+        13,
+        13,
+        4,
+        25,
+        41,
+        29,
+        14,
+        41,
+        29,
+        14,
+        2,
+        5,
+        35
+      ],
+      "sources": [
+        {
+          "copy_id": 0,
+          "residues": [
+            1,
+            10,
+            31
+          ],
+          "triple": [
+            1,
+            10,
+            31
+          ]
+        },
+        {
+          "copy_id": 1,
+          "residues": [
+            37,
+            34,
+            13
+          ],
+          "triple": [
+            1,
+            10,
+            31
+          ]
+        },
+        {
+          "copy_id": 2,
+          "residues": [
+            13,
+            4,
+            25
+          ],
+          "triple": [
+            1,
+            10,
+            31
+          ]
+        },
+        {
+          "copy_id": 3,
+          "residues": [
+            41,
+            29,
+            14
+          ],
+          "triple": [
+            1,
+            13,
+            28
+          ]
+        },
+        {
+          "copy_id": 4,
+          "residues": [
+            41,
+            29,
+            14
+          ],
+          "triple": [
+            1,
+            13,
+            28
+          ]
+        },
+        {
+          "copy_id": 5,
+          "residues": [
+            2,
+            5,
+            35
+          ],
+          "triple": [
+            2,
+            5,
+            35
+          ]
+        }
+      ],
+      "status": "NO_PARTITION_THIS_PRESENTATION",
+      "wall_seconds": 0.009414603933691978
+    },
+    {
+      "blocks": null,
+      "candidate_visits": 12880,
+      "case_id": 26,
+      "concatenated_residues": [
+        1,
+        10,
+        31,
+        37,
+        34,
+        13,
+        13,
+        4,
+        25,
+        41,
+        29,
+        14,
+        41,
+        29,
+        14,
+        3,
+        4,
+        35
+      ],
+      "sources": [
+        {
+          "copy_id": 0,
+          "residues": [
+            1,
+            10,
+            31
+          ],
+          "triple": [
+            1,
+            10,
+            31
+          ]
+        },
+        {
+          "copy_id": 1,
+          "residues": [
+            37,
+            34,
+            13
+          ],
+          "triple": [
+            1,
+            10,
+            31
+          ]
+        },
+        {
+          "copy_id": 2,
+          "residues": [
+            13,
+            4,
+            25
+          ],
+          "triple": [
+            1,
+            10,
+            31
+          ]
+        },
+        {
+          "copy_id": 3,
+          "residues": [
+            41,
+            29,
+            14
+          ],
+          "triple": [
+            1,
+            13,
+            28
+          ]
+        },
+        {
+          "copy_id": 4,
+          "residues": [
+            41,
+            29,
+            14
+          ],
+          "triple": [
+            1,
+            13,
+            28
+          ]
+        },
+        {
+          "copy_id": 5,
+          "residues": [
+            3,
+            4,
+            35
+          ],
+          "triple": [
+            3,
+            4,
+            35
+          ]
+        }
+      ],
+      "status": "NO_PARTITION_THIS_PRESENTATION",
+      "wall_seconds": 0.007933326065540314
+    },
+    {
+      "blocks": null,
+      "candidate_visits": 18260,
+      "case_id": 27,
+      "concatenated_residues": [
+        1,
+        10,
+        31,
+        37,
+        34,
+        13,
+        13,
+        4,
+        25,
+        41,
+        29,
+        14,
+        38,
+        32,
+        14,
+        1,
+        6,
+        35
+      ],
+      "sources": [
+        {
+          "copy_id": 0,
+          "residues": [
+            1,
+            10,
+            31
+          ],
+          "triple": [
+            1,
+            10,
+            31
+          ]
+        },
+        {
+          "copy_id": 1,
+          "residues": [
+            37,
+            34,
+            13
+          ],
+          "triple": [
+            1,
+            10,
+            31
+          ]
+        },
+        {
+          "copy_id": 2,
+          "residues": [
+            13,
+            4,
+            25
+          ],
+          "triple": [
+            1,
+            10,
+            31
+          ]
+        },
+        {
+          "copy_id": 3,
+          "residues": [
+            41,
+            29,
+            14
+          ],
+          "triple": [
+            1,
+            13,
+            28
+          ]
+        },
+        {
+          "copy_id": 4,
+          "residues": [
+            38,
+            32,
+            14
+          ],
+          "triple": [
+            4,
+            10,
+            28
+          ]
+        },
+        {
+          "copy_id": 5,
+          "residues": [
+            1,
+            6,
+            35
+          ],
+          "triple": [
+            1,
+            6,
+            35
+          ]
+        }
+      ],
+      "status": "NO_PARTITION_THIS_PRESENTATION",
+      "wall_seconds": 0.01224999874830246
+    },
+    {
+      "blocks": null,
+      "candidate_visits": 20221,
+      "case_id": 28,
+      "concatenated_residues": [
+        1,
+        10,
+        31,
+        37,
+        34,
+        13,
+        13,
+        4,
+        25,
+        41,
+        29,
+        14,
+        38,
+        32,
+        14,
+        2,
+        5,
+        35
+      ],
+      "sources": [
+        {
+          "copy_id": 0,
+          "residues": [
+            1,
+            10,
+            31
+          ],
+          "triple": [
+            1,
+            10,
+            31
+          ]
+        },
+        {
+          "copy_id": 1,
+          "residues": [
+            37,
+            34,
+            13
+          ],
+          "triple": [
+            1,
+            10,
+            31
+          ]
+        },
+        {
+          "copy_id": 2,
+          "residues": [
+            13,
+            4,
+            25
+          ],
+          "triple": [
+            1,
+            10,
+            31
+          ]
+        },
+        {
+          "copy_id": 3,
+          "residues": [
+            41,
+            29,
+            14
+          ],
+          "triple": [
+            1,
+            13,
+            28
+          ]
+        },
+        {
+          "copy_id": 4,
+          "residues": [
+            38,
+            32,
+            14
+          ],
+          "triple": [
+            4,
+            10,
+            28
+          ]
+        },
+        {
+          "copy_id": 5,
+          "residues": [
+            2,
+            5,
+            35
+          ],
+          "triple": [
+            2,
+            5,
+            35
+          ]
+        }
+      ],
+      "status": "NO_PARTITION_THIS_PRESENTATION",
+      "wall_seconds": 0.014053788036108017
+    },
+    {
+      "blocks": null,
+      "candidate_visits": 18358,
+      "case_id": 29,
+      "concatenated_residues": [
+        1,
+        10,
+        31,
+        37,
+        34,
+        13,
+        13,
+        4,
+        25,
+        41,
+        29,
+        14,
+        38,
+        32,
+        14,
+        3,
+        4,
+        35
+      ],
+      "sources": [
+        {
+          "copy_id": 0,
+          "residues": [
+            1,
+            10,
+            31
+          ],
+          "triple": [
+            1,
+            10,
+            31
+          ]
+        },
+        {
+          "copy_id": 1,
+          "residues": [
+            37,
+            34,
+            13
+          ],
+          "triple": [
+            1,
+            10,
+            31
+          ]
+        },
+        {
+          "copy_id": 2,
+          "residues": [
+            13,
+            4,
+            25
+          ],
+          "triple": [
+            1,
+            10,
+            31
+          ]
+        },
+        {
+          "copy_id": 3,
+          "residues": [
+            41,
+            29,
+            14
+          ],
+          "triple": [
+            1,
+            13,
+            28
+          ]
+        },
+        {
+          "copy_id": 4,
+          "residues": [
+            38,
+            32,
+            14
+          ],
+          "triple": [
+            4,
+            10,
+            28
+          ]
+        },
+        {
+          "copy_id": 5,
+          "residues": [
+            3,
+            4,
+            35
+          ],
+          "triple": [
+            3,
+            4,
+            35
+          ]
+        }
+      ],
+      "status": "NO_PARTITION_THIS_PRESENTATION",
+      "wall_seconds": 0.012017419561743736
+    },
+    {
+      "blocks": null,
+      "candidate_visits": 18260,
+      "case_id": 30,
+      "concatenated_residues": [
+        1,
+        10,
+        31,
+        37,
+        34,
+        13,
+        13,
+        4,
+        25,
+        38,
+        32,
+        14,
+        41,
+        29,
+        14,
+        1,
+        6,
+        35
+      ],
+      "sources": [
+        {
+          "copy_id": 0,
+          "residues": [
+            1,
+            10,
+            31
+          ],
+          "triple": [
+            1,
+            10,
+            31
+          ]
+        },
+        {
+          "copy_id": 1,
+          "residues": [
+            37,
+            34,
+            13
+          ],
+          "triple": [
+            1,
+            10,
+            31
+          ]
+        },
+        {
+          "copy_id": 2,
+          "residues": [
+            13,
+            4,
+            25
+          ],
+          "triple": [
+            1,
+            10,
+            31
+          ]
+        },
+        {
+          "copy_id": 3,
+          "residues": [
+            38,
+            32,
+            14
+          ],
+          "triple": [
+            4,
+            10,
+            28
+          ]
+        },
+        {
+          "copy_id": 4,
+          "residues": [
+            41,
+            29,
+            14
+          ],
+          "triple": [
+            1,
+            13,
+            28
+          ]
+        },
+        {
+          "copy_id": 5,
+          "residues": [
+            1,
+            6,
+            35
+          ],
+          "triple": [
+            1,
+            6,
+            35
+          ]
+        }
+      ],
+      "status": "NO_PARTITION_THIS_PRESENTATION",
+      "wall_seconds": 0.012160906568169594
+    },
+    {
+      "blocks": null,
+      "candidate_visits": 20221,
+      "case_id": 31,
+      "concatenated_residues": [
+        1,
+        10,
+        31,
+        37,
+        34,
+        13,
+        13,
+        4,
+        25,
+        38,
+        32,
+        14,
+        41,
+        29,
+        14,
+        2,
+        5,
+        35
+      ],
+      "sources": [
+        {
+          "copy_id": 0,
+          "residues": [
+            1,
+            10,
+            31
+          ],
+          "triple": [
+            1,
+            10,
+            31
+          ]
+        },
+        {
+          "copy_id": 1,
+          "residues": [
+            37,
+            34,
+            13
+          ],
+          "triple": [
+            1,
+            10,
+            31
+          ]
+        },
+        {
+          "copy_id": 2,
+          "residues": [
+            13,
+            4,
+            25
+          ],
+          "triple": [
+            1,
+            10,
+            31
+          ]
+        },
+        {
+          "copy_id": 3,
+          "residues": [
+            38,
+            32,
+            14
+          ],
+          "triple": [
+            4,
+            10,
+            28
+          ]
+        },
+        {
+          "copy_id": 4,
+          "residues": [
+            41,
+            29,
+            14
+          ],
+          "triple": [
+            1,
+            13,
+            28
+          ]
+        },
+        {
+          "copy_id": 5,
+          "residues": [
+            2,
+            5,
+            35
+          ],
+          "triple": [
+            2,
+            5,
+            35
+          ]
+        }
+      ],
+      "status": "NO_PARTITION_THIS_PRESENTATION",
+      "wall_seconds": 0.013957826420664787
+    },
+    {
+      "blocks": null,
+      "candidate_visits": 18358,
+      "case_id": 32,
+      "concatenated_residues": [
+        1,
+        10,
+        31,
+        37,
+        34,
+        13,
+        13,
+        4,
+        25,
+        38,
+        32,
+        14,
+        41,
+        29,
+        14,
+        3,
+        4,
+        35
+      ],
+      "sources": [
+        {
+          "copy_id": 0,
+          "residues": [
+            1,
+            10,
+            31
+          ],
+          "triple": [
+            1,
+            10,
+            31
+          ]
+        },
+        {
+          "copy_id": 1,
+          "residues": [
+            37,
+            34,
+            13
+          ],
+          "triple": [
+            1,
+            10,
+            31
+          ]
+        },
+        {
+          "copy_id": 2,
+          "residues": [
+            13,
+            4,
+            25
+          ],
+          "triple": [
+            1,
+            10,
+            31
+          ]
+        },
+        {
+          "copy_id": 3,
+          "residues": [
+            38,
+            32,
+            14
+          ],
+          "triple": [
+            4,
+            10,
+            28
+          ]
+        },
+        {
+          "copy_id": 4,
+          "residues": [
+            41,
+            29,
+            14
+          ],
+          "triple": [
+            1,
+            13,
+            28
+          ]
+        },
+        {
+          "copy_id": 5,
+          "residues": [
+            3,
+            4,
+            35
+          ],
+          "triple": [
+            3,
+            4,
+            35
+          ]
+        }
+      ],
+      "status": "NO_PARTITION_THIS_PRESENTATION",
+      "wall_seconds": 0.012087585404515266
+    },
+    {
+      "blocks": null,
+      "candidate_visits": 8690,
+      "case_id": 33,
+      "concatenated_residues": [
+        1,
+        10,
+        31,
+        37,
+        34,
+        13,
+        13,
+        4,
+        25,
+        38,
+        32,
+        14,
+        38,
+        32,
+        14,
+        1,
+        6,
+        35
+      ],
+      "sources": [
+        {
+          "copy_id": 0,
+          "residues": [
+            1,
+            10,
+            31
+          ],
+          "triple": [
+            1,
+            10,
+            31
+          ]
+        },
+        {
+          "copy_id": 1,
+          "residues": [
+            37,
+            34,
+            13
+          ],
+          "triple": [
+            1,
+            10,
+            31
+          ]
+        },
+        {
+          "copy_id": 2,
+          "residues": [
+            13,
+            4,
+            25
+          ],
+          "triple": [
+            1,
+            10,
+            31
+          ]
+        },
+        {
+          "copy_id": 3,
+          "residues": [
+            38,
+            32,
+            14
+          ],
+          "triple": [
+            4,
+            10,
+            28
+          ]
+        },
+        {
+          "copy_id": 4,
+          "residues": [
+            38,
+            32,
+            14
+          ],
+          "triple": [
+            4,
+            10,
+            28
+          ]
+        },
+        {
+          "copy_id": 5,
+          "residues": [
+            1,
+            6,
+            35
+          ],
+          "triple": [
+            1,
+            6,
+            35
+          ]
+        }
+      ],
+      "status": "NO_PARTITION_THIS_PRESENTATION",
+      "wall_seconds": 0.005775276571512222
+    },
+    {
+      "blocks": null,
+      "candidate_visits": 8690,
+      "case_id": 34,
+      "concatenated_residues": [
+        1,
+        10,
+        31,
+        37,
+        34,
+        13,
+        13,
+        4,
+        25,
+        38,
+        32,
+        14,
+        38,
+        32,
+        14,
+        2,
+        5,
+        35
+      ],
+      "sources": [
+        {
+          "copy_id": 0,
+          "residues": [
+            1,
+            10,
+            31
+          ],
+          "triple": [
+            1,
+            10,
+            31
+          ]
+        },
+        {
+          "copy_id": 1,
+          "residues": [
+            37,
+            34,
+            13
+          ],
+          "triple": [
+            1,
+            10,
+            31
+          ]
+        },
+        {
+          "copy_id": 2,
+          "residues": [
+            13,
+            4,
+            25
+          ],
+          "triple": [
+            1,
+            10,
+            31
+          ]
+        },
+        {
+          "copy_id": 3,
+          "residues": [
+            38,
+            32,
+            14
+          ],
+          "triple": [
+            4,
+            10,
+            28
+          ]
+        },
+        {
+          "copy_id": 4,
+          "residues": [
+            38,
+            32,
+            14
+          ],
+          "triple": [
+            4,
+            10,
+            28
+          ]
+        },
+        {
+          "copy_id": 5,
+          "residues": [
+            2,
+            5,
+            35
+          ],
+          "triple": [
+            2,
+            5,
+            35
+          ]
+        }
+      ],
+      "status": "NO_PARTITION_THIS_PRESENTATION",
+      "wall_seconds": 0.005831100046634674
+    },
+    {
+      "blocks": null,
+      "candidate_visits": 8769,
+      "case_id": 35,
+      "concatenated_residues": [
+        1,
+        10,
+        31,
+        37,
+        34,
+        13,
+        13,
+        4,
+        25,
+        38,
+        32,
+        14,
+        38,
+        32,
+        14,
+        3,
+        4,
+        35
+      ],
+      "sources": [
+        {
+          "copy_id": 0,
+          "residues": [
+            1,
+            10,
+            31
+          ],
+          "triple": [
+            1,
+            10,
+            31
+          ]
+        },
+        {
+          "copy_id": 1,
+          "residues": [
+            37,
+            34,
+            13
+          ],
+          "triple": [
+            1,
+            10,
+            31
+          ]
+        },
+        {
+          "copy_id": 2,
+          "residues": [
+            13,
+            4,
+            25
+          ],
+          "triple": [
+            1,
+            10,
+            31
+          ]
+        },
+        {
+          "copy_id": 3,
+          "residues": [
+            38,
+            32,
+            14
+          ],
+          "triple": [
+            4,
+            10,
+            28
+          ]
+        },
+        {
+          "copy_id": 4,
+          "residues": [
+            38,
+            32,
+            14
+          ],
+          "triple": [
+            4,
+            10,
+            28
+          ]
+        },
+        {
+          "copy_id": 5,
+          "residues": [
+            3,
+            4,
+            35
+          ],
+          "triple": [
+            3,
+            4,
+            35
+          ]
+        }
+      ],
+      "status": "NO_PARTITION_THIS_PRESENTATION",
+      "wall_seconds": 0.005692383274435997
+    },
+    {
+      "blocks": null,
+      "candidate_visits": 23917,
+      "case_id": 36,
+      "concatenated_residues": [
+        1,
+        18,
+        23,
+        37,
+        36,
+        11,
+        13,
+        24,
+        5,
+        41,
+        29,
+        14,
+        41,
+        29,
+        14,
+        1,
+        6,
+        35
+      ],
+      "sources": [
+        {
+          "copy_id": 0,
+          "residues": [
+            1,
+            18,
+            23
+          ],
+          "triple": [
+            1,
+            18,
+            23
+          ]
+        },
+        {
+          "copy_id": 1,
+          "residues": [
+            37,
+            36,
+            11
+          ],
+          "triple": [
+            1,
+            18,
+            23
+          ]
+        },
+        {
+          "copy_id": 2,
+          "residues": [
+            13,
+            24,
+            5
+          ],
+          "triple": [
+            1,
+            18,
+            23
+          ]
+        },
+        {
+          "copy_id": 3,
+          "residues": [
+            41,
+            29,
+            14
+          ],
+          "triple": [
+            1,
+            13,
+            28
+          ]
+        },
+        {
+          "copy_id": 4,
+          "residues": [
+            41,
+            29,
+            14
+          ],
+          "triple": [
+            1,
+            13,
+            28
+          ]
+        },
+        {
+          "copy_id": 5,
+          "residues": [
+            1,
+            6,
+            35
+          ],
+          "triple": [
+            1,
+            6,
+            35
+          ]
+        }
+      ],
+      "status": "NO_PARTITION_THIS_PRESENTATION",
+      "wall_seconds": 0.015715904533863068
+    },
+    {
+      "blocks": null,
+      "candidate_visits": 17692,
+      "case_id": 37,
+      "concatenated_residues": [
+        1,
+        18,
+        23,
+        37,
+        36,
+        11,
+        13,
+        24,
+        5,
+        41,
+        29,
+        14,
+        41,
+        29,
+        14,
+        2,
+        5,
+        35
+      ],
+      "sources": [
+        {
+          "copy_id": 0,
+          "residues": [
+            1,
+            18,
+            23
+          ],
+          "triple": [
+            1,
+            18,
+            23
+          ]
+        },
+        {
+          "copy_id": 1,
+          "residues": [
+            37,
+            36,
+            11
+          ],
+          "triple": [
+            1,
+            18,
+            23
+          ]
+        },
+        {
+          "copy_id": 2,
+          "residues": [
+            13,
+            24,
+            5
+          ],
+          "triple": [
+            1,
+            18,
+            23
+          ]
+        },
+        {
+          "copy_id": 3,
+          "residues": [
+            41,
+            29,
+            14
+          ],
+          "triple": [
+            1,
+            13,
+            28
+          ]
+        },
+        {
+          "copy_id": 4,
+          "residues": [
+            41,
+            29,
+            14
+          ],
+          "triple": [
+            1,
+            13,
+            28
+          ]
+        },
+        {
+          "copy_id": 5,
+          "residues": [
+            2,
+            5,
+            35
+          ],
+          "triple": [
+            2,
+            5,
+            35
+          ]
+        }
+      ],
+      "status": "NO_PARTITION_THIS_PRESENTATION",
+      "wall_seconds": 0.011367637664079666
+    },
+    {
+      "blocks": null,
+      "candidate_visits": 16553,
+      "case_id": 38,
+      "concatenated_residues": [
+        1,
+        18,
+        23,
+        37,
+        36,
+        11,
+        13,
+        24,
+        5,
+        41,
+        29,
+        14,
+        41,
+        29,
+        14,
+        3,
+        4,
+        35
+      ],
+      "sources": [
+        {
+          "copy_id": 0,
+          "residues": [
+            1,
+            18,
+            23
+          ],
+          "triple": [
+            1,
+            18,
+            23
+          ]
+        },
+        {
+          "copy_id": 1,
+          "residues": [
+            37,
+            36,
+            11
+          ],
+          "triple": [
+            1,
+            18,
+            23
+          ]
+        },
+        {
+          "copy_id": 2,
+          "residues": [
+            13,
+            24,
+            5
+          ],
+          "triple": [
+            1,
+            18,
+            23
+          ]
+        },
+        {
+          "copy_id": 3,
+          "residues": [
+            41,
+            29,
+            14
+          ],
+          "triple": [
+            1,
+            13,
+            28
+          ]
+        },
+        {
+          "copy_id": 4,
+          "residues": [
+            41,
+            29,
+            14
+          ],
+          "triple": [
+            1,
+            13,
+            28
+          ]
+        },
+        {
+          "copy_id": 5,
+          "residues": [
+            3,
+            4,
+            35
+          ],
+          "triple": [
+            3,
+            4,
+            35
+          ]
+        }
+      ],
+      "status": "NO_PARTITION_THIS_PRESENTATION",
+      "wall_seconds": 0.011237921193242073
+    },
+    {
+      "blocks": null,
+      "candidate_visits": 22340,
+      "case_id": 39,
+      "concatenated_residues": [
+        1,
+        18,
+        23,
+        37,
+        36,
+        11,
+        13,
+        24,
+        5,
+        41,
+        29,
+        14,
+        38,
+        32,
+        14,
+        1,
+        6,
+        35
+      ],
+      "sources": [
+        {
+          "copy_id": 0,
+          "residues": [
+            1,
+            18,
+            23
+          ],
+          "triple": [
+            1,
+            18,
+            23
+          ]
+        },
+        {
+          "copy_id": 1,
+          "residues": [
+            37,
+            36,
+            11
+          ],
+          "triple": [
+            1,
+            18,
+            23
+          ]
+        },
+        {
+          "copy_id": 2,
+          "residues": [
+            13,
+            24,
+            5
+          ],
+          "triple": [
+            1,
+            18,
+            23
+          ]
+        },
+        {
+          "copy_id": 3,
+          "residues": [
+            41,
+            29,
+            14
+          ],
+          "triple": [
+            1,
+            13,
+            28
+          ]
+        },
+        {
+          "copy_id": 4,
+          "residues": [
+            38,
+            32,
+            14
+          ],
+          "triple": [
+            4,
+            10,
+            28
+          ]
+        },
+        {
+          "copy_id": 5,
+          "residues": [
+            1,
+            6,
+            35
+          ],
+          "triple": [
+            1,
+            6,
+            35
+          ]
+        }
+      ],
+      "status": "NO_PARTITION_THIS_PRESENTATION",
+      "wall_seconds": 0.01596318744122982
+    },
+    {
+      "blocks": null,
+      "candidate_visits": 18558,
+      "case_id": 40,
+      "concatenated_residues": [
+        1,
+        18,
+        23,
+        37,
+        36,
+        11,
+        13,
+        24,
+        5,
+        41,
+        29,
+        14,
+        38,
+        32,
+        14,
+        2,
+        5,
+        35
+      ],
+      "sources": [
+        {
+          "copy_id": 0,
+          "residues": [
+            1,
+            18,
+            23
+          ],
+          "triple": [
+            1,
+            18,
+            23
+          ]
+        },
+        {
+          "copy_id": 1,
+          "residues": [
+            37,
+            36,
+            11
+          ],
+          "triple": [
+            1,
+            18,
+            23
+          ]
+        },
+        {
+          "copy_id": 2,
+          "residues": [
+            13,
+            24,
+            5
+          ],
+          "triple": [
+            1,
+            18,
+            23
+          ]
+        },
+        {
+          "copy_id": 3,
+          "residues": [
+            41,
+            29,
+            14
+          ],
+          "triple": [
+            1,
+            13,
+            28
+          ]
+        },
+        {
+          "copy_id": 4,
+          "residues": [
+            38,
+            32,
+            14
+          ],
+          "triple": [
+            4,
+            10,
+            28
+          ]
+        },
+        {
+          "copy_id": 5,
+          "residues": [
+            2,
+            5,
+            35
+          ],
+          "triple": [
+            2,
+            5,
+            35
+          ]
+        }
+      ],
+      "status": "NO_PARTITION_THIS_PRESENTATION",
+      "wall_seconds": 0.012844327837228775
+    },
+    {
+      "blocks": null,
+      "candidate_visits": 22277,
+      "case_id": 41,
+      "concatenated_residues": [
+        1,
+        18,
+        23,
+        37,
+        36,
+        11,
+        13,
+        24,
+        5,
+        41,
+        29,
+        14,
+        38,
+        32,
+        14,
+        3,
+        4,
+        35
+      ],
+      "sources": [
+        {
+          "copy_id": 0,
+          "residues": [
+            1,
+            18,
+            23
+          ],
+          "triple": [
+            1,
+            18,
+            23
+          ]
+        },
+        {
+          "copy_id": 1,
+          "residues": [
+            37,
+            36,
+            11
+          ],
+          "triple": [
+            1,
+            18,
+            23
+          ]
+        },
+        {
+          "copy_id": 2,
+          "residues": [
+            13,
+            24,
+            5
+          ],
+          "triple": [
+            1,
+            18,
+            23
+          ]
+        },
+        {
+          "copy_id": 3,
+          "residues": [
+            41,
+            29,
+            14
+          ],
+          "triple": [
+            1,
+            13,
+            28
+          ]
+        },
+        {
+          "copy_id": 4,
+          "residues": [
+            38,
+            32,
+            14
+          ],
+          "triple": [
+            4,
+            10,
+            28
+          ]
+        },
+        {
+          "copy_id": 5,
+          "residues": [
+            3,
+            4,
+            35
+          ],
+          "triple": [
+            3,
+            4,
+            35
+          ]
+        }
+      ],
+      "status": "NO_PARTITION_THIS_PRESENTATION",
+      "wall_seconds": 0.01620660163462162
+    },
+    {
+      "blocks": null,
+      "candidate_visits": 22340,
+      "case_id": 42,
+      "concatenated_residues": [
+        1,
+        18,
+        23,
+        37,
+        36,
+        11,
+        13,
+        24,
+        5,
+        38,
+        32,
+        14,
+        41,
+        29,
+        14,
+        1,
+        6,
+        35
+      ],
+      "sources": [
+        {
+          "copy_id": 0,
+          "residues": [
+            1,
+            18,
+            23
+          ],
+          "triple": [
+            1,
+            18,
+            23
+          ]
+        },
+        {
+          "copy_id": 1,
+          "residues": [
+            37,
+            36,
+            11
+          ],
+          "triple": [
+            1,
+            18,
+            23
+          ]
+        },
+        {
+          "copy_id": 2,
+          "residues": [
+            13,
+            24,
+            5
+          ],
+          "triple": [
+            1,
+            18,
+            23
+          ]
+        },
+        {
+          "copy_id": 3,
+          "residues": [
+            38,
+            32,
+            14
+          ],
+          "triple": [
+            4,
+            10,
+            28
+          ]
+        },
+        {
+          "copy_id": 4,
+          "residues": [
+            41,
+            29,
+            14
+          ],
+          "triple": [
+            1,
+            13,
+            28
+          ]
+        },
+        {
+          "copy_id": 5,
+          "residues": [
+            1,
+            6,
+            35
+          ],
+          "triple": [
+            1,
+            6,
+            35
+          ]
+        }
+      ],
+      "status": "NO_PARTITION_THIS_PRESENTATION",
+      "wall_seconds": 0.015581376850605011
+    },
+    {
+      "blocks": null,
+      "candidate_visits": 18558,
+      "case_id": 43,
+      "concatenated_residues": [
+        1,
+        18,
+        23,
+        37,
+        36,
+        11,
+        13,
+        24,
+        5,
+        38,
+        32,
+        14,
+        41,
+        29,
+        14,
+        2,
+        5,
+        35
+      ],
+      "sources": [
+        {
+          "copy_id": 0,
+          "residues": [
+            1,
+            18,
+            23
+          ],
+          "triple": [
+            1,
+            18,
+            23
+          ]
+        },
+        {
+          "copy_id": 1,
+          "residues": [
+            37,
+            36,
+            11
+          ],
+          "triple": [
+            1,
+            18,
+            23
+          ]
+        },
+        {
+          "copy_id": 2,
+          "residues": [
+            13,
+            24,
+            5
+          ],
+          "triple": [
+            1,
+            18,
+            23
+          ]
+        },
+        {
+          "copy_id": 3,
+          "residues": [
+            38,
+            32,
+            14
+          ],
+          "triple": [
+            4,
+            10,
+            28
+          ]
+        },
+        {
+          "copy_id": 4,
+          "residues": [
+            41,
+            29,
+            14
+          ],
+          "triple": [
+            1,
+            13,
+            28
+          ]
+        },
+        {
+          "copy_id": 5,
+          "residues": [
+            2,
+            5,
+            35
+          ],
+          "triple": [
+            2,
+            5,
+            35
+          ]
+        }
+      ],
+      "status": "NO_PARTITION_THIS_PRESENTATION",
+      "wall_seconds": 0.01282423734664917
+    },
+    {
+      "blocks": null,
+      "candidate_visits": 22277,
+      "case_id": 44,
+      "concatenated_residues": [
+        1,
+        18,
+        23,
+        37,
+        36,
+        11,
+        13,
+        24,
+        5,
+        38,
+        32,
+        14,
+        41,
+        29,
+        14,
+        3,
+        4,
+        35
+      ],
+      "sources": [
+        {
+          "copy_id": 0,
+          "residues": [
+            1,
+            18,
+            23
+          ],
+          "triple": [
+            1,
+            18,
+            23
+          ]
+        },
+        {
+          "copy_id": 1,
+          "residues": [
+            37,
+            36,
+            11
+          ],
+          "triple": [
+            1,
+            18,
+            23
+          ]
+        },
+        {
+          "copy_id": 2,
+          "residues": [
+            13,
+            24,
+            5
+          ],
+          "triple": [
+            1,
+            18,
+            23
+          ]
+        },
+        {
+          "copy_id": 3,
+          "residues": [
+            38,
+            32,
+            14
+          ],
+          "triple": [
+            4,
+            10,
+            28
+          ]
+        },
+        {
+          "copy_id": 4,
+          "residues": [
+            41,
+            29,
+            14
+          ],
+          "triple": [
+            1,
+            13,
+            28
+          ]
+        },
+        {
+          "copy_id": 5,
+          "residues": [
+            3,
+            4,
+            35
+          ],
+          "triple": [
+            3,
+            4,
+            35
+          ]
+        }
+      ],
+      "status": "NO_PARTITION_THIS_PRESENTATION",
+      "wall_seconds": 0.01634419895708561
+    },
+    {
+      "blocks": null,
+      "candidate_visits": 8471,
+      "case_id": 45,
+      "concatenated_residues": [
+        1,
+        18,
+        23,
+        37,
+        36,
+        11,
+        13,
+        24,
+        5,
+        38,
+        32,
+        14,
+        38,
+        32,
+        14,
+        1,
+        6,
+        35
+      ],
+      "sources": [
+        {
+          "copy_id": 0,
+          "residues": [
+            1,
+            18,
+            23
+          ],
+          "triple": [
+            1,
+            18,
+            23
+          ]
+        },
+        {
+          "copy_id": 1,
+          "residues": [
+            37,
+            36,
+            11
+          ],
+          "triple": [
+            1,
+            18,
+            23
+          ]
+        },
+        {
+          "copy_id": 2,
+          "residues": [
+            13,
+            24,
+            5
+          ],
+          "triple": [
+            1,
+            18,
+            23
+          ]
+        },
+        {
+          "copy_id": 3,
+          "residues": [
+            38,
+            32,
+            14
+          ],
+          "triple": [
+            4,
+            10,
+            28
+          ]
+        },
+        {
+          "copy_id": 4,
+          "residues": [
+            38,
+            32,
+            14
+          ],
+          "triple": [
+            4,
+            10,
+            28
+          ]
+        },
+        {
+          "copy_id": 5,
+          "residues": [
+            1,
+            6,
+            35
+          ],
+          "triple": [
+            1,
+            6,
+            35
+          ]
+        }
+      ],
+      "status": "NO_PARTITION_THIS_PRESENTATION",
+      "wall_seconds": 0.005749208852648735
+    },
+    {
+      "blocks": null,
+      "candidate_visits": 8471,
+      "case_id": 46,
+      "concatenated_residues": [
+        1,
+        18,
+        23,
+        37,
+        36,
+        11,
+        13,
+        24,
+        5,
+        38,
+        32,
+        14,
+        38,
+        32,
+        14,
+        2,
+        5,
+        35
+      ],
+      "sources": [
+        {
+          "copy_id": 0,
+          "residues": [
+            1,
+            18,
+            23
+          ],
+          "triple": [
+            1,
+            18,
+            23
+          ]
+        },
+        {
+          "copy_id": 1,
+          "residues": [
+            37,
+            36,
+            11
+          ],
+          "triple": [
+            1,
+            18,
+            23
+          ]
+        },
+        {
+          "copy_id": 2,
+          "residues": [
+            13,
+            24,
+            5
+          ],
+          "triple": [
+            1,
+            18,
+            23
+          ]
+        },
+        {
+          "copy_id": 3,
+          "residues": [
+            38,
+            32,
+            14
+          ],
+          "triple": [
+            4,
+            10,
+            28
+          ]
+        },
+        {
+          "copy_id": 4,
+          "residues": [
+            38,
+            32,
+            14
+          ],
+          "triple": [
+            4,
+            10,
+            28
+          ]
+        },
+        {
+          "copy_id": 5,
+          "residues": [
+            2,
+            5,
+            35
+          ],
+          "triple": [
+            2,
+            5,
+            35
+          ]
+        }
+      ],
+      "status": "NO_PARTITION_THIS_PRESENTATION",
+      "wall_seconds": 0.005565984174609184
+    },
+    {
+      "blocks": null,
+      "candidate_visits": 9344,
+      "case_id": 47,
+      "concatenated_residues": [
+        1,
+        18,
+        23,
+        37,
+        36,
+        11,
+        13,
+        24,
+        5,
+        38,
+        32,
+        14,
+        38,
+        32,
+        14,
+        3,
+        4,
+        35
+      ],
+      "sources": [
+        {
+          "copy_id": 0,
+          "residues": [
+            1,
+            18,
+            23
+          ],
+          "triple": [
+            1,
+            18,
+            23
+          ]
+        },
+        {
+          "copy_id": 1,
+          "residues": [
+            37,
+            36,
+            11
+          ],
+          "triple": [
+            1,
+            18,
+            23
+          ]
+        },
+        {
+          "copy_id": 2,
+          "residues": [
+            13,
+            24,
+            5
+          ],
+          "triple": [
+            1,
+            18,
+            23
+          ]
+        },
+        {
+          "copy_id": 3,
+          "residues": [
+            38,
+            32,
+            14
+          ],
+          "triple": [
+            4,
+            10,
+            28
+          ]
+        },
+        {
+          "copy_id": 4,
+          "residues": [
+            38,
+            32,
+            14
+          ],
+          "triple": [
+            4,
+            10,
+            28
+          ]
+        },
+        {
+          "copy_id": 5,
+          "residues": [
+            3,
+            4,
+            35
+          ],
+          "triple": [
+            3,
+            4,
+            35
+          ]
+        }
+      ],
+      "status": "NO_PARTITION_THIS_PRESENTATION",
+      "wall_seconds": 0.0067398399114608765
+    },
+    {
+      "blocks": [
+        {
+          "entries": [
+            1,
+            41
+          ],
+          "triple_positions": null
+        },
+        {
+          "entries": [
+            1,
+            41
+          ],
+          "triple_positions": null
+        },
+        {
+          "entries": [
+            6,
+            20,
+            21,
+            37
+          ],
+          "triple_positions": null
+        },
+        {
+          "entries": [
+            8,
+            21,
+            26,
+            29
+          ],
+          "triple_positions": null
+        },
+        {
+          "entries": [
+            13,
+            29
+          ],
+          "triple_positions": null
+        },
+        {
+          "entries": [
+            14,
+            14,
+            21,
+            35
+          ],
+          "triple_positions": null
+        }
+      ],
+      "candidate_visits": 339,
+      "case_id": 48,
+      "concatenated_residues": [
+        1,
+        20,
+        21,
+        37,
+        26,
+        21,
+        13,
+        8,
+        21,
+        41,
+        29,
+        14,
+        41,
+        29,
+        14,
+        1,
+        6,
+        35
+      ],
+      "sources": [
+        {
+          "copy_id": 0,
+          "residues": [
+            1,
+            20,
+            21
+          ],
+          "triple": [
+            1,
+            20,
+            21
+          ]
+        },
+        {
+          "copy_id": 1,
+          "residues": [
+            37,
+            26,
+            21
+          ],
+          "triple": [
+            1,
+            20,
+            21
+          ]
+        },
+        {
+          "copy_id": 2,
+          "residues": [
+            13,
+            8,
+            21
+          ],
+          "triple": [
+            1,
+            20,
+            21
+          ]
+        },
+        {
+          "copy_id": 3,
+          "residues": [
+            41,
+            29,
+            14
+          ],
+          "triple": [
+            1,
+            13,
+            28
+          ]
+        },
+        {
+          "copy_id": 4,
+          "residues": [
+            41,
+            29,
+            14
+          ],
+          "triple": [
+            1,
+            13,
+            28
+          ]
+        },
+        {
+          "copy_id": 5,
+          "residues": [
+            1,
+            6,
+            35
+          ],
+          "triple": [
+            1,
+            6,
+            35
+          ]
+        }
+      ],
+      "status": "FOUND",
+      "wall_seconds": 0.00024970434606075287
+    }
+  ],
+  "case_count": 144,
+  "copies": [
+    {
+      "copy_id": 0,
+      "embedding": 1,
+      "orbit": 0,
+      "repeated_coefficient_copy": 0,
+      "sign": 1,
+      "source_reduced_embedding": 1
+    },
+    {
+      "copy_id": 1,
+      "embedding": 37,
+      "orbit": 0,
+      "repeated_coefficient_copy": 0,
+      "sign": -1,
+      "source_reduced_embedding": 5
+    },
+    {
+      "copy_id": 2,
+      "embedding": 13,
+      "orbit": 0,
+      "repeated_coefficient_copy": 0,
+      "sign": 1,
+      "source_reduced_embedding": 13
+    },
+    {
+      "copy_id": 3,
+      "embedding": 41,
+      "orbit": 1,
+      "repeated_coefficient_copy": 0,
+      "sign": -1,
+      "source_reduced_embedding": 1
+    },
+    {
+      "copy_id": 4,
+      "embedding": 41,
+      "orbit": 1,
+      "repeated_coefficient_copy": 1,
+      "sign": -1,
+      "source_reduced_embedding": 1
+    },
+    {
+      "copy_id": 5,
+      "embedding": 1,
+      "orbit": 3,
+      "repeated_coefficient_copy": 0,
+      "sign": 1,
+      "source_reduced_embedding": 1
+    }
+  ],
+  "elapsed_seconds": 0.6453612353652716,
+  "limits": {
+    "case_wall_seconds": 4,
+    "max_candidates_per_case": 2000000,
+    "task_wall_seconds": 120
+  },
+  "manifest_sha256": "9504c08cb672205a79bb8543a4eacf0dd209f4f3f4cdbb50a2ee66418a8f8fdb",
+  "no_partition_is_not_nonalgebraicity": true,
+  "partition_search_sha256": "cc14626504a148394ee3d49fb3c49e6dbe145b9fef425d57b93bb4ba75b9fce0",
+  "schema_version": 1,
+  "scope": "168 cases: B presentation uniform across B copies; repeated type1 copies may use distinct exact-type presentations. Exhausts this explicitly limited choice set only, not every per-copy B choice.",
+  "status": "FOUND",
+  "task_index": 1,
+  "tensor_degree": 6,
+  "terminal": true,
+  "worker_sha256": "d9aefc2557274418c02858e1be03d9ea99d99b4e9d9f005f008f9128b66bf80e"
+}

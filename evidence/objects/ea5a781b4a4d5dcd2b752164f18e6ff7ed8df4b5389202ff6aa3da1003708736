@@ -1,0 +1,60 @@
+"""Tiny exact Fourier-ring check; no producer imports or theta evaluations.
+
+This checks seven diagonal-block signatures by multiplication in Z[zeta_3]
+and convolution, not by enumerating fixed points. The universal quotient and
+Lefschetz argument remains a human proof.
+"""
+import json
+import resource
+import signal
+
+
+def mul(x, y):
+    a, b = x
+    c, d = y
+    return (a*c-b*d, a*d+b*c-b*d)
+
+
+def power(x, n):
+    out = (1, 0)
+    for _ in range(n):
+        out = mul(out, x)
+    return out
+
+
+def convolve(x, y):
+    return [sum(x[i]*y[(k-i) % 3] for i in range(3)) for k in range(3)]
+
+
+def run():
+    rows = []
+    roots = [(1, 0), (0, 1), (-1, -1)]
+    for r in range(7):
+        levels = [1, 0, 0]
+        for i in range(6):
+            levels = convolve(levels, [1, 2, 0] if i < r else [1, 0, 2])
+        gauss = mul(power((1, 2), r), power((-1, -2), 6-r))
+        denominator = mul(power((1, -1), r), power((2, 1), 6-r))
+        assert gauss == (levels[0]-levels[2], levels[1]-levels[2])
+        possible = [u for u in roots if mul(u, denominator) == gauss]
+        assert len(possible) == 1
+        rows.append({'zeta_tangent_multiplicity': r,
+                     'levels': levels, 'gauss': gauss,
+                     'complex_lefschetz_denominator': denominator,
+                     'section_character': possible[0]})
+    assert rows[3]['levels'] == [261, 234, 234]
+    assert rows[3]['complex_lefschetz_denominator'] == (27, 0)
+    assert rows[3]['section_character'] == (1, 0)
+    assert all(mul(u, (27, 0)) != (-27, 0) for u in roots)
+    assert rows[0]['levels'] == rows[6]['levels'] == [225, 252, 252]
+    return {'status': 'PASS', 'producer_imports': False,
+            'theta_evaluations': 0, 'fixed_point_enumeration': False,
+            'scope': 'Exact seven-signature block character algebra; not the universal geometric proof',
+            'negative_gauss_incompatible_with_balanced_denominator': True,
+            'rows': rows}
+
+
+if __name__ == '__main__':
+    resource.setrlimit(resource.RLIMIT_CPU, (20, 20))
+    signal.alarm(30)
+    print(json.dumps(run(), indent=2))

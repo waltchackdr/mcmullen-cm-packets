@@ -1,0 +1,37 @@
+{
+  "files": {
+    "certificates/principal_bc_isogeny_data.json": {
+      "bytes": 3834,
+      "sha256": "4796d9f3b2ddfe3fefbf80e6fff1b7842c7e7d40cd35b3795deec0974ab49cee"
+    },
+    "certificates/principal_bc_isogeny_v123.py": {
+      "bytes": 5347,
+      "sha256": "7d0be401bd97520c8bc03d142062d5aa4437de4f859296371e2a7bb01abfe22a"
+    },
+    "certificates/principal_unmarked_bc_data.json": {
+      "bytes": 22180,
+      "sha256": "b9792b7ebe38ab8235d8b7b603a2596768d182b7863c6ca975eac56f9cb0437f"
+    },
+    "certificates/principal_unmarked_bc_v122.py": {
+      "bytes": 7515,
+      "sha256": "a73582098061839d7405a1fe00576b8bc50b703d0d830bb7d3977ecad446fdd3"
+    },
+    "check01/producer.source": {
+      "bytes": 5347,
+      "sha256": "7d0be401bd97520c8bc03d142062d5aa4437de4f859296371e2a7bb01abfe22a"
+    },
+    "check01/stdout.json": {
+      "bytes": 543,
+      "sha256": "161f41851ac1cbce8f4a4d052c96b49d3c3d50e69d0855b095d63f68299d059a"
+    },
+    "independent/principal_bc_isogeny_v123.py": {
+      "bytes": 7443,
+      "sha256": "ec88a3a40d3d9ab4ff66ffcef85d51f3e68281b926f7d7626592df12e825087d"
+    },
+    "tests/test_principal_bc_isogeny_v123.py": {
+      "bytes": 1360,
+      "sha256": "7f251b0bd765e0e28ffaebc8e760c605a21f7e9a8c2ae9dcc358d81409c2e2e3"
+    }
+  },
+  "status": "PREPARED_C59_PRIMARY_INDEPENDENT_AND_REGRESSION_PENDING_CROSS_REVIEW"
+}

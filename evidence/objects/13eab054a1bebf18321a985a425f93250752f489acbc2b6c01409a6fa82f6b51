@@ -1,0 +1,165 @@
+"""Remote exact principal models, in fixed ten-model chunks; no theta values.
+
+The --smoke option replays only catalog0, already constructed locally.
+This producer extends the V161 method; it is not an independent implementation.
+"""
+import argparse
+import hashlib
+import importlib.util
+from itertools import product
+import json
+import os
+from pathlib import Path
+import platform
+import resource
+import signal
+import sys
+import sympy as s
+from sympy.matrices.normalforms import hermite_normal_form
+
+BASE = Path(__file__).resolve().parent
+ROOT = BASE.parents[1]
+PINS = {
+    'experiments/s_order_models_v161/model_candidate.py': '6bb0f3d1797a779ab8665ed47c3cf1d38e34b9205f7a5c9e19ab89615d54cf5d',
+    'experiments/s_order_models_v161/model.json': '1803891819609ee4c8ecb84222a898a2574207f06bfdf08c48fca95ef27f8184',
+    'experiments/s_order_models_v161/catalog_candidate.json': 'e6a6d431107ce1ceb9cee31ace70558876800d56daf3869a2174dfbea9eb97e3',
+}
+
+
+def context():
+    if not __debug__:
+        raise RuntimeError('Enabled assertions required')
+    for p, pin in PINS.items():
+        assert hashlib.sha256((ROOT/p).read_bytes()).hexdigest() == pin, p
+    spec = importlib.util.spec_from_file_location('single161', BASE/'model_candidate.py')
+    one = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(one)
+    for p, pin in one.PINS.items():
+        assert hashlib.sha256((ROOT/p).read_bytes()).hexdigest() == pin, p
+    seed = json.loads((BASE/'model.json').read_text())
+    catalog = json.loads((BASE/'catalog_candidate.json').read_text())
+    assert catalog['input_model_sha256'] == PINS['experiments/s_order_models_v161/model.json']
+    assert len(catalog['models']) == 160
+    original = json.loads((ROOT/'certificates/principal_unmarked_bc_data.json').read_text())
+    actual = json.loads((ROOT/'certificates/actual_bc_polarizations_data.json').read_text())
+    orders = json.loads((ROOT/'certificates/principal_bc_unpolarized_data.json').read_text())
+    r = s.Matrix(orders['R_C_basis'])
+    u = s.Matrix(actual['models']['C']['basis_change'])
+    e0 = s.Matrix(original['data']['principal_alternating_matrix'])
+    c_symp = s.diag(s.eye(6), e0[:6,6:].inv())
+    standard = s.zeros(12)
+    standard[:6,6:] = s.eye(6); standard[6:,:6] = -s.eye(6)
+    assert c_symp.T*e0*c_symp == standard
+    return one, seed, catalog, (r*u*c_symp).inv(), standard
+
+
+def build(ctx, index):
+    one, seed, catalog, relative_map, standard = ctx
+    row = catalog['models'][index]
+    assert row['index'] == index
+    pi = s.Matrix(seed['source_lattice_basis'])
+    f = s.eye(12)-pi
+    e = s.Matrix(seed['ambient_form'])
+    lift = s.Matrix(seed['quotient_lifts'])
+    omega = s.Matrix(seed['discriminant_gram'])
+    real = s.Matrix(seed['real_subfield_action'])
+    h = s.Matrix(row['lagrangian_rows']).T
+    assert len(one.rref(h.T.tolist())[1]) == 3
+    assert one.mod(h.T*omega*h) == s.zeros(3)
+    stable = one.rref(h.T.tolist())[0] == one.rref(s.Matrix.hstack(h,real*h).T.tolist())[0]
+    assert row['endomorphism_order'] == ('R' if stable else 'S')
+    lattice = hermite_normal_form(s.Matrix.hstack(pi,lift*h))
+    assert lattice.det() == 27 and one.integral(lattice.inv()*pi)
+    assert abs((lattice.inv()*pi).det()) == 27
+    target_form = lattice.T*e*lattice
+    assert one.integral(target_form) and target_form.det() == 1
+    relative = relative_map*lattice
+    denominator = s.ilcm(*[v.q for v in relative])
+    assert denominator in (1,3)
+    scaled = s.Matrix(12,12,[int(v) for v in denominator*relative.T])
+    reduced, rows = scaled.lll_transform(delta=s.Rational(3,4))
+    change = rows.T
+    assert one.integral(change) and abs(change.det()) == 1 and reduced == rows*scaled
+    short_form = change.T*target_form*change
+    aa, bb = one.symplectic_integral(short_form)
+    symp = change*s.Matrix.hstack(*(aa+bb))
+    assert one.integral(symp) and abs(symp.det()) == 1
+    assert symp.T*target_form*symp == standard
+    basis = lattice*symp
+    action = basis.inv()*f*basis
+    assert one.integral(action) and action.T*standard*action == standard
+    assert action**2+action+s.eye(12) == s.zeros(12)
+    chi = [int((standard*action)[i,i]) % 2 for i in range(12)]
+    assert sum(chi[i]*chi[i+6] for i in range(6)) % 2 == 0
+    _, fixed = one.quotient_coordinates(action-s.eye(12))
+    numerators = -(action+2*s.eye(12))*fixed
+    assert one.mod((action-s.eye(12))*numerators) == s.zeros(12,6)
+    b = one.mod(fixed.T*standard*action*fixed)
+    levels, eligible = [0,0,0], set()
+    for coeff in product(range(3),repeat=6):
+        v = s.Matrix(coeff)
+        level = int((v.T*b*v)[0]) % 3
+        levels[level] += 1
+        if level == 0:
+            eligible.add(tuple(map(int,one.mod(numerators*v))))
+    assert levels == [261,234,234] and len(eligible) == 261
+    pairs = sorted(v for v in eligible if any(v) and v < tuple(-x % 3 for x in v))
+    assert len(pairs) == 130
+    serial = lambda a:[[str(v) for v in row] for row in a.tolist()]
+    return {'status':'EXACT_MODEL_CANDIDATE_NOT_THETA_EVALUATION', 'catalog_index':index,
+            'endomorphism_order':row['endomorphism_order'], 'input_pins':{**PINS,**one.PINS},
+            'actual_tangent_type':seed['actual_tangent_type'],
+            'lagrangian_rows':row['lagrangian_rows'],
+            'target_lattice_basis':serial(lattice), 'target_form':serial(target_form),
+            'short_basis_change':serial(change), 'short_basis_form':serial(short_form),
+            'symplectic_change':serial(symp), 'symplectic_power_basis':serial(basis),
+            'delta_in_symplectic_basis':serial(action), 'invariant_refinement_chi':chi,
+            'fixed_torsion_numerator_basis':serial(numerators),
+            'eligible_nonzero_pairs':[list(v) for v in pairs], 'fiber_levels':levels,
+            'theta_evaluations':0, 'runtime':{'python':sys.version,'sympy':s.__version__}}
+
+
+def main():
+    p = argparse.ArgumentParser()
+    p.add_argument('--start',type=int,default=0)
+    p.add_argument('--smoke',action='store_true')
+    args = p.parse_args()
+    if args.smoke:
+        assert args.start == 0
+        resource.setrlimit(resource.RLIMIT_CPU,(20,20)); signal.alarm(30)
+        count = 1
+    else:
+        assert platform.system() == 'Linux' and os.environ.get('RUNPOD_POD_ID')
+        assert args.start in range(0,160,10)
+        resource.setrlimit(resource.RLIMIT_CPU,(120,120)); signal.alarm(150)
+        resource.setrlimit(resource.RLIMIT_FSIZE,(2*1024**2,2*1024**2))
+        count = 10
+    ctx = context()
+    for index in range(args.start,args.start+count):
+        result = build(ctx,index)
+        if args.smoke:
+            one, seed, _, _, standard = ctx
+            root = s.Matrix(seed['order7_action'])
+            h = s.Matrix(result['lagrangian_rows']).T
+            wanted = one.rref(s.Matrix(seed['non_real_stable_lagrangian']).T.tolist())[0]
+            j = next(j for j in range(7) if one.rref((root**j*h).T.tolist())[0] == wanted)
+            x = s.Symbol('x')
+            coeff = list(reversed(s.Poly(s.cyclotomic_poly(42,x),x).all_coeffs()))
+            z = s.zeros(12)
+            for i in range(11): z[i+1,i] = 1
+            z[:,11] = s.Matrix([-v for v in coeff[:-1]])
+            transport = s.Matrix(seed['symplectic_power_basis']).inv()*z**(6*j)*s.Matrix(result['symplectic_power_basis'])
+            assert one.integral(transport) and abs(transport.det()) == 1
+            assert transport.T*standard*transport == standard
+            q = lambda v: (sum(int(v[i])*int(v[i+6]) for i in range(6))+
+                           sum(int(v[i])*seed['invariant_refinement_chi'][i] for i in range(12))) % 2
+            assert all(q(transport[:,i]) == result['invariant_refinement_chi'][i] for i in range(12))
+            canonical = lambda v: min(tuple(v),tuple(-int(x) % 3 for x in v))
+            transported = {canonical(tuple(map(int,one.mod(transport*s.Matrix(v))))) for v in result['eligible_nonzero_pairs']}
+            assert transported == {tuple(v) for v in seed['eligible_nonzero_pairs']}
+            result['smoke_root_transport_exponent'] = j
+        print(json.dumps(result,sort_keys=True),flush=True)
+
+
+if __name__ == '__main__':
+    main()

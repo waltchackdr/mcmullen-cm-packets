@@ -1,0 +1,52 @@
+{
+  "status": "PASS",
+  "submitted_pins_verified": 15,
+  "cpu_limit_seconds_per_child": 20,
+  "wall_timeout_seconds_per_child": 30,
+  "runs": [
+    {
+      "command": [
+        "python3",
+        "experiments/s_order_census_v162/referee_catalog01.py"
+      ],
+      "returncode": 0,
+      "wall_seconds": 0.298061,
+      "stderr": ""
+    },
+    {
+      "command": [
+        "python3",
+        "experiments/s_order_census_v162/referee_execution01.py"
+      ],
+      "returncode": 0,
+      "wall_seconds": 0.128316,
+      "stderr": ""
+    },
+    {
+      "command": [
+        "python3",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests",
+        "-p",
+        "test_s_order_census_worker_v162.py",
+        "-v"
+      ],
+      "returncode": 0,
+      "wall_seconds": 0.067594,
+      "stderr": "test_disjoint_admission (test_s_order_census_worker_v162.ChangedWorkerTests.test_disjoint_admission) ... ok\ntest_fail_closed_outputs (test_s_order_census_worker_v162.ChangedWorkerTests.test_fail_closed_outputs) ... ok\n\n----------------------------------------------------------------------\nRan 2 tests in 0.004s\n\nOK\n"
+    },
+    {
+      "command": [
+        ".venv/bin/python",
+        "experiments/s_order_models_v161/census_candidate.py",
+        "--smoke"
+      ],
+      "returncode": 0,
+      "wall_seconds": 0.486844,
+      "stderr": ""
+    }
+  ]
+}

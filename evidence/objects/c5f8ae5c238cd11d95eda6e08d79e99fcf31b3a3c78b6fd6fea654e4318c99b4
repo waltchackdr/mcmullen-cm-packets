@@ -1,0 +1,8 @@
+{
+  "returncode": 0,
+  "seconds": 5.570895417011343,
+  "cpu_limit": 20,
+  "wall_limit": 30,
+  "scope": "One installed full primary+independent regression, not full suite",
+  "manifest_sha256": "3e30ae44719897641b7d775461f3451b33e8bb39dc4dcfa57f55ae5f76627492"
+}

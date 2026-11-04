@@ -1,0 +1,44 @@
+"""Bounded regression on the adopted24-element action; not independent proof."""
+import hashlib,json,resource,signal
+from pathlib import Path
+from collections import Counter
+ROOT=Path(__file__).resolve().parents[2]
+DATA='certificates/s_order_galois_v163/finite_action01.json'
+
+def run():
+    resource.setrlimit(resource.RLIMIT_CPU,(20,20));signal.alarm(30)
+    authority=json.loads((ROOT/'experiments/s_order_galois_v163/adoption.json').read_bytes())
+    raw=(ROOT/DATA).read_bytes()
+    assert hashlib.sha256(raw).hexdigest()==authority['pins'][DATA]
+    data=json.loads(raw);perms=data['permutations'];identity=tuple(range(160))
+    mul=lambda a,b:tuple(a[b[i]] for i in range(160))
+    a=tuple(perms['full_similitude_scalar']);b=tuple(perms['corrected_frobenius'])
+    group={identity};front=[identity]
+    while front:
+        x=front.pop()
+        for y in [a,b]:
+            z=mul(x,y)
+            if z not in group:group.add(z);front.append(z)
+        assert len(group)<=24
+    assert len(group)==24
+    def power(x,n):
+        y=identity
+        for _ in range(n):y=mul(y,x)
+        return y
+    order=lambda x:next(n for n in range(1,25) if power(x,n)==identity)
+    assert order(a)==4 and order(b)==6
+    assert mul(b,a)==mul(power(a,3),b)
+    counts=Counter(order(x) for x in group)
+    assert counts=={1:1,2:5,3:2,4:2,6:10,12:4}
+    center=[x for x in group if all(mul(x,y)==mul(y,x) for y in group)]
+    assert len(center)==6
+    derived={mul(mul(mul(x,y),power(x,order(x)-1)),power(y,order(y)-1)) for x in group for y in group}
+    assert derived=={identity,power(a,2)}
+    return {'status':'PROVISIONAL_SMALL_GROUP_REGRESSION_PASS','input_path':DATA,
+        'input_sha256':hashlib.sha256(raw).hexdigest(),'group_order':24,
+        'element_order_counts':dict(sorted(counts.items())),'center_order':6,
+        'commutator_subgroup_order':2,'a_order':4,'b_order':6,
+        'relation':'b a b^-1 = a^-1','candidate_abstract_group':'D8(order8) x C3',
+        'scope':'Accepted finite permutation action reused; not independent mathematical proof, no new subspace enumeration or108 orbit count.'}
+
+if __name__=='__main__':print(json.dumps(run(),indent=2,sort_keys=True))

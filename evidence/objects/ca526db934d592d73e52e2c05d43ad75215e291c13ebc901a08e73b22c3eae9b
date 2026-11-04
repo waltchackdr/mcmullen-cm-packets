@@ -1,0 +1,167 @@
+{
+  "assessment": {
+    "path": "experiments/principal_normalization_v111/ASSESSMENT.md",
+    "sha256": "486a1068679d4d14fabb571edf8f5d9f2432f9d5504ad4e9bf4fcf02975a83de"
+  },
+  "hypotheses_and_deductions": [
+    {
+      "consequence": "No principal polarization whose Rosati fixes L",
+      "evidence": "paper/main.tex prop:noprincipal and lem:narrowclass",
+      "id": "H1",
+      "premise": "Fixed O_L action and all-upper-half-plane marking on O_L^2",
+      "status": "INHERITED_HUMAN_PROOF"
+    },
+    {
+      "consequence": "determinant fractional ideal of P equals codifferent",
+      "evidence": "ASSESSMENT.md section4 local trace-dual calculation",
+      "id": "H2",
+      "premise": "P full O_L lattice in L^2 and self-dual for E1",
+      "status": "NEW_DEDUCTION_PENDING_REVIEW"
+    },
+    {
+      "consequence": "T cannot belong to GL2^+(L)",
+      "id": "H3",
+      "premise": "H1,H2 and T O_L^2=P",
+      "status": "NEW_DEDUCTION_PENDING_REVIEW"
+    },
+    {
+      "consequence": "Kernel not invariant under full quadrilateral monodromy; restrict to stabilizer",
+      "does_not_imply": "No possible unmarked target descent, nor rejection of every unspecified finite-index Gamma",
+      "evidence": "C32 orbit size28",
+      "id": "H4",
+      "premise": "Descent of the fixed quotient isogeny with original quadrilateral marking",
+      "status": "SCOPED_DEDUCTION_PENDING_REVIEW"
+    },
+    {
+      "consequence": "V_P intersects W_K,P; no assertion three image points distinct",
+      "evidence": "C31,C33 specialized stable K actions and unchanged rational polarized Hodge structures",
+      "id": "H5",
+      "premise": "Define principal target S_P and image V_P using C33 itself",
+      "status": "SCOPED_DEDUCTION_PENDING_REVIEW"
+    },
+    {
+      "available": false,
+      "id": "H6",
+      "premise": "Identify with the named literal V",
+      "required_evidence": [
+        "target integral module and polarization",
+        "positive real component and arithmetic group/level",
+        "integral polarized comparison or explicit moduli correspondence",
+        "equality of curve images or individual point membership",
+        "K/Rosati compatibility"
+      ],
+      "status": "OPEN_COMPARISON_NOT_AN_ASSERTED_EMPTY_INTERSECTION"
+    }
+  ],
+  "inherited_claims": [
+    {
+      "id": "C31",
+      "used_scope": "common self-dual O_L/O_K stable lattice and index453789"
+    },
+    {
+      "id": "C32",
+      "used_scope": "inverse-transpose stabilizer224, quadrilateral orbit28 before neat refinement"
+    },
+    {
+      "id": "C33",
+      "used_scope": "connected algebraic principal family and marked isogeny; no Mostaed identification"
+    },
+    {
+      "id": "C34",
+      "used_scope": "selected M multiplier order index27, not full End ring at A"
+    }
+  ],
+  "local_inputs": {
+    "certificates/principal_descent_v57.py": {
+      "bytes": 4340,
+      "role": "retained proof/source input; not freshly executed",
+      "sha256": "b9e68a813bc9715b2749135287ae49e211486187900277b91fae4707c7169e7f"
+    },
+    "certificates/principal_homology_v56.py": {
+      "bytes": 7997,
+      "role": "retained proof/source input; not freshly executed",
+      "sha256": "657eebc2676649085428ef7a9b49cdba0cd4c943d352295305bcac8b0e830d77"
+    },
+    "docs/CLAIM_LEDGER.md": {
+      "bytes": 139251,
+      "role": "retained proof/source input; not freshly executed",
+      "sha256": "13dc12153708e6fd55610d51d92bed425a2744fb41cbd2f4eff0d5106a7e1bd6"
+    },
+    "docs/PRINCIPAL_DESCENT_V57.md": {
+      "bytes": 11394,
+      "role": "retained proof/source input; not freshly executed",
+      "sha256": "84381e3c3bdae05f0d963b09b3671bdb40ffb0cfab4aa51d84cbef1af97303c0"
+    },
+    "docs/PRINCIPAL_HOMOLOGY_REPAIR_V56.md": {
+      "bytes": 7428,
+      "role": "retained proof/source input; not freshly executed",
+      "sha256": "511fe4fbe2a2278987bb50b6146bdc87bd3feb38d106c05affb5b0ca46d542c9"
+    },
+    "docs/REFEREE_AUDIT_V56.md": {
+      "bytes": 4013,
+      "role": "retained proof/source input; not freshly executed",
+      "sha256": "0266c2a78cc0720980a69045867afd06df83b58f8fdcdd1b38165597ede29291"
+    },
+    "independent/principal_descent_stdlib_v57.py": {
+      "bytes": 14884,
+      "role": "retained proof/source input; not freshly executed",
+      "sha256": "783a473e1919516766ec508399ec8812e493d10cb0ebd54db9ce8a5741ac39cd"
+    },
+    "independent/principal_homology_stdlib_v56.py": {
+      "bytes": 18579,
+      "role": "retained proof/source input; not freshly executed",
+      "sha256": "127e1fe82b2a39a7a9ffb10a82e42806d5b53eb632f46e5e523e7ec644001c23"
+    },
+    "paper/main.tex": {
+      "bytes": 309372,
+      "role": "retained proof/source input; not freshly executed",
+      "sha256": "97853c93fe549ae5292349450c243670d8de73dd75afb1df7ba6716102aede6e"
+    }
+  },
+  "next_action": "Independently review determinant-ideal/orientation deduction; construct explicit basis and conjugated principal stabilizer from retained lattice data if useful. No external publication.",
+  "primary_source": {
+    "accepted_as": "Definitions and stated setup only, not certification of its asserted principal moduli interpretation",
+    "accessed_date": "2026-10-13",
+    "author": "Amir Mostaed",
+    "locators": [
+      {
+        "section": "1.2",
+        "use": "SL2(O_L) quotient and asserted principal interpretation"
+      },
+      {
+        "section": "1.4",
+        "use": "unspecified suitable level and finite-index curve group"
+      },
+      {
+        "section": "2.1 Definition 2.1",
+        "use": "principal RM Weil-type conditions"
+      },
+      {
+        "section": "2.2 Definition 2.3",
+        "use": "W_K membership"
+      }
+    ],
+    "medium": "primary browser-rendered HTML",
+    "raw_sha256": null,
+    "raw_sha256_reason": "No raw source bytes retained or hashed by this task.",
+    "title": "McMullen\u2019s Curve, the Weil Locus, and the Hodge Conjecture for Abelian Sixfolds",
+    "url": "https://arxiv.org/html/2603.20268v1",
+    "version": "arXiv v1"
+  },
+  "rejected_inferences": [
+    "Finite cover makes a nonprincipal fiber principal without changing its lattice",
+    "O_L-linear isogeny implies O_L-linear isomorphism",
+    "Rational Hodge structure or commensurable monodromy specifies an integral principal moduli point",
+    "Index28 determines the degree after auxiliary neat refinement",
+    "Selected M order computes full End ring at imprimitive A",
+    "An isogeny correspondence automatically supplies a GL2^+(L) same-component Hecke matrix"
+  ],
+  "resource_scope": {
+    "cloud": false,
+    "full_suite_replay": false,
+    "local_work": "bounded source reads and hash calculations; no new arithmetic search"
+  },
+  "schema": "principal-normalization-assessment-v111-1",
+  "source_epoch_note": "These hashes name the inspected current bytes, not a new historical replay. Mutable governance/manuscript may subsequently change; retain this observation rather than overwrite it.",
+  "status": "HUMAN-PROOF-PREPARATION_PENDING_ADVERSARIAL_REVIEW"
+}

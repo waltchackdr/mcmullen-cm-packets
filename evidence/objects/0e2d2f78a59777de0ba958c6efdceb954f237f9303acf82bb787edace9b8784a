@@ -1,0 +1,25 @@
+import importlib.util,json,tempfile,unittest
+from pathlib import Path
+ROOT=Path(__file__).resolve().parents[1]
+spec=importlib.util.spec_from_file_location('post_worker',ROOT/'experiments/s_order_census_v162/postprocess_worker_candidate.py')
+w=importlib.util.module_from_spec(spec);spec.loader.exec_module(w)
+class CompletionTests(unittest.TestCase):
+    def test_nested_incompleteness_fails(self):
+        with tempfile.TemporaryDirectory() as name:
+            out=Path(name);tasks=[{'start':10*i} for i in range(8)]
+            result=[{'status':'EXITED','returncode':0} for _ in tasks]
+            values=[]
+            for i in range(80):
+                v={'catalog_index':i,'status':'EXACT_MODEL_AUDIT_AND_PERIOD_CANDIDATES','theta_evaluations':0}
+                for key,status in [('exact_audit','EXACT_SERIALIZED_MODEL_CHECK_PASS'),('transport','EXACT_TRANSPORT_WITH_NONCERTIFIED_PERIOD_RECONNAISSANCE'),('interval_period','INTERVAL_PERIOD_CANDIDATE_REVIEW_REQUIRED')]:
+                    v[key]={'status':status,'catalog_index':i,'theta_evaluations':0}
+                values.append(v)
+            def write():
+                for k in range(8):
+                    p=out/f'task{k:02d}';p.mkdir(exist_ok=True)
+                    (p/'stdout.jsonl').write_text(''.join(json.dumps(v)+'\n' for v in values[10*k:10*k+10]))
+            write();self.assertTrue(w.successful_results(result,out,tasks))
+            values[0]['interval_period']['catalog_index']=1;write();self.assertFalse(w.successful_results(result,out,tasks))
+            values[0]['interval_period']['catalog_index']=0;values[0]['exact_audit']['status']='FAIL';write();self.assertFalse(w.successful_results(result,out,tasks))
+            del values[0]['exact_audit'];write();self.assertFalse(w.successful_results(result,out,tasks))
+if __name__=='__main__':unittest.main()

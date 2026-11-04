@@ -1,0 +1,69 @@
+#!/usr/bin/env python3
+"""Finite exact preparation for integer invariant generation on B x J7.
+
+Compute all maximal minors and minimal dependent column subsets of the
+nine distinct opposite-weight directions. No algebraicity premise here.
+"""
+from hashlib import sha256
+from itertools import combinations
+from pathlib import Path
+import json
+import sympy as sp
+
+ROOT = Path(__file__).resolve().parents[2]
+SOURCE = "experiments/fixed_field_cm_census_v98/primary.json"
+SOURCE_SHA = "2135edfe6a09b1a2c51a254f80e4570a761674e5be3208c15c549087f225917e"
+G = [1,5,11,13,17,19,23,25,29,31,37,41]
+
+
+def check():
+    raw = (ROOT / SOURCE).read_bytes()
+    assert sha256(raw).hexdigest() == SOURCE_SHA
+    types = json.loads(raw)["orbits"]
+    columns = []
+    for name, index in [("B",0),("J7",4)]:
+        phi = types[index]["representative"]
+        for a in G:
+            column = tuple(1 if a*g % 42 in phi else -1 for g in G)
+            old = [c["weights"] for c in columns]
+            if column not in old and tuple(-x for x in column) not in old:
+                columns.append({"factor": name,"embedding_representative": a,"weights": column})
+    assert len(columns) == 9
+    matrix = sp.Matrix.hstack(*[sp.Matrix(c["weights"]) for c in columns])
+    rows = list(matrix.T.rref()[1])
+    assert len(rows) == 5
+    reduced = matrix[rows,:]
+    minors = [{"columns":list(ix),"determinant":int(reduced[:,list(ix)].det())}
+              for ix in combinations(range(9),5)]
+    assert len(minors) == 126 and {abs(m["determinant"]) for m in minors} == {0,16}
+    circuits = []
+    for size in range(2,7):
+        for ix in combinations(range(9),size):
+            kernel = reduced[:,list(ix)].nullspace()
+            if len(kernel) != 1 or any(x == 0 for x in kernel[0]):
+                continue
+            vector = kernel[0] / kernel[0][0]
+            assert set(vector) <= {sp.Integer(-1),sp.Integer(1)}
+            full = [0]*9
+            for i,v in zip(ix,vector):
+                full[i] = int(v)
+            assert matrix*sp.Matrix(full) == sp.zeros(12,1)
+            circuits.append(full)
+    assert circuits
+    return {"status":"EXACT_UNIMODULAR_CONFIGURATION_PREPARATION",
+            "input_sha256":{SOURCE:SOURCE_SHA},"columns":columns,
+            "independent_row_indices":rows,"reduced_matrix":reduced.tolist(),
+            "maximal_minors":minors,"circuits_up_to_sign":circuits,
+            "circuit_counts_by_degree":{str(k):sum(sum(v!=0 for v in c)==k for c in circuits) for k in range(2,7)},
+            "finite_completeness":"All126 maximal minors. All column subsets of sizes2 through rank+1=6; a minimal dependent set has nullity1 with full-support kernel. Distinct opposite directions exclude singleton or two-column circuits.",
+            "conditional_use":"Conformal circuit decomposition with unit coefficients reduces any integral zero-weight relation; opposite-weight pairs are divisor generators. All circuits fit one copy B x J7. Algebraicity still requires verified algebraic-cycle source and pullback/descent proof.",
+            "mixed_algebraicity_claim":False}
+
+
+if __name__ == "__main__":
+    import resource
+    import signal
+    resource.setrlimit(resource.RLIMIT_CPU,(20,22))
+    signal.alarm(30)
+    assert __debug__
+    print(json.dumps(check(),indent=2,sort_keys=True,default=int))

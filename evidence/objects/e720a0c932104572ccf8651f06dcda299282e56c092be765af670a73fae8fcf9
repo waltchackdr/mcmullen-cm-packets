@@ -1,0 +1,48 @@
+#!/usr/bin/env python3
+"""Bounded regression for the structural four-weight lemma."""
+from collections import Counter
+from hashlib import sha256
+from itertools import combinations_with_replacement
+from pathlib import Path
+import json
+
+ROOT = Path(__file__).resolve().parents[2]
+SOURCE = "experiments/fixed_field_cm_census_v98/primary.json"
+SOURCE_SHA = "2135edfe6a09b1a2c51a254f80e4570a761674e5be3208c15c549087f225917e"
+G = [1,5,11,13,17,19,23,25,29,31,37,41]
+
+
+def check():
+    raw = (ROOT / SOURCE).read_bytes()
+    assert sha256(raw).hexdigest() == SOURCE_SHA
+    types = json.loads(raw)["orbits"]
+    columns = [tuple(1 if a*g%42 in types[i]["representative"] else -1 for g in G)
+               for i in (0,2) for a in G]
+    assert len(set(columns)) == 24
+    negatives = {i:columns.index(tuple(-x for x in c)) for i,c in enumerate(columns)}
+    counts = Counter()
+    exceptions = []
+    for ix in combinations_with_replacement(range(24),4):
+        counts["tested"] += 1
+        if any(sum(columns[k][h] for k in ix) for h in range(12)):
+            continue
+        counts["invariant"] += 1
+        multiplicity = Counter(ix)
+        divisor = all(multiplicity[k] == multiplicity[negatives[k]] for k in multiplicity)
+        if divisor:
+            counts["divisor"] += 1
+        else:
+            assert len(set(ix)) == 4
+            exceptions.append(list(ix))
+    assert counts == {"tested":17550,"invariant":90,"divisor":78}
+    assert len(exceptions) == 12
+    return {"status":"PASS_FOUR_WEIGHT_LEMMA_REGRESSION_NOT_COPY_DIMENSION",
+            "input_sha256":{SOURCE:SOURCE_SHA},"counts":dict(counts),
+            "exceptional_squarefree_supports":exceptions,
+            "column_labels":[[i,a] for i in (0,2) for a in G],
+            "interpretation":"90 counts abstract weight multisets, not a Hodge dimension on any specified power. Arbitrary powers use the separate structural lemma and endomorphism-density proof."}
+
+
+if __name__ == "__main__":
+    assert __debug__
+    print(json.dumps(check(),indent=2,sort_keys=True))

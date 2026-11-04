@@ -1,0 +1,20 @@
+{
+  "all_selected_commit_blobs_and_modes_match": true,
+  "changed_paths": 2192,
+  "commit": "ff38e32595ddcbcec7f29d03f1f2e3ae8f3e0e27",
+  "files_verified": 2239,
+  "full_suite_pass": false,
+  "index_empty_after": true,
+  "input_manifest_sha256": "1c81b41b6a4723c7f56812ad804605a5f408670a3e44d99cd4754befe271e19e",
+  "parent": "fefacfdf909d54a04a6d0031f1fbc98f9bd50c5f",
+  "preserved_historical_whitespace_findings_sha256": "d3df22eb59bdcb7f03efecfa6f0edc7b531861aa45de7d446d04c29c69b4151a",
+  "protected_live_paths_unchanged": true,
+  "registration_installation": false,
+  "schema_version": 1,
+  "selected_bytes": 201422907,
+  "staged_whitespace_check_pass": false,
+  "status": "EXACT_STAGE_ONE_CERTIFICATE_COMMIT_VERIFIED",
+  "theorem_adoption": false,
+  "untouched_tracked_paths_verified": 82,
+  "wall_seconds": 2.847878932952881
+}

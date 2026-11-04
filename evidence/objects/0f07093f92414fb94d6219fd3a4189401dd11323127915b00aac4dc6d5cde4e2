@@ -1,0 +1,25 @@
+{
+  "actual_theta_count": "UNKNOWN",
+  "cleanup_absence_observations": 2,
+  "job1_started": false,
+  "last_request": {
+    "endpoint": "artifact",
+    "event": "FAILED",
+    "exception_type": "HTTPError",
+    "http_status": 404,
+    "job": 0,
+    "method": "GET",
+    "observed_epoch": 1793681691.4436638,
+    "sequence": 22
+  },
+  "partial_inventory_bound": true,
+  "pins": {
+    "build/s-order-v164/session_run03/controller/cleanup.json": "ad9bab6b5585abe105bf5655713c131935948a2a9e4901b14fe864665603dd3b",
+    "build/s-order-v164/session_run03/controller/jobs/job0/controller/inventory-6b2bd6d8fcf799a2756e52a6093335796bda00d1c4838f6cf630888a32ee0a3f.json": "6b2bd6d8fcf799a2756e52a6093335796bda00d1c4838f6cf630888a32ee0a3f",
+    "build/s-order-v164/session_run03/controller/jobs/job0/controller/partial_retention.json": "ee6e97a59008f3603bdfe9ac9885350c8e760f0827f298182e8ccbe5a6ad8a48",
+    "build/s-order-v164/session_run03/controller/outcome.json": "14727336e2908705401b52e8c8ad9b81fae4ecc7dd589f819b3b76bf52d318ca",
+    "build/s-order-v164/session_run03/controller/request_events.jsonl": "3dfd14e684157f809a4a6f8f8bc3b51c257f398bffe4a4941fceea491904e508"
+  },
+  "provider_calls": 0,
+  "status": "PASS_RETAINED_POST_START_ARTIFACT_FAILURE_METADATA"
+}

@@ -1,0 +1,44 @@
+"""Integral polynomial identities for the proposed primitive projector only."""
+import json
+from arithmetic_candidate import multiply
+
+
+def remainder(a, monic):
+    a = list(a)
+    while len(a) >= len(monic):
+        coefficient = a[-1]
+        shift = len(a) - len(monic)
+        for j, b in enumerate(monic):
+            a[shift + j] -= coefficient * b
+        while a and a[-1] == 0:
+            a.pop()
+    return a
+
+
+def check():
+    norm = [0] * 21
+    norm[0] = 21
+    for j in range(7):
+        norm[3*j] -= 3
+    for j in range(3):
+        norm[7*j] -= 7
+    square = multiply(norm, norm)
+    for i, n in enumerate(norm):
+        square[i] -= 21*n
+    assert remainder(square, [1]*21) == []
+    assert norm == [norm[(-i) % 21] for i in range(21)]
+    assert remainder(norm, [1]*3) == []
+    assert remainder(norm, [1]*7) == []
+    # Phi21=t^12-t^11+t^9-t^8+t^6-t^4+t^3-t+1.
+    phi21 = [1, -1, 0, 1, -1, 0, 1, 0, -1, 1, 0, -1, 1]
+    assert multiply(multiply([1]*3, [1]*7), phi21) == [1]*21
+    assert remainder(norm, phi21) == [21]
+    return {'status': 'FINITE_POLYNOMIAL_CHECK_NOT_GEOMETRIC_ADOPTION',
+            'norm_coefficients_ascending': norm,
+            'relation': 'N^2=21N modulo 1+t+...+t^20',
+            'eigenvalues_by_order': {'3': 0, '7': 0, '21': 21},
+            'inverse_rotation_invariant': True}
+
+
+if __name__ == '__main__':
+    print(json.dumps(check(), indent=2, sort_keys=True))

@@ -1,0 +1,6 @@
+{
+  "status": "REFEREE_SCHEMA_ASSUMPTION_CORRECTED",
+  "initial_error": "Compared full distribution file mapping count against installed_wheel_files1772",
+  "resolution": "Actual distribution mapping has1785 entries including installer metadata; installed_wheel_files is a separate1772-entry mapping. Full runtime dictionaries already compared equal before assertion. Both mapping lengths now checked separately.",
+  "producer_failure": false
+}

@@ -1,0 +1,52 @@
+"""Separate subgroup-count proof of finite projector identities."""
+from collections import Counter
+from pathlib import Path
+import hashlib
+import json
+import resource
+import signal
+
+
+def main():
+    resource.setrlimit(resource.RLIMIT_CPU, (20, 20))
+    signal.alarm(30)
+    here = Path(__file__).resolve().parent
+    root = here.parents[1]
+    packet = json.loads((here / 'projector_review_inputs.json').read_text())
+    for path, expected in packet['pins'].items():
+        assert hashlib.sha256((root / path).read_bytes()).hexdigest() == expected
+    subgroup7 = set(range(0, 21, 3))
+    subgroup3 = set(range(0, 21, 7))
+    sums = lambda a, b: Counter((x + y) % 21 for x in a for y in b)
+    assert sums(subgroup7, subgroup7) == Counter({x: 7 for x in subgroup7})
+    assert sums(subgroup3, subgroup3) == Counter({x: 3 for x in subgroup3})
+    assert sums(subgroup7, subgroup3) == Counter(range(21))
+    assert {(-x) % 21 for x in subgroup7} == subgroup7
+    assert {(-x) % 21 for x in subgroup3} == subgroup3
+    coefficients = [(21 if i == 0 else 0) - 3 * (i in subgroup7)
+                    - 7 * (i in subgroup3) for i in range(21)]
+    assert coefficients == json.loads((here / 'projector_arithmetic01.json').read_text())['norm_coefficients_ascending']
+    # N^2 - 21N = 42S21 in the group ring, not zero there.
+    # On the trivial representation its value is 42*21 = 882.
+    assert sum(coefficients) == -21
+    assert sum(coefficients) ** 2 - 21 * sum(coefficients) == 882
+    # For order d, a subgroup sum is its size iff that character is trivial.
+    eigenvalues = {str(d): 21 - 3 * (7 if 3 % d == 0 else 0)
+                   - 7 * (3 if 7 % d == 0 else 0) for d in (3, 7, 21)}
+    assert eigenvalues == {'3': 0, '7': 0, '21': 21}
+    # A factor Z/21 is present in C80's actual discriminant group.
+    assert [n for n in range(1, 22) if n % 21 == 0] == [21]
+    result = {'status': 'PASS_INDEPENDENT_PROJECTOR_ARITHMETIC',
+              'group_ring_relation': 'N^2-21N=42S21 modulo t^21-1',
+              'on_jacobian_relation': 'N^2=21N because S21(T)=0',
+              'eigenvalues_by_order': eigenvalues,
+              'inverse_rotation_invariant': True,
+              'negative_control': 'False full-group-ring idempotence rejected by trivial-character residual 882.',
+              'least_denominator_from_C80_group_exponent': 21,
+              'scope': 'Finite subgroup identities; geometric claims require the separate human review.'}
+    (here / 'referee_projector01.json').write_text(json.dumps(result, indent=2, sort_keys=True) + '\n')
+    print(json.dumps(result, indent=2, sort_keys=True))
+
+
+if __name__ == '__main__':
+    main()

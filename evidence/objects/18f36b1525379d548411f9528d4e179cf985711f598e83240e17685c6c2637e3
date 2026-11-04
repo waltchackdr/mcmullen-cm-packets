@@ -1,0 +1,160 @@
+"""Fault injection for provider creation, cancellation, and deletion boundary."""
+import importlib.util
+from pathlib import Path
+import unittest
+
+ROOT = Path(__file__).resolve().parents[1]
+spec = importlib.util.spec_from_file_location('lifecycle', ROOT/'experiments/bc_jacobian_v147/runtime/lifecycle_candidate.py')
+module = importlib.util.module_from_spec(spec); spec.loader.exec_module(module)
+NAME = 'hodge-v147-012345abcdef'
+
+
+class Fake:
+    def __init__(self):
+        self.now = 0; self.resources = []; self.records = {}; self.calls = []
+        self.lost = self.delete_fails = self.late = False
+        self.claimed = False; self.created = False
+        self.shape = dict(id='pod1', name=NAME, computeType='CPU', cpuFlavorId='cpu3c',vcpuCount=2,
+            containerDiskInGb=5, volumeInGb=0, networkVolumeId=None, costPerHr=.1)
+
+    def sleep(self, seconds): self.now += seconds
+    def claim(self):
+        if self.claimed: raise FileExistsError()
+        self.claimed = True
+    def provider(self, path, method='GET', body=None, timeout=10):
+        self.calls.append((path, method))
+        if path == '/networkvolumes': return []
+        if method == 'POST':
+            self.created = True
+            if not self.late: self.resources = [dict(self.shape)]
+            if self.lost: raise TimeoutError()
+            return dict(self.shape)
+        if method == 'DELETE':
+            if self.delete_fails: raise OSError()
+            self.resources = []; return None
+        if self.late and self.created and 60 <= self.now < 63:
+            self.resources = [dict(self.shape)]; self.late = False
+        return list(self.resources)
+    def run(self, execute=lambda pod: {'status':'RAW_ATTEMPT_RETAINED'}):
+        obj = module.Lifecycle(self.provider, self.records.__setitem__,
+                               lambda:self.now, self.sleep)
+        return obj.run(NAME, {'name':NAME}, execute, self.claim)
+
+
+class Tests(unittest.TestCase):
+    def test_success_still_deletes(self):
+        f=Fake(); r=f.run()
+        self.assertEqual(r['status'], 'RAW_ATTEMPT_RETAINED')
+        self.assertEqual(f.resources, [])
+        self.assertTrue(f.records['cleanup.json']['provider_absence_verified'])
+
+    def test_lost_create_never_runs_or_retries(self):
+        f=Fake(); f.lost=True
+        r=f.run(lambda pod:self.fail('Uncertain creation executed'))
+        self.assertEqual(r['status'],'CREATE_UNCERTAIN_RECONCILIATION_ENDED')
+        self.assertEqual(f.calls.count(('/pods','POST')),1)
+        self.assertGreaterEqual(f.now,120)
+        self.assertFalse(f.records['cleanup.json']['creation_resolved'])
+        self.assertFalse(f.records['cleanup.json']['reservation_released'])
+
+    def test_delayed_resource_after_lost_response_deleted(self):
+        f=Fake(); f.lost=f.late=True; f.run()
+        self.assertIn(('/pods/pod1','DELETE'),f.calls)
+        self.assertEqual(f.resources,[])
+
+    def test_malformed_success_keeps_uncertainty_for_delayed_resource(self):
+        f=Fake();f.late=True; original=f.provider
+        def provider(*args,**kwargs):
+            result=original(*args,**kwargs)
+            return {} if kwargs.get('method')=='POST' else result
+        f.provider=provider
+        result=f.run(lambda pod:self.fail('Malformed identity executed'))
+        self.assertGreaterEqual(f.now,120)
+        self.assertEqual(result['status'],'CREATE_UNCERTAIN_RECONCILIATION_ENDED')
+        self.assertIn(('/pods/pod1','DELETE'),f.calls)
+        self.assertFalse(f.records['cleanup.json']['creation_resolved'])
+
+    def test_cancellation_deletes(self):
+        f=Fake()
+        def cancel(pod): raise KeyboardInterrupt()
+        self.assertEqual(f.run(cancel)['status'],'EXECUTION_FAILED')
+        self.assertEqual(f.resources,[])
+
+    def test_retention_failure_deletes(self):
+        f=Fake()
+        def broken(pod): raise ValueError('Truncated artifact')
+        f.run(broken)
+        self.assertEqual(f.resources,[])
+
+    def test_deletion_failure_not_success(self):
+        f=Fake(); f.delete_fails=True
+        self.assertEqual(f.run()['status'],'CLEANUP_UNVERIFIED')
+        self.assertFalse(f.records['cleanup.json']['provider_absence_verified'])
+
+    def test_bad_price_deleted_before_execution(self):
+        for price in (None, .36, float('nan'), 'not-a-price',True,'-1','1e-2'):
+            f=Fake(); f.shape['costPerHr']=price
+            self.assertEqual(f.run(lambda pod:self.fail('Bad price ran'))['status'],
+                             'EXECUTION_FAILED')
+            self.assertEqual(f.resources,[])
+
+    def test_documented_cpu_response_without_compute_type(self):
+        f=Fake();f.shape.pop('computeType');f.shape['costPerHr']='0.06'
+        self.assertEqual(f.run()['status'],'RAW_ATTEMPT_RETAINED')
+        observation=f.records['resource_observation.json']
+        self.assertNotIn('computeType',observation['fields_present'])
+        self.assertEqual(observation['cpuFlavorId'],'cpu3c')
+
+    def test_gpu_or_missing_cpu_flavor_rejected(self):
+        for change in ({'gpuCount':1},{'computeType':'GPU'},{'cpuFlavorId':None}):
+            f=Fake();f.shape.update(change)
+            result=f.run(lambda pod:self.fail('GPU/unknown type ran'))
+            self.assertEqual(result['phase'],'SHAPE_VALIDATION')
+            self.assertIn('resource_observation.json',f.records)
+
+    def test_attached_objects_rejected_and_redacted(self):
+        import json
+        for field,flag in [('gpu','gpu_attached'),('networkVolume','network_volume_attached')]:
+            for value in ({},{'id':'fixture-secret'}):
+                with self.subTest(field=field,value=value):
+                    f=Fake();f.shape.pop('networkVolumeId');f.shape[field]=value
+                    result=f.run(lambda pod:self.fail('Attached object ran'))
+                    self.assertEqual(result['phase'],'SHAPE_VALIDATION')
+                    observation=f.records['resource_observation.json']
+                    self.assertTrue(observation[flag])
+                    self.assertIn(field,observation['fields_present'])
+                    self.assertNotIn('fixture-secret',json.dumps(f.records))
+                    self.assertEqual(f.resources,[])
+                    self.assertTrue(f.records['cleanup.json']['provider_absence_verified'])
+
+    def test_null_attachment_objects_allowed(self):
+        f=Fake();f.shape.update(gpu=None,networkVolume=None)
+        self.assertEqual(f.run()['status'],'RAW_ATTEMPT_RETAINED')
+        self.assertFalse(f.records['resource_observation.json']['gpu_attached'])
+        self.assertFalse(f.records['resource_observation.json']['network_volume_attached'])
+
+    def test_failure_metadata_excludes_secret_fields(self):
+        f=Fake();f.shape.update(costPerHr='invalid',env={'key':'fixture-secret'},
+                               dockerStartCmd=['fixture-secret'])
+        result=f.run()
+        self.assertEqual(result['phase'],'PRICE_VALIDATION')
+        import json
+        self.assertNotIn('fixture-secret',json.dumps(f.records))
+
+    def test_wrong_shape_deleted(self):
+        f=Fake(); f.shape['volumeInGb']=10
+        f.run(lambda pod:self.fail('Wrong shape ran'))
+        self.assertEqual(f.resources,[])
+
+    def test_existing_resources_prevent_creation(self):
+        f=Fake(); f.resources=[f.shape]
+        with self.assertRaises(ValueError): f.run()
+        self.assertNotIn(('/pods','POST'),f.calls)
+
+    def test_duplicate_claim_prevents_creation(self):
+        f=Fake(); f.claimed=True
+        with self.assertRaises(FileExistsError): f.run()
+        self.assertNotIn(('/pods','POST'),f.calls)
+
+
+if __name__ == '__main__': unittest.main()

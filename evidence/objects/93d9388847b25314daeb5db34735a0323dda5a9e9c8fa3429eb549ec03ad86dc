@@ -1,0 +1,10 @@
+{
+  "file_count": 2204,
+  "limitations": [
+    "Focused deterministic screening is not a universal secret scanner. Exact allowlist/root review remains required.",
+    "Approved runtime profiles and public process/config metadata identify proof executions; no runtime binary trees, SSH keys, environment dumps, or cloud credentials are selected."
+  ],
+  "no_git_mutation": true,
+  "private_key_markers_and_exact_sensitive_json_key_findings": [],
+  "schema_version": 1
+}

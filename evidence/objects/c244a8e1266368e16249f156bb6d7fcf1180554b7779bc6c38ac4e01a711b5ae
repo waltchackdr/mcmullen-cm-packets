@@ -1,0 +1,40 @@
+{
+  "accepted_original_candidate_inputs": [
+    {
+      "path": "build/research-v81/release-prep/citation-readiness-2026-10-13/candidate.json",
+      "sha256": "004e9b18f1372c11ad15d216d5a9e2271013283446ebe9d8269ac727de116020"
+    },
+    {
+      "path": "build/research-v81/release-prep/citation-readiness-2026-10-13/source-receipts.json",
+      "sha256": "a3f71b32161a7c9692b51532fd4116ffac095b11753df56967e109e7c94e7233"
+    },
+    {
+      "path": "build/research-v81/release-prep/citation-readiness-2026-10-13/APPLICATION.md",
+      "sha256": "44b184b611e441a2164dc67e22bc76426866aae12956498c51580a718ca87579"
+    }
+  ],
+  "format_change_only": "Four malformed math delimiters; no theorem application change. Original accepted bytes retained.",
+  "full_inspection_pdfs_and_images_included": false,
+  "mathematical_adoption_or_release_claimed": false,
+  "prior_map_artifacts_sha256": "2aabfb629a2226623568528d3a2a221044320dd7efd00339fab47038a330675d",
+  "schema_version": 1,
+  "small_additional_refs": [
+    {
+      "bytes": 5988,
+      "path": "experiments/continuous_v82_review/focused_citation_application_review.json",
+      "sha256": "80e90bdd08e42691c330b52db8909cc5e2a54d21eb4b154a88091e3ffa786d8a"
+    },
+    {
+      "bytes": 9184,
+      "path": "build/research-v81/release-prep/citation-readiness-2026-10-13/APPLICATION-format02.md",
+      "sha256": "64cdf2770ddd3d40979b29e1b6a0749bc6fdb0de9ea2189c68b1d8133de61622"
+    },
+    {
+      "bytes": 963,
+      "path": "build/research-v81/release-prep/citation-readiness-2026-10-13/format-amendment02.json",
+      "sha256": "265e83f5194af88851be23d7dce9630862f2de9c1e1f746149cd2318f2addd23"
+    }
+  ],
+  "status": "FOCUSED_CITATION_ACCEPTANCE_SUPPLEMENT_TO_DEPENDENCY_MAP",
+  "supersedes_only_prior_pending_citation_review_state": true
+}

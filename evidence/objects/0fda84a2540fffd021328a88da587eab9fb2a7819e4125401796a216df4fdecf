@@ -1,0 +1,187 @@
+"""Independent C84 finite check via symmetric graphs in a field trace form.
+
+No producer imports and no enumeration of six-column RREF matrices.
+K=F3[r]/Phi7(r); b(x,y)=Tr((r-r^-1)x*y^27).
+Project to a fixed Lagrangian X: for each U<=X, use the symmetric forms
+on U and the vertical annihilator of U. This constructs all Lagrangians.
+The actual geometric identification remains a separate human proof.
+"""
+import itertools
+import json
+
+VECTORS = [tuple((a // (3 ** j)) % 3 for j in range(6)) for a in range(729)]
+
+
+def encode(v):
+    return sum((x % 3) * 3 ** j for j, x in enumerate(v))
+
+
+def add(a, b):
+    return encode(x + y for x, y in zip(VECTORS[a], VECTORS[b]))
+
+
+def scale(a, c):
+    return encode(c * x for x in VECTORS[a])
+
+
+def mul(a, b):
+    c = [0] * 11
+    for i, x in enumerate(VECTORS[a]):
+        for j, y in enumerate(VECTORS[b]):
+            c[i + j] += x * y
+    for i in range(10, 5, -1):
+        for j in range(6):
+            c[i - 6 + j] -= c[i]
+    return encode(c[:6])
+
+
+def power(a, n):
+    result = 1
+    while n:
+        if n & 1:
+            result = mul(result, a)
+        a = mul(a, a)
+        n //= 2
+    return result
+
+
+def trace(a):
+    total, v = 0, a
+    for _ in range(6):
+        total = add(total, v)
+        v = power(v, 3)
+    assert total in (0, 1, 2)
+    return total
+
+
+def lincomb(coeffs, basis):
+    result = 0
+    for c, v in zip(coeffs, basis):
+        result = add(result, scale(v, c))
+    return result
+
+
+def span(basis):
+    return tuple(sorted(lincomb(c, basis)
+                        for c in itertools.product(range(3), repeat=len(basis))))
+
+
+def check():
+    if not __debug__:
+        raise RuntimeError('Enabled assertions required')
+    r = 3
+    assert power(r, 7) == 1 and r != 1
+    assert [pow(3, j, 7) for j in range(1, 7)] == [3, 2, 6, 4, 5, 1]
+    # Phi7 is irreducible by this order computation, hence these operations
+    # define F729; no numerical irreducibility library is used.
+    delta = add(r, scale(power(r, 6), 2))
+    assert add(power(delta, 27), delta) == 0 and delta
+    def pairing(x, y):
+        return trace(mul(delta, mul(x, power(y, 27))))
+    standard = [3 ** j for j in range(6)]
+    gram = [[pairing(x, y) for y in standard] for x in standard]
+    def fastpair(x, y):
+        return sum(a * gram[i][j] * b
+                   for i, a in enumerate(VECTORS[x])
+                   for j, b in enumerate(VECTORS[y])) % 3
+    # A hyperbolic basis extracted from the field trace form, not supplied
+    # by the producer's seven-cycle representation.
+    working, es, fs = standard[:], [], []
+    while working:
+        e = working.pop(0)
+        index = next(i for i, v in enumerate(working) if fastpair(e, v))
+        f = working.pop(index)
+        f = scale(f, pow(fastpair(e, f), -1, 3))
+        es.append(e); fs.append(f)
+        working = [add(add(v, scale(e, -fastpair(v, f))),
+                       scale(f, fastpair(v, e))) for v in working]
+    assert len(es) == 3
+    for i in range(3):
+        for j in range(3):
+            assert fastpair(es[i], es[j]) == fastpair(fs[i], fs[j]) == 0
+            assert fastpair(es[i], fs[j]) == int(i == j)
+    triples = list(itertools.product(range(3), repeat=3))
+    zero = (0, 0, 0)
+    def dot(x, y): return sum(a * b for a, b in zip(x, y)) % 3
+    def triple_span(basis):
+        return {tuple(sum(c[i] * basis[i][j] for i in range(len(basis))) % 3
+                      for j in range(3))
+                for c in itertools.product(range(3), repeat=len(basis))}
+    def basis_of(vectors):
+        answer, present = [], {zero}
+        for v in vectors:
+            if v not in present:
+                answer.append(v)
+                present = triple_span(answer)
+        return answer
+    lines = [v for v in triples if v != zero and next(x for x in v if x) == 1]
+    assert len(lines) == 13
+    by_rank = {0: [[]], 1: [[v] for v in lines],
+               2: [basis_of([w for w in triples if dot(v, w) == 0]) for v in lines],
+               3: [[(1, 0, 0), (0, 1, 0), (0, 0, 1)]]}
+    lagrangians, counts = set(), {}
+    for rank, subspaces in by_rank.items():
+        before = len(lagrangians)
+        for u in subspaces:
+            annihilator = basis_of([w for w in triples if all(dot(v, w) == 0 for v in u)])
+            dual = [next(w for w in triples if all(dot(v, w) == int(i == j)
+                         for j, v in enumerate(u))) for i in range(rank)]
+            positions = [(i, j) for i in range(rank) for j in range(i, rank)]
+            for entries in itertools.product(range(3), repeat=len(positions)):
+                symmetric = [[0] * rank for _ in range(rank)]
+                for (i, j), a in zip(positions, entries):
+                    symmetric[i][j] = symmetric[j][i] = a
+                basis = [lincomb(v, fs) for v in annihilator]
+                for i in range(rank):
+                    y = tuple(sum(symmetric[i][j] * dual[j][k] for j in range(rank)) % 3
+                              for k in range(3))
+                    basis.append(add(lincomb(u[i], es), lincomb(y, fs)))
+                assert len(basis) == 3
+                assert all(fastpair(x, y) == 0 for x in basis for y in basis)
+                h = span(basis)
+                assert len(set(h)) == 27 and h not in lagrangians
+                lagrangians.add(h)
+        counts[rank] = len(lagrangians) - before
+    assert counts == {0: 1, 1: 39, 2: 351, 3: 729}
+    assert len(lagrangians) == 1120
+    real = add(r, power(r, 6))
+    assert power(real, 27) == real and power(real, 3) != real
+    root_action = [mul(r, a) for a in range(729)]
+    real_action = [mul(real, a) for a in range(729)]
+    def transform(h, action): return tuple(sorted(action[x] for x in h))
+    stable = {h for h in lagrangians if transform(h, real_action) == h}
+    assert len(stable) == 28
+    remaining, orbits = set(lagrangians), []
+    while remaining:
+        h = min(remaining)
+        orbit, v = set(), h
+        for _ in range(7):
+            orbit.add(v)
+            v = transform(v, root_action)
+        assert len(orbit) == 7 and v == h and orbit <= remaining
+        remaining -= orbit
+        orbits.append(orbit)
+    assert len(orbits) == 160
+    assert sum(o <= stable for o in orbits) == 4
+    assert sum(not o.intersection(stable) for o in orbits) == 156
+    # Accepted actual O-unit gamma=z^6(1-z^2), with z=-r in the residue
+    # field. Show why full units must not be substituted for polarized ones.
+    gamma = mul(power(r, 6), add(1, scale(power(r, 2), 2)))
+    gamma_action = [mul(gamma, a) for a in range(729)]
+    witness = next(h for h in sorted(lagrangians)
+                   if transform(h, gamma_action) not in lagrangians)
+    assert witness not in stable
+    return {'status': 'PASS', 'model': 'F3[r]/Phi7; trace skew-Hermitian form',
+            'enumeration': 'Projection U<=F3^3 plus symmetric forms on U; no six-column RREF enumeration',
+            'counts_by_projection_rank': counts,
+            'lagrangians': len(lagrangians), 'k_lines': len(stable),
+            'root_orbits': len(orbits), 'orbit_size': 7,
+            'R_orbits': 4, 'S_orbits': 156, 'non_k_lagrangians': 1092,
+            'hyperbolic_basis': {'e': es, 'f': fs},
+            'unpolarized_unit_negative_control': {'gamma_residue': gamma,
+                'lagrangian': witness, 'image_is_not_lagrangian': True},
+            'scope': 'Finite-field regression and explicit counting-domain negative control. Actual quotient geometry, endomorphism orders and model bridge remain human proofs.'}
+
+
+if __name__ == '__main__':
+    print(json.dumps(check(), indent=2, sort_keys=True))

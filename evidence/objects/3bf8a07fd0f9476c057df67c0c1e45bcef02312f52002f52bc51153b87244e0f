@@ -1,0 +1,32 @@
+{
+  "archive_members_verified": 16,
+  "executable_code_unchanged": true,
+  "existing_worker_validation_passed": true,
+  "indices_per_model": [
+    96,
+    97,
+    98,
+    99,
+    100,
+    101,
+    102,
+    103,
+    104,
+    105,
+    106
+  ],
+  "new_distinct_model_pairs": 44,
+  "packet": {
+    "bytes": 2718,
+    "path": "build/theta-v147/certificate_preparation07/execution_packet.json",
+    "sha256": "c9d8f40158e8736d0a7b81174e5a605c95f0daf254bbe24f981a66539da4e527"
+  },
+  "plan": {
+    "bytes": 13354,
+    "path": "build/theta-v147/certificate_preparation07/plan.json",
+    "sha256": "9ac57f07bf360f81c421a0aec7d8863137e480e605a661bacd468ec753950d53"
+  },
+  "prior_distinct_model_pairs": 384,
+  "scope": "Eight finite tasks,8+3 pairs/model within reviewed1..8/task validator. No success or threshold claim; missing/zero-containing outputs require further untested inputs.",
+  "status": "PREPARED_NOT_ADOPTED_OR_RENTED"
+}

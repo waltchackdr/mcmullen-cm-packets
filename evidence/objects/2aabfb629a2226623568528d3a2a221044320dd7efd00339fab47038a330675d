@@ -1,0 +1,23 @@
+{
+  "files": {
+    "README.md": "4098932ced21f888db4e8854ada2c73e69cfbacdc5fd74792ad89730c9270fac",
+    "dynamic-dependencies.json": "ad0a7457d5ae9e21c6a6df5c84fbdf034616c4d86e1069bfbdb48ab351e1a6c5",
+    "evidence-families.json": "a795acaf433144d6ad2b75ac3474251225617f2a01fa9da9ff5b8873f39908bf",
+    "external-evidence.json": "e1b938250661e9f033c04494db8c747a9292cabb7299590cde92d312f04d0e8c",
+    "pending.json": "2ed1d915b7b6134034b07d4abc6224267268fc98f7c9cfa6366e5b46754a4372",
+    "prepare.py": "434e7dd9ebf2fd5aed459f5b8b0e96897e2bc388208175ec639a4225af299f0c",
+    "run.json": "2e7097d698601c251f65ed963d91f704e02493c60fa00860ec95705b128b6a1b",
+    "small-files.json": "90d165be4789d3b22934c1d7978549c1378b29edb01d5058773eeb28b25527f2",
+    "static-pin-edges.json": "f04a75b52ebaf20af2c1b528523b3dd451c5e0d67a032e3803eecc5326a797da",
+    "stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stdout.log": "ababf922d455ea78b158d67227be2b412341acfc9ea9bcc5d7eaa90d546a0263",
+    "summary.json": "9f82ded1c4193083ec4a8a3ebe2baa2e36f62419bf9b46c63212d40cba04fd4d",
+    "supplement-run.json": "5533347d0eb5bb8ff19ac95084d34fee074721d971a91510c151d160cce17332",
+    "supplement.py": "5a6dbba5252cff00e53a13b78c7809f0c5232f9c2aa3d97806604855a8ebbd3b",
+    "supplement.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "supplement.stdout.log": "793193580c2e556ff15c20a31d7d453073bebd27a357fbda69d25c9d6caf895c"
+  },
+  "schema_version": 1,
+  "status": "REVIEWABLE_DEPENDENCY_MAP_NOT_ACCEPTANCE",
+  "theorem_promotion": false
+}

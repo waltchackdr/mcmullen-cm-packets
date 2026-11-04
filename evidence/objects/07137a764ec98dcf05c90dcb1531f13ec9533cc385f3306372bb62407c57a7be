@@ -1,0 +1,22 @@
+"""Independent small-group/coset regression; arithmetic argument is human proof."""
+import json
+from pathlib import Path
+import subprocess
+import sys
+import tempfile
+import unittest
+ROOT=Path(__file__).resolve().parents[1]
+class CompleteModuliFields(unittest.TestCase):
+    def test_independent_stabilizers_and_signatures(self):
+        source=ROOT/'experiments/all_underlying_galois_v165/referee_moduli_fields01.py'
+        with tempfile.TemporaryDirectory() as folder:
+            target=Path(folder)/source.name
+            target.write_bytes(source.read_bytes())
+            result=subprocess.run([sys.executable,str(target)],check=True,capture_output=True,text=True,timeout=20)
+        d=json.loads(result.stdout)
+        self.assertEqual(d['status'],'PASS')
+        self.assertEqual(d['allowed_stabilizer_orders_with_multiplicity'],[1,2,2,3,6,6])
+        self.assertEqual(d['field_signatures_from_real_cosets']['D'],[2,1])
+        self.assertEqual(d['field_signatures_from_real_cosets']['DJ'],[6,3])
+        self.assertTrue(d['forgetful_stabilizer_lifts_verified'])
+if __name__=='__main__':unittest.main()

@@ -1,0 +1,187 @@
+#!/usr/bin/env python3
+"""Stage the final371-entry V83 package from reviewed complete evidence.
+
+No kernel import, geometry, registration, cloud action or outcome acceptance.
+An exact input-file SHA is mandatory. Missing actual730 review is fatal.
+"""
+import argparse, ast, hashlib, json, os, re, stat
+from pathlib import Path
+
+DATA='certificates/reflected_packet_v83'
+FRONTEND='d391aedb0c2a845de2a6cb89590770114dad63802cd891aa869582f01d419ff6'
+RELOCATION='969f0ca3022f15fc351ce161e5930e87d8b92f89849e4d47596a020654d65bda'
+FRAGMENTS='3d6e19e2818a4ccd33c646c3d568504d2a67206167516a00bd09021231e57a8d'
+OLD_SELECTION='ff68b6c84d3cc5afb0960f7a08761ce0bea2e08b3698f74971732312aa12afd7'
+OLD_EXPECTED='ab441e42c3541a61667e84e4c3f0888124373ab527d265f9a80ce98149fc37c6'
+AUDITOR='b2db9e7784f0e2ed6fbdc164ba244db0c8dd7da358276b7bd83bcccb1f66e51c'
+FROZEN='6c12e07b0cce9b6fff4512c932f5b834acc9e32b071f4e54f3dd38ce27e5ffc5'
+POLICY='a4b524ea6492a2bd2e0725619f63caaae23d7550724363624287bef548c89374'
+FINAL_SELECTION='25a1ee38fe4a654480df5574e398037da2d7e906c2542bec1aad3edda1488111'
+CACHE_REVIEW='de2e4b221a867f08069444ba69148699663522844f948ba2337a4d806ad0f679'
+SERIALIZATION_REVIEW='43afff910266620acdb433d3f1f0662c814d7572bda4254aaab88bd1e63eb6bc'
+CACHE_SHA='3786473b04b0eea4d5b74f6489ca45d0c3f5530ef01db7a5de4aae8df8d3ec47'
+PARENT_REVIEW='a3b69bfc93c197ecd4fcc5db33eb456ba120f0af6871eca80a53445e850151dc'
+PARENT_SHA='a799be3165c4841e97a15d63b2bec9f552ca3783449457ce79ff4d071754bbee'
+EXECUTION_EVIDENCE=('configuration','parent_result','parent_completion','parent_launch','worker_limits','guard_handoff','runtime','execution_window_approval','retention_receipt','administrative_window','audit_input','stdout','stderr')
+HITS=('OM:pic0:00','OM:pic0:07','OM:pic0:15')
+TARGET='REFLECTED_AB_V1'
+POSITIVE_KEYS=tuple(sorted(t+'/'+l for t in('ORIGINAL_Q_V1',TARGET)for l in HITS))
+CANONICAL=('preparation.json','A-entries.json','C-entries.json','bottom-rows.json','candidates-nonzero.json','candidates-zero.json','classification.json','survivors.json')
+COUNTS=('a_count','c_count','bottom_rows','nonzero_candidates','zero_candidates','candidate_count','survivor_count','classification_digest','c_zero_audit')
+FIELDS=('kind','target_id','point_label','plan_sha256','target_geometry_sha256','canonical_artifact_sha256','counts')
+
+
+def need(v,msg):
+ if not v:raise ValueError(msg)
+def encoded(v):return (json.dumps(v,sort_keys=True,separators=(',',':'),allow_nan=False)+'\n').encode()
+def sha(p):return hashlib.sha256(Path(p).read_bytes()).hexdigest()
+def objsha(v):return hashlib.sha256(encoded(v)).hexdigest()
+def digest(v):return type(v)is str and re.fullmatch('[0-9a-f]{64}',v)is not None
+def safe(p):
+ p=Path(os.path.abspath(p));need(all(not x.is_symlink()for x in(p,*p.parents)),'Symlink path');return p
+def file(p):
+ p=safe(p);s=p.stat();need(stat.S_ISREG(s.st_mode)and s.st_nlink==1 and s.st_size<=32*1024**2,'Nonregular/aliased/large input');return p
+def read(p):return json.loads(file(p).read_text())
+def inventory(root):
+ root=safe(root);names={};inodes=set()
+ def error(e):raise e
+ for parent,dirs,files in os.walk(root,onerror=error,followlinks=False):
+  for n in dirs:need(safe(Path(parent)/n).is_dir(),'Non-directory')
+  for n in files:
+   p=file(Path(parent)/n);s=p.stat();need((s.st_dev,s.st_ino)not in inodes,'Duplicate inode');inodes.add((s.st_dev,s.st_ino));names[p.relative_to(root).as_posix()]=sha(p)
+ return names
+def literal(source,name):
+ rows=[n.value for n in ast.parse(source).body if isinstance(n,ast.Assign)and any(isinstance(t,ast.Name)and t.id==name for t in n.targets)]
+ need(len(rows)==1,'One literal '+name);return ast.literal_eval(rows[0])
+def write(root,name,content):
+ rel=Path(name);need(not rel.is_absolute()and '..'not in rel.parts,'Unsafe output name');p=safe(root/rel);p.parent.mkdir(parents=True,exist_ok=True);p.write_bytes(content);return sha(p)
+def count_record(counts):
+ need(type(counts)is dict and set(counts)==set(COUNTS),'Nine result fields')
+ need(all(type(counts[k])is int and counts[k]>=0 for k in COUNTS[:7])and digest(counts['classification_digest']),'Strict counts')
+ need(type(counts['c_zero_audit'])is list and len(counts['c_zero_audit'])==5 and all(type(v)is int and v>=0 for v in counts['c_zero_audit']),'Complete c0 audit')
+def plan_record(plan,target,label):
+ need(type(plan)is dict and set(plan)=={'schema_version','target_id','point_label','transport','entry_units'}and type(plan['schema_version'])is int and plan['schema_version']==2,'Plan schema2')
+ need(plan['target_id']==target and plan['point_label']==label,'Plan identity')
+ t=plan['transport'];u=plan['entry_units'];need(set(t)=={'inversion_first','unit_exponents'}and type(t['inversion_first'])is bool and set(u)=={'A','C','DEN','NUM'},'Plan route')
+ need(all(type(v)is list and len(v)==5 and all(type(x)is int and -2<=x<=2 for x in v)for v in[t['unit_exponents'],*u.values()]),'Plan exponent domain')
+def geometry(row,key):
+ t,l=key.split('/');need(row['target_id']==t and row['point_label']==l,'Outcome identity');count_record(row['counts'])
+ need(set(row['canonical_artifact_sha256'])==set(CANONICAL)and all(digest(x)for x in row['canonical_artifact_sha256'].values()),'Canonical eight')
+ need(digest(row['plan_sha256'])and digest(row['target_geometry_sha256']),'Plan/target hashes')
+def accept_terminal(t,review,audit_sha):
+ need(type(t.get('schema_version'))is int and t['schema_version']==1 and t['status']=='CONDITIONAL_COMPLETE_730_UNDER_REVIEWED_V86_DRIVER_GUARDS','Actual conditional730 required')
+ need(t['auditor_sha256']==AUDITOR and t['frozen_auditor_sha256']==FROZEN and t['final_selection_sha256']==FINAL_SELECTION and t['v86_halted_policy_review_sha256']==POLICY and t['structural_cache_review_sha256']==CACHE_REVIEW,'Exact reviewed audit sources/authority')
+ need(all(type(t[k])is int and t[k]==v for k,v in {'complete_backend_count':730,'original_completed_paths':557,'continuation_completed_paths':173}.items())and t['missing_backend_keys']==[],'Exact complete730')
+ need(t['conditional_historical_execution_assumption_required']is True and t['all_selected_coordinators_closed_normally']is False and t['theorem_promotion']is False,'Historical limitations preserved')
+ need(type(review.get('schema_version'))is int and review['schema_version']==1 and review['status']=='ACCEPTED_ACTUAL_CONDITIONAL730_OUTCOME_AND_RETENTION','Actual reviewed retained outcome')
+ expected={'audit_sha256':audit_sha,'auditor_sha256':AUDITOR,'final_selection_sha256':FINAL_SELECTION,'origin_index_sha256':t['origin_index_sha256'],'v86_halted_policy_review_sha256':POLICY,'frozen_auditor_sha256':FROZEN,'structural_cache_review_sha256':CACHE_REVIEW,'configuration_serialization_review_sha256':SERIALIZATION_REVIEW,'cache_sha256':CACHE_SHA,'audit_parent_source_review_sha256':PARENT_REVIEW,'audit_parent_sha256':PARENT_SHA}
+ need(review['binds']==expected and review['theorem_promotion']is False,'Review binds different actual outcome')
+ need(all(review.get(k)is True for k in('historical_immutability_assumption_accepted','normal_audit_execution_accepted','all730_selected_results_verified','all_completed_duplicates_compared','all_failed_histories_retained','archive_members_and_local_retention_verified','configuration_serialization_amendment_reviewed','structural_cache_amendment_reviewed','actual_parent_source_and_resources_verified','actual_guard_handoff_and_window_accepted')),'Complete hostile outcome/retention review')
+ for k in('retention_evidence_sha256','actual_execution_evidence_sha256'):need(type(review.get(k))is dict and review[k]and all(digest(h)for h in review[k].values()),'Actual execution/retention seals')
+ need(set(review['actual_execution_evidence_sha256'])==set(EXECUTION_EVIDENCE),'Exact13 actual execution roles')
+
+WITNESS_INPUT='42dfdce3ff4b202f0ec03b53b62f9a4f3bc10af7fc2767b5832ccba08aa8c6eb'
+WITNESS_REVIEW='2d512c0e16d1aebb10ec5fe543b4243aae8ee926d14800ef186345e3d71aea63'
+def reviewed_witness_envelope(raw,review,expected):
+ need(type(raw.get('schema_version'))is int and raw['schema_version']==1 and raw.get('status')=='EXACT_POSITIVE_WITNESSES_PREPARED_NOT_FULL_CONTROLS','Exact original prepared witness envelope')
+ need(set(raw)=={'schema_version','status','records'}and set(raw['records'])==set(POSITIVE_KEYS)==set(expected),'Six original witness records')
+ need(type(review.get('schema_version'))is int and review['schema_version']==1 and review['status']=='PASS_EXACT_POSITIVE_WITNESS_REVIEW'and review['source_relocation_sha256']==RELOCATION,'Actual exact witness review')
+ hashes={key:objsha(row)for key,row in raw['records'].items()}
+ need(review['record_sha256']==hashes,'All six exact reviewed witness hashes')
+ for key,row in raw['records'].items():
+  exp=expected[key];need(hashes[key]==exp['positive_witness_record_sha256'],'Expected witness record linkage')
+  need(row['target_id']==exp['target_id']and row['point_label']==exp['point_label']and row['plan_sha256']==exp['plan_sha256']and row['preparation_sha256']==exp['canonical_artifact_sha256']['preparation.json']and row['target_geometry_sha256']==exp['target_geometry_sha256'],'Exact witness target/plan/preparation')
+ adapted={**raw,'status':'REVIEWED_EXACT_POSITIVE_WITNESSES'}
+ need(encoded(adapted['records'])==encoded(raw['records']),'Witness records changed')
+ return adapted,{'schema_version':1,'scope':'REVIEWED_RECORD_ENVELOPE_ADAPTATION_NOT_NEW_MATHEMATICS','original_file_sha256':WITNESS_INPUT,'original_status':raw['status'],'record_review_sha256':WITNESS_REVIEW,'output_file_sha256':objsha(adapted),'output_status':adapted['status'],'record_sha256':hashes,'records_unchanged':True,'old_review_binds_new_whole_file':False}
+
+def positive_consumer_preflight(code,path,witnesses,expected,selection):
+ # Execute only the frozen frontend's stdlib metadata module and witness predicate.
+ # These signed sets exercise its consumer contract, not fresh candidate geometry.
+ namespace={'__name__':'positive_witness_contract_only','__file__':str(path)}
+ exec(compile(code,str(path),'exec'),namespace)
+ for key in POSITIVE_KEYS:
+  signed=namespace['ordered'](witnesses['records'][key]['signed_H_selected'],4)
+  checked=namespace['positive_witnesses'](key,expected[key],selection[key]['plan_sha256'],expected[key]['counts'],signed,signed)
+  need(checked['both_signed_witnesses_present']is True and checked['record_sha256']==expected[key]['positive_witness_record_sha256'],'Actual frozen positive consumer predicate')
+ return {'cases':list(POSITIVE_KEYS),'actual_frozen_metadata_predicate_passed':True,'synthetic_candidate_sets_equal_reviewed_signed_witnesses':True,'fresh_geometry_or_POINT_PASS_claimed':False}
+
+def stage(input_path,input_sha,output):
+ anchors={};inputs=[]
+ def pin(path,wanted):
+  p=file(path);need(digest(wanted)and sha(p)==wanted,'Changed input '+str(p));anchors[str(p)]=wanted;inputs.append(p);return p
+ def ref(v):
+  need(type(v)is dict and set(v)=={'path','sha256'}and type(v['path'])is str,'Actual pinned reference required');return pin(v['path'],v['sha256'])
+ own=pin(__file__,sha(__file__));ip=pin(input_path,input_sha);cfg=read(ip)
+ need(type(cfg.get('schema_version'))is int and cfg['schema_version']==1 and cfg['status']=='FINAL_V83_UNION_STAGING_INPUTS_NOT_LAUNCH','Staging input scope')
+ need(set(cfg)=={'schema_version','status','template','portable_root','fragments_root','terminal','terminal_outcome_review','reflected_plans','om13_selection','om13_expected'},'Exact staging fields')
+ template=ref(cfg['template']);need(sha(template)==FRONTEND,'Frozen template')
+ portable=safe(cfg['portable_root']);fragments=safe(cfg['fragments_root']);relocation=pin(portable/'source-relocation.json',RELOCATION);receipt=pin(fragments/'fragments.json',FRAGMENTS)
+ src=template.read_text();parsed=src.replace('@BACKEND@',repr('primary')).replace('@KERNEL@',repr('unused')).replace('@SOURCE_PINS@','{}');mathpins=literal(parsed,'MATH_PINS');executed=literal(parsed,'EXECUTED_CAMPAIGN_PINS')
+ need(len(mathpins)==16 and len(executed)==19 and read(relocation)['portable_sha256']==mathpins and read(relocation)['executed_campaign_source_sha256']==executed,'Exact16/19 relocation')
+ pinmap=inventory(portable);need(pinmap=={**mathpins,'source-relocation.json':RELOCATION},'Portable exact inventory')
+ for name,h in mathpins.items():pin(portable/name,h)
+ fr=read(receipt);need(inventory(fragments)=={**fr['files'],'fragments.json':FRAGMENTS},'Positive fragments inventory')
+ for name,h in fr['files'].items():pin(fragments/name,h)
+ ep=read(fragments/'expected-positive-fragment.json')['points'];sp=read(fragments/'selection-positive-fragment.json')['jobs']
+ need(sorted(ep)==list(POSITIVE_KEYS)==sorted(sp),'Exact six positives')
+ pin(fragments/'positive-witnesses.json',WITNESS_INPUT);pin(fragments/'positive-witness-review.json',WITNESS_REVIEW)
+ witnesses,envelope=reviewed_witness_envelope(read(fragments/'positive-witnesses.json'),read(fragments/'positive-witness-review.json'),ep)
+ tpath=ref(cfg['terminal']);rpath=ref(cfg['terminal_outcome_review']);t=read(tpath);review=read(rpath);accept_terminal(t,review,sha(tpath))
+ ambient=read(portable/'certificates/full_packet_v62/ambient_points.json');labels=sorted(x['point_label']for x in ambient);need(len(labels)==len(set(labels))==368 and set(HITS)<=set(labels),'C39 census')
+ negatives=sorted(set(labels)-set(HITS));need(len(negatives)==365 and set(t['points'])==set(negatives)==set(cfg['reflected_plans']),'Exact365 reflected domain')
+ oldsel=read(pin(ref(cfg['om13_selection']),OLD_SELECTION));oldexp=read(pin(ref(cfg['om13_expected']),OLD_EXPECTED))
+ expected={};selection={};plan_bytes={}
+ for key in POSITIVE_KEYS:
+  row=ep[key];geometry(row,key);need(row['kind']=='KNOWN_POSITIVE_CONTROL'and row['counts']['survivor_count']>=2,'Known positive retained')
+  job=sp[key];need(job['kind']=='KNOWN_POSITIVE_CONTROL'and job['cpu_seconds']==1800 and job['plan_sha256']==row['plan_sha256'],'Positive exact frozen job')
+  rel=job['plan_path'];need(rel.startswith(DATA+'/plans/'),'Positive plan namespace');pp=fragments/rel.removeprefix(DATA+'/');need(sha(pp)==row['plan_sha256'],'Positive plan seal');plan_record(read(pp),row['target_id'],row['point_label'])
+  expected[key]=row;selection[key]=job;plan_bytes[rel]=pp.read_bytes()
+ for label in negatives:
+  key=TARGET+'/'+label;row=t['points'][label];geometry(row,key);need(row['outcome']=='PAIRED_EMPTY_DISCOVERY'and row['counts']['survivor_count']==0,'Nonempty/partial reflected result cannot seed exclusion')
+  pair=row['accepted_backends'];need(type(pair)is list and len(pair)==2 and {x['backend']for x in pair}=={'primary','sturm'},'Two separate complete backends')
+  for v in pair:
+   need(v['point_label']==label and all(v[k]==row[k]for k in('counts','canonical_artifact_sha256','plan_sha256','preparation_sha256','target_geometry_sha256'))and digest(v['result_sha256']),'Paired backend fields')
+  need(row['preparation_sha256']==row['canonical_artifact_sha256']['preparation.json']and digest(row['row_evidence']['sha256']),'Prep/journal linkage')
+  pp=ref(cfg['reflected_plans'][label]);need(sha(pp)==row['plan_sha256'],'Selected frozen negative plan');plan_record(read(pp),TARGET,label)
+  name=DATA+'/plans/reflected_ab_v1/'+label.lower().replace(':','-')+'.json';need(name not in plan_bytes,'Plan name collision');plan_bytes[name]=pp.read_bytes()
+  selection[key]={'target_id':TARGET,'point_label':label,'kind':'NEGATIVE_REPLAY','plan_path':name,'plan_sha256':sha(pp),'cpu_seconds':7200}
+  expected[key]={'target_id':TARGET,'point_label':label,'kind':'NEGATIVE_REPLAY','plan_sha256':sha(pp),'target_geometry_sha256':row['target_geometry_sha256'],'canonical_artifact_sha256':row['canonical_artifact_sha256'],'counts':row['counts'],'evidence_sha256':{'conditional730_audit':sha(tpath),'actual_outcome_retention_review':sha(rpath),'normalized_rows':row['row_evidence']['sha256'],'primary_kernel_result':next(x['result_sha256']for x in pair if x['backend']=='primary'),'sturm_kernel_result':next(x['result_sha256']for x in pair if x['backend']=='sturm'),'historical_v86_policy':POLICY}}
+ need(len(selection)==len(expected)==371,'Final371 entries')
+ omkeys={TARGET+'/OM:pic0:'+format(x,'02d')for x in range(16)if x not in(0,7,15)}
+ need(set(oldsel['jobs'])==set(oldexp['points'])==omkeys,'Exact prior OM13')
+ for k in omkeys:
+  need(all(expected[k][f]==oldexp['points'][k][f]for f in FIELDS),'OM13 widened outcome changed')
+  need(all(selection[k][f]==oldsel['jobs'][k][f]for f in('kind','target_id','point_label','plan_sha256','cpu_seconds')),'OM13 widened job changed')
+ out=safe(output);need(not out.exists(),'Fresh output only')
+ for p in[portable,fragments,*inputs]:need(not out.is_relative_to(p)and not p.is_relative_to(out),'Output overlaps immutable input')
+ # Derive every intended output digest from sealed source bytes/rendered data,
+ # never from bytes discovered in the destination after copying.
+ payload={name:(portable/name).read_bytes()for name in mathpins}
+ payload[DATA+'/source-relocation.json']=relocation.read_bytes();payload.update(plan_bytes)
+ payload[DATA+'/positive-witnesses.json']=encoded(witnesses)
+ payload[DATA+'/positive-witness-review.json']=(fragments/'positive-witness-review.json').read_bytes()
+ payload[DATA+'/selection.json']=encoded({'schema_version':1,'scope':'PORTABLE_FULL_TARGET_REPLAY_SELECTION_NO_PROMOTION','jobs':selection})
+ payload[DATA+'/expected.json']=encoded({'schema_version':1,'scope':'REVIEWED_COMPLETE_TARGET_OUTCOMES','points':expected})
+ pins={name:hashlib.sha256(data).hexdigest()for name,data in payload.items()}
+ need(all(pins[k]==h for k,h in mathpins.items())and pins[DATA+'/source-relocation.json']==RELOCATION,'Source-derived math/relocation map')
+ need(all(pins[v['plan_path']]==v['plan_sha256']for v in selection.values()),'Source-derived exact plan map')
+ out.mkdir(parents=True)
+ for name,data in sorted(payload.items()):write(out,name,data)
+ need(inventory(out)==pins,'Copied package differs from precomputed source-derived map')
+ generated={};rendered={}
+ for backend,name,kernel in[('primary','certificates/reflected_primary_v83.py','certificates/reflected_primary_kernel_v83.py'),('sturm','independent/reflected_sturm_v83.py','independent/reflected_sturm_kernel_v83.py')]:
+  code=src.replace('@BACKEND@',repr(backend)).replace('@KERNEL@',repr(kernel)).replace('@SOURCE_PINS@',repr(dict(sorted(pins.items()))));ast.parse(code);generated[name]=hashlib.sha256(code.encode()).hexdigest();rendered[name]=code;write(out,name,code.encode())
+ consumer={}
+ for name in generated:
+  need(sha(file(out/name))==generated[name],'Frontend must match precomputed bytes before metadata execution')
+  consumer[name]=positive_consumer_preflight(rendered[name],out/name,witnesses,expected,selection)
+ for path,h in anchors.items():need(sha(file(path))==h,'Input changed during staging')
+ need(inventory(portable)==pinmap and inventory(fragments)=={**fr['files'],'fragments.json':FRAGMENTS},'Input inventory changed')
+ files=inventory(out);need(files=={**pins,**generated},'Generated bytes/inventory changed')
+ manifest={'schema_version':1,'status':'FINAL371_V83_UNION_PACKAGE_STAGED_PENDING_STRICT12_AND_ADOPTION','entry_count':371,'full_command_count':742,'positive_commands':12,'reflected_nonhit_commands':730,'source_relocation_sha256':RELOCATION,'template_sha256':FRONTEND,'merger_sha256':sha(own),'staging_input_sha256':input_sha,'terminal_audit_sha256':sha(tpath),'terminal_outcome_review_sha256':sha(rpath),'positive_fragments_sha256':FRAGMENTS,'positive_witness_envelope_adaptation':envelope,'positive_consumer_metadata_preflight':consumer,'files_sha256':files,'source_pins':pins,'om13_outcomes_preserved':True,'conditional_historical_execution_assumption_required':True,'theorem_promotion':False,'cloud_launch_authorized':False,'strict12_completed':False}
+ write(out,'package.json',encoded(manifest));return manifest
+
+def main():
+ p=argparse.ArgumentParser();p.add_argument('--input',type=Path,required=True);p.add_argument('--input-sha256',required=True);p.add_argument('--output',type=Path,required=True);a=p.parse_args();v=stage(a.input,a.input_sha256,a.output);print(json.dumps({'status':v['status'],'package_sha256':sha(a.output/'package.json'),'theorem_promotion':False},sort_keys=True))
+if __name__=='__main__':main()

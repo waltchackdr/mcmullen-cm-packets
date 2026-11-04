@@ -1,0 +1,25 @@
+"""Count/cocycle regression; real effectivity and obstruction are human proof."""
+import json
+from pathlib import Path
+import subprocess
+import sys
+import tempfile
+import unittest
+ROOT=Path(__file__).resolve().parents[1]
+class RealDescent(unittest.TestCase):
+    def test_independent_cosets_fibers_and_cocycle(self):
+        source=ROOT/'experiments/all_underlying_galois_v165/referee_real_descent01.py'
+        with tempfile.TemporaryDirectory() as folder:
+            target=Path(folder)/source.name
+            target.write_bytes(source.read_bytes())
+            result=subprocess.run([sys.executable,str(target)],check=True,capture_output=True,text=True,timeout=20)
+        d=json.loads(result.stdout)
+        self.assertEqual(d['status'],'PASS')
+        self.assertEqual(d['principal_fixed'],28)
+        self.assertEqual(d['minimum_fixed_including_A'],29)
+        self.assertEqual(d['underlying_real_model_classes_including_A'],15)
+        self.assertEqual(d['pseudoreal_underlying_classes'],14)
+        self.assertEqual(d['principal_R_S'],[2,26])
+        self.assertEqual(d['root_cocycle_cases'],42)
+        self.assertEqual(d['incorrect_trivial_root_action_failures'],40)
+if __name__=='__main__':unittest.main()

@@ -1,0 +1,1037 @@
+% !TeX root = ../../arithmetic-and-computation.tex
+\section{Historical exclusion batches and their exact scope}
+The following records retain their original target populations and counts.
+Only the complete two-region theorem of Paper I supplies the full-curve
+conclusion for the whole packet. In every statement below that concludes
+curve exclusion, the packet execution premise of Paper I is inherited;
+no local summary removes that premise.
+
+\paragraph{Historical first-target computations and their present use.}
+The following subpacket tables retain the original-product $P_0$ counts,
+matrix lists and numerical mask digests. Their old checkpoint counts
+such as $107$, $105$ and $75$ describe that historical progression, not
+the current undecided population. The full-curve exclusion statements
+use Theorem~\externalref{packet}{thm:fullpacketgeometry} in addition to these computations.
+For the nonprincipal proper-$R_{83}$ module, the old and current
+arithmetic censuses each describe the entire same $32$-point population.
+The new reflected search excludes all of it. No permutation identifying
+an individual old numerical mask with a current mask is assumed or
+needed; no historical digest is relabelled as a reflected digest.
+
+\begin{proposition}[Two proper-order $d=7$ exclusions]\label{prop:d7mask14}
+In the canonical point manifest of Theorem~\ref{thm:d7ambient}, the
+two nontrivial-$R_{83}$ points represented by the free root pairs
+$\{14,62\}$ and $\{30,46\}$ do not lie on the normalized McMullen curve.
+In the historical v45 first-target bookkeeping, this pair reduced $107$ to $105$:
+$11$ maximal-multiplier and $94$ proper-order points.
+\end{proposition}
+\begin{proof}
+Take the index-$2$ action on the nontrivial conductor-$83$ ideal lattice used
+in Theorem~\ref{thm:d7ambient}, with determinant-sector mask $14$.  The
+absolute norm of its raw lower-left matrix entry is
+\[
+2097130411225081.
+\]
+Thus diagonal unit balancing alone preserves a prohibitively small product of
+the six coordinate heights.  The integral determinant-one
+inversion
+\[
+ S=\begin{pmatrix}0&-1\\1&0\end{pmatrix}
+\]
+replaces it by the negative upper-right entry, of absolute norm $83^2=6889$.
+Put $u=4-t^2$ and then apply
+$H=\operatorname{diag}(u^{-2},u^2)\in\mathrm{SL}_2(\OL)$.
+Both transformations have integral inverses and hence preserve the orbit
+membership question.  For the resulting point the exact squared-height norm
+is $1/28217344$.
+
+The compact polygon bounds used in
+Proposition~\ref{prop:residualexclusions} are rederived for this source point,
+using its exact $\operatorname{Re}w$, $\operatorname{Im}(w)^2$, and $|w|^2$.
+Outward rational bounds and the positive trace form give exactly $23923$
+possible $a$-entries, $6605$ possible $c$-entries, and $2093$ coupled bottom
+rows $(c,d)$.  For $c\ne0$, the determinant equation forces
+$b=(ad-1)/c$; exact divisibility and numerator bounds leave $9036$ matrices.
+The separate $c=0$ branch is empty.  Exact cross-multiplied circle signs reject
+every matrix from at least one coordinate quadrilateral, while retaining
+boundary equality.  Thus there is no polygon survivor.
+
+For the second point, bit $16$ changes the orientation unit by $-1$.  If
+$J=\operatorname{diag}(1,-1)$, exact matrix arithmetic gives
+$M_{30}=JM_{14}J^{-1}$ for the reduced matrices, hence their fixed points have
+centers $x$ and $-x$ and common squared height and modulus.  Here
+$\det J=-1$ is totally negative, so $J$ lies in neither
+$\GL_2^+(\OL)$ nor $\SL_2(\OL)$ and does not identify the quotient points.
+Nevertheless
+\[
+ \iota\begin{pmatrix}a&b\\c&d\end{pmatrix}
+ =\begin{pmatrix}a&-b\\-c&d\end{pmatrix}
+\]
+is an involution of $\SL_2(\OL)$ that bijects their complete bounded matrix
+sets, including the $c=0$ sector: for $j(z)=-\overline z$ one has
+$\iota(\gamma)j(z)=j(\gamma z)$.  We do not assume that the quadrilateral is
+reflection-invariant: every reflected matrix is tested separately at the
+mask-$30$ point.
+
+The primary rational/SymPy and separate standard-library/Sturm implementations
+reproduce both empty survivor sets and the respective canonical exclusion
+digests
+\[
+\begin{gathered}
+\digest{19f1bba6f56200bac45a52810a56669c}{51824f22a9b3fd410db6a1fc2d69a5a1},\\
+\digest{2334a40fed0d008d44c2e892871bec20}{fc04b226a99df899a8927df81595faf6}.
+\end{gathered}
+\]
+The root involution is xor $48$, so $\{14,62\}$ and $\{30,46\}$ are disjoint
+points.  Removing them from the $107$ points left by
+Theorem~\ref{thm:d7ambient} gives $11+94=105$.
+\end{proof}
+
+
+\begin{proposition}[Two further proper-order $d=7$ exclusions]\label{prop:d7mask15_31}
+In the canonical point manifest of Theorem~\ref{thm:d7ambient}, the
+two nontrivial-$R_{83}$ points represented by the free root pairs
+$\{15,63\}$ and $\{31,47\}$ do not lie on the normalized McMullen curve.
+In the historical v47 first-target bookkeeping, this pair reduced $105$ to $103$:
+$11$ maximal-multiplier and $92$ proper-order points.
+\end{proposition}
+\begin{proof}
+Use the index-$2$ action on the nontrivial conductor-$83$ ideal lattice.  For
+each of masks $15$ and $31$, first apply the integral determinant-one inversion
+from Proposition~\ref{prop:d7mask14}, then conjugate by
+$\operatorname{diag}(q,q^{-1})$, where $q$ has saturated-unit exponent vector
+$(1,1,1,0,0)$ in $(\xi_5,\xi_{11},\xi_{13},\xi_{17},4-t^2)$.  Both maps have
+integral inverses.  The resulting lower-left entry has absolute norm $83^2$,
+and the exact squared-height norm is $1/28217344$.
+
+The point-specific compactness bounds are rederived with rational Sturm
+intervals and rounded outward.  Complete positive-trace-form enumeration gives
+$24103$ possible $a$-entries, $6611$ possible $c$-entries, and $2045$ coupled
+bottom rows.  Exact determinant solving and coefficient divisibility leave
+$8278$ matrices with $c\ne0$; the separately enumerated $c=0$ branch is empty.
+
+For $J=\operatorname{diag}(1,-1)$, the two reduced action matrices satisfy
+$M_{31}=JM_{15}J^{-1}$.  The determinant of $J$ is totally negative, so
+$J\in\GL_2(\OL)\setminus\GL_2^+(\OL)$ and $J\notin\SL_2(\OL)$: this does not
+identify the two quotient points.  As in Proposition~\ref{prop:d7mask14}, the
+involution
+\[
+ \begin{pmatrix}a&b\\c&d\end{pmatrix}
+ \longmapsto
+ \begin{pmatrix}a&-b\\-c&d\end{pmatrix}
+\]
+bijects their complete bounded determinant-one sets, in both directions and
+including the $c=0$ sector.  No quadrilateral-reflection symmetry is assumed;
+all four exact side predicates at all six real embeddings are evaluated
+separately for both centers.  Neither point has a survivor.
+
+The primary rational/SymPy and separate standard-library/Sturm implementations
+reproduce the two canonical exclusion digests
+\[
+\begin{gathered}
+\digest{66684a7a1aa493a7e37b6b4fc6e97b36}{63c70e79700724eaca94e170a4d946b4},\\
+\digest{2fa340baeab5f877f4ea61d9c2e9cc85}{0ee54221d257396b1320dc2c048ef023}.
+\end{gathered}
+\]
+The v45 root involution is xor $48$, so $\{15,63\}$ and $\{31,47\}$ are
+disjoint and are also disjoint from the two fibers in
+Proposition~\ref{prop:d7mask14}.  Removing these two further points from the
+$105$ left there gives $11+92=103$.
+\end{proof}
+
+
+\begin{proposition}[A third pair of proper-order $d=7$ exclusions]\label{prop:d7mask6_22}
+In the canonical point manifest of Theorem~\ref{thm:d7ambient}, the
+two nontrivial-$R_{83}$ points represented by the free root pairs
+$\{6,54\}$ and $\{22,38\}$ do not lie on the normalized McMullen curve.
+At the historical v49 checkpoint, exactly $101$ ambient $d=7$ points
+remained unclassified for curve membership: $11$ maximal-multiplier and $90$ proper-order points.
+\end{proposition}
+\begin{proof}
+Apply the integral determinant-one inversion of
+Proposition~\ref{prop:d7mask14} to the index-$2$ nontrivial conductor-$83$
+ideal action, then conjugate by $\operatorname{diag}(q,q^{-1})$ with
+$q=\xi_{11}\xi_{13}$.  This is the saturated-unit exponent vector
+$(0,1,1,0,0)$. Both maps and their inverses are integral. The reduced
+lower-left entry has absolute norm $83^2$, and the exact squared-height norm is
+$1/28217344$.
+
+Point-specific outward rational bounds, certified from Sturm intervals, give
+$23937$ possible $a$-entries, $6605$ possible $c$-entries, and $2019$ coupled
+bottom rows. Exact determinant solving and coefficient divisibility leave
+$8514$ matrices with $c\ne0$; exhaustive enumeration of the separate $c=0$
+branch gives none.
+
+The reduced action matrices satisfy $M_{22}=JM_6J^{-1}$ for
+$J=\operatorname{diag}(1,-1)$. Since $\det J=-1$ is totally negative,
+$J\in\GL_2(\OL)\setminus\GL_2^+(\OL)$ and $J\notin\SL_2(\OL)$; it does not
+identify the quotient points. The involution
+\[
+ \begin{pmatrix}a&b\\c&d\end{pmatrix}
+ \longmapsto
+ \begin{pmatrix}a&-b\\-c&d\end{pmatrix}
+\]
+bijects their complete bounded determinant-one sets in both directions,
+including $c=0$, because the exact numerator and denominator norms agree at
+the reflected centers. No quadrilateral-reflection symmetry is assumed: all
+four exact side predicates at all six real embeddings are evaluated separately
+at both points. Neither test has a survivor.
+
+The primary rational/SymPy and separate standard-library/Sturm implementations
+reproduce the canonical exclusion digests
+\[
+\begin{gathered}
+\digest{756c33defcade60c47adab07c30af7b5}{beb7b110e2051e8dfe025055690cb523},\\
+\digest{5f5c2adaa1366bceab1d2b43a49fffc4}{8c8377320e9d4d522853e1586950e04a}.
+\end{gathered}
+\]
+The xor-$48$ fibers $\{6,54\}$ and $\{22,38\}$ are disjoint from one another
+and from the four earlier excluded proper-order fibers. Removing these two
+further points from the $103$ left by Proposition~\ref{prop:d7mask15_31}
+gives $11+90=101$.
+\end{proof}
+
+
+\begin{proposition}[A fourth pair of proper-order $d=7$ exclusions]\label{prop:d7mask1_17}
+In the canonical point manifest of Theorem~\ref{thm:d7ambient}, the
+two nontrivial-$R_{83}$ points represented by the free root pairs
+$\{1,49\}$ and $\{17,33\}$ do not lie on the normalized McMullen curve.
+At the historical v50 checkpoint, exactly $99$ ambient $d=7$ points
+remained unclassified for curve membership: $11$ maximal-multiplier and $88$ proper-order points.
+\end{proposition}
+\begin{proof}
+Apply the integral determinant-one inversion of
+Proposition~\ref{prop:d7mask14} to the index-$2$ nontrivial conductor-$83$
+ideal action, then conjugate by $\operatorname{diag}(q,q^{-1})$ with
+$q=\xi_5\xi_{17}^{-1}(4-t^2)^{-1}$. This is the saturated-unit exponent
+vector $(1,0,0,-1,-1)$. Both maps and their inverses are integral. The reduced
+lower-left entry has absolute norm $83^2$, and the exact squared-height norm is
+$1/28217344$.
+
+Point-specific outward rational bounds, certified from Sturm intervals, give
+$23959$ possible $a$-entries, $6601$ possible $c$-entries, and $2017$ coupled
+bottom rows. Exact determinant solving and coefficient divisibility leave
+$8748$ matrices with $c\ne0$; exhaustive enumeration of the separate $c=0$
+branch gives none.
+
+The reduced action matrices satisfy $M_{17}=JM_1J^{-1}$ for
+$J=\operatorname{diag}(1,-1)$. Since $\det J=-1$ is totally negative,
+$J\in\GL_2(\OL)\setminus\GL_2^+(\OL)$ and $J\notin\SL_2(\OL)$; it does not
+identify the quotient points. The involution
+\[
+ \begin{pmatrix}a&b\\c&d\end{pmatrix}
+ \longmapsto
+ \begin{pmatrix}a&-b\\-c&d\end{pmatrix}
+\]
+bijects their complete bounded determinant-one sets in both directions,
+including $c=0$, because the exact numerator and denominator norms agree at
+the reflected centers. No quadrilateral-reflection symmetry is assumed: all
+four exact side predicates at all six real embeddings are evaluated separately
+at both points. Neither test has a survivor.
+
+The primary rational/SymPy and separate standard-library/Sturm implementations
+reproduce the canonical exclusion digests
+\[
+\begin{gathered}
+\digest{3d6a732cc36a03fe90933cdfcffd1b9d}{977e7ce22cb1d7ae1f3926e6dff2e1a8},\\
+\digest{82b2d957ba62af939e5bb39b0f6bbec0}{6b230094aeee60faa3ae54caf3e2e17b}.
+\end{gathered}
+\]
+The xor-$48$ fibers $\{1,49\}$ and $\{17,33\}$ are disjoint from one another
+and from the six earlier excluded proper-order fibers. Removing these two
+further points from the $101$ left by Proposition~\ref{prop:d7mask6_22}
+gives $11+88=99$.
+\end{proof}
+
+
+\begin{proposition}[A twenty-point proper-order $d=7$ exclusion batch]\label{prop:d7batch10}
+In the canonical point manifest of Theorem~\ref{thm:d7ambient}, the twenty
+nontrivial-$R_{83}$ points with canonical masks
+\[
+ \{0,16,2,18,3,19,4,20,5,21,8,24,9,25,10,26,11,27,12,28\}
+\]
+do not lie on the normalized McMullen curve.  Here the point with mask $m$
+is represented by the free root fiber $\{m,m\mathbin{\mathrm{xor}}48\}$.
+At the historical v51 checkpoint, exactly $79$ ambient $d=7$ points
+remained unclassified for curve membership: $11$ maximal-multiplier and $68$ proper-order points.
+\end{proposition}
+\begin{proof}
+For each base mask
+\[
+ m\in\{0,2,3,4,5,8,9,10,11,12\},
+\]
+reconstruct the index-$2$ action on the nontrivial conductor-$83$ ideal
+lattice. Apply the integral determinant-one inversion of
+Proposition~\ref{prop:d7mask14}, followed by the point-specific saturated-unit
+conjugation $\operatorname{diag}(q_m,q_m^{-1})$. Exact inversion in
+$\OL$ verifies that $q_m$ and $q_m^{-1}$ are integral, so these reductions and
+their inverses lie in $\SL_2(\OL)$. The reduced lower-left entries have
+absolute norm $83^2$, while the exact squared-height and squared-modulus norms
+are respectively
+\[
+ \frac1{28217344},\qquad
+ \frac{2097130411225081}{6889}.
+\]
+
+For each base point, rational Sturm intervals derive point-specific outward
+compact bounds. The exact positive trace form and its rational
+$LDL^{\mathsf T}$ decomposition enumerate every algebraic integer in the
+resulting six-place boxes. The complete counts are
+\[
+\begin{array}{c|rrrrr}
+m&\#a&\#c&\#(c,d)&c\ne0&c=0\\ \hline
+0 &24035&6633&2023&8136&0\\
+2 &24137&6607&1967&8334&0\\
+3 &23993&6597&1937&7794&0\\
+4 &24059&6599&2015&8702&10\\
+5 &23959&6619&2083&8878&0\\
+8 &23967&6613&2021&8750&6\\
+9 &24001&6607&2085&9146&0\\
+10&24039&6611&2017&9436&6\\
+11&23973&6617&2013&8360&0\\
+12&24013&6635&2015&8508&4
+\end{array}
+\]
+For $c\ne0$, the determinant equation forces $b=(ad-1)/c$, whose
+integrality and numerator bound are decided exactly. For $c=0$, it forces
+$a=d^{-1}$, after which a second exact trace-form enumeration exhausts every
+bounded $b$. Thus the last two columns include the entire determinant-one
+search. At mask $3$, the vector $(-7,0,0,0,0,0)$ meets the embedding-$1$
+$c$-entry bound exactly; the closed-box comparison accepts that local
+equality, while another embedding rejects the vector from the full six-place
+box.
+
+The bit-$16$ partner of each base point has center $-x_m$ and the same squared
+height and modulus. Conjugation by $J=\operatorname{diag}(1,-1)$ induces
+\[
+ \begin{pmatrix}a&b\\c&d\end{pmatrix}
+ \longmapsto
+ \begin{pmatrix}a&-b\\-c&d\end{pmatrix}.
+\]
+Exact numerator and denominator norm identities prove that this is an
+involutive bijection of the two complete bounded candidate sets, including
+the nonempty $c=0$ sectors. But $\det J=-1$ is totally negative, so
+$J\in\GL_2(\OL)\setminus\GL_2^+(\OL)$ and $J\notin\SL_2(\OL)$; it does not
+identify the quotient points. No reflection symmetry of the normalized
+quadrilateral is used. All four exact side predicates at all six embeddings
+are evaluated separately at each of the twenty centers, and every survivor
+set is empty.
+
+The primary rational/SymPy and separate standard-library/Sturm paths agree on
+all twenty first-failure histograms and point digests and on all ten labelled
+pair aggregates. The primary path additionally freezes the labelled
+twenty-mask and ten-pair batch digests
+\[
+\begin{gathered}
+\digest{be161e65208adb27deadd69d0d63cbe5}{a41d500ebd331c02ee7bf22157a47278},\\
+\digest{17fcca5c094efb163b7eb39636429b5b}{1b75a56ca6cc4930816742c59607c046}.
+\end{gathered}
+\]
+The primary path replays the already certified v45 root-pair records; the
+independent path also reconstructs determinant-one anti-intertwiner bridges
+for all twenty labels. Hence the twenty xor-$48$ fibers are pairwise disjoint
+and disjoint from the eight proper-order fibers excluded earlier. Removing
+these twenty points from the $99$ left by
+Proposition~\ref{prop:d7mask1_17} gives $11+68=79$.
+\end{proof}
+
+
+\begin{proposition}[The final two proper-order $d=7$ exclusion pairs]\label{prop:d7finalpairs}
+In the canonical point manifest of Theorem~\ref{thm:d7ambient}, none of the
+four nontrivial-$R_{83}$ points represented by the free root fibers
+\[
+ \{13,61\},\quad \{29,45\},\quad \{7,55\},\quad \{23,39\}
+\]
+lies on the normalized McMullen curve.  The first pair reduces the remainder
+of Proposition~\ref{prop:d7batch10} to $77=11+66$; the second reduces it to
+\[
+ 75=11\text{ maximal-multiplier}+64\text{ proper-order}.
+\]
+\end{proposition}
+\begin{proof}
+For masks $13$ and $7$, reconstruct the index-$2$ action on the nontrivial
+conductor-$83$ ideal lattice, apply the integral determinant-one inversion of
+Proposition~\ref{prop:d7mask14}, and then conjugate by
+$\operatorname{diag}(q,q^{-1})$.  In the saturated-unit basis
+$(\xi_5,\xi_{11},\xi_{13},\xi_{17},4-t^2)$ the exponent vectors are
+respectively
+\[
+ (1,0,1,0,0),\qquad (0,0,0,-1,-2).
+\]
+Exact multiplication in $\OL$ verifies both units and their integral inverses,
+so every reduction and its inverse belongs to $\SL_2(\OL)$.  The reduced
+lower-left entries have absolute norm $83^2$.
+
+At each real embedding, rational Sturm isolation supplies intervals
+$h_i^-\leq h_i\leq h_i^+$ and $r_i\leq r_i^+$ for the height and modulus.
+Before outward decimal rounding, the certificates form the rational upper
+endpoints
+\[
+\begin{aligned}
+ \widehat d_i&=\operatorname{upper\_sqrt}(h_i^+/M_i),&
+ \widehat c_i&=\operatorname{upper\_sqrt}(1/(M_i h_i^-)),\\
+ \widehat n_i&=U_i\widehat d_i,&
+ \widehat a_i&=\widehat n_i/h_i^-,\\
+ \widehat D_i&=\widehat d_i+\widehat c_i r_i^+,&
+ \widehat B_i&=\widehat n_i+\widehat a_i r_i^+.
+\end{aligned}
+\]
+Each stored bound is rounded outward separately from its own hatted endpoint;
+no formula substitutes already rounded entries into the last two expressions.
+The positive trace form and its exact rational $LDL^{\mathsf T}$ decomposition
+therefore enumerate every algebraic integer in each six-place box.  The exact
+counts are
+\[
+\begin{array}{c|rrrrr}
+\text{masks}&\#a&\#c&\#(c,d)&c\ne0&c=0\\ \hline
+13,29&23917&6625&2043&8768&0\\
+7,23 &23889&6609&1955&8514&0
+\end{array}
+\]
+where the last two columns count bounded determinant-one candidates.  For the
+second row, the $1955$ bottom rows split into $1954$ rows with $c\ne0$ and the
+single row $(c,d)=(0,0)$.  The latter satisfies $ad-bc=0$ for every top row and
+therefore contributes no candidate.  This singular sector is part of the
+complete enumeration, not discarded by division by $c$.
+
+For each row of the table, bit $16$ changes the center $x$ to $-x$ and leaves
+the squared height and modulus fixed.  Conjugation by
+$J=\operatorname{diag}(-1,1)$ induces the involution
+\[
+ \begin{pmatrix}a&b\\c&d\end{pmatrix}
+ \longmapsto
+ \begin{pmatrix}a&-b\\-c&d\end{pmatrix}
+\]
+on the complete bounded candidate sets.  Since $\det J=-1$ is totally
+negative,
+\[
+ J\in\GL_2(\OL)\setminus\GL_2^+(\OL),\qquad J\notin\SL_2(\OL).
+\]
+Thus this involution is only a search bijection and does not identify the
+quotient points.  No reflection symmetry of the quadrilateral is assumed:
+all four exact circle-side predicates at all six embeddings are evaluated
+separately at all four centers.  Every survivor set is empty.
+
+The primary rational/SymPy and separate standard-library/Sturm paths agree on
+all counts, failure histograms, and empty survivor sets.  Their point digests
+are
+\[
+\begin{array}{c|l}
+13&\digest{d66a04fa445505dd16cf2dad98ee6c9c}{57fe16d90aa4bbeb0b1bf2a1c2cc1a15}\\
+29&\digest{b3ce2ca80967f6acf28bf10d6bb1707f}{330c768313680c369dd9d6d2cb3349de}\\
+7 &\digest{b653b69bf5888c06df2ee9a20e5f6fd8}{d1d06277de0b862933ba5a4bf8811ae5}\\
+23&\digest{392b61bb9ec4dcfd6720de02184032cf}{e211f9094b3e5ed1dac5224be84f8d52}
+\end{array}
+\]
+with pair aggregates
+\[
+\begin{gathered}
+\digest{20ca8ce844583d40514ca6f65db26a30}{2957b057fb0fd23c057cb7e52dab2e68},\\
+\digest{aba4002201230fea6eb9e127aa6fa38a}{04e63194d3970adc32c95a1a87386dab}.
+\end{gathered}
+\]
+The xor-$48$ fibers displayed in the statement are mutually disjoint and are
+disjoint from all fibers excluded through Proposition~\ref{prop:d7batch10}.
+Removing the first two points from $79$ gives $77$, and removing the last two
+gives $75$.
+\end{proof}
+
+\begin{corollary}[Closure of the nontrivial-$R_{83}$ stratum]\label{cor:d7r83nontrivial}
+The exclusions in Propositions~\ref{prop:d7mask14}--\ref{prop:d7finalpairs}
+cover the old canonical masks $\{0,1,\ldots,31\}$ exactly once.
+Their original-product emptiness and the complete reflected-population
+exclusion in Theorem~\externalref{packet}{thm:fullpacketgeometry} exclude all $32$ points
+of this stratum. This uses equality of the full oriented populations,
+not a correspondence between individual numerical mask labels.
+At the historical v53 first-target checkpoint the remaining
+$75$ ambient $d=7$ candidates were exactly $11$ maximal-multiplier points,
+$32$ proper-$R_{41}$ points, and $32$ principal-Picard-class proper-$R_{83}$
+points.
+\end{corollary}
+
+\begin{theorem}[Closure of the principal-Picard proper-$R_{83}$ stratum]
+\label{thm:d7r83principal}
+None of the $32$ ambient quotient points whose multiplier module is in the
+principal Picard class of the proper order $R_{83}$ lies on the normalized
+McMullen quadrilateral in the trace-polarized
+$\mathrm{SL}_2(\OL)$ quotient.
+\end{theorem}
+\begin{proof}
+The v45 ambient classification represents the principal class by the regular
+lattice $R_{83}=\OL[\alpha_2]$ with basis $(1,\alpha_2)$. Its $64$
+determinant sectors are indexed by masks $0,\ldots,63$. The exact free-root
+involution is $m\mapsto m\mathbin{\mathtt{xor}}16$: an integral
+determinant-one bridge carries
+$\operatorname{Tr}(\alpha_2)I-T_m$ to
+$T_{m\mathbin{\mathtt{xor}}16}$. Hence the $32$
+disjoint root fibers are represented exactly once by
+\[
+ \mathcal M=\{0,\ldots,15,32,\ldots,47\}.
+\]
+The anti-intertwiner used to compare candidate sets has totally negative
+determinant. It lies in $\GL_2(\OL)$ but not in $\GL_2^+(\OL)$ or
+$\SL_2(\OL)$, so it is not used to identify quotient points. The identity
+$\alpha_{23}=-\alpha_2$ gives the same point set for the second conductor-$83$
+trace.
+
+For each $m\in\mathcal M$, the certificate constructs and exactly verifies a
+cyclotomic unit $q_m$ and applies
+$\operatorname{diag}(q_m,q_m^{-1})\in\mathrm{SL}_2(\OL)$.  The six exact fixed-point
+heights then give outward rational bounds.  Before rounding, these imply
+simultaneous bounds for $c,d$ from the lower-half contribution to the
+trace-$LDL^{\mathsf T}$ form and, after $c,d$ are fixed, for $a,b$ from the
+upper-half contribution.  Enumerating the resulting finite trace ellipsoids
+is therefore complete.
+
+The determinant equation $ad-bc=1$ is solved in both branches.  If $c\ne0$,
+the affine solution set is obtained from one exact solution by
+$(a,b)=(a_0+nc,b_0+nd)$, and the exact archimedean intervals give all integers
+$n$.  If $c=0$, the code separately imposes $ad=1$, integrality of $a=d^{-1}$,
+and the complete bounded list of $b$; this essential branch contributes
+$49{,}232$ candidates. An image in the original product $P_0$
+must satisfy every one of its four closed circle-side inequalities in
+all six embeddings, so a failed exact side sign excludes that candidate
+from $P_0$. The reflected-product calculation and
+Lemma~\externalref{packet}{lem:twochambers}, as assembled in
+Theorem~\externalref{packet}{thm:fullpacketgeometry}, supply the full-curve conclusion.
+
+The primary quotient-field/SymPy implementation and a separate
+standard-library/Sturm implementation independently reconstruct the order,
+root bridges, reductions, bounds, determinant branches, and polygon signs.
+For the $32$ centers they agree on $62{,}262$ bounded bottom rows,
+$219{,}840$ candidates with $c\ne0$, $49{,}232$ with $c=0$, and hence
+$269{,}072$ candidates in total. Every survivor set is empty; all per-center
+counts, first-failure histograms, and classification digests agree, with
+order-sensitive batch digest
+\[
+ \digest{7a2f2f6f71efb74627f4f891f108b25}{48a1a9b2a8584cea684eaa630c6d90d90}.
+\]
+The exact sources are listed in Section~\ref{app:computer}.
+\end{proof}
+
+\begin{corollary}[Closure of the proper-$R_{83}$ locus]
+\label{cor:d7r83all}
+Corollary~\ref{cor:d7r83nontrivial} and
+Theorem~\ref{thm:d7r83principal} exhaust and exclude all $64$ proper-$R_{83}$
+ambient points. These results and the five earlier maximal decisions
+settle $69$ of the $112$ ambient $d=7$ points. Theorem~\ref{thm:maximalallorientations}
+below adds the remaining eleven maximal exclusions;
+Theorem~\ref{thm:d7r41complete} then excludes all $32$ proper-$R_{41}$
+points, completing the $112$-point census.
+\end{corollary}
+
+Here ``principal Picard class'' means the identity proper-ideal class of
+$R_{83}$; it is unrelated to principal polarization. No new CM-type, Hodge,
+or polarization assertion is made in Theorem~\ref{thm:d7r83principal}.
+
+
+
+\begin{theorem}[All maximal-multiplier orientations]\label{thm:maximalallorientations}
+In the fixed marked extension $M/L$, the maximal-multiplier strata of all
+$42$ corrected norm-$\pi$ traces have exactly sixteen ambient quotient
+points. Exactly three lie on the normalized McMullen curve: $A,B,C$.
+The other thirteen are excluded. This statement concerns maximal
+multiplier order, including its occurrences under nonmaximal generated
+orders; it makes no proper-order curve-membership assertion.
+\end{theorem}
+\begin{proof}
+Proposition~\ref{prop:alltraceorders} identifies the same maximal-multiplier
+population across all $42$ traces; Theorem~\ref{thm:d7ambient} supplies its
+sixteen-point census. The exact vertex realizations identify masks
+$0,7,15$ with $C,A,B$, respectively. We exclude the thirteen other
+masks by checking both targets of Lemma~\externalref{packet}{lem:twochambers}.
+First consider the original product $P_0$. Its two historical companion
+calculations concern masks $2,13$; the label transfer is justified below.
+The eleven remaining original-product searches use masks
+\[
+ 1,3,4,5,6,8,9,10,11,12,14.
+\]
+Use the maximal action of $\alpha_2=a+bz$, where
+$a=-2-t+3t^2-t^4$ and $b=-1+4t+t^2-4t^3+t^5$.
+For the established sign representatives $\delta_m$ put
+\[
+ T_m=\begin{pmatrix}a&-\delta_m b\\ b/\delta_m&a+tb\end{pmatrix}.
+\]
+The free two-root fibers pair $m$ with $m\mathbin{\mathrm{xor}}16$.
+The integral determinant-one matrix
+$R_m=\left(\begin{smallmatrix}-1&-\delta_m t\\0&-1\end{smallmatrix}\right)$
+satisfies
+$R_m(\operatorname{tr}(T_m)I-T_m)=T_{m\mathbin{\mathrm{xor}}16}R_m$.
+Thus no negative-determinant reflection is used to identify quotient points.
+
+Balance by $\operatorname{diag}(q,q^{-1})$, with $q=1$ for masks
+$1,4,8,9,10$, $q=\xi_{11}^{-1}$ for $3,6$,
+$q=\xi_5^{-1}$ for $5,11$, $q=\xi_{17}^{-1}$ for $12$, and
+$q=\xi_{13}^{-1}$ for $14$. Here
+\[
+ \xi_5=t^4-3t^2+1,\quad \xi_{11}=t^3+t^2-2t-1,\quad
+ \xi_{13}=t^5-4t^3+3t+1,\quad \xi_{17}=t^3-2t.
+\]
+All these units and their inverses are integral. With $\eta=\delta_mq^2$,
+the balanced fixed tuple has exact invariants
+\[
+ x=-\eta t/2,\qquad h^2=\eta^2(4-t^2)/4,\qquad |w|^2=\eta^2.
+\]
+For each real embedding, use the same certified target-polygon bounds
+$\operatorname{Im}(\gamma w)\ge M>0$, $|\gamma w|\le U$ as in the
+preceding exclusions. For
+$\gamma=\left(\begin{smallmatrix}a'&b'\\c'&d'\end{smallmatrix}\right)$
+of determinant one,
+\[
+ |c'w+d'|^2\le h/M,\qquad |a'w+b'|\le U\sqrt{h/M}.
+\]
+Writing certified rational bounds $h^-\le h\le h^+$ and $|w|\le r^+$,
+these imply outward bounds
+\[
+ |c'|\le\sqrt{1/(Mh^-)},\quad
+ |a'|\le U\sqrt{h^+/M}/h^-,\quad
+ |d'|\le\sqrt{h^+/M}+|c'|r^+,\quad
+ |b'|\le U\sqrt{h^+/M}+|a'|r^+.
+\]
+Each bound is rounded outward from its own rational pre-rounding endpoint.
+The positive trace form gives finite complete containing ellipsoids for
+$a'$ and $c'$. For each $c'$, the denominator inequality gives a centered
+ellipsoid for $d'$. If $c'\ne0$, the only possible top-right entry is
+$b'=(a'd'-1)/c'$; integrality and all numerator bounds are tested exactly.
+If $c'=0$, impose $a'd'=1$ and enumerate every $b'$ in the centered
+numerator ellipsoid. Thus both determinant branches are exhaustive.
+
+Both implementations independently reconstruct these bounds and enumerate
+all candidates, retaining boundary equalities. The final predicates are
+necessary polygon-side inequalities in all six embeddings; rational
+intervals have exact algebraic sign fallback. Their full results agree:
+\begin{center}
+\begin{tabular}{rrrr}
+\toprule
+Mask & Bottom rows & $c'\ne0$ candidates & $c'=0$ candidates\\
+\midrule
+1 & 1975 & 5280 & 0\\
+3 & 1891 & 6996 & 144\\
+4 & 2089 & 7736 & 136\\
+5 & 1975 & 6748 & 140\\
+6 & 2433 & 8540 & 112\\
+8 & 1891 & 7392 & 156\\
+9 & 2177 & 10840 & 212\\
+10 & 2017 & 8956 & 168\\
+11 & 1933 & 8972 & 148\\
+12 & 2143 & 9796 & 32\\
+14 & 2017 & 7004 & 36\\
+\midrule
+Total & 22541 & 88260 & 1284\\
+\bottomrule
+\end{tabular}
+\end{center}
+All $89{,}544$ candidates fail a necessary polygon predicate. The two
+portable paths agree on every candidate digest and failure histogram,
+with ordered classification digest
+\[
+ \digest{beff7e2462c7f461f1990c6297381b4}{9c8de2895b59e2be3baa98f0b8d869e2c}.
+\]
+The full replay covers all eleven masks in both paths. The named exact
+certificates are listed in Section~\ref{app:computer}. At this stage
+the conclusion is avoidance of $P_0$ for these eleven masks.
+
+For masks $2$ and $13$, the historical companion calculations for
+$k=17,38$ and $k=1,22$, respectively, give $9812$ and $9072$
+candidates per companion, with none in $P_0$. To transfer these
+statements, write $\alpha_k=a_k+b_kz$ and use
+\[
+ J_k=\begin{pmatrix}1&a_k\\0&b_k\end{pmatrix}.
+\]
+It intertwines the companion action and multiplication on $(1,z)$.
+Here $\OL[\alpha_k]=\OM$, so $b_k$ is an integral unit.
+The exact orientation fingerprints select the stated masks and make
+$\det(D_{\delta_m}J_k)$ a totally positive unit, where
+$D_{\delta_m}=\operatorname{diag}(\delta_m,1)$.
+Theorem~\ref{thm:unitnorm} supplies a CM unit whose multiplication
+matrix in the companion centralizer has inverse determinant.
+Composing with it gives an integral determinant-one intertwiner.
+Changing the nonreal generator of this fixed embedded CM action
+preserves its unique upper fixed point at every real place.
+Thus these are the required labelled $P_0$ statements, without
+identifying $\GL_2(\OL)$ with $\SL_2(\OL)$.
+
+For the second target set $R=A_tB_t-B_tA_t$. The two exact target
+implementations verify that $\operatorname{tr}(R)=0$, that
+$R^2=-\det(R)I$, and that $\det(R)$ is negative at every real
+embedding, with absolute norm $21952$. The anti-Mobius action
+\[
+ r_i(w)=\frac{\sigma_i(R_{11})\overline w+\sigma_i(R_{12})}
+                  {\sigma_i(R_{21})\overline w+\sigma_i(R_{22})}
+\]
+fixes $A_i$ and $B_i$ and is the reflection in their geodesic.
+It transforms only the target. The certificates reconstruct the four
+reflected vertices and all closed side inequalities independently.
+Valid rational lower height and upper modulus bounds for $r_i(Q_i)$,
+in the fixed embedding order, are
+\[
+ 10^5(M_i)=(1368,23817,14522,22806,10088,5105),
+\]
+\[
+ 10^5(U_i)=(197767,354283,28993,254603,165248,191115).
+\]
+The exact vertex comparisons imply the bounds on the entire convex
+polygon: the horoball $\operatorname{Im}(w)\ge M_i$ and the
+geodesic half-plane $|w|\le U_i$ are hyperbolically convex.
+The preceding determinant-one bounds therefore give complete finite
+ellipsoids for this target too. Certified unit changes of enumeration
+coordinates are integral bijections, and every candidate is checked
+against the original bounds. Both determinant branches and all boundary
+equalities are retained.
+
+For each of the thirteen labels the source module, sign sector and
+determinant-one balancing are reconstructed from its frozen exact plan.
+The two implementations give the following complete reflected-target
+counts, with zero survivors in every row:
+\begin{center}
+\begin{tabular}{rrrr}
+\toprule
+Mask & Bottom rows & $c'\ne0$ candidates & $c'=0$ candidates\\
+\midrule
+1 & 3865 & 83400 & 1332\\
+2 & 4277 & 91720 & 1704\\
+3 & 3693 & 75752 & 1300\\
+4 & 3655 & 81272 & 776\\
+5 & 3945 & 81240 & 780\\
+6 & 3861 & 89948 & 772\\
+8 & 3853 & 88696 & 372\\
+9 & 3991 & 97736 & 1800\\
+10 & 3819 & 76348 & 280\\
+11 & 3945 & 82188 & 708\\
+12 & 4143 & 103792 & 1376\\
+13 & 4067 & 83148 & 548\\
+14 & 4021 & 66496 & 440\\
+\midrule
+Total & 51135 & 1101736 & 12188\\
+\bottomrule
+\end{tabular}
+\end{center}
+In particular all $1{,}113{,}924$ reflected candidates per path fail a
+necessary side condition. The canonical preparation, entry lists,
+bottom rows, both candidate branches and complete classifications agree
+between the separate implementations. The retained executions, their
+portable-source correspondence and the exact per-label comparison data
+are identified in Section~\ref{app:computer}. These data certify
+complete searches; comparison expectations do not define the search
+domain. We now have avoidance of both $P_0$ and $P_1$ for each of the
+thirteen labelled points. Lemma~\externalref{packet}{lem:twochambers} proves their
+full-curve exclusion. Together with the three distinct positive
+realizations and the arithmetic census, this proves the theorem.
+\end{proof}
+
+\begin{theorem}[Exclusion of the complete proper-$R_{41}$ stratum]
+\label{thm:d7r41complete}
+In the fixed marked extension $M/L$, none of the $32$ ambient points
+with proper multiplier order
+\[
+ R_{41}=\OL+(41,t-12)\OM
+\]
+lies on the normalized McMullen curve in the trace-polarized
+$\SL_2(\OL)$ quotient.  These are the complete proper-order points
+arising from traces $k=14,35$ in Theorem~\ref{thm:d7ambient}.
+The distinct embedded order of conductor $(41,t-22)$ is not included
+in this exclusion.
+\end{theorem}
+\begin{proof}
+Theorem~\ref{thm:d7nonmax} gives $\operatorname{Pic}(R_{41})=1$
+and $N_{M/L}(R_{41}^{\times})=E_L^2$.  Thus the regular module
+$R_{41}$ supplies exactly $64$ matrix classes up to $\SL_2(\OL)$ conjugacy,
+indexed by the full unit-square masks $0,\ldots,63$.
+Write
+\[
+ \tau=c_{14}=t^5-7t^3-t^2+11t+2,\qquad
+ T_m=\begin{pmatrix}0&-\delta_m\pi\\\delta_m^{-1}&\tau\end{pmatrix},
+\]
+where $\delta_m$ is the binary product in the ordered basis
+$(\xi_5,\xi_{11},\xi_{13},\xi_{17},-1,4-t^2)$.
+This is the regular basis $(1,\alpha_{14})$, followed by its
+orientation twist.  The integral determinant-one matrix
+\[
+ R_m=\begin{pmatrix}-1&-\delta_m\tau\\0&-1\end{pmatrix}
+\]
+satisfies
+\[
+ R_m(\tau I-T_m)=T_{m\mathbin{\mathrm{xor}}16}R_m.
+\]
+By Lemma~\externalref{packet}{lem:packetpointfibers}, the two root classes are
+precisely the fiber over a quotient point.  Hence the canonical masks
+\[
+ \mathcal M_{41}=\{0,\ldots,15,32,\ldots,47\}
+\]
+represent all $32$ disjoint pairs $\{m,m\mathbin{\mathrm{xor}}16\}$
+exactly once.  The bridge compares the conjugate root action with the
+opposite mask; it does not identify actions by a negative-determinant
+reflection.  The identity $\alpha_{35}=-\alpha_{14}$ gives the same
+point population for the second trace.
+
+For each canonical mask, use the explicit real unit $q_m$ in the
+frozen witness table and conjugate by
+$\operatorname{diag}(q_m,q_m^{-1})\in\SL_2(\OL)$.
+Both exact paths check integrality of the unit and its inverse and
+the determinant-one transformation.  With $\eta=\delta_mq_m^2$,
+the balanced upper tuple $w=x+ih$, $h>0$, has exact invariants
+\[
+ x=-\eta\tau/2,\qquad
+ h^2=\eta^2(4\pi-\tau^2)/4,\qquad |w|^2=\eta^2\pi.
+\]
+These identities, total positivity of the squared heights, and the
+fixed ordering of the six real embeddings are checked separately
+in both implementations.
+
+Here is the finite-domain argument, with the same certified target
+bounds as in Theorem~\ref{thm:maximalallorientations}.
+At each embedding, a possible image in the normalized quadrilateral
+has height at least $M>0$ and modulus at most $U$.
+For $\gamma=\left(\begin{smallmatrix}a&b\\c&d\end{smallmatrix}\right)$
+of determinant one,
+\[
+ |cw+d|^2\le h/M,\qquad |aw+b|\le U\sqrt{h/M}.
+\]
+Certified rational intervals $h^-\le h\le h^+$ and $|w|\le r^+$
+therefore give upper bounds
+\[
+ \widehat D_0\ge\sqrt{h^+/M},\quad
+ \widehat C\ge\sqrt{1/(Mh^-)},\quad
+ \widehat N_0=U\widehat D_0,\quad
+ \widehat A=\widehat N_0/h^-.
+\]
+The remaining endpoints are
+$\widehat D=\widehat D_0+\widehat C r^+$ and
+$\widehat B=\widehat N_0+\widehat A r^+$.
+Each final entry bound is rounded outward from its own pre-rounding
+endpoint.  An integral entry $v$ in the six boxes satisfies
+$\Tr_{L/\mathbf Q}(v^2)\le\sum_i R_i^2$.
+The positive rational trace form consequently gives finite complete
+containing ellipsoids, enumerated by exact $LDL^{\mathsf T}$ recursion.
+
+First enumerate the complete $a$ and $c$ lists.  For each $c$, the
+centered denominator ellipsoid around $-cx$, followed by its exact
+six-place inequalities, gives all necessary $d$.
+For $c\ne0$, each $a$ and bottom row has the unique possible
+$b=(ad-1)/c$; test its integrality and all numerator bounds.
+For $c=0$, reject $d=0$, impose the unique $a=d^{-1}$, test its
+integrality and $a$ bounds, and enumerate every $b$ in the centered
+numerator ellipsoid.  Thus the zero branch is included in full.
+All boundary equalities remain admissible.
+
+The primary quotient-field path
+\path{certificates/d7_r41_v63.py} and the separate standard-library/Sturm
+path \path{independent/d7_r41_sturm_v63.py} perform these searches
+and the necessary polygon-side tests in all six embeddings.
+Their witnesses and exact per-center expectations are retained in
+\path{certificates/d7_r41_expected_v63.py}.
+The final signs use rational intervals with exact algebraic fallback;
+uncertainty is never accepted as an exclusion.  Summed over the
+$32$ centers, each implementation obtains
+\[
+\begin{array}{l|r}
+\text{Bounded bottom rows}&62{,}474\\
+\text{Candidates with }c\ne0&231{,}744\\
+\text{Candidates with }c=0&33{,}468\\
+\text{All determinant-one candidates}&265{,}212\\
+\text{Survivors}&0.
+\end{array}
+\]
+Every per-center count, candidate digest, zero-branch audit,
+first-failure histogram and classification digest agrees.
+The ordered classification digest is
+\[
+ \digest{d3e983df4d9ff3d9d3ebf498df08345b7}{01eb95a5a0edc4a0b5654a88fb4ba06}.
+\]
+The complete portable replay covers all $32$ masks in each path.
+These empty sets prove avoidance of the original product $P_0$.
+The full reflected $32$-point search, with fresh target bounds, is part
+of Theorem~\externalref{packet}{thm:fullpacketgeometry}. Together with
+Lemma~\externalref{packet}{lem:twochambers}, it proves the stated curve exclusion.
+\end{proof}
+
+\begin{corollary}[Closure of the nonmaximal $d=7$ geometric packet]
+\label{cor:d7geometrycomplete}
+The $112$ distinct ambient points attached to the four nonmaximal
+$d=7$ traces $k=2,14,23,35$ contain exactly three points of the
+normalized McMullen curve: $A,B,C$.  The other $109$ are excluded.
+Thus this complete $d=7$ population is classified in the fixed marked,
+trace-polarized $\SL_2(\OL)$ model.  Its complement in the full arithmetic census of
+Theorem~\externalref{packet}{thm:fullpacketarithmetic} has $256$ points.
+\end{corollary}
+\begin{proof}
+The intrinsic multiplier decomposition of
+Theorem~\ref{thm:d7ambient} has $16$ maximal, $64$ proper-$R_{83}$
+and $32$ proper-$R_{41}$ points.
+Theorem~\ref{thm:maximalallorientations} gives the three maximal
+hits $A,B,C$ and thirteen maximal exclusions.
+Corollary~\ref{cor:d7r83all} excludes all $64$ proper-$R_{83}$
+points, and Theorem~\ref{thm:d7r41complete} excludes the remaining
+$32$.  Hence there are $13+64+32=109$ exclusions and three hits.
+\end{proof}
+
+\begin{remark}
+This closure adds no positive curve point.  The previously proved
+geometric CM types and Hodge conclusions at $A,B,C$ retain their
+existing scope.  ``Principal Picard class'' for $R_{41}$ refers to
+an ideal class and not a principal polarization.  The result concerns
+the normalized trace-polarized quotient in the specified marked CM
+extension; it neither classifies other CM fields nor identifies the
+standard fibers with Mostaed's principally polarized locus.
+\end{remark}
+
+\paragraph{Seven pointwise exclusions beyond the $d=7$ population.}
+The full arithmetic census also permits individual geometric decisions
+outside the complete population of Corollary~\ref{cor:d7geometrycomplete}.
+The following result concerns seven specified points, not their whole
+multiplier or Picard strata.
+
+\begin{proposition}[Seven further pointwise exclusions]
+\label{prop:broadersevenexclusions}
+In the fixed marked extension and normalized trace-polarized
+$\SL_2(\OL)$ quotient, the seven points in the following table do not
+lie on McMullen's curve. The labels are those of the canonical point
+manifest of Theorem~\externalref{packet}{thm:fullpacketarithmetic}; all have orientation
+mask zero. The last three columns count the complete bounded matrices
+before the original-product closed polygon tests, in either exact
+implementation. These counts are retained historical $P_0$ data.
+\[
+\begin{array}{l|r|l|r|r|r}
+\text{Point label}&k&\text{Multiplier conductor}&c\ne0&c=0&\text{Total}\\\hline
+\texttt{R127:pic0:00}&10&(127,t-94)&6572&2304&8876\\
+\texttt{R43\_20:pic0:00}&4&(43,t-20)&7704&952&8656\\
+\texttt{R7sq:pic0:00}&12&(7,t-1)^2&7084&1320&8404\\
+\texttt{R41\_22:pic0:00}&5&(41,t-22)&7148&1616&8764\\
+\texttt{R43\_31:pic0:00}&8&(43,t-31)&8556&1436&9992\\
+\texttt{R7:pic0:00}&0&(7,t-1)&8840&588&9428\\
+\texttt{R127:pic1:00}&10&(127,t-94)&8488&0&8488.
+\end{array}
+\]
+The survivor count is zero in every row. Here \texttt{pic0} means the
+principal Picard module class, not a principal polarization;
+\texttt{pic1} is the nonprincipal class represented at conductor
+$(127,t-94)$ by $J_9$ in the proof of
+Theorem~\externalref{packet}{thm:fullpacketarithmetic}.
+\end{proposition}
+
+\begin{proof}
+Write $\alpha_k=A_k+B_kz$ as in the arithmetic census. For the six
+principal rows use the ordered basis $(1,B_kz)$, and for the last row
+use $(1+9z,B_{10}z)$. Put $s=0$ or $9$ accordingly and
+$n=1+st+s^2$. Multiplication by $\alpha_k$ has the integral matrix
+\[
+ T_{k,s}=\begin{pmatrix}
+ A_k-sB_k&-B_k^2\\
+ n&A_k+(t+s)B_k
+ \end{pmatrix}.
+\]
+The two paths independently reconstruct this action, its characteristic
+polynomial and its upper fixed tuple $w=x+ih$. In the fixed ordering of
+the six real embeddings its exact invariants are
+\[
+ x=-\frac{B_k(t+2s)}{2n},\qquad
+ h^2=\frac{B_k^2(4-t^2)}{4n^2},\qquad
+ |w|^2=\frac{B_k^2}{n}.
+\]
+All squared heights are positive. The conductor, module and root-fiber
+identifications are those of Theorem~\externalref{packet}{thm:fullpacketarithmetic}.
+In particular the last point has root partner
+$(J_{100},16)$; this is the other root representative of the same point,
+not an additional exclusion.
+
+The portable witness data specify a balancing transformation
+$G\in\SL_2(\OL)$, consisting of a diagonal unit transformation,
+with inversion first when prescribed. Both paths verify its integral
+inverse and reconstruct the transported point. If $p'=Gp$, an integral
+determinant-one representative $H$ at $p'$ corresponds to $HG$ at $p$.
+Thus this change of representative preserves the exact orbit question.
+
+Apply the finite-domain argument of
+Theorem~\ref{thm:d7r41complete} to the transported tuple. It uses only
+positive source heights, determinant one and the certified target
+height/modulus bounds, and therefore applies to the nonprincipal row
+as well. Its outward rational bounds and positive trace form contain
+every possible entry in finite ellipsoids. The exact unit changes of
+enumeration coordinates are integral bijections: every enumerated entry
+is mapped back before the original six-place bounds are tested.
+
+For clarity, write an original shifted bound at embedding $i$ as
+$|v_i+q_i x_i|^2+q_i^2h_i^2\le L_i^2$.
+For an integral unit $u$, choose certified rational
+$B_i\ge |u_i|L_i$ and set $y=uv$.
+Then every admissible $v$ satisfies
+\[
+ \Tr_{L/\mathbf Q}((y+uqx)^2)
+ \le \sum_i B_i^2-\Tr_{L/\mathbf Q}((uq)^2h^2).
+\]
+This is the searched ellipsoid centered at $-uqx$;
+$q=0$ gives the entry-box searches, $q=c$ the denominator search,
+and $q=a$ the zero-branch numerator search.
+Multiplication by $u^{-1}$ recovers every original integral entry,
+regardless of the embedding signs of $u$.
+Strictly negative remaining radii give empty domains; zero radii and
+boundary equality are retained.
+
+For every admitted $c$, the denominator enumeration finds all admitted
+$d$. If $c\ne0$, each admitted $a$ has the unique possible completion
+$b=(ad-1)/c$; integrality and the original numerator inequalities are
+tested. If $c=0$, require $d\ne0$ and $a=d^{-1}\in\OL$, check the
+$a$ bounds and enumerate the complete remaining $b$ domain. Hence the
+zero branch is included even when it returns no matrix.
+
+For the last row the portable computation also rejects nonprimitive
+bottom rows: $(c,d)\ne\OL$ precludes $ad-bc=1$. The ideal index is
+computed afresh; a unit $c$ directly certifies primitivity. On every
+remaining nonzero bottom row it verifies integer identities
+\[
+ M_cR=D M_d,\qquad M_c v=-D e_0,\qquad D>0,
+\]
+where $M_c,M_d$ are multiplication matrices in the integral power basis
+and $e_0$ represents $1$. These identities certify the complete affine
+formula $b=(Ra+v)/D$ before scanning the entire original $a$ list.
+Simultaneous negation preserves determinant, action and every original
+bound. Both matrix signs are restored before canonical sorting and
+polygon classification; the retained matrices receive exact determinant
+checks. These reductions therefore omit no bounded candidate.
+
+The six principal rows give $54{,}120$ complete candidates per path.
+The last row freshly gives $29{,}555$ possible $a$ entries, $8{,}167$
+possible $c$ entries, $2{,}005$ bottom rows and $8{,}488$ complete
+candidates. The primary exact algebra/trace-ellipsoid path and the
+separate integer/Sturm path agree on the reconstructed preparation,
+entry lists, bottom rows, both candidate branches and complete polygon
+classifications. The named portable certificates and comparison data
+are listed in Section~\ref{app:computer}. Comparison targets do not
+define or truncate the search; the full success status requires
+recomputed counts and all eight canonical artifact hashes to agree.
+
+Every candidate fails a necessary closed polygon-side condition in at
+least one embedding, with exact algebraic signs or certified rational
+intervals. This proves avoidance of $P_0$ for these seven labels.
+Their separate reflected searches are included in the full $365$-label
+certificate of Theorem~\externalref{packet}{thm:fullpacketgeometry};
+Lemma~\externalref{packet}{lem:twochambers} then proves the seven curve exclusions.
+\end{proof}
+
+\begin{corollary}[Historical subpacket coverage]\label{cor:geometry119}
+The complete $d=7$ population and the seven additional labels above form
+a $119$-point subset of the $368$-point arithmetic census: the three
+vertices and $116$ exclusions. Its complement has $249$ points,
+all excluded by Theorem~\externalref{packet}{thm:fullpacketgeometry}. The figures
+$119$ and $249$ describe the historical division of the first-target
+work, not a current coverage total or an unresolved set.
+\end{corollary}
+\begin{proof}
+The $112$-point $d=7$ census and the seven distinct additional points
+are disjoint. Outside this subset the four proper $d=3$ strata
+contribute $128-4=124$ points, conductor $(41,t-22)$ contributes
+$32-1=31$, and conductor $(127,t-94)$ contributes $96-2=94$.
+Their sum is $249$. Principal controls are not counted a second time,
+and a paired root is not a second quotient point. The first-target
+coverages $116$ and $249$ are disjoint and exhaust all $365$ nonvertices.
+\end{proof}
+
+\begin{remark}
+These seven negative orbit decisions add no positive geometric CM type,
+$K$-signature, Hermitian discriminant or Hodge-algebra assertion. They
+neither exclude a whole remaining conductor or Picard stratum nor
+identify any standard fiber with a principally polarized model or with
+Mostaed's named principally polarized locus. The geometric CM and Hodge
+conclusions at $A,B,C$ are unchanged.
+\end{remark}
+

@@ -1,0 +1,25 @@
+{
+  "cleanup_absence_observations": 2,
+  "first_differing_component_identified": false,
+  "job1_started": false,
+  "nonempty_stdout": 0,
+  "pins": {
+    "build/s-order-v164/session_run01/controller/cleanup.json": "9029db66dc9e77d19af67f59349126c07e0501bb474d1bee38090b20f1e30d7f",
+    "build/s-order-v164/session_run01/controller/jobs/job0/controller/outcome.json": "9922711c556966ed1852a936797e9bc53de0f2d4f4341e7b689c220ffd70d4a6",
+    "build/s-order-v164/session_run01/controller/jobs/job0/controller/retained/blobs/0f02d6189878519bf97a9949c9bc4d377888bda92fd42171b33d93bb0b58de65.blob": "0f02d6189878519bf97a9949c9bc4d377888bda92fd42171b33d93bb0b58de65",
+    "build/s-order-v164/session_run01/controller/jobs/job0/controller/retained/blobs/28df70dcac35dab62b20b76d0c1956f087d0dac029a936eb9e26f2463e29f89c.blob": "28df70dcac35dab62b20b76d0c1956f087d0dac029a936eb9e26f2463e29f89c",
+    "build/s-order-v164/session_run01/controller/jobs/job0/controller/retained/blobs/7ef4dd158a735a497b4a66d4f5575b92292d3a00c59ca47c1da0c833af4f082f.blob": "7ef4dd158a735a497b4a66d4f5575b92292d3a00c59ca47c1da0c833af4f082f",
+    "build/s-order-v164/session_run01/controller/jobs/job0/controller/retained/blobs/91c6f90f03aa01a95ccaa34c6ca3b1733da5ec36882805d2e8ece785339ad76d.blob": "91c6f90f03aa01a95ccaa34c6ca3b1733da5ec36882805d2e8ece785339ad76d",
+    "build/s-order-v164/session_run01/controller/jobs/job0/controller/retained/blobs/a5d2749f16b62acbcd7e42d25ec60b01bd3798eee69d4a1fba8425099b624142.blob": "a5d2749f16b62acbcd7e42d25ec60b01bd3798eee69d4a1fba8425099b624142",
+    "build/s-order-v164/session_run01/controller/jobs/job0/controller/retained/blobs/a837861a3680a264e47b6744b6bec3029d76932455eb97a47b8a3600e4c0a06b.blob": "a837861a3680a264e47b6744b6bec3029d76932455eb97a47b8a3600e4c0a06b",
+    "build/s-order-v164/session_run01/controller/jobs/job0/controller/retained/blobs/bc7233b5bdba25e0b0cf94b0d28c1c94d3c78843bb7552038b29805be494ef5e.blob": "bc7233b5bdba25e0b0cf94b0d28c1c94d3c78843bb7552038b29805be494ef5e",
+    "build/s-order-v164/session_run01/controller/jobs/job0/controller/retained/blobs/cf85a94e835b91e6250831d64e3e7f046d2908f92b28828f63ea3b2a958964d3.blob": "cf85a94e835b91e6250831d64e3e7f046d2908f92b28828f63ea3b2a958964d3",
+    "build/s-order-v164/session_run01/controller/jobs/job0/controller/retained/blobs/df8d9cd89f44b739f46c0315b93f77250bcdffbaa439dded39f964ae03368169.blob": "df8d9cd89f44b739f46c0315b93f77250bcdffbaa439dded39f964ae03368169",
+    "build/s-order-v164/session_run01/controller/jobs/job0/controller/retained/blobs/e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.blob": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "build/s-order-v164/session_run01/controller/jobs/job0/controller/retained/snapshot-35a15ba3ee5fcfda3a28eb3bee75293cb2829a29d8b00b7bd2bcc04a0328be72.json": "35a15ba3ee5fcfda3a28eb3bee75293cb2829a29d8b00b7bd2bcc04a0328be72",
+    "build/s-order-v164/session_run01/controller/outcome.json": "7ef59692f5ed4b5b65235f60e57c8ae28773df97b924fe1b3c0c96786b8ce431"
+  },
+  "provider_queried": false,
+  "status": "PASS_RETAINED_FAILURE_BINDINGS",
+  "tasks_failed_before_input": 8
+}

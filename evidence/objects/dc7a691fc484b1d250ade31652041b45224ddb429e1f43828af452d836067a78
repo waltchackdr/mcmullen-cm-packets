@@ -1,0 +1,181 @@
+{
+  "base_files_sha256": "45c2ab17df1fab7a17dcf9d1830400588a3896f00183743cf63fb4faac198395",
+  "base_manifest_sha256": "9221086a7d3ebeb6d728bf1ebffff7f70d098073aa1ff6059d1d58f2e3551a36",
+  "current_actual_computational_status": "CANONICAL_CONFIGURATION_V86_ASSUMPTION_JOIN34_READY_FOR_FINAL_THEOREM_REVIEW",
+  "files": {
+    "build/research-v81/release-prep/reproducibility-closure-preparation-2026-10-13/README.md": {
+      "bytes": 7337,
+      "copy_required": false,
+      "sha256": "4098932ced21f888db4e8854ada2c73e69cfbacdc5fd74792ad89730c9270fac",
+      "source_path": "build/research-v81/release-prep/reproducibility-closure-preparation-2026-10-13/README.md"
+    },
+    "build/research-v81/release-prep/reproducibility-closure-preparation-2026-10-13/artifacts.json": {
+      "bytes": 1596,
+      "copy_required": false,
+      "sha256": "2aabfb629a2226623568528d3a2a221044320dd7efd00339fab47038a330675d",
+      "source_path": "build/research-v81/release-prep/reproducibility-closure-preparation-2026-10-13/artifacts.json"
+    },
+    "build/research-v81/release-prep/reproducibility-closure-preparation-2026-10-13/citation-supplement02.json": {
+      "bytes": 1794,
+      "copy_required": false,
+      "sha256": "c244a8e1266368e16249f156bb6d7fcf1180554b7779bc6c38ac4e01a711b5ae",
+      "source_path": "build/research-v81/release-prep/reproducibility-closure-preparation-2026-10-13/citation-supplement02.json"
+    },
+    "build/research-v81/release-prep/reproducibility-closure-preparation-2026-10-13/dynamic-dependencies.json": {
+      "bytes": 4468,
+      "copy_required": false,
+      "sha256": "ad0a7457d5ae9e21c6a6df5c84fbdf034616c4d86e1069bfbdb48ab351e1a6c5",
+      "source_path": "build/research-v81/release-prep/reproducibility-closure-preparation-2026-10-13/dynamic-dependencies.json"
+    },
+    "build/research-v81/release-prep/reproducibility-closure-preparation-2026-10-13/evidence-families.json": {
+      "bytes": 23020,
+      "copy_required": false,
+      "sha256": "a795acaf433144d6ad2b75ac3474251225617f2a01fa9da9ff5b8873f39908bf",
+      "source_path": "build/research-v81/release-prep/reproducibility-closure-preparation-2026-10-13/evidence-families.json"
+    },
+    "build/research-v81/release-prep/reproducibility-closure-preparation-2026-10-13/external-evidence.json": {
+      "bytes": 27928,
+      "copy_required": false,
+      "sha256": "e1b938250661e9f033c04494db8c747a9292cabb7299590cde92d312f04d0e8c",
+      "source_path": "build/research-v81/release-prep/reproducibility-closure-preparation-2026-10-13/external-evidence.json"
+    },
+    "build/research-v81/release-prep/reproducibility-closure-preparation-2026-10-13/small-files.json": {
+      "bytes": 1029592,
+      "copy_required": false,
+      "sha256": "90d165be4789d3b22934c1d7978549c1378b29edb01d5058773eeb28b25527f2",
+      "source_path": "build/research-v81/release-prep/reproducibility-closure-preparation-2026-10-13/small-files.json"
+    },
+    "build/research-v81/release-prep/reproducibility-closure-preparation-2026-10-13/static-pin-edges.json": {
+      "bytes": 22481,
+      "copy_required": false,
+      "sha256": "f04a75b52ebaf20af2c1b528523b3dd451c5e0d67a032e3803eecc5326a797da",
+      "source_path": "build/research-v81/release-prep/reproducibility-closure-preparation-2026-10-13/static-pin-edges.json"
+    },
+    "build/research-v81/release-prep/reproducibility-closure-preparation-2026-10-13/summary.json": {
+      "bytes": 2152,
+      "copy_required": false,
+      "sha256": "9f82ded1c4193083ec4a8a3ebe2baa2e36f62419bf9b46c63212d40cba04fd4d",
+      "source_path": "build/research-v81/release-prep/reproducibility-closure-preparation-2026-10-13/summary.json"
+    },
+    "build/research-v81/release-prep/stage1-certificate-commit-preparation-2026-10-13/README.md": {
+      "bytes": 5737,
+      "copy_required": false,
+      "sha256": "34dd203a7cece73153a667a5dbcd9de7419347907e2322bf5608fe87a9ef9eaf",
+      "source_path": "build/research-v81/release-prep/stage1-certificate-commit-preparation-2026-10-13/README.md"
+    },
+    "build/research-v81/release-prep/stage1-certificate-commit-preparation-2026-10-13/artifacts.json": {
+      "bytes": 2490,
+      "copy_required": false,
+      "sha256": "e2b9c05032e05fed2c119666d98ade6b11190863957bb82ec280abd987a49b28",
+      "source_path": "build/research-v81/release-prep/stage1-certificate-commit-preparation-2026-10-13/artifacts.json"
+    },
+    "build/research-v81/release-prep/stage1-certificate-commit-preparation-2026-10-13/check.py": {
+      "bytes": 1609,
+      "copy_required": false,
+      "sha256": "621eff57d7005969054fc8c7a13a7fac787d6a273b3be130438aa16b1c623f76",
+      "source_path": "build/research-v81/release-prep/stage1-certificate-commit-preparation-2026-10-13/check.py"
+    },
+    "build/research-v81/release-prep/stage1-certificate-commit-preparation-2026-10-13/content-screening.json": {
+      "bytes": 469,
+      "copy_required": false,
+      "sha256": "93d9388847b25314daeb5db34735a0323dda5a9e9c8fa3429eb549ec03ad86dc",
+      "source_path": "build/research-v81/release-prep/stage1-certificate-commit-preparation-2026-10-13/content-screening.json"
+    },
+    "build/research-v81/release-prep/stage1-certificate-commit-preparation-2026-10-13/manifest.json": {
+      "bytes": 1994,
+      "copy_required": false,
+      "sha256": "9221086a7d3ebeb6d728bf1ebffff7f70d098073aa1ff6059d1d58f2e3551a36",
+      "source_path": "build/research-v81/release-prep/stage1-certificate-commit-preparation-2026-10-13/manifest.json"
+    },
+    "build/research-v81/release-prep/stage1-certificate-commit-preparation-2026-10-13/overlay/tests/test_staged_packet_release_v96.py": {
+      "bytes": 4937,
+      "copy_required": false,
+      "sha256": "84e5b7ceb23ca965d01aa3e29c0ef08dc537fd9e0ae8a68ad5fe744b59f5875f",
+      "source_path": "build/research-v81/release-prep/stage1-certificate-commit-preparation-2026-10-13/overlay/tests/test_staged_packet_release_v96.py"
+    },
+    "build/research-v81/release-prep/stage1-certificate-commit-preparation-2026-10-13/payload-contract.json": {
+      "bytes": 1684,
+      "copy_required": false,
+      "sha256": "0faea89ee5978f9fbf551d00e2ae3b0eaeefec73ae9284fe32ea097cc339abef",
+      "source_path": "build/research-v81/release-prep/stage1-certificate-commit-preparation-2026-10-13/payload-contract.json"
+    },
+    "build/research-v81/release-prep/stage1-certificate-commit-preparation-2026-10-13/prepare_manifest.py": {
+      "bytes": 7701,
+      "copy_required": false,
+      "sha256": "f9ead2d523c2df066514b70c59dd874595cde0ab4973a1037375c93260cb92ee",
+      "source_path": "build/research-v81/release-prep/stage1-certificate-commit-preparation-2026-10-13/prepare_manifest.py"
+    },
+    "build/research-v81/release-prep/stage1-certificate-commit-preparation-2026-10-13/selected-files.json": {
+      "bytes": 1161675,
+      "copy_required": false,
+      "sha256": "45c2ab17df1fab7a17dcf9d1830400588a3896f00183743cf63fb4faac198395",
+      "source_path": "build/research-v81/release-prep/stage1-certificate-commit-preparation-2026-10-13/selected-files.json"
+    },
+    "build/research-v81/release-prep/stage1-certificate-commit-preparation-2026-10-13/test-revision01.py": {
+      "bytes": 4501,
+      "copy_required": false,
+      "sha256": "e626aac0a12eadedb615a331afef54d1f108ade93bda89f7958f30c7bbd01197",
+      "source_path": "build/research-v81/release-prep/stage1-certificate-commit-preparation-2026-10-13/test-revision01.py"
+    },
+    "build/research-v81/release-prep/stage1-certificate-commit-preparation-2026-10-13/validation01/run.json": {
+      "bytes": 921,
+      "copy_required": false,
+      "sha256": "d5640f2b88322542b9e6c735f1362a99a2d6b5f5b01d1c460ae617842fff01df",
+      "source_path": "build/research-v81/release-prep/stage1-certificate-commit-preparation-2026-10-13/validation01/run.json"
+    },
+    "build/research-v81/release-prep/stage1-certificate-commit-preparation-2026-10-13/validation01/stderr.log": {
+      "bytes": 2655,
+      "copy_required": false,
+      "sha256": "6042c4df578db27905d031257d7cf1a0677213108cde2174284d7d1d6f8674ea",
+      "source_path": "build/research-v81/release-prep/stage1-certificate-commit-preparation-2026-10-13/validation01/stderr.log"
+    },
+    "build/research-v81/release-prep/stage1-certificate-commit-preparation-2026-10-13/validation01/stdout.log": {
+      "bytes": 0,
+      "copy_required": false,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_path": "build/research-v81/release-prep/stage1-certificate-commit-preparation-2026-10-13/validation01/stdout.log"
+    },
+    "build/research-v81/release-prep/stage1-certificate-commit-preparation-2026-10-13/validation02/0.stderr": {
+      "bytes": 563,
+      "copy_required": false,
+      "sha256": "393483833b37ece5cd6f4ca1f1b98b59bbc62de825e1ce8ed6d7f1e29ad6eba1",
+      "source_path": "build/research-v81/release-prep/stage1-certificate-commit-preparation-2026-10-13/validation02/0.stderr"
+    },
+    "build/research-v81/release-prep/stage1-certificate-commit-preparation-2026-10-13/validation02/0.stdout": {
+      "bytes": 0,
+      "copy_required": false,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_path": "build/research-v81/release-prep/stage1-certificate-commit-preparation-2026-10-13/validation02/0.stdout"
+    },
+    "build/research-v81/release-prep/stage1-certificate-commit-preparation-2026-10-13/validation02/1.stderr": {
+      "bytes": 484,
+      "copy_required": false,
+      "sha256": "fdc9214c0b46132b8c547e5f4071449a5028d45354c4f2c635dd9a40f04f6889",
+      "source_path": "build/research-v81/release-prep/stage1-certificate-commit-preparation-2026-10-13/validation02/1.stderr"
+    },
+    "build/research-v81/release-prep/stage1-certificate-commit-preparation-2026-10-13/validation02/1.stdout": {
+      "bytes": 0,
+      "copy_required": false,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_path": "build/research-v81/release-prep/stage1-certificate-commit-preparation-2026-10-13/validation02/1.stdout"
+    },
+    "build/research-v81/release-prep/stage1-certificate-commit-preparation-2026-10-13/validation02/run.json": {
+      "bytes": 2657,
+      "copy_required": false,
+      "sha256": "159b21d52333ddcbf5c737dec3a67b4ffec288532c5b11215ba37c4c21a70bf3",
+      "source_path": "build/research-v81/release-prep/stage1-certificate-commit-preparation-2026-10-13/validation02/run.json"
+    },
+    "experiments/continuous_v82_review/actual_final34_computational_conjunction_review.json": {
+      "bytes": 12604,
+      "copy_required": false,
+      "sha256": "1b5c471903645b85f3d2e61fb3c39fbf31a658d99a25798ca32bcdae5cea92c4",
+      "source_path": "experiments/continuous_v82_review/actual_final34_computational_conjunction_review.json"
+    }
+  },
+  "future_theorem_installation_release_records_excluded": true,
+  "local_raw_reproducibility_index_supplement_pending": true,
+  "old_pending_map_is_historical": true,
+  "schema_version": 1,
+  "self_inclusion_rule": "This exact supplement is also a commit input; its own external SHA is given in the review/dispatch, avoiding a self-hash cycle.",
+  "status": "EXPLICIT_STAGE1_CLOSURE_AND_FINAL_REVIEW_SUPPLEMENT_NO_THEOREM_OR_INSTALLATION"
+}

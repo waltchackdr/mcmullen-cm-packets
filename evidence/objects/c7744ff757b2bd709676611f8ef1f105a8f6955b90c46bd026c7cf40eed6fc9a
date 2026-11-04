@@ -1,0 +1,25 @@
+"""Replay the independent complete-task recovery audit without altering receipts."""
+import importlib.util
+from pathlib import Path
+import unittest
+ROOT = Path(__file__).resolve().parents[1]
+SPEC = importlib.util.spec_from_file_location('theta_recovery03', ROOT/'experiments/s_order_theta_v164/referee_actual_data03.py')
+AUDIT = importlib.util.module_from_spec(SPEC)
+SPEC.loader.exec_module(AUDIT)
+
+class CompleteTaskRecovery(unittest.TestCase):
+    def test_failed_session_complete_tasks_only(self):
+        r = AUDIT.run()
+        self.assertEqual(len(r['observations']), 64)
+        self.assertEqual(r['recovered_complete_tasks'], 7)
+        self.assertFalse(r['session_success'])
+        self.assertTrue(r['failed_task_excluded'])
+        self.assertEqual(r['excluded_prefix_observations'], 14)
+        self.assertEqual(r['unstarted_jobs'], [1])
+        self.assertTrue(r['prior_pairs_disjoint'])
+        self.assertEqual(r['cumulative_nonzero_pairs'], {str(i):40 if i in (0,1,2,3) else 24 for i in (0,1,2,3,6,12,15,17,40,91)})
+        self.assertTrue(all(o['nonzero'] and o['finite'] for o in r['observations']))
+        self.assertIn('killed prefix with forged success still incomplete',r['negative_cases_rejected'])
+
+if __name__ == '__main__':
+    unittest.main()

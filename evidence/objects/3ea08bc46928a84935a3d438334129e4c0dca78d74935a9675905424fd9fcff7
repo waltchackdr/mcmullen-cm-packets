@@ -1,0 +1,153 @@
+#!/usr/bin/env python3
+"""Bounded exact reproduction of the inline K7 polarization preparation.
+
+This is the retained, refactored version of the earlier inline SymPy check,
+not a claim that this filename was the historical producer. It regenerates
+the same mathematical payload, including the rational interval endpoints.
+The preparation remains unchanged and no mathematical claim is promoted.
+"""
+from pathlib import Path
+import argparse
+import hashlib
+import json
+import resource
+import signal
+
+
+def canonical(value):
+    return (json.dumps(value, sort_keys=True, separators=(",", ":")) + "\n").encode()
+
+
+def mathematical_payload():
+    import sympy as s
+
+    z, t = s.symbols("z t")
+    cyclotomic = s.Poly(s.cyclotomic_poly(42, z), z)
+    f = s.Poly(t**6 + t**5 - 6*t**4 - 6*t**3 + 8*t**2 + 8*t + 1, t)
+
+    def rz(q):
+        return s.rem(q, cyclotomic.as_expr(), z).expand()
+
+    def rt(q):
+        return s.rem(q, f.as_expr(), t).expand()
+
+    s3 = rz(1 + 2*z**14)
+    s7 = rz(sum(z**(6*a) for a in (1, 2, 4))
+            - sum(z**(6*a) for a in (3, 5, 6)))
+    assert rz(s3*s3) == -3 and rz(s7*s7) == -7
+    q21 = rz(-s3*s7)
+    assert rz(q21*q21) == 21
+    tz = rz(z + z**41)
+    basis = [s.Poly(rz(tz**j), z) for j in range(6)]
+    matrix = s.Matrix([[b.nth(i) for b in basis] for i in range(12)])
+    vector = s.Matrix([s.Poly(q21, z).nth(i) for i in range(12)])
+    coefficients, parameters = matrix.gauss_jordan_solve(vector)
+    assert parameters.rows == 0
+    sqrt21 = sum(coefficients[j]*t**j for j in range(6))
+    assert rt(sqrt21**2) == 21
+    q = [s.Integer(2), t]
+    for _ in range(1, 17):
+        q.append(rt(t*q[-1] - q[-2]))
+    u = rt(q[1]*q[13]*q[17])
+    b = rt(sqrt21*u)
+    assert s.resultant(f.as_expr(), u, t) == 1
+    assert s.resultant(f.as_expr(), sqrt21, t) == -21**3
+    assert s.resultant(f.as_expr(), b, t) == -21**3
+    discriminant = int(s.discriminant(f.as_expr(), t))
+    assert discriminant == 3**3*7**5
+    assert discriminant*(-21**3) == -(3**3*7**4)**2
+    isolated = s.polys.polytools.intervals(f, eps=s.Rational(1, 10)**25)
+    assert len(isolated) == 6 and all(multiplicity == 1 for _, multiplicity in isolated)
+    intervals = sorted([ab for ab, _ in isolated], reverse=True)
+
+    def bounds(poly, interval):
+        lo, hi = interval
+        polynomial_coefficients = s.Poly(poly, t).all_coeffs()
+        lower = upper = polynomial_coefficients[0]
+        for coefficient in polynomial_coefficients[1:]:
+            values = [lower*lo, lower*hi, upper*lo, upper*hi]
+            lower = min(values) + coefficient
+            upper = max(values) + coefficient
+        return lower, upper
+
+    # Since 2*cos(pi*r/21) is strictly decreasing for 0<r<21, the
+    # descending intervals have exactly this embedding order, with no
+    # numerical root matching involved.
+    base = [1, 5, 11, 13, 17, 19]
+    phi = {1, 5, 11, 13, 19, 25}
+    rows = []
+    for exponent, interval in zip(base, intervals):
+        values = {}
+        for name, polynomial in [("sqrt21", sqrt21), ("t1", q[1]),
+                                 ("t13", q[13]), ("t17", q[17]),
+                                 ("u", u), ("b", b)]:
+            lo, hi = bounds(polynomial, interval)
+            assert lo > 0 or hi < 0
+            values[name] = {"sign": 1 if lo > 0 else -1,
+                            "certified_interval": [str(lo), str(hi)]}
+        chi7 = 1 if exponent % 7 in (1, 2, 4) else -1
+        selection = 1 if exponent in phi else -1
+        assert values["b"]["sign"] == chi7*selection
+        rows.append({"embedding_exponent_mod42": exponent,
+                     "t_interval": [str(x) for x in interval],
+                     "chi_minus7": chi7, "CM_selection_sign": selection,
+                     "values": values})
+    assert rows[0]["values"]["sqrt21"]["sign"] == 1
+    return {
+        "abstract_CM_type": sorted(phi),
+        "polynomials": {"minimal_polynomial_t": str(f.as_expr()),
+                        "sqrt21_positive_at_identity": str(sqrt21),
+                        "t13": str(q[13]), "t17": str(q[17]),
+                        "unit_u": str(u), "b": str(b)},
+        "exact_checks": {
+            "s3_squared": -3, "s7_squared": -7, "sqrt21_squared": 21,
+            "norm_u": 1, "norm_sqrt21": -21**3, "norm_b": -21**3,
+            "disc_power_basis_L": discriminant,
+            "det_trace_hermitian_form": discriminant*(-21**3),
+            "negative_determinant_is_square_of": 3**3*7**4,
+            "all_signs_certified_by_rational_root_intervals": True,
+            "rows": rows,
+        },
+    }
+
+
+def main():
+    if not __debug__:
+        raise RuntimeError("Assertions must be enabled")
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--output", required=True, type=Path)
+    parser.add_argument("--compare-preparation", type=Path)
+    args = parser.parse_args()
+    old_soft, old_hard = resource.getrlimit(resource.RLIMIT_CPU)
+    soft = min(25, old_soft) if old_soft != resource.RLIM_INFINITY else 25
+    hard = min(26, old_hard) if old_hard != resource.RLIM_INFINITY else 26
+    resource.setrlimit(resource.RLIMIT_CPU, (min(soft, hard), hard))
+    signal.alarm(50)
+    source_before = hashlib.sha256(Path(__file__).read_bytes()).hexdigest()
+    payload = mathematical_payload()
+    comparison = None
+    if args.compare_preparation:
+        raw = args.compare_preparation.read_bytes()
+        preparation = json.loads(raw)
+        for key, value in payload.items():
+            assert value == preparation[key], key
+        comparison = {"path": str(args.compare_preparation),
+                      "sha256": hashlib.sha256(raw).hexdigest(),
+                      "all_three_mathematical_fields_equal": True}
+    assert source_before == hashlib.sha256(Path(__file__).read_bytes()).hexdigest()
+    result = {"status": "EXACT_REPRODUCTION_PREPARATION_NOT_PROMOTED",
+              "mathematical_payload": payload,
+              "mathematical_payload_sha256": hashlib.sha256(canonical(payload)).hexdigest(),
+              "source_sha256": source_before,
+              "comparison": comparison}
+    with args.output.open("xb") as stream:
+        stream.write(json.dumps(result, sort_keys=True, indent=2).encode() + b"\n")
+    print(json.dumps({"output": str(args.output),
+                      "source_sha256": source_before,
+                      "output_sha256": hashlib.sha256(args.output.read_bytes()).hexdigest(),
+                      "mathematical_payload_sha256": result["mathematical_payload_sha256"]},
+                     sort_keys=True))
+
+
+if __name__ == "__main__":
+    main()

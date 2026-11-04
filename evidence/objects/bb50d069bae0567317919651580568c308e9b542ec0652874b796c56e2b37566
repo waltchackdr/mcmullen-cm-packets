@@ -1,0 +1,62 @@
+"""Short negative checks for new theta admission; no FLINT or theta calls."""
+import copy,hashlib,importlib.util,json,tempfile,unittest
+from pathlib import Path
+
+ROOT=Path(__file__).resolve().parents[1]
+def module(name,path):
+    spec=importlib.util.spec_from_file_location(name,ROOT/path)
+    result=importlib.util.module_from_spec(spec);spec.loader.exec_module(result);return result
+worker=module('theta_worker164','experiments/s_order_theta_v164/worker_candidate.py')
+loader=module('theta_loader164','experiments/s_order_theta_v164/period_loader_candidate.py')
+
+class ThetaAdmission(unittest.TestCase):
+    def setUp(self):
+        self.tmp=tempfile.TemporaryDirectory();self.addCleanup(self.tmp.cleanup)
+        self.root=Path(self.tmp.name)
+        packet=json.loads((ROOT/'build/s-order-v164/preparation01/job0/execution_packet.json').read_text())
+        for virtual,real in packet['source_mapping'].items():
+            p=self.root/virtual;p.parent.mkdir(parents=True,exist_ok=True);p.write_bytes((ROOT/real).read_bytes())
+        self.plan=json.loads((ROOT/'build/s-order-v164/preparation01/job0/certificate_plan_candidate.json').read_text())
+
+    def test_actual_plan_and_changed_binding_rejected(self):
+        self.assertEqual(len(worker.validate_plan(self.plan,self.root)),5)
+        changed=copy.deepcopy(self.plan);changed['tasks'][0]['catalog_index']=1
+        with self.assertRaises(RuntimeError):worker.validate_plan(changed,self.root)
+        changed=copy.deepcopy(self.plan);changed['tasks'][0]['numerators_mod3'][0]=[0]*12
+        with self.assertRaises(RuntimeError):worker.validate_plan(changed,self.root)
+        # Rehashing a changed period record in the plan cannot bypass its adoption.
+        changed=copy.deepcopy(self.plan);path=changed['tasks'][0]['record_path']
+        data=json.loads((self.root/path).read_text());data['interval_period']['precision_bits']=96
+        (self.root/path).write_text(json.dumps(data))
+        changed['pins'][path]=hashlib.sha256((self.root/path).read_bytes()).hexdigest()
+        with self.assertRaises(RuntimeError):worker.validate_plan(changed,self.root)
+
+    def test_loader_coordinate_and_rectangle_rejections(self):
+        data=json.loads((ROOT/'build/s-order-v162/postprocessed01/model000.json').read_text())
+        loader.validate_record(data,0)
+        for change in ('type','characteristic','pair','radius','symmetry'):
+            bad=copy.deepcopy(data)
+            if change=='type':bad['transport']['actual_tangent_type'][0]=41
+            if change=='characteristic':bad['transport']['flint_characteristic_index']^=1
+            if change=='pair':bad['transport']['eligible_nonzero_pairs'][0]=[0]*12
+            if change=='radius':bad['interval_period']['period_rectangles'][0][0]['real']['rad'][0]=-1
+            if change=='symmetry':bad['interval_period']['period_rectangles'][0][1]['real']['mid'][0]+=1
+            with self.assertRaises(ValueError,msg=change):loader.validate_record(bad,0)
+
+    def test_missing_or_wrong_observation_rejected(self):
+        results=[{'status':'EXITED','returncode':0} for _ in range(5)]
+        output=self.root/'out';output.mkdir()
+        for i,task in enumerate(self.plan['tasks']):
+            first={'stage':'EXACT_PERIOD_INPUT','catalog_index':task['catalog_index'],'task_index':i}
+            h=hashlib.sha256(json.dumps(first,sort_keys=True).encode()).hexdigest()
+            values=[first]+[{'stage':'EXACT_THETA_OBSERVATION','catalog_index':task['catalog_index'],
+                'task_index':i,'pair_index':j,'numerator_mod3':v,'input_sha256':h,'mathematical_conclusion':None}
+                for j,v in zip(task['pair_indices'],task['numerators_mod3'])]
+            values.append({'stage':'BATCH_COMPLETE','catalog_index':task['catalog_index'],'task_index':i,'pair_indices':task['pair_indices']})
+            folder=output/f'task{i:02d}';folder.mkdir();(folder/'stdout.jsonl').write_text('\n'.join(json.dumps(v) for v in values)+'\n')
+        self.assertTrue(worker.successful_results(results,output,self.plan['tasks']))
+        target=output/'task00/stdout.jsonl';values=[json.loads(x) for x in target.read_text().splitlines()]
+        values[1]['pair_index']=99;target.write_text('\n'.join(json.dumps(v) for v in values)+'\n')
+        self.assertFalse(worker.successful_results(results,output,self.plan['tasks']))
+
+if __name__=='__main__':unittest.main()

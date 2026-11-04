@@ -1,0 +1,35 @@
+{
+  "archive_members_verified": 16,
+  "executable_code_unchanged": true,
+  "indices_per_model": [
+    80,
+    81,
+    82,
+    83,
+    84,
+    85,
+    86,
+    87,
+    88,
+    89,
+    90,
+    91,
+    92,
+    93,
+    94,
+    95
+  ],
+  "new_distinct_model_pairs": 64,
+  "packet": {
+    "bytes": 2718,
+    "path": "build/theta-v147/certificate_preparation06/execution_packet.json",
+    "sha256": "3cd01c824f11901e17e5b50acf3b393bf70f0064e318db4b383dcd26ddd0c2e3"
+  },
+  "plan": {
+    "bytes": 17086,
+    "path": "build/theta-v147/certificate_preparation06/plan.json",
+    "sha256": "19fb3eeb3305d78d60abfa914953c763028f5f73da763b1ba48d3bb1ec7956c5"
+  },
+  "prior_distinct_model_pairs": 320,
+  "status": "PREPARED_NOT_ADOPTED_OR_RENTED"
+}

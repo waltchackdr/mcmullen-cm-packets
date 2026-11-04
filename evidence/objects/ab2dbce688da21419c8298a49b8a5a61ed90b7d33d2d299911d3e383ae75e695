@@ -1,0 +1,71 @@
+"""Check the registered theorem domains without launching arithmetic jobs."""
+from contextlib import redirect_stdout
+import io
+from pathlib import Path
+import runpy
+import types
+import unittest
+from unittest.mock import patch
+
+ROOT = Path(__file__).resolve().parents[1]
+
+
+class CertificateRegistrationTests(unittest.TestCase):
+    def test_full_census_and_completed_geometry_domains_are_registered(self):
+        captured = []
+        executor = types.ModuleType("certificate_execution")
+
+        def capture(tasks, workers, root, output):
+            captured.extend(tasks)
+            return []
+
+        executor.execute_tasks = capture
+        with patch.dict("sys.modules", {"certificate_execution": executor}), \
+             patch("shutil.which", return_value="/test/node"), \
+             patch.dict("os.environ", {"CERT_WORKERS": "4"}), \
+             redirect_stdout(io.StringIO()):
+            runpy.run_path(str(ROOT / "scripts/run_certificates.py"))
+        commands = [command for _, command in captured]
+        for relative in ("certificates/full_packet_arithmetic_v62.py",
+                         "independent/full_packet_cyclotomic_v62.py"):
+            self.assertEqual(sum(command[1] == str(ROOT / relative)
+                                 for command in commands), 1)
+        expected = {1, 3, 4, 5, 6, 8, 9, 10, 11, 12, 14}
+        for relative in ("certificates/d7_remaining_maximal_v61.py",
+                         "independent/d7_remaining_maximal_sturm_v61.py"):
+            selected = [command for command in commands
+                        if command[1] == str(ROOT / relative)]
+            self.assertEqual(len(selected), 11)
+            self.assertTrue(all(command[2] == "--masks" for command in selected))
+            self.assertEqual({int(command[3]) for command in selected}, expected)
+        expected_r41 = set(range(16)) | set(range(32, 48))
+        for relative in ("certificates/d7_r41_v63.py", "independent/d7_r41_sturm_v63.py"):
+            selected = [command for command in commands
+                        if command[1] == str(ROOT / relative)]
+            self.assertEqual(len(selected), 32)
+            self.assertTrue(all(command[2] == "--masks" for command in selected))
+            self.assertEqual({int(command[3]) for command in selected}, expected_r41)
+        expected_broader = {"R127:pic0:00", "R43_20:pic0:00", "R7sq:pic0:00",
+                            "R41_22:pic0:00", "R43_31:pic0:00", "R7:pic0:00"}
+        for relative in ("certificates/broader_principal_v75.py",
+                         "independent/broader_principal_sturm_v75.py"):
+            selected = [command for command in commands
+                        if command[1] == str(ROOT / relative)]
+            self.assertEqual(len(selected), 6)
+            self.assertTrue(all(len(command) == 4 and command[2] == "--point"
+                                for command in selected))
+            self.assertEqual({command[3] for command in selected}, expected_broader)
+
+        for relative in ("certificates/r127_pic1_v80.py",
+                         "independent/r127_pic1_sturm_v80.py"):
+            selected = [command for command in commands
+                        if command[1] == str(ROOT / relative)]
+            self.assertEqual(len(selected), 2)
+            self.assertTrue(all(len(command) == 4 and command[2] == "--point"
+                                for command in selected))
+            self.assertEqual({command[3] for command in selected},
+                             {"R127:pic0:00", "R127:pic1:00"})
+
+
+if __name__ == "__main__":
+    unittest.main()

@@ -1,0 +1,113 @@
+{
+  "integral_bezout_formula": "(sum(j=0..a-1)t^(qj))*Phi_q - t*(sum(j=0..k-1)t^(pj))*Phi_p = 1, qa=1+kp",
+  "negative_controls": [
+    "Phi3/Phi9 are Q-coprime but not Z-comaximal: Phi9 mod Phi3 is 3.",
+    "Full cyclic group ring idempotence fails on the trivial character."
+  ],
+  "pins_checked": 9,
+  "producer_implementation_imported": false,
+  "samples": [
+    {
+      "bezout_inverse_a": 2,
+      "bezout_k": 3,
+      "degree": 2025,
+      "dimension": 4,
+      "least_denominator_from_group_exponent": 15,
+      "negative_full_group_ring_residual": 450,
+      "p": 3,
+      "q": 5,
+      "type": [
+        1,
+        1,
+        3,
+        15
+      ]
+    },
+    {
+      "bezout_inverse_a": 1,
+      "bezout_k": 2,
+      "degree": 35721,
+      "dimension": 6,
+      "least_denominator_from_group_exponent": 21,
+      "negative_full_group_ring_residual": 882,
+      "p": 3,
+      "q": 7,
+      "type": [
+        1,
+        1,
+        1,
+        3,
+        3,
+        21
+      ]
+    },
+    {
+      "bezout_inverse_a": 3,
+      "bezout_k": 4,
+      "degree": 37515625,
+      "dimension": 12,
+      "least_denominator_from_group_exponent": 35,
+      "negative_full_group_ring_residual": 2450,
+      "p": 5,
+      "q": 7,
+      "type": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        5,
+        35,
+        35
+      ]
+    },
+    {
+      "bezout_inverse_a": 2,
+      "bezout_k": 3,
+      "degree": 500422134593689,
+      "dimension": 30,
+      "least_denominator_from_group_exponent": 77,
+      "negative_full_group_ring_residual": 11858,
+      "p": 7,
+      "q": 11,
+      "type": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        7,
+        7,
+        77,
+        77,
+        77
+      ]
+    }
+  ],
+  "scope": "Finite regressions only; generality comes from the reviewed human proof.",
+  "status": "PASS_INDEPENDENT_FINITE_REGRESSION_ONLY"
+}

@@ -1,0 +1,53 @@
+"""Exact ball retention/checking proposal; not an evaluator or adopted certificate.
+
+The caller must separately bind the model, input periods, library and source.
+No decimal string is parsed as numerical evidence.
+"""
+from fractions import Fraction
+
+MAX_MANTISSA_BITS = 4096
+MAX_EXPONENT = 100000
+
+
+def dyadic(pair):
+    if not isinstance(pair, list) or len(pair) != 2:
+        raise ValueError('Expected mantissa/exponent pair')
+    m, e = pair
+    if type(m) is not int or type(e) is not int:
+        raise ValueError('Exact integers required')
+    if m.bit_length() > MAX_MANTISSA_BITS or abs(e) > MAX_EXPONENT:
+        raise ValueError('Enclosure exceeds retention bounds')
+    return Fraction(m << e, 1) if e >= 0 else Fraction(m, 1 << (-e))
+
+
+def component(record):
+    if not isinstance(record, dict) or set(record) != {'mid', 'rad'}:
+        raise ValueError('Invalid real ball record')
+    mid, rad = dyadic(record['mid']), dyadic(record['rad'])
+    if rad < 0:
+        raise ValueError('Negative radius')
+    return mid-rad, mid+rad
+
+
+def excludes_zero(record):
+    if not isinstance(record, dict) or set(record) != {'real', 'imag'}:
+        raise ValueError('Invalid complex ball record')
+    bounds = [component(record[name]) for name in ('real', 'imag')]
+    return any(lo > 0 or hi < 0 for lo, hi in bounds)
+
+
+def serialize(value):
+    """Extract exact library ball data; no call to theta or approximate parsing."""
+    if not value.is_finite():
+        raise ValueError('Nonfinite enclosure')
+    def one(part):
+        mid = [int(x) for x in part.mid().man_exp()]
+        rad = [int(x) for x in part.rad().man_exp()]
+        result = {'mid':mid, 'rad':rad}
+        component(result)
+        return result
+    record = {'real':one(value.real), 'imag':one(value.imag)}
+    # Enforce agreement of retained exact rectangle with the library predicate.
+    if excludes_zero(record) != (not value.contains(0)):
+        raise ValueError('Containment predicate disagrees with exact enclosure')
+    return record

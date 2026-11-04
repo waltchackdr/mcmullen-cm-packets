@@ -1,0 +1,12 @@
+{
+  "files": {
+    "closure/run.json": "7ed48590f6145e138e8c41410a825b05fcbeef1bfd4e26ee583b736f84a80f62",
+    "closure/stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "closure/stdout.log": "6626d1e841ceecc6463173712f9aa697d1f2a16c89674a4b62ad257fe9e0a9f5",
+    "input.json": "817e5821f0d726433a167fd7043c412870b92a3487a70aac9608ab989077825d",
+    "join.json": "aaf7b5077bc24ce58cad93767256321e673b6a217b241320b190a996b058e523"
+  },
+  "runner_output_scope_note": "Frozen runner rglob omits a file output; this separate receipt binds the actual file whose digest also appears in unchanged child stdout.",
+  "schema_version": 1,
+  "theorem_promotion": false
+}

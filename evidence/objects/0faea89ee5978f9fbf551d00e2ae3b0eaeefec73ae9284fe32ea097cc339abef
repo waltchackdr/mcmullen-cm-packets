@@ -1,0 +1,39 @@
+{
+  "active_registry_changed": false,
+  "command_inventory": {
+    "path": "build/research-v81/release-prep/combined-registration34-2026-10-13/overlay/tests/registration/combined1405.json",
+    "sha256": "a842f125406100060b6543cf770cd2c9bc9c7eb9c75e63d64237be82b24e3c73"
+  },
+  "legacy159": {
+    "path": "build/research-v81/release-prep/combined-registration34-2026-10-13/overlay/tests/registration/legacy159.json",
+    "sha256": "a7eae21c1225c4e9e95c858537ea533b55de54f03b2de53cb8a02764996112db"
+  },
+  "mathematical_execution": false,
+  "phase_counts": [
+    159,
+    6,
+    498,
+    12,
+    34,
+    696
+  ],
+  "registered_command_count": 1405,
+  "registry": {
+    "path": "build/research-v81/release-prep/combined-registration34-2026-10-13/overlay/scripts/run_certificates.py",
+    "sha256": "8fc668ad5869dfba27d82f08bb3703d454c4089408bda0dc3ac7a7321c661897"
+  },
+  "registry_test": {
+    "path": "build/research-v81/release-prep/combined-registration34-2026-10-13/overlay/tests/test_certificate_registration.py",
+    "sha256": "2afec2a94c2e76fabcdaa47ffb4263598833de8fca866f60bf83172e37aa5a79"
+  },
+  "schema_version": 1,
+  "status": "STAGED_CERTIFICATE_REGRESSION_CONTRACT_NO_INSTALLATION_OR_THEOREM_PROMOTION",
+  "v82_package": {
+    "path": "build/research-v81/cloud/v82-recovery-2026-10-12/preflight-unpacked/package/package.json",
+    "sha256": "18f75af69dfda0dbefde2f68ef7da79ecca701fd24cb625be8f74e44784d021c"
+  },
+  "v83_package": {
+    "path": "build/research-v81/release-prep/positive12-closure-preparation-2026-10-13/witness-envelope-repair01/actual-merge01/package/package.json",
+    "sha256": "2998ef6324265d030287080ed7ee392e2fa60e9c2ec1dc35d9dcf6cae38710f2"
+  }
+}

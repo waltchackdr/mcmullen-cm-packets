@@ -1,0 +1,102 @@
+#!/usr/bin/env python3
+from pathlib import Path
+import re, sys
+ROOT=Path(__file__).resolve().parents[1]
+tex=(ROOT/'paper/main.tex').read_text(errors='ignore')
+ledger=(ROOT/'docs/CLAIM_LEDGER.md').read_text()
+state=(ROOT/'docs/CURRENT_STATE.md').read_text()
+errors=[]
+# Scope/title invariants
+if "Three Explicit CM Vertices on McMullen's Curve" not in tex[:12000]:
+    errors.append('paper title/header does not contain the scoped three-vertex title')
+if 'Two Explicit CM' in tex: errors.append('stale Two Explicit CM wording found')
+for pair in ('{1,22}','{17,38}','{20,41}'):
+    if pair not in ledger.replace(' ',''): errors.append(f'missing residual pair {pair} in claim ledger')
+# Principal-polarization guardrail must exist in state.
+if 'not principal' not in state.lower(): errors.append('principal-polarization scope guardrail missing')
+
+# v54 ledger schema and checkpoint language.
+for heading in ('proof_mode', 'verification', 'scope'):
+    if heading not in ledger: errors.append(f'missing v54 ledger field {heading}')
+if '| Status |' in ledger: errors.append('stale one-dimensional ledger Status column found')
+for open_id in ('O01', 'O02', 'O03'):
+    row=next((line for line in ledger.splitlines() if line.startswith(f'| {open_id} |')), '')
+    if not row or 'CLOSED' not in row: errors.append(f'{open_id} is not explicitly closed')
+if ('v45 checkpoint' not in ledger or 'v53 checkpoint' not in ledger or
+        not re.search(r'authoritative (?:present )?remainder is (?:`)?0', ledger)):
+    errors.append('ledger does not distinguish v45=107 and v53=75 from the present remainder 0')
+if '| C30 |' not in ledger:
+    errors.append('missing v55 principal-Picard proper-R83 closure claim C30')
+
+# v56 must retain the refutation as well as the constructive replacement.
+c18=next((line for line in ledger.splitlines() if line.startswith('| C18 |')), '')
+if 'REFUTED-AS-STATED' not in c18 or '| C31 |' not in ledger:
+    errors.append('v56 must retain refuted C18 and separate constructive C31')
+runner=(ROOT/'scripts/run_certificates.py').read_text()
+for rel in ('certificates/principal_homology_v56.py',
+            'independent/principal_homology_stdlib_v56.py'):
+    if rel not in runner or not (ROOT/rel).is_file():
+        errors.append(f'missing registered homology repair certificate {rel}')
+if r'\label{prop:commonprincipal}' not in tex:
+    errors.append('missing common nonfree principal-lattice proof')
+for stale in ('pairwise different integral level data',
+              r'$S=I+2B_t^{14}$ used below'):
+    if stale in tex: errors.append(f'stale v56 proof error: {stale}')
+
+# v57 replaces the provisional warning with a sourced proof and two exact paths.
+for rel in ('certificates/principal_descent_v57.py',
+            'independent/principal_descent_stdlib_v57.py'):
+    if rel not in runner or not (ROOT/rel).is_file():
+        errors.append(f'missing registered principal descent certificate {rel}')
+for claim in ('C32', 'C33', 'C34'):
+    if f'| {claim} |' not in ledger:
+        errors.append(f'missing separately scoped v57 claim {claim}')
+for label in ('prop:principalstabilizer', 'thm:principalfamily', 'prop:survivingorder'):
+    if '\\label{' + label + '}' not in tex:
+        errors.append(f'missing v57 proof {label}')
+for boundary in ('before an auxiliary neat refinement',
+                 'inside each selected CM field',
+                 'No identification with Mostaed',
+                 'The degree of a chosen auxiliary fine-level cover is not'):
+    if boundary not in tex: errors.append(f'missing v57 scope boundary: {boundary}')
+if 'MilneModuli2011' not in tex or 'Theorems 3.6 and 7.13' not in tex:
+    errors.append('missing pinned algebraization/neatness source')
+if 'Provisional global principal-moduli construction' in tex:
+    errors.append('stale provisional warning after scoped v57 promotion')
+for dependency in ('discriminant local system', 'monodromy', 'inverse-image lattice sheaf',
+                   'surviving order'):
+    if dependency not in tex: errors.append(f'missing global principal-moduli dependency: {dependency}')
+
+# The conceptual primitive Hodge proof and theorem-grade packet verifier are mandatory.
+if r'\label{lem:primitivebinary}' not in tex:
+    errors.append('missing conceptual primitive binary Hodge lemma')
+if r'\path{independent/packet_cm_hodge_sturm_v41.py}' not in tex:
+    errors.append('theorem-grade packet Sturm verifier omitted from reproducibility appendix')
+node_entry=r'\path{independent/packet_hodge_node_v40.js}'
+node_pos=tex.find(node_entry)
+if node_pos < 0 or 'Floating-point regression evidence only' not in tex[node_pos:node_pos+300]:
+    errors.append('packet Node implementation is not labeled floating regression evidence only')
+
+# Every source path advertised by the manuscript must exist; this is not a Git release gate.
+for rel in re.findall(r'\\path\{([^}]+)\}', tex):
+    if not (ROOT/rel).is_file(): errors.append(f'manuscript names missing source path {rel}')
+for legacy in ('cyclotomic_fiber.py', 'vertex_certificate.py', 'hodge_ring.py',
+               'independent_k11.py', 'third_exact.cpp'):
+    if legacy in tex: errors.append(f'manuscript still advertises absent legacy source {legacy}')
+
+# Theorem-relevant SymPy embedding order may not use binary floating point.
+for rel in (
+    'certificates/a_vertex_certificate_v31.py',
+    'certificates/vertex_saturation_v35.py',
+    'certificates/maximal_vertex_orbits_v38.py',
+    'certificates/four_vertex_audit_v40.py',
+    'certificates/d7_ambient_points_v45.py',
+):
+    source=(ROOT/rel).read_text()
+    if re.search(r'key\s*=.*float|float\s*\(\s*\([^\n]*\+[^\n]*\)\s*/\s*2', source):
+        errors.append(f'float-based theorem embedding ordering found in {rel}')
+if errors:
+    print('REPO INVARIANTS: FAIL')
+    for e in errors: print(' -',e)
+    sys.exit(1)
+print('REPO INVARIANTS: PASS')

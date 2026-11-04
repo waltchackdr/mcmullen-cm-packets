@@ -1,0 +1,107 @@
+"""Verify a reviewed installation receipt; never infer mathematical adoption.
+
+The distributed candidate receipt is deliberately pending. The later exact
+installation review supplies package/evidence/file bindings after adoption.
+This administrative check neither executes nor marks any regression passed.
+"""
+import hashlib
+import json
+from pathlib import Path
+import re
+import stat
+
+ROOT = Path(__file__).resolve().parents[1]
+INVENTORY = "tests/registration/combined1405.json"
+RECEIPT = "tests/registration/combined1405-installation.json"
+V82 = "18f75af69dfda0dbefde2f68ef7da79ecca701fd24cb625be8f74e44784d021c"
+EVIDENCE = {"whole730_outcome_review", "representative34_outcome_review",
+            "source_runtime_adoption_review", "final371_strict_positive12_review",
+            "final_theorem_adoption", "registration_installation_review"}
+
+
+def digest(raw):
+    return hashlib.sha256(raw).hexdigest()
+
+
+def valid_hash(value):
+    return isinstance(value, str) and re.fullmatch(r"[0-9a-f]{64}", value) is not None
+
+
+def read(root, relative):
+    p = Path(relative)
+    if not isinstance(relative, str) or p.is_absolute() or ".." in p.parts or str(p) != relative:
+        raise ValueError("unsafe installation reference")
+    path = root
+    for part in p.parts:
+        path = path / part
+        if path.is_symlink():
+            raise ValueError("linked installation reference")
+    st = path.stat()
+    if not stat.S_ISREG(st.st_mode):
+        raise ValueError("non-file installation reference")
+    return path.read_bytes()
+
+
+def check(root=ROOT):
+    raw = read(root, RECEIPT)
+    receipt = json.loads(raw)
+    if (type(receipt.get("schema_version")) is not int or receipt["schema_version"] != 1
+            or receipt.get("status") != "REVIEWED_COMBINED1405_REGISTRATION_INSTALLATION"
+            or type(receipt.get("registered_commands")) is not int or receipt["registered_commands"] != 1405):
+        raise ValueError("combined1405 installation has not been reviewed")
+    inv = read(root, INVENTORY)
+    if receipt["registration_inventory_sha256"] != digest(inv):
+        raise ValueError("registration inventory changed")
+    if receipt["v82_package_sha256"] != V82 or not valid_hash(receipt["v83_package_sha256"]):
+        raise ValueError("exact V82 and final371 package bindings are required")
+    files = receipt["installed_file_sha256"]
+    required = {"scripts/run_certificates.py", "scripts/certificate_execution.py", "tests/test_certificate_registration.py",
+                "tests/test_combined_registration_installation.py",
+                "tests/check_combined_registration_installation.py", "verify_all.sh", INVENTORY,
+                "certificates/continuous_primary_v82.py", "independent/continuous_sturm_v82.py",
+                "certificates/reflected_primary_v83.py", "independent/reflected_sturm_v83.py",
+                "certificates/reflected_packet_v83/selection.json",
+                "certificates/reflected_packet_v83/expected.json"}
+    if not isinstance(files, dict) or not required <= set(files):
+        raise ValueError("complete installed source/data closure is required")
+    if RECEIPT in files:
+        raise ValueError("installation receipt cannot hash itself")
+    seals = {RECEIPT: digest(raw), INVENTORY: digest(inv)}
+    for relative, expected in files.items():
+        if not valid_hash(expected) or digest(read(root, relative)) != expected:
+            raise ValueError("installed bytes differ: " + relative)
+        seals[relative] = expected
+    evidence = receipt["evidence"]
+    if not isinstance(evidence, dict) or set(evidence) != EVIDENCE:
+        raise ValueError("missing actual outcome/adoption/installation evidence")
+    records = {}
+    for role, ref in evidence.items():
+        if not isinstance(ref, dict) or set(ref) != {"path", "sha256"} or not valid_hash(ref["sha256"]):
+            raise ValueError("pending evidence: " + role)
+        value = read(root, ref["path"])
+        if digest(value) != ref["sha256"]:
+            raise ValueError("changed evidence: " + role)
+        records[role] = json.loads(value)
+        seals[ref["path"]] = ref["sha256"]
+    approval = records["registration_installation_review"]
+    expected_binds = {
+        "registration_inventory_sha256": digest(inv),
+        "v82_package_sha256": V82,
+        "v83_package_sha256": receipt["v83_package_sha256"],
+        "installed_file_sha256": files,
+        "evidence_sha256": {r: evidence[r]["sha256"] for r in EVIDENCE if r != "registration_installation_review"},
+    }
+    if (approval.get("status") != "ACCEPTED_EXACT_COMBINED1405_REGISTRATION_INSTALLATION"
+            or approval.get("binds") != expected_binds
+            or approval.get("actual_adoption_and_final_package_reviews_accepted") is not True
+            or approval.get("full_suite_execution_inferred") is not False):
+        raise ValueError("installation review must bind actual accepted inputs without inferring execution")
+    for relative, expected in seals.items():
+        if digest(read(root, relative)) != expected:
+            raise ValueError("late installation/evidence mutation: " + relative)
+    return {"status": "COMBINED1405_INSTALLATION_BYTES_VERIFIED_NOT_EXECUTED",
+            "registered_commands": 1405, "regressions_executed_by_this_check": 0}
+
+
+if __name__ == "__main__":
+    print(json.dumps(check(), sort_keys=True))

@@ -1,0 +1,8 @@
+{
+  "returncode": 0,
+  "seconds": 0.4473873330280185,
+  "cpu_limit": 20,
+  "wall_limit": 30,
+  "scope": "One installed full primary+independent finite-input regression; human classgroup proof separate",
+  "manifest_sha256": "4d1da1e7856a089b2b5af48764021b58b68912473536bc6653d1273507e8e22a"
+}

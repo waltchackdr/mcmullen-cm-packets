@@ -1,0 +1,56 @@
+{
+  "additional_interface_pair": {
+    "actual_pair_audit": null,
+    "actual_pair_review": null,
+    "expected_plan_unchanged": true,
+    "label": "R127:pic1:03",
+    "target_id": "REFLECTED_AB_V1"
+  },
+  "apply_authorized": false,
+  "combined_patch_sha256": "5ca12f8337625fd776692f94f35f2c7c4547d49959ea5541a5eaa4b719b5df33",
+  "domain_sha256": "8c4613ab9d74d7b0ae635f41352be68e44587fdc3a3ac25937f089cb691cb9ee",
+  "final371_strict12_review": null,
+  "final_theorem_adoption": null,
+  "full1405_suite_pass": false,
+  "identical1405_argv_multiset": true,
+  "live_registry_count": 185,
+  "mathematical_commands_executed": 0,
+  "overlay_sha256": {
+    "scripts/run_certificates.py": "8fc668ad5869dfba27d82f08bb3703d454c4089408bda0dc3ac7a7321c661897",
+    "tests/check_combined_registration_installation.py": "7d53cd863863268a2466fa2411ad621e95882f48f47143106b21883371948a46",
+    "tests/registration/combined1405-installation.json": "f62c2604e3ebf705803bd705729410056f90b02e160e2d530dd4204e64835dc8",
+    "tests/registration/combined1405.json": "a842f125406100060b6543cf770cd2c9bc9c7eb9c75e63d64237be82b24e3c73",
+    "tests/registration/legacy159.json": "a7eae21c1225c4e9e95c858537ea533b55de54f03b2de53cb8a02764996112db",
+    "tests/test_certificate_registration.py": "2afec2a94c2e76fabcdaa47ffb4263598833de8fca866f60bf83172e37aa5a79",
+    "tests/test_combined_registration_installation.py": "112d4929a8478df9e6a4c8e9d379ee2e3ae47a89c96133a0b6d24ee485164fed",
+    "verify_all.sh": "a7d6d63c503d58c8500938a2b88d1cc6a3e9ccc7bce0210c0ade5da2dda37c34"
+  },
+  "phase_counts": [
+    159,
+    6,
+    498,
+    12,
+    34,
+    696
+  ],
+  "preconditions_sha256": "e66cf535cb7dc2687a65ceb34a6965fdb3d83d473d3ac2c44fdfe7a49f5eb076",
+  "prior_registration_candidate_sha256": "212d65a3358865b2359f4ce92c8818d699bfc13549f06f5f05a0b371b012676e",
+  "proposed_count": 1405,
+  "registration_installation_review": null,
+  "representative34_outcome_review": null,
+  "required_prewrite_checks": [
+    "Exact current preconditions",
+    "Reviewed complete V82 and final371 descriptors",
+    "Byte-identical existing shared dependency overlap",
+    "Reviewed13 OM row/plan/expected preservation under365 widening",
+    "Final installed file closure and actual evidence reviewed"
+  ],
+  "schema_version": 1,
+  "status": "COMBINED1405_WITH34_BARRIER_CANDIDATE_PENDING_PAIR_OUTCOME_AND_ADOPTION",
+  "theorem_promotion": false,
+  "v82_package_sha256": "18f75af69dfda0dbefde2f68ef7da79ecca701fd24cb625be8f74e44784d021c",
+  "v83_final371_package_sha256": null,
+  "validation_sha256": "93837a95b0c32043fbeca51adee40298aa0ca01166ddb5134ddf9746ba0bf8cf",
+  "whole730_outcome_review": null,
+  "whole_packet_source_runtime_adoption_review": null
+}

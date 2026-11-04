@@ -1,0 +1,54 @@
+"""Separate24-element subgroup/coset check for C97; no adopted permutations imported."""
+import itertools,json,resource,signal,time
+from pathlib import Path
+resource.setrlimit(resource.RLIMIT_CPU,(20,20));signal.alarm(30);started=time.monotonic()
+# r^i s^j q^k in D8 x C3; s is the chosen complex conjugation.
+G=set(itertools.product(range(4),range(2),range(3)));one=(0,0,0);z=(2,0,0);cc=(0,1,0);q=(0,0,1)
+def product(x,y):return ((x[0]+(-1)**x[1]*y[0])%4,(x[1]+y[1])%2,(x[2]+y[2])%3)
+inverse={g:next(h for h in G if product(g,h)==one) for g in G}
+def subgroup(gens):
+ result={one};pending=[one]
+ while pending:
+  g=pending.pop()
+  for h in gens:
+   v=product(g,h)
+   if v not in result:result.add(v);pending.append(v)
+ return frozenset(result)
+def conjugate(g,H):return frozenset(product(product(g,h),inverse[g]) for h in H)
+def proj(g):return ((3*g[1]+2*g[2])%6,(-1)**(g[0]+g[1]))
+assert {g for g in G if proj(g)==(0,1)}=={one,z}
+assert len({proj(g) for g in G})==12
+for g,h in itertools.product(G,repeat=2):
+ a,b=proj(g),proj(h);assert proj(product(g,h))==((a[0]+b[0])%6,a[1]*b[1])
+reflections={g for g in G if g!=one and g!=z and product(g,g)==one}
+assert len(reflections)==4
+classes={frozenset(product(product(g,r),inverse[g]) for g in G) for r in reflections};assert len(classes)==2
+for C in classes:assert len(C)==2 and len({proj(x) for x in C})==1 and next(iter({proj(x) for x in C}))[0]==3
+forbidden={r for r in reflections if proj(r)[1]==1}
+subgroups={frozenset({one})};pending=list(subgroups)
+while pending:
+ H=pending.pop()
+ for g in G-H:
+  K=subgroup(set(H)|{g})
+  if K not in subgroups:subgroups.add(K);pending.append(K)
+allowed={H for H in subgroups if z not in H and not H&forbidden}
+assert sorted(len(H) for H in allowed)==[1,2,2,3,6,6]
+for n in (1,2,3,6):
+ candidates={H for H in allowed if len(H)==n};H=next(iter(candidates));assert {conjugate(g,H) for g in G}==candidates
+# A field's embeddings are G/H; real embeddings are cosets fixed by cc.
+def signature(H):
+ cosets={frozenset(product(g,h) for h in H) for g in G}
+ real=sum(frozenset(product(cc,x) for x in C)==C for C in cosets)
+ assert (len(cosets)-real)%2==0
+ return [real,(len(cosets)-real)//2]
+H_D=subgroup([q,cc]);H_DJ=subgroup([cc]);H_E0=subgroup([q]);H_M=subgroup([z]);H_B=subgroup([z,q]);H_realM=subgroup([z,cc]);H_sqrt21=subgroup([z,q,cc])
+fields={'Q':frozenset(G),'D':H_D,'DJ':H_DJ,'E0':H_E0,'E':frozenset({one}),'M':H_M,'B':H_B,'Mplus':H_realM,'Qsqrt21':H_sqrt21}
+sigs={name:signature(H) for name,H in fields.items()}
+assert sigs=={'Q':[1,0],'D':[2,1],'DJ':[6,3],'E0':[0,4],'E':[0,12],'M':[0,6],'B':[0,2],'Mplus':[6,0],'Qsqrt21':[2,0]}
+# Quotient by the free central involution: exact underlying stabilizer lifts.
+assert subgroup(set(H_D)|{z})==H_sqrt21
+assert subgroup(set(H_DJ)|{z})==H_realM
+assert subgroup(set(H_E0)|{z})==H_B
+assert subgroup([z])==H_M
+out={'status':'PASS','group_order':len(G),'reflection_conjugacy_classes':sorted([sorted([list(x) for x in C]) for C in classes]),'reflection_projection_classes':sorted([list(proj(next(iter(C)))) for C in classes]),'root_adjustment_preserves_square':'v^28=1 for every v of order dividing14','allowed_stabilizer_orders_with_multiplicity':sorted(len(H) for H in allowed),'allowed_stabilizers_one_conjugacy_class_each_order':True,'field_degrees':{name:24//len(H) for name,H in fields.items()},'field_signatures_from_real_cosets':sigs,'forgetful_stabilizer_lifts_verified':True,'scope':'Tiny abstract group/coset check; actual Galois projection and fields rely on adopted inputs and reviewed structural argument','wall_seconds':time.monotonic()-started}
+Path(__file__).with_suffix('.json').write_text(json.dumps(out,indent=2,sort_keys=True)+'\n');print(json.dumps(out,sort_keys=True))

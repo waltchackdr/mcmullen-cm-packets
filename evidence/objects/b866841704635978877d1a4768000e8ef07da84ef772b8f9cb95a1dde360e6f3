@@ -1,0 +1,63 @@
+#!/usr/bin/env python3
+"""Discovery: minimal invariant supports on one copy B x D.
+
+This is a finite exterior-algebra calculation, not arbitrary powers.
+"""
+from collections import defaultdict, Counter
+from hashlib import sha256
+from pathlib import Path
+import json
+
+ROOT = Path(__file__).resolve().parents[2]
+SOURCE = "experiments/fixed_field_cm_census_v98/primary.json"
+SOURCE_SHA = "2135edfe6a09b1a2c51a254f80e4570a761674e5be3208c15c549087f225917e"
+G = [1,5,11,13,17,19,23,25,29,31,37,41]
+ZERO = (0,)*12
+
+
+def factor(phi):
+    columns = [tuple(1 if a*g%42 in phi else -1 for g in G) for a in G]
+    sums = [ZERO]
+    by_weight = defaultdict(list)
+    for mask in range(4096):
+        if mask:
+            bit = mask & -mask
+            sums.append(tuple(x+y for x,y in zip(sums[mask^bit],columns[bit.bit_length()-1])))
+        by_weight[sums[mask]].append(mask)
+    return by_weight
+
+
+def check():
+    raw = (ROOT / SOURCE).read_bytes()
+    assert sha256(raw).hexdigest() == SOURCE_SHA
+    types = json.loads(raw)["orbits"]
+    b,d = [factor(types[i]["representative"]) for i in (0,2)]
+    invariants = {x | (y << 12) for w,xs in b.items() for x in xs
+                  for y in d.get(tuple(-a for a in w),[])}
+    assert len(invariants) == 11856
+    atoms = []
+    decompositions = {}
+    for mask in sorted(invariants-{0},key=lambda m:(m.bit_count(),m)):
+        sub = next((a for a in atoms if a & mask == a),None)
+        if sub is None: atoms.append(mask)
+        else:
+            assert (mask ^ sub) in invariants and (mask ^ sub)
+            decompositions[mask] = [sub,mask^sub]
+    assert len(decompositions)+len(atoms)+1 == len(invariants)
+    labels = [(f,g) for f in ('B','D') for g in G]
+    return {"status":"EXACT_FINITE_ATOM_DISCOVERY_NO_NEW_ALGEBRAICITY",
+            "input_sha256":{SOURCE:SOURCE_SHA},"finite_domain":"2^24 exterior supports via4096x4096 opposite-weight join",
+            "invariant_dimensions":dict(sorted(Counter(m.bit_count()//2 for m in invariants).items())),
+            "atom_counts_by_codimension":dict(sorted(Counter(m.bit_count()//2 for m in atoms).items())),
+            "atoms":[{'mask':m,'support':[list(labels[i]) for i in range(24)if m & (1<<i)]}for m in atoms],
+            "decomposition_sha256":sha256(json.dumps(decompositions,sort_keys=True).encode()).hexdigest(),
+            "scope":"One copy each, support-minimal zero-weight exterior monomials. No integer multiplicity Hilbert-basis assertion or all-powers generation."}
+
+
+if __name__ == '__main__':
+    import resource
+    import signal
+    resource.setrlimit(resource.RLIMIT_CPU,(20,22))
+    signal.alarm(30)
+    assert __debug__
+    print(json.dumps(check(),indent=2,sort_keys=True))

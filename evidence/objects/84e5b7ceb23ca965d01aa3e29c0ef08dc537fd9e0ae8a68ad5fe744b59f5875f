@@ -1,0 +1,95 @@
+"""Field-free regression for the committed staged packages and registry candidate.
+
+Does not install the candidate or run mathematical children. Run before installation
+with --repository ROOT; when copied to repository tests/, ROOT is the default.
+"""
+import argparse
+import hashlib
+import json
+from pathlib import Path
+import sys
+import types
+import unittest
+
+CONTRACT = 'build/research-v81/release-prep/stage1-certificate-commit-preparation-2026-10-13/payload-contract.json'
+CONTRACT_SHA = '0faea89ee5978f9fbf551d00e2ae3b0eaeefec73ae9284fe32ea097cc339abef'
+ROOT = Path(__file__).resolve().parents[1]
+
+def held(root, ref):
+    p = root / ref['path']
+    if p.is_symlink() or not p.is_file():
+        raise ValueError('Expected regular pinned file')
+    data = p.read_bytes()
+    if hashlib.sha256(data).hexdigest() != ref['sha256']:
+        raise ValueError('Staged input bytes changed: ' + ref['path'])
+    return data
+
+def contract():
+    return json.loads(held(ROOT, {'path': CONTRACT, 'sha256': CONTRACT_SHA}))
+
+def package(root, ref, field):
+    value = json.loads(held(root, ref))
+    base = Path(ref['path']).parent
+    for name, sha in value[field].items():
+        p = Path(name)
+        if p.is_absolute() or '..' in p.parts:
+            raise ValueError('Unsafe package member')
+        held(root, {'path': str(base / p), 'sha256': sha})
+    return value
+
+class StagedPacketReleaseTests(unittest.TestCase):
+    def test_both_whole_staged_packages_and_plan_population(self):
+        c = contract()
+        p = package(ROOT, c['v83_package'], 'files_sha256')
+        v = package(ROOT, c['v82_package'], 'files')
+        self.assertEqual((p['entry_count'], p['positive_commands'], p['reflected_nonhit_commands']), (371, 12, 730))
+        self.assertEqual((len(v['labels']), len(v['controls'])), (249, 3))
+        base = Path(c['v83_package']['path']).parent
+        def read(n):
+            return json.loads(held(ROOT, {'path': str(base/n), 'sha256': p['files_sha256'][n]}))
+        s = read('certificates/reflected_packet_v83/selection.json')['jobs']
+        e = read('certificates/reflected_packet_v83/expected.json')['points']
+        self.assertEqual(set(s), set(e)); self.assertEqual(len(s), 371)
+        positives = {(v['target_id'], v['point_label']) for v in s.values() if v['kind'] == 'KNOWN_POSITIVE_CONTROL'}
+        self.assertEqual(positives, {(t, l) for t in ('ORIGINAL_Q_V1','REFLECTED_AB_V1') for l in ('OM:pic0:00','OM:pic0:07','OM:pic0:15')})
+        for key, job in s.items():
+            self.assertEqual(key, job['target_id']+'/'+job['point_label'])
+            held(ROOT, {'path': str(base/job['plan_path']), 'sha256': job['plan_sha256']})
+        self.assertFalse(p['theorem_promotion'])
+
+    def test_exact_registration_vector_inventory_and_barrier(self):
+        c = contract(); inv = json.loads(held(ROOT, c['command_inventory']))
+        self.assertEqual(inv['count'], 1405)
+        phases = ('legacy159','v82-controls','v82-selected','v83-positive-controls','v83-representatives','v83-remaining')
+        self.assertEqual([sum(x['phase'] == p for x in inv['commands']) for p in phases], [159,6,498,12,34,696])
+        self.assertEqual(len({tuple(x['argv']) for x in inv['commands']}), 1405)
+        self.assertFalse(inv['mathematical_execution']); self.assertFalse(inv['theorem_promotion'])
+
+    def test_reviewed_candidate_runner_through_nonlaunching_regression(self):
+        c = contract()
+        # Check both held code files before executing the reviewed test module;
+        # that module patches child execution and imports no mathematical kernel.
+        held(ROOT, c['registry'])
+        code = held(ROOT, c['registry_test'])
+        module = types.ModuleType('staged_registry_test')
+        module.__file__ = str(ROOT/c['registry_test']['path'])
+        exec(compile(code, module.__file__, 'exec'), module.__dict__)
+        module.ROOT = (ROOT/c['registry']['path']).parent.parent
+        result = unittest.TestResult()
+        names = unittest.defaultTestLoader.getTestCaseNames(module.CertificateRegistrationTests)
+        integration = 'test_existing_installed_files_bound_by_reviewed_receipt'
+        self.assertIn(integration, names)
+        # That separately named integration obligation belongs to stage2. Its
+        # frozen source explicitly excludes it from candidate metadata tests.
+        suite = unittest.TestSuite(module.CertificateRegistrationTests(n) for n in names if n != integration)
+        suite.run(result)
+        self.assertGreaterEqual(result.testsRun, 9)
+        self.assertEqual(result.errors, []); self.assertEqual(result.failures, [])
+        held(ROOT, c['registry']); held(ROOT, c['registry_test'])
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--repository', type=Path, default=ROOT)
+    args, rest = parser.parse_known_args()
+    ROOT = args.repository.resolve()
+    unittest.main(argv=[sys.argv[0], *rest])

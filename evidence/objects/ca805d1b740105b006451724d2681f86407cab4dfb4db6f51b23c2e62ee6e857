@@ -1,0 +1,17 @@
+{
+  "status": "FINITE_KERNEL_MODEL_REGRESSION_NOT_GEOMETRIC_ADOPTION",
+  "field_size": 27,
+  "ambient_size": 729,
+  "distinct_lines": 28,
+  "line_cardinalities": [
+    27
+  ],
+  "nonzero_partition_size": 728,
+  "additive_exponent": 3,
+  "conditional_unit_orbit_sizes": [
+    14,
+    14
+  ],
+  "minimum_degree_from_conductor_index": 27,
+  "premise": "C63 identifies the actual residue extension and full unit image; this model does not reprove those global inputs."
+}

@@ -1,0 +1,49 @@
+"""Apply real resource cleanup checks to the generalized pilot supervisor."""
+import importlib.util
+import json
+from pathlib import Path
+import subprocess
+import sys
+import tempfile
+import unittest
+from unittest.mock import patch
+import test_broader_pilot_limits as limits
+
+ROOT = Path(__file__).resolve().parents[1]
+
+def load(name):
+    spec = importlib.util.spec_from_file_location('v71_' + name,
+        ROOT / 'experiments/broader_geometry_v71' / (name + '.py'))
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+runner = load('run_pilot')
+comparator = load('compare')
+
+class GeneralizedPilotLimits(limits.BroaderPilotLimits):
+    def setUp(self):
+        self.binding = patch.object(limits, 'runner', runner)
+        self.binding.start()
+        self.addCleanup(self.binding.stop)
+
+class PilotDomainGuards(unittest.TestCase):
+    def test_unreviewed_point_rejected_before_output_creation(self):
+        with tempfile.TemporaryDirectory() as directory:
+            output = Path(directory) / 'must-not-exist'
+            result = subprocess.run([sys.executable, '-B', str(ROOT /
+                'experiments/broader_geometry_v71/run_pilot.py'), '--point',
+                'R127:pic1:01', '--output', str(output)], capture_output=True, text=True)
+            self.assertEqual(result.returncode, 2)
+            self.assertIn('invalid choice', result.stderr)
+            self.assertFalse(output.exists())
+
+    def test_comparator_rejects_unreviewed_point_without_reading_artifacts(self):
+        with tempfile.TemporaryDirectory() as directory:
+            run = Path(directory)
+            (run / 'runtime.json').write_text(json.dumps({'point_label':'R127:pic2:00'}))
+            with self.assertRaisesRegex(ValueError, 'outside reviewed pilot domain'):
+                comparator.compare(run)
+
+if __name__ == '__main__':
+    unittest.main()

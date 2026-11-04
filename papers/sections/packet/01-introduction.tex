@@ -1,0 +1,206 @@
+% !TeX root = ../../packet-and-principal-models.tex
+\section{Introduction}\label{sec:intro}
+A rational CM Hodge structure does not determine an integral polarized
+abelian variety, and neither determines its location on a specified curve.
+This paper separates these three questions for one finite packet on
+McMullen's curve. We first determine its intersection with the normalized
+curve. We then construct principal models of the three surviving fibers
+and distinguish their integral maps and polarizations.
+
+The packet is fixed by the extension $M/L$, the ordered embeddings and the
+norm generator below. All conjugacy counts use $\SL_2(\mathcal O_L)$.
+Replacing this group by $\GL_2(\mathcal O_L)$ or forgetting a field marking
+changes the classification problem. No assertion concerns every CM point
+of the curve or every Hecke packet of level $43$.
+
+\subsection{The three questions and their answers}
+The finite packet has $3520$ trace-labelled matrix classes and $368$
+quotient points. Its intersection with the normalized curve is exactly
+$A,B,C$, subject to the execution premise stated below. The original
+fibers have polarization type $(1,7,7,21,21,21)$, not principal type.
+A common self-dual lattice gives isogenous principal models on a connected
+finite cover. For the B/C principal models the minimum unrestricted
+isogeny degree is $7$, whereas the minimum scalar-polarized degree is $64$.
+These two minima measure different requirements on a map.
+
+The table in Theorem~\ref{thm:A} presents all three geometric fibers
+together. The main statements distinguish the finite intersection, the
+Hodge consequences and the integral principal geometry. The supporting
+Hodge note treats powers and mixed products; none of those extensions is
+needed to prove the finite intersection.
+
+\subsection{Fixed data and execution premise}
+Write $z=\zeta_{42}$, $M=\mathbb Q(z)=\mathbb Q(\zeta_{21})$,
+$L=M^+$ and $t=z+z^{-1}$. Order the real embeddings by
+$1,5,11,13,17,19$ and put
+\[
+ \pi=t^4+t^3-4t^2-2t+5,\qquad \alpha_0=1+z+z^4,
+ \qquad \alpha_k=z^k\alpha_0,\quad c_k=\alpha_k+\bar\alpha_k.
+\]
+Then $N_{M/L}(\alpha_0)=\pi$ and $N_{L/\mathbb Q}(\pi)=43$.
+The symbols $A,B,C$ denote normalized vertex classes; $A_X$ denotes the
+trace-polarized sixfold at $X$, and $B_X$ its specified principal model.
+Let $F_t:\mathbb H\to\mathbb H^6$ be McMullen's modular embedding
+with the component normalization of Supplement, Section~\externalref{supplement}{app:components}.
+The normalized curve image is the image of $F_t$ in
+$\SL_2(\mathcal O_L)\backslash\mathbb H^6$. Its quadrilateral
+monodromy is the integral, orientation-preserving group used below.
+The normalized generators are $X_t=h_tXh_t^{-1}$ with
+$h_t=\operatorname{diag}(t,1)$. The fourth quadrilateral vertex is treated
+in Proposition~\ref{prop:DBsame}; it is not a fourth quotient class.
+
+\begin{executionhypothesis}\label{hyp:packetexecution}
+The packet intersection claims use the retained exact search executions
+identified in Supplement, Section~\externalref{supplement}{app:computer}. For the historical commands and
+continuation cohort lacking complete end-of-execution guards, we assume
+that the archived mathematical sources and runtime were not transiently
+replaced during execution. The accepted source correspondence and final
+population join are those of the final packet adoption identified there.
+Later hashes and small control runs do not establish the missing historical
+guards or constitute a fresh execution of the full suite.
+This premise concerns the retained execution evidence; it is additional
+to the finite-domain and exact-arithmetic arguments in the proofs.
+\end{executionhypothesis}
+
+\begin{theorem}[The fixed marked norm-$\pi$ packet]\label{thm:packetintro}
+Under the packet execution hypothesis above, the following holds.
+Fix the extension $M/L$, its $L$-action and ordered six real embeddings,
+and the generator $\pi$ and elements
+$\alpha_k=\zeta_{42}^k\alpha_0$ for $0\leq k<42$ specified above.
+The integral matrices of determinant $\pi$ and trace
+$c_k=\alpha_k+\overline{\alpha}_k$ have exactly $3520$
+trace-labelled $\SL_2(\OL)$-conjugacy classes. Their upper fixed tuples
+give exactly $368$ distinct points of
+$\SL_2(\OL)\backslash\HH^6$.
+In the normalized trace-polarized McMullen curve image, precisely three
+of these points occur: $A,B,C$. There are $365$ exclusions, consisting
+of thirteen maximal-multiplier points and all $352$ proper-multiplier
+points. The complete $112$-point $d=7$ subpacket has three hits and
+$109$ exclusions.
+\end{theorem}
+\begin{proof}
+The arithmetic assertion is Theorem~\ref{thm:fullpacketarithmetic}.
+The geometric assertion is Theorem~\ref{thm:fullpacketgeometry}, using
+the retained exact certificates and execution-provenance assumptions
+specified in Supplement, Section~\externalref{supplement}{app:computer}.
+\end{proof}
+
+\begin{theoremA}\label{thm:A}
+Let $z_X$ be the normalized vertex $X\in\{A,B,C\}$ and set
+$A_X=\C^6/(\OL z_X+\OL)$, with trace polarization
+$E_1((a,b),(a',b'))=\Tr_{L/\Ql}(a'b-ab')$.
+Each has polarization type $(1,7,7,21,21,21)$ and a compatible
+$K=\Ql(\sqrt{-3})$ action of signature $(3,3)$ and Hermitian
+discriminant $-1$. Their actual geometric CM types and Hodge algebras are
+\[
+\begin{array}{c|c|c}
+X&\Phi_X&\operatorname{Hdg}^*(A_X)\\ \hline
+A&\{1,5,17,19,29,31\}&\langle\text{divisors}\rangle\\
+B&\{1,5,23,25,29,31\}&\langle\text{divisors},W_K(A_B)\rangle\\
+C&\{1,5,11,13,17,19\}&\langle\text{divisors},W_K(A_C)\rangle
+\end{array}
+\]
+The A type is induced and the B/C types are primitive.
+Consequently the Hodge conjecture holds for all three fibers in every
+codimension. Their common self-dual lattice modification supplies
+principal models $B_A,B_B,B_C$ on one connected finite-cover RM family,
+with degree-$453789$ isogenies preserving the rational CM Hodge
+structures, the indicated $K$ signatures and discriminants.
+\end{theoremA}
+
+\noindent\emph{Proof locator for Theorem~\ref{thm:A}.}
+The trace polarization is computed in Proposition~\ref{prop:E1type}.
+The B calculation is in Sections~\ref{sec:actualcmtype}--\ref{sec:fullhodge};
+Theorem~\ref{thm:Ahodge} and Proposition~\ref{prop:Cvertex} give A and C.
+Proposition~\ref{prop:commonprincipal} and
+Theorem~\ref{thm:principalfamily} supply the common principal family.
+
+\begin{theorem}[Principal models and their integral distinctions]
+\label{pp:thm:introgeometry}
+The specified principal models $B_A,B_B,B_C$ are pairwise nonisomorphic
+even as unpolarized complex abelian varieties. For maps $B_B\to B_C$,
+the least isogeny degree is $7$. Among these maps pulling back the given
+target principal polarization to a positive integer multiple of the
+source polarization, the least multiplier is $2$, with exactly six
+degree-$64$ maps sharing one kernel. Under the normalization of
+Proposition~\ref{pp:prop:homideal}, their integral Hom module is
+the target-$R$ ideal $\mathfrak a$ of class order two.
+
+On each of the two underlying varieties $B_B,B_C$, exactly two
+isomorphism classes of principal polarizations occur, represented by
+the given polarization and its $4-t^2$ twist. These give four distinct
+polarized isomorphism classes after forgetting all CM and RM markings.
+The same twist extends over the principal family; on the full coarse
+principal RM component it is the nontrivial involution
+$w_i\mapsto w_i/\sigma_i(4-t^2)$. It preserves the entire principal
+curve image. On each of $B_A,B_B,B_C$ with its prescribed RM action
+there are exactly two compatible principal-polarization classes;
+the resulting six Weil points all lie on this same image and remain
+distinct after forgetting all CM and RM markings. For each of the four
+B/C polarization pairs, the least scalar multiplier remains $2$,
+with six degree-$64$ maps in the direction $B_B\to B_C$; their two possible kernels are complementary
+order-$64$ subgroups of $B_B[2]$.
+\end{theorem}
+\begin{proof}
+See Theorem~\ref{thm:principalfamily} and
+Propositions~\ref{pp:prop:unpolarizeddistinct},
+\ref{pp:prop:bcisogeny}, \ref{pp:prop:mindegree},
+\ref{pp:prop:homideal}, \ref{pp:prop:actualpolarizations}
+and~\ref{pp:prop:unitfamily}, together with
+Propositions~\ref{pp:prop:unitcurve}, \ref{pp:prop:sixprincipal},
+\ref{pp:prop:unmarkeda}, \ref{pp:prop:polarizationsquare} and
+Corollary~\ref{pp:cor:weilimage}. Arbitrary fine-level lifts are not
+part of the involution assertion.
+\end{proof}
+
+\begin{remark}[Principal-moduli normalization]\label{rem:WKnormalization}
+The original lattice $\mathcal O_L^2$ with its trace form is not a
+principally polarized model. The self-dual modification changes the lattice
+through an isogeny; passage to a finite cover alone would not do so.
+The resulting principal family lies in the component determined by that
+self-dual module. Its identification with Mostaed's named principally
+polarized locus remains open. The Hodge conclusions at the three special
+fibers do not require that further identification, and no global
+$K$-action on the family is asserted.
+\end{remark}
+
+\subsection{Proof strategy and relation to prior work}
+The arithmetic classification includes every module overorder and
+orientation, then identifies the two characteristic roots at the level of
+quotient points. For geometry, two simultaneous target regions reduce curve
+membership to finite exact searches. Both regions are needed: separate
+choices of a reflected chamber in different coordinates are not allowed.
+The positive vertex realizations and exhaustive empty searches prove the
+intersection theorem.
+
+The principal construction instead uses the discriminant module of the
+trace lattice. A common nonfree maximal isotropic subgroup is stable under
+the three specialized quadratic actions. Its stabilizer gives the finite
+cover on which the lattice modification descends. Integral lattice and
+unit calculations then distinguish the models, maps and twists.
+
+The Hodge consequences use divisor classes and the split-Weil input of
+Schoen and Markman \cite{Schoen1998,Markman2025}. OpenAI's general CM
+manuscript \cite{OpenAICM2026}, if valid, implies the rational algebraicity
+conclusions; it is not a proof input here. Goodson's factor comparison and
+Saller's related discussion \cite{Goodson2024,Saller2026} also precede any
+claim of novelty for the rational CM types. The contribution examined here
+is the fixed packet and its integral geometry, not new abstract isogeny
+classes. Precise historical priority remains a separate literature question.
+The reported Aoki route in Saller is not used as a substitute proof.
+
+The trace-dual and unit-norm description of polarizations is classical.
+For comparison, Li--Mantovan--Pries prove uniqueness, when a principal
+polarization exists, for simple maximal-order CM types under specified
+unit-sign hypotheses \cite[Prop.~4.5]{LiMantovanPries2021}. Their
+same-field example $y^7=x^3-1$ is a known principally polarized Jacobian
+\cite[Prop.~6.11 and Lemma~6.12]{LiMantovanPries2021}.
+Our B/C principal models have a proper endomorphism order. The results
+here concern their exact integral classes, maps and realization on the
+specified curve; neither the general polarization method nor same-field
+principal existence is claimed as new.
+
+The constructed principal family is not identified with Mostaed's named
+principal normalization \cite{Mostaed2026}. It has a different integral
+lattice. Corrections relevant to that distinction are recorded in the
+supplement; they are secondary to the positive results of this paper.
