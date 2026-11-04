@@ -1,51 +1,25 @@
-# Contributing
+# Working with the research package
 
-Corrections, questions and extensions are welcome. You can [open an issue](https://github.com/waltchackdr/mcmullen-cm-packets/issues)
-to report an error or discuss an idea. Include the paper, theorem, claim ID or
-file involved, and enough detail for someone else to follow your reasoning.
-For a Python problem, include the command, Python version and error message.
-Please leave credentials and personal information out of reports.
-
-To propose an edit, fork the repository, make your changes on a branch and open
-a pull request. A fork is your own copy; a pull request proposes changes to this
-repository. The maintainer reviews proposals and decides what to merge.
-Public access does not grant permission to edit this repository directly.
-
-## Preparing a contribution
-
-The [overview](docs/research-overview.md), [claims guide](docs/claims.md) and
-[limitations](docs/limitations.md) explain the package and its scope.
-Keep changes focused and describe what they improve.
-
-For a mathematical change, identify the affected claims, hypotheses, evidence
-and dependencies. Distinguish conjectures, computations and proofs, and retain
-counterexamples and failed approaches when they explain a result. Preserve
-existing theorem labels and historical certificate identifiers so references
-remain usable. If a certificate needs correction, retain its original version
-and document the replacement and affected claims.
+Start with the [overview](docs/research-overview.md), [claims guide](docs/claims.md)
+and [limitations](docs/limitations.md). Keep an unchanged copy of the manifested
+snapshot and make edits in a separate working copy.
 
 Use descriptive filenames for new prose, four-space Python indentation and
-UTF-8 text with LF line endings and a final newline.
+UTF-8 text with LF line endings and a final newline. Preserve theorem labels
+and historical certificate identifiers so references remain usable.
 
-## Checking changes
+For a mathematical change, identify affected claim IDs, hypotheses, evidence
+and dependencies. Separate discovery, exact computation and proof. A successful
+program does not replace a proof of its search domain or an independent review.
+Record counterexamples and failed approaches rather than editing expectations
+to conceal a discrepancy.
 
-Follow the [reproduction guide](docs/reproducing-results.md) to run the package
-check and two small exact Python examples. GitHub Actions runs these same
-checks for pushes to `main` and pull requests. A passing run checks package
-consistency and those examples; it is not a review of every proof.
-
-The manifest records the files and hashes of a particular snapshot. Changes
-will intentionally fail the integrity check until the manifest is updated.
-You can submit a proposal with that expected failure: explain which files you
-changed. The maintainer reviews the changes, preserves the previous snapshot
-in Git history and updates the manifest before merging. Changes to mathematical
-claims also need their corresponding evidence and review records updated;
-regenerating a manifest alone does not validate them.
-
-## Reuse and attribution
+The [reproduction guide](docs/reproducing-results.md) distinguishes integrity
+checks, document compilation and mathematical replay. The original manifest
+should fail after a change; do not present a modified copy as the reviewed
+snapshot. A new edition needs its own manifest and review record.
 
 See [licensing](LICENSE.md) for MIT code/data and CC BY 4.0 writing terms, and
-[third-party notices](THIRD-PARTY-NOTICES.md) for exclusions. Contribute material
-you have the right to share under the applicable terms, and acknowledge any
-sources. Citing third-party material does not itself grant permission to
-redistribute it.
+[third-party notices](THIRD-PARTY-NOTICES.md) for exclusions. Only contribute
+material you have the right to distribute under the applicable terms. No
+permission to redistribute third-party material is implied by its citation.
