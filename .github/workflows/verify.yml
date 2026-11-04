@@ -1,0 +1,38 @@
+name: Package and Python checks
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: package-checks-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    name: Package integrity and exact examples
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    env:
+      PYTHONDONTWRITEBYTECODE: "1"
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - name: Set up Python
+        uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with:
+          python-version: "3.12"
+      - name: Check package integrity and navigation
+        run: timeout 60s python3 -B scripts/check-public-package.py
+      - name: Check supplied CM types and matrix identities
+        run: timeout 60s python3 -B certificates/known_cm_comparison_v58.py
+      - name: Check exact arithmetic vertex bridge
+        run: timeout 60s python3 -B independent/k11_vertex_bridge_stdlib_v60.py

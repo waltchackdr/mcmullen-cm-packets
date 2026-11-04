@@ -106,7 +106,10 @@ def verify(root):
               if p.is_file() and p.relative_to(root).parts[0] != ".git"}
     if actual != names | {"manifest.json"}:
         errors.append("Inventory differs from manifest")
-    if any(x.startswith(".") or x == "__pycache__" for name in actual for x in Path(name).parts) or any(name.endswith(".pyc") for name in actual):
+    # This one manifested workflow is intentional public configuration.
+    # Other hidden files remain forbidden, including other workflows.
+    allowed_hidden_files = {".github/workflows/verify.yml"}
+    if any(x.startswith(".") or x == "__pycache__" for name in actual - allowed_hidden_files for x in Path(name).parts) or any(name.endswith(".pyc") for name in actual):
         errors.append("Hidden configuration or history in distribution")
     data = json.loads((root / "data/claims/register.json").read_text())
     index = json.loads((root / "evidence/index.json").read_text())

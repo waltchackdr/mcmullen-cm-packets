@@ -47,6 +47,25 @@ To retain output, redirect it to a file outside the edition, for example
 `python3 -B certificates/known_cm_comparison_v58.py > ../cm-comparison.json`.
 A nonzero exit, traceback or different status is a failed run to investigate.
 
+## Automatic checks on GitHub
+
+The [workflow](../.github/workflows/verify.yml) runs the three commands above
+on Python 3.12 and Ubuntu for pushes to `main` and pull requests. You can inspect
+individual steps and their JSON output in the repository's
+[Actions tab](https://github.com/waltchackdr/mcmullen-cm-packets/actions).
+Maintainers can also start a run manually there.
+
+The job has a five-minute limit, with a one-minute limit for each check. It uses
+read-only repository permissions, no project secrets and no third-party Python
+packages. It does not run the full historical campaign or build the papers.
+A passing run confirms the stated package checks and two exact examples; it
+does not certify all mathematical claims or constitute independent review.
+
+The workflow itself is included in the manifest. It is the only permitted
+hidden configuration file in the distribution. The checker does not update
+hashes automatically; see [contributing](../CONTRIBUTING.md) for how proposed
+changes and revised manifests are handled.
+
 ## Rebuild the papers
 
 For an editor preview, open the complete `papers/` folder and choose the main

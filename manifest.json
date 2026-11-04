@@ -1,9 +1,14 @@
 {
   "files": [
     {
-      "bytes": 1421,
+      "bytes": 1136,
+      "path": ".github/workflows/verify.yml",
+      "sha256": "f7b3acd006e3a5ee81a7fca4d35bed7ef3a38c17565185dae948baa95ec7900b"
+    },
+    {
+      "bytes": 2742,
       "path": "CONTRIBUTING.md",
-      "sha256": "c9108e179aab37b191679cbd2884630e88baf6e49f0848f80371de858af36158"
+      "sha256": "efc01326e9eca94af3fc809c928a5b95109251c419fe713658f0fd27eccf218b"
     },
     {
       "bytes": 1408,
@@ -3706,9 +3711,9 @@
       "sha256": "7fd1bbe3b22dbcedc11df0235174bf3c01a763957f1149105a0ef76a1dbb9c53"
     },
     {
-      "bytes": 4576,
+      "bytes": 5610,
       "path": "docs/reproducing-results.md",
-      "sha256": "22c17d0330d16441e2aab64e55c7cc1f34eb37aaad0a4b250c52be2128098261"
+      "sha256": "62bd594b853a89d124290066db8b1ea03ac86aa2fa84c22fa98761841bbbcbb2"
     },
     {
       "bytes": 3303,
@@ -18136,9 +18141,9 @@
       "sha256": "345fdbcdc8a5d83936852d21bc6d2190ac822c037ef340005967bc0c95dbc185"
     },
     {
-      "bytes": 10023,
+      "bytes": 10248,
       "path": "src/public_package.py",
-      "sha256": "1939ef3a1c9eb9121698018bc31cf58a96cf3a5896d1d1ba459ebaae660c106f"
+      "sha256": "aad9352c6ea94d56681714f68b6569ec7cafb5ab64e17f2e415252d62746baa3"
     },
     {
       "bytes": 2217,
