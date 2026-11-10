@@ -42,6 +42,48 @@ printed `scope` fields explain the limits: neither establishes the geometric
 orbit claim or replaces its human proof. These are examples, not the full
 packet campaign. Do not use Python's `-O` option: it disables assertions.
 
+### The packet census
+
+The arithmetic census of Paper I, Theorem `thm:fullpacketarithmetic`, can be
+recomputed from this edition by two separately written programs. Both use only
+Python's standard library:
+
+```sh
+python3 -B certificates/full_packet_arithmetic_v62.py
+python3 -B independent/full_packet_cyclotomic_v62.py
+```
+
+The expected `status` values are
+`PASS_EXACT_FULL_PACKET_ARITHMETIC_3520_CLASSES_368_POINTS` and
+`PASS_INDEPENDENT_FULL_PACKET_CYCLOTOMIC_V62`. Each takes seconds. They
+reconstruct the 3,520 trace-labelled matrix classes and 368 ambient quotient
+points and compare them with the retained data in
+`certificates/full_packet_v62/`. They perform no curve-membership test: the
+three-point geometric conclusion rests on the separate exclusion searches and
+the execution premise stated in Paper I.
+
+### Inputs of the search programs
+
+```sh
+python3 -B scripts/check-certificate-inputs.py
+```
+
+This reads the programs under `certificates/` and `independent/` without
+running them and checks that every file they pin by SHA256, and every sibling
+module they import, is in this edition. The expected `status` is
+`CERTIFICATE_INPUTS_PRESENT`. It establishes no mathematical claim.
+
+The exclusion searches themselves need the packages in `requirements.txt`.
+One positive control, in both implementations, takes one to two minutes each:
+
+```sh
+python3 -B certificates/reflected_primary_v83.py --target-id ORIGINAL_Q_V1 --point OM:pic0:15 --output ../om15-primary
+python3 -B independent/reflected_sturm_v83.py --target-id ORIGINAL_Q_V1 --point OM:pic0:15 --output ../om15-sturm
+```
+
+Each should end with `POINT_PASS`. One control is not the packet theorem,
+which rests on all the registered searches and the execution premise.
+
 The `-B` option prevents bytecode files from being added to the checked edition.
 To retain output, redirect it to a file outside the edition, for example
 `python3 -B certificates/known_cm_comparison_v58.py > ../cm-comparison.json`.
@@ -49,8 +91,8 @@ A nonzero exit, traceback or different status is a failed run to investigate.
 
 ## Automatic checks on GitHub
 
-The [workflow](../.github/workflows/verify.yml) runs the three commands above
-on Python 3.12 and Ubuntu for pushes to `main` and pull requests. You can inspect
+The [workflow](../.github/workflows/verify.yml) runs the six standard-library
+commands above (every command except the two search controls) on Python 3.12 and Ubuntu for pushes to `main` and pull requests. You can inspect
 individual steps and their JSON output in the repository's
 [Actions tab](https://github.com/waltchackdr/mcmullen-cm-packets/actions).
 Maintainers can also start a run manually there.
@@ -58,8 +100,8 @@ Maintainers can also start a run manually there.
 The job has a five-minute limit, with a one-minute limit for each check. It uses
 read-only repository permissions, no project secrets and no third-party Python
 packages. It does not run the full historical campaign or build the papers.
-A passing run confirms the stated package checks and two exact examples; it
-does not certify all mathematical claims or constitute independent review.
+A passing run confirms the stated package checks, the presence of the pinned
+inputs, the two exact examples and the arithmetic census; it does not certify all mathematical claims or constitute independent review.
 
 The workflow itself is included in the manifest. It is the only permitted
 hidden configuration file in the distribution. The checker does not update

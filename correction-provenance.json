@@ -1,0 +1,135 @@
+{
+  "scope": "Correction to the public edition. Restores nine working files that included certificate programs read, import or pin and that the edition had omitted or had kept only under another path, so the packet census, the listed separate implementations, the V82 and V83 search programs and the order-coverage check run from a fresh copy. Adds a static check that pinned inputs are present, adds that check and the census to the automatic checks, and documents them. No theorem, proof text, paper source, PDF or previously included certificate or data file is changed.",
+  "date": "2026-11-10",
+  "prepared_by": "Claude (Anthropic), at the author's request. This is a packaging correction, not a mathematical review, and it adopts no claim.",
+  "parent_manifest_sha256": "3ef0f6afcc22fe79a8d63d043f07aab5c9ef67a1001a977809fc065ebf2b21c7",
+  "restored_files": [
+    {
+      "path": "certificates/d3_matrix_manifest_v60.jsonl",
+      "bytes": 309088,
+      "sha256": "fc87260544e8d8418e7bc6fe3ca80ef7d9715a82fcdaea9b2a9716016e00004e"
+    },
+    {
+      "path": "certificates/d3_points_v60/matrix_to_point_bridges_v59.jsonl",
+      "bytes": 608124,
+      "sha256": "33ea6723a2c08a2aec9bf0315d6d13299ecf43808308e63d7222bdde4058c197"
+    },
+    {
+      "path": "certificates/full_packet_v62/all_42_matrix_classes.jsonl",
+      "bytes": 811972,
+      "sha256": "08492a608ce13b99b6e9470241379a1a01746e78539b126aeb785a15af9b9761"
+    },
+    {
+      "path": "certificates/full_packet_v62/root_bridges.jsonl",
+      "bytes": 163026,
+      "sha256": "13dcf16cd44e5359659b307dc9f0eb45d8d0864b8dda9c3aabb4291bb620ece6"
+    },
+    {
+      "path": "experiments/packet_scope/trace_coverage_v58.json",
+      "bytes": 95249,
+      "sha256": "2aef609b6ce72dfb8b6a9017b31674995f0a3cb2cd3ce80aaf7b763e3edfdcd2",
+      "note": "Second copy of certificates/d3_points_v60/trace_order_inputs.json, which the edition already includes. independent/packet_order_coverage_stdlib_v58.py reads it at this path by default."
+    },
+    {
+      "path": "independent/continuous_sturm_kernel_v82.py",
+      "bytes": 48149,
+      "sha256": "13fe2fc31f523caa0108938f460f3d06db58c5cc873648a5b4f4d5ca0fcf41d6"
+    },
+    {
+      "path": "independent/principal_descent_stdlib_v57.py",
+      "bytes": 14884,
+      "sha256": "783a473e1919516766ec508399ec8812e493d10cb0ebd54db9ce8a5741ac39cd"
+    },
+    {
+      "path": "independent/r127_pic1_sturm_v80.py",
+      "bytes": 48007,
+      "sha256": "9745e43762b5cb5582dab2e5cebf8c6f7ad9fe2f0eb66a5782dafb02f7d7b964"
+    },
+    {
+      "path": "independent/reflected_sturm_kernel_v83.py",
+      "bytes": 49169,
+      "sha256": "b2b4b154198290c66f7f1c41b639a23bb62943a64772146c2cd11ca6cb5a1c4e"
+    }
+  ],
+  "restored_files_note": "Each restored file is byte-identical to an object already recorded by SHA256 and size in evidence/index.json. The object store and that index are unchanged; the files are restored at their working paths only.",
+  "changed_files": [
+    {
+      "path": ".github/workflows/verify.yml",
+      "before_sha256": "f7b3acd006e3a5ee81a7fca4d35bed7ef3a38c17565185dae948baa95ec7900b",
+      "after_sha256": "979b41088ef4fd960c8628d349bd8babc97d2991fcb6edbb1df535435a083872"
+    },
+    {
+      "path": "data/claims/register.json",
+      "before_sha256": "fcf274678333909d6c160770a2b1a2e95918f72e2a1bcdf4ed5ca4a61c8da2e2",
+      "after_sha256": "4fdb2c91378b3fbaf0c6087621e87378439685eb1304d88a4ee9179b3834052c"
+    },
+    {
+      "path": "docs/reproducing-results.md",
+      "before_sha256": "62bd594b853a89d124290066db8b1ea03ac86aa2fa84c22fa98761841bbbcbb2",
+      "after_sha256": "76512b148e972b9b56b228cb5921d3f4e4d433816ef4296a1729d78a87f8d00c"
+    },
+    {
+      "path": "scripts/README.md",
+      "before_sha256": "c0d6ee32050c9ee200c62412a0dcc346ec4c1ca86c5077c789f67a606238c497",
+      "after_sha256": "87ea74f79cf62424146c74389834a50aad91ab645cdf0bad1156da0b9842f796"
+    }
+  ],
+  "claim_reference_updates": {
+    "claims": [
+      "C32",
+      "C34",
+      "C43"
+    ],
+    "change": "direct_evidence entries for the restored files now read INCLUDED with a locator"
+  },
+  "not_restored": "certificates/principal_quotient_models_v162.jsonl and certificates/principal_quotient_periods_v162.jsonl remain omitted; no included program reads them. Forty documentation files under certificates/ and independent/ also remain omitted. Twelve included programs outside the registered packet campaign name files under experiments/ that this edition does not ship; whether they run from this edition was not tested. They are listed under programs_naming_unshipped_experiment_files.",
+  "checks_run": [
+    "python3 scripts/check-public-package.py",
+    "python3 -B scripts/check-certificate-inputs.py",
+    "python3 -B certificates/full_packet_arithmetic_v62.py",
+    "python3 -B independent/full_packet_cyclotomic_v62.py",
+    "python3 -B certificates/d3_completeness_v60.py",
+    "python3 -B independent/d3_completeness_quadratic_v60.py",
+    "python3 -B certificates/d3_points_v60.py",
+    "python3 -B independent/d3_points_quadratic_v60.py",
+    "python3 -B independent/principal_descent_stdlib_v57.py",
+    "python3 -B certificates/continuous_primary_v82.py --check-sources",
+    "python3 -B independent/continuous_sturm_v82.py --check-sources",
+    "python3 -B certificates/reflected_primary_v83.py --target-id ORIGINAL_Q_V1 --point OM:pic0:15",
+    "python3 -B independent/reflected_sturm_v83.py --target-id ORIGINAL_Q_V1 --point OM:pic0:15",
+    "start check (15 seconds each, no mathematical pass) of the 159 legacy commands, 6 V82 controls and 12 V83 positive controls of the private command registry, run inside this edition"
+  ],
+  "checks_scope": "Each listed command exited 0 on Linux x86_64 with Python 3.14.6; the standard-library commands also on Python 3.12. The two V83 commands are one positive control and ended with POINT_PASS; before the kernel was restored the first of them failed with FileNotFoundError. In the start check no command failed to start once the nine files were present; a start check stops each command after 15 seconds and is not a mathematical pass. These are packaging checks, exact-arithmetic regressions and one search control. They do not replay the packet campaign.",
+  "all_previously_included_mathematical_sources_data_and_pdfs_unchanged": true,
+  "history": [
+    {
+      "date": "2026-11-09",
+      "change": "Restored seven files; added the census to the guide and the automatic checks."
+    },
+    {
+      "date": "2026-11-10",
+      "change": "Restored independent/reflected_sturm_kernel_v83.py, which both V83 search programs pin, and experiments/packet_scope/trace_coverage_v58.json, which the order-coverage check reads; the first correction missed both. Added scripts/check-certificate-inputs.py and its automatic check."
+    }
+  ],
+  "added_files": [
+    {
+      "path": "scripts/check-certificate-inputs.py",
+      "bytes": 4381,
+      "sha256": "1919c285c98b7204bff4bc65e2c1902b09bed4b379b6735130051e291d94a1e3"
+    }
+  ],
+  "programs_naming_unshipped_experiment_files": [
+    "certificates/s_order_galois_v163/finite_action.py",
+    "independent/ab_unimodular_v100.py",
+    "independent/fermat_codim3_v100.py",
+    "independent/fermat_type_coverage_v108.py",
+    "independent/mixed_graver_v101.py",
+    "independent/mixed_pair_v100.py",
+    "independent/mixed_source_v101.py",
+    "independent/mixed_triple_v102.py",
+    "independent/primitive_pair_atoms_v100.py",
+    "independent/s_order_census_v162/referee_data_checker.py",
+    "independent/s_order_galois_v163/referee_finite01.py",
+    "independent/unit_lattice_v101.py"
+  ]
+}
