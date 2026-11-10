@@ -1131,8 +1131,8 @@
           "sha256": "84381e3c3bdae05f0d963b09b3671bdb40ffb0cfab4aa51d84cbef1af97303c0"
         },
         {
-          "availability": "OMITTED_FROM_EDITION",
-          "locator": null,
+          "availability": "INCLUDED",
+          "locator": "independent/principal_descent_stdlib_v57.py",
           "sha256": "783a473e1919516766ec508399ec8812e493d10cb0ebd54db9ce8a5741ac39cd"
         },
         {
@@ -1201,8 +1201,8 @@
           "sha256": "84381e3c3bdae05f0d963b09b3671bdb40ffb0cfab4aa51d84cbef1af97303c0"
         },
         {
-          "availability": "OMITTED_FROM_EDITION",
-          "locator": null,
+          "availability": "INCLUDED",
+          "locator": "independent/principal_descent_stdlib_v57.py",
           "sha256": "783a473e1919516766ec508399ec8812e493d10cb0ebd54db9ce8a5741ac39cd"
         },
         {
@@ -1674,8 +1674,8 @@
           "sha256": "f60f7912226e66ec1ec40cde4be3ebc7ec58dabf5c80dd4952e2cb125a4cf269"
         },
         {
-          "availability": "OMITTED_FROM_EDITION",
-          "locator": null,
+          "availability": "INCLUDED",
+          "locator": "independent/r127_pic1_sturm_v80.py",
           "sha256": "9745e43762b5cb5582dab2e5cebf8c6f7ad9fe2f0eb66a5782dafb02f7d7b964"
         }
       ],

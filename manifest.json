@@ -1,9 +1,9 @@
 {
   "files": [
     {
-      "bytes": 1136,
+      "bytes": 1428,
       "path": ".github/workflows/verify.yml",
-      "sha256": "f7b3acd006e3a5ee81a7fca4d35bed7ef3a38c17565185dae948baa95ec7900b"
+      "sha256": "07e2004e8a36a25a4d70e150d5b120c6e20744bcebeea887039233edc1176378"
     },
     {
       "bytes": 703,
@@ -1431,6 +1431,11 @@
       "sha256": "7341c4dddc68e06e3288cda31372e6ad3a7617074a01cb2292526eba17baaf17"
     },
     {
+      "bytes": 309088,
+      "path": "certificates/d3_matrix_manifest_v60.jsonl",
+      "sha256": "fc87260544e8d8418e7bc6fe3ca80ef7d9715a82fcdaea9b2a9716016e00004e"
+    },
+    {
       "bytes": 9176,
       "path": "certificates/d3_points_v60/basis_unit_witnesses_v59.json",
       "sha256": "0714e540d49551a16782699f77fc91c6fc2992b5b446828f570f66bf3b1d90d9"
@@ -1444,6 +1449,11 @@
       "bytes": 4041,
       "path": "certificates/d3_points_v60/foundation_inputs.json",
       "sha256": "378559344333a813c4b94e721bafbf44581232a489a0cd16f24751a15569adf1"
+    },
+    {
+      "bytes": 608124,
+      "path": "certificates/d3_points_v60/matrix_to_point_bridges_v59.jsonl",
+      "sha256": "33ea6723a2c08a2aec9bf0315d6d13299ecf43808308e63d7222bdde4058c197"
     },
     {
       "bytes": 95249,
@@ -1551,6 +1561,11 @@
       "sha256": "6804ac1923d6e669b09510fa9c75813d2f070b65992e7434411e0f4c69c41e98"
     },
     {
+      "bytes": 811972,
+      "path": "certificates/full_packet_v62/all_42_matrix_classes.jsonl",
+      "sha256": "08492a608ce13b99b6e9470241379a1a01746e78539b126aeb785a15af9b9761"
+    },
+    {
       "bytes": 397259,
       "path": "certificates/full_packet_v62/ambient_points.json",
       "sha256": "c0e84da6c266c087cbce65a6e8aca8e3f30350ce56b5a1089c4ae4978a381f36"
@@ -1564,6 +1579,11 @@
       "bytes": 16877,
       "path": "certificates/full_packet_v62/module_templates.json",
       "sha256": "09ccff217511a67e946567135f9ffb74da020843621d0895ecce8746d25c245d"
+    },
+    {
+      "bytes": 163026,
+      "path": "certificates/full_packet_v62/root_bridges.jsonl",
+      "sha256": "13dcf16cd44e5359659b307dc9f0eb45d8d0864b8dda9c3aabb4291bb620ece6"
     },
     {
       "bytes": 3840,
@@ -3671,6 +3691,11 @@
       "sha256": "b5cd4bfd5e6579562c3c9e7180c4581eaad65ee99f0cf5882f1c4179a78bd732"
     },
     {
+      "bytes": 4135,
+      "path": "correction-provenance.json",
+      "sha256": "a8c0ba9d7bfd7caa43919b26d38d11e00513609ae8637e6065f0734c04e688fc"
+    },
+    {
       "bytes": 548,
       "path": "data/README.md",
       "sha256": "7c3375d30d7571a4aef0e3d03827ea26a2cf5c3209dccdd8bb53b6c2e34eacca"
@@ -3681,9 +3706,9 @@
       "sha256": "b00a16e89225e97eb066e89d3bf1f00b2d1e16f3cc60ad313218dcdc0820422b"
     },
     {
-      "bytes": 196458,
+      "bytes": 196536,
       "path": "data/claims/register.json",
-      "sha256": "fcf274678333909d6c160770a2b1a2e95918f72e2a1bcdf4ed5ca4a61c8da2e2"
+      "sha256": "4fdb2c91378b3fbaf0c6087621e87378439685eb1304d88a4ee9179b3834052c"
     },
     {
       "bytes": 564,
@@ -3716,9 +3741,9 @@
       "sha256": "7fd1bbe3b22dbcedc11df0235174bf3c01a763957f1149105a0ef76a1dbb9c53"
     },
     {
-      "bytes": 5610,
+      "bytes": 6453,
       "path": "docs/reproducing-results.md",
-      "sha256": "62bd594b853a89d124290066db8b1ea03ac86aa2fa84c22fa98761841bbbcbb2"
+      "sha256": "0f5eb2fd88bece7fccf335330068232cc2b43c6a5d31e5c41c3351954c4cffda"
     },
     {
       "bytes": 3303,
@@ -17681,6 +17706,11 @@
       "sha256": "50b43ae9640c001ca787ea29b8478b23356edb03c45af2cae60946a985184051"
     },
     {
+      "bytes": 48149,
+      "path": "independent/continuous_sturm_kernel_v82.py",
+      "sha256": "13fe2fc31f523caa0108938f460f3d06db58c5cc873648a5b4f4d5ca0fcf41d6"
+    },
+    {
       "bytes": 40898,
       "path": "independent/continuous_sturm_v82.py",
       "sha256": "10bed0dc20593fef3a45aa7a1e600c077ded4f1bb695cc5b77ab33d8ef7871ca"
@@ -17856,6 +17886,11 @@
       "sha256": "bb2cebbe9fa66ac1cc5b6d4df5f693c72b535b4a6f271ec6d26acfbd1a3dd0e9"
     },
     {
+      "bytes": 14884,
+      "path": "independent/principal_descent_stdlib_v57.py",
+      "sha256": "783a473e1919516766ec508399ec8812e493d10cb0ebd54db9ce8a5741ac39cd"
+    },
+    {
       "bytes": 18579,
       "path": "independent/principal_homology_stdlib_v56.py",
       "sha256": "127e1fe82b2a39a7a9ffb10a82e42806d5b53eb632f46e5e523e7ec644001c23"
@@ -17874,6 +17909,11 @@
       "bytes": 23181,
       "path": "independent/quadrilateral_k17_stdlib_v41.py",
       "sha256": "c5bd45f334a028820a071b5c758acfb8e48afc1e8454b18a3174dd04ca58a38c"
+    },
+    {
+      "bytes": 48007,
+      "path": "independent/r127_pic1_sturm_v80.py",
+      "sha256": "9745e43762b5cb5582dab2e5cebf8c6f7ad9fe2f0eb66a5782dafb02f7d7b964"
     },
     {
       "bytes": 6554,

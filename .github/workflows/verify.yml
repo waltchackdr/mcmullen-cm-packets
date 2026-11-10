@@ -36,3 +36,7 @@ jobs:
         run: timeout 60s python3 -B certificates/known_cm_comparison_v58.py
       - name: Check exact arithmetic vertex bridge
         run: timeout 60s python3 -B independent/k11_vertex_bridge_stdlib_v60.py
+      - name: Recompute the packet census (primary implementation)
+        run: timeout 60s python3 -B certificates/full_packet_arithmetic_v62.py
+      - name: Recompute the packet census (separate implementation)
+        run: timeout 60s python3 -B independent/full_packet_cyclotomic_v62.py
