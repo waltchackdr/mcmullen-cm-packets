@@ -32,6 +32,8 @@ jobs:
           python-version: "3.12"
       - name: Check package integrity and navigation
         run: timeout 60s python3 -B scripts/check-public-package.py
+      - name: Check that pinned certificate inputs are present
+        run: timeout 60s python3 -B scripts/check-certificate-inputs.py
       - name: Check supplied CM types and matrix identities
         run: timeout 60s python3 -B certificates/known_cm_comparison_v58.py
       - name: Check exact arithmetic vertex bridge

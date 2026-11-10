@@ -1,9 +1,9 @@
 {
   "files": [
     {
-      "bytes": 1428,
+      "bytes": 1563,
       "path": ".github/workflows/verify.yml",
-      "sha256": "07e2004e8a36a25a4d70e150d5b120c6e20744bcebeea887039233edc1176378"
+      "sha256": "979b41088ef4fd960c8628d349bd8babc97d2991fcb6edbb1df535435a083872"
     },
     {
       "bytes": 703,
@@ -3691,9 +3691,9 @@
       "sha256": "b5cd4bfd5e6579562c3c9e7180c4581eaad65ee99f0cf5882f1c4179a78bd732"
     },
     {
-      "bytes": 4135,
+      "bytes": 7620,
       "path": "correction-provenance.json",
-      "sha256": "a8c0ba9d7bfd7caa43919b26d38d11e00513609ae8637e6065f0734c04e688fc"
+      "sha256": "583ef31521af92be600828953eb0e89f11bc105a4505b72e29a9331cd4b96a51"
     },
     {
       "bytes": 548,
@@ -3741,9 +3741,9 @@
       "sha256": "7fd1bbe3b22dbcedc11df0235174bf3c01a763957f1149105a0ef76a1dbb9c53"
     },
     {
-      "bytes": 6453,
+      "bytes": 7472,
       "path": "docs/reproducing-results.md",
-      "sha256": "0f5eb2fd88bece7fccf335330068232cc2b43c6a5d31e5c41c3351954c4cffda"
+      "sha256": "76512b148e972b9b56b228cb5921d3f4e4d433816ef4296a1729d78a87f8d00c"
     },
     {
       "bytes": 3303,
@@ -17671,6 +17671,11 @@
       "sha256": "fff7ec70946164fcd1d1d19f1b35e1ca88a0b9a99ecb593bb7dcc1d764ce4f12"
     },
     {
+      "bytes": 95249,
+      "path": "experiments/packet_scope/trace_coverage_v58.json",
+      "sha256": "2aef609b6ce72dfb8b6a9017b31674995f0a3cb2cd3ce80aaf7b763e3edfdcd2"
+    },
+    {
       "bytes": 602,
       "path": "independent/README.md",
       "sha256": "dc0b4b40de209f1cb37d494d82dc9f5e182c49a77516e9edd09239cd004c53fe"
@@ -17921,6 +17926,11 @@
       "sha256": "6a0aae7a310a091719721b08654574da87f0c105e716988e932ceedacd5886e6"
     },
     {
+      "bytes": 49169,
+      "path": "independent/reflected_sturm_kernel_v83.py",
+      "sha256": "b2b4b154198290c66f7f1c41b639a23bb62943a64772146c2cd11ca6cb5a1c4e"
+    },
+    {
       "bytes": 87445,
       "path": "independent/reflected_sturm_v83.py",
       "sha256": "89d16ca3317ad6f240f9965b9732abd1e1080022cf87542a395ac456f0139026"
@@ -18166,14 +18176,19 @@
       "sha256": "25f9f1fb1988b230147a1d3092d34e09c069eb7a6c6d6df46b3973b9f2d36efc"
     },
     {
-      "bytes": 471,
+      "bytes": 623,
       "path": "scripts/README.md",
-      "sha256": "c0d6ee32050c9ee200c62412a0dcc346ec4c1ca86c5077c789f67a606238c497"
+      "sha256": "87ea74f79cf62424146c74389834a50aad91ab645cdf0bad1156da0b9842f796"
     },
     {
       "bytes": 5119,
       "path": "scripts/build-papers.py",
       "sha256": "43632a03a1e1852989fd486649db837273453f25c4bbc4f1cf81fecf5d320bba"
+    },
+    {
+      "bytes": 4381,
+      "path": "scripts/check-certificate-inputs.py",
+      "sha256": "1919c285c98b7204bff4bc65e2c1902b09bed4b379b6735130051e291d94a1e3"
     },
     {
       "bytes": 801,
